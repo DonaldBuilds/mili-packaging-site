@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mili-packaging.site.accio.ai/sitemap.xml

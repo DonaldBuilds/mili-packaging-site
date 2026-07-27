@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "siteId": "awb-packaging",
+  "name": "awb-packaging",
+  "kind": "react-vite",
+  "devCommand": "vite",
+  "buildCommand": "vite build",
+  "outputDir": "dist",
+  "entry": "index.html",
+  "createdBy": "accio-site-builder",
+  "createdAt": "2026-07-25T08:09:07.504Z",
+  "installedAt": "2026-07-25T14:52:43.820Z",
+  "databaseUrl": "https://supabase.com/dashboard/project/qfecxuuvgbqqruzfgrpl",
+  "integrations": {
+    "supabase": {
+      "projectUrl": "https://qfecxuuvgbqqruzfgrpl.supabase.co",
+      "projectRef": "qfecxuuvgbqqruzfgrpl",
+      "connectedAt": "2026-07-25T15:03:53.807Z"
+    }
+  },
+  "subdomain": "mili-packaging",
+  "publishedUrl": "https://mili-packaging.site.accio.ai",
+  "publishedAt": "2026-07-27T09:35:50.267Z",
+  "deployId": "dep_1785144947856_d7a3d5da"
+}

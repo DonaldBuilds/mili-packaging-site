@@ -1,0 +1,80 @@
+import { Link } from 'react-router-dom';
+
+export default function Footer() {
+  return (
+    <footer className="footer">
+      <div className="footer-grid">
+        <div>
+          <div className="footer-brand">
+            <img src="/assets/images/logo-mili.png" alt="Mili Packaging" />
+          </div>
+          <p>Premium custom packaging manufacturer serving global brands since 2012. Factory-direct quality, low MOQ, free design, worldwide delivery.</p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
+            {['FSC Certified','ISO 9001','SGS Audited','AQL 2.5 QC'].map(cert => (
+              <span key={cert} style={{ fontSize: 10, letterSpacing: '0.06em', color: 'var(--gold)', border: '1px solid var(--border)', padding: '4px 10px' }}>{cert}</span>
+            ))}
+          </div>
+          <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
+            <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer"
+              style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
+              WhatsApp
+            </a>
+            <a href="mailto:18296876285@163.com"
+              style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
+              Email Us
+            </a>
+          </div>
+        </div>
+        <div>
+          <h5>Products</h5>
+          <ul>
+            <li><Link to="/products">Paper Boxes</Link></li>
+            <li><Link to="/products">Gift Boxes</Link></li>
+            <li><Link to="/products">Magnetic Gift Boxes</Link></li>
+            <li><Link to="/products">Jewelry Boxes</Link></li>
+            <li><Link to="/products">Cosmetic Boxes</Link></li>
+            <li><Link to="/products">Shipping Boxes</Link></li>
+            <li><Link to="/products">Paper Bags</Link></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Industries</h5>
+          <ul>
+            <li><Link to="/industries">Cosmetics & Beauty</Link></li>
+            <li><Link to="/industries">Jewelry & Watches</Link></li>
+            <li><Link to="/industries">Apparel & Fashion</Link></li>
+            <li><Link to="/industries">Food & Beverage</Link></li>
+            <li><Link to="/industries">Electronics</Link></li>
+            <li><Link to="/industries">Corporate Gifts</Link></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <ul>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/portfolio">Portfolio</Link></li>
+            <li><Link to="/faq">FAQ</Link></li>
+            <li><Link to="/support">Support</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+          </ul>
+          <div style={{ marginTop: 24 }}>
+            <h5 style={{ marginBottom: 10 }}>Contact</h5>
+            <p><a href="mailto:18296876285@163.com">18296876285@163.com</a></p>
+            <p style={{ marginTop: 4 }}><a href="https://wa.me/8618296876285">+86 182 9687 6285</a></p>
+            <p style={{ marginTop: 4, color: 'var(--gray-2)' }}>Jiangxi, China</p>
+          </div>
+        </div>
+      </div>
+      <hr className="footer-divider" />
+      <div className="footer-bottom">
+        <div style={{ display:'flex', gap: 20 }}>
+          <Link to="/warranty" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Warranty</Link>
+          <Link to="/shipping-policy" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Shipping Policy</Link>
+          <Link to="/returns-policy" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Returns Policy</Link>
+          <Link to="/support" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Support</Link>
+        </div>
+        <span>Jiangxi Ouruike Packaging Materials Co., Ltd.</span>
+      </div>
+    </footer>
+  );
+}

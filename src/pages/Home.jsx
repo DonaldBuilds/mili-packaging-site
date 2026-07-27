@@ -1,0 +1,298 @@
+import { Link } from 'react-router-dom';
+
+const products = [
+  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/mag-box-black-gold.jpg', tag: 'MOQ 500 pcs | 15 Days' },
+  { id: 2, title: 'Jewelry Box', desc: 'Velvet-lined precision jewelry cases', img: '/assets/images/jewelry-box-black.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
+  { id: 3, title: 'Cosmetic Box', desc: 'Luxury beauty & skincare packaging', img: '/assets/images/cosmetic-box-black.jpg', tag: 'MOQ 300 pcs | Free Design' },
+  { id: 4, title: 'Drawer Box', desc: 'Rigid slide-out drawer structure', img: '/assets/images/magnetic-box-detail.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
+  { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
+  { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry.jpg', tag: 'MOQ 200 pcs | Embossing' },
+  { id: 7, title: 'Shipping Box', desc: 'Eco-friendly corrugated mailers', img: '/assets/images/shipping-box-kraft.jpg', tag: 'MOQ 1000 pcs | FSC Paper' },
+  { id: 8, title: 'Paper Bag', desc: 'Branded retail & boutique bags', img: '/assets/images/gift-bag-black.jpg', tag: 'MOQ 500 pcs | Foil Stamp' },
+];
+
+const industries = [
+  { name: 'Cosmetics & Beauty',  desc: 'Luxury magnetic boxes & custom inserts', img: '/assets/images/cosmetic-box-black.jpg' },
+  { name: 'Jewelry & Watches',   desc: 'Velvet-lined, gold foil, drawer-style', img: '/assets/images/jewelry-box-black.jpg' },
+  { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/gift-bag-black.jpg' },
+  { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/shipping-box-kraft.jpg' },
+  { name: 'Electronics',         desc: 'Precision foam inserts & anti-static', img: '/assets/images/mag-box-black-gold.jpg' },
+  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/case-jewelry.jpg' },
+];
+
+const testimonials = [
+  { text: '"The quality exceeded our expectations. Our unboxing content went viral — we directly attribute 40% of our social growth to the packaging."', author: 'Sarah L.', role: 'Brand Manager, Aurora Beauty' },
+  { text: '"Finally found a packaging partner who understands luxury. The gold foil stamping across 10,000 units was absolutely flawless."', author: 'David C.', role: 'CEO, Lumina Jewels' },
+  { text: '"Sample approval to delivery in 18 days. Mili handled design, production, customs. Genuinely zero headache experience."', author: 'Maria K.', role: 'Operations Director, Vere Apparel' },
+];
+
+export default function Home() {
+  return (
+    <>
+      {/* ── Hero ── */}
+      <section className="hero">
+        <div className="hero-bg">
+          <img src="/assets/images/hero-black-gold.jpg" alt="Mili Packaging factory-direct custom packaging" />
+        </div>
+        <div className="hero-overlay" />
+        <div className="hero-content">
+          <div className="hero-badges">
+            <span className="hero-badge">FSC Certified</span>
+            <span className="hero-badge">ISO 9001</span>
+            <span className="hero-badge">SGS Audited</span>
+          </div>
+          <h1>Custom Luxury Gift Box<br />Manufacturer in China</h1>
+          <p>Factory-Direct Magnetic, Rigid, Drawer & Custom Boxes with Your Logo. Free Design, Low MOQ 100 pcs, Global Shipping to 50+ Countries.</p>
+          <div className="hero-actions">
+            <a href="/contact" className="btn-gold">Get a Free Quote</a>
+            <a href="/products" className="btn-outline-white">Browse Products</a>
+          </div>
+          <div className="hero-stats-row">
+            {[['MOQ','100 pcs'],['Lead Time','15 Days'],['Design','Free'],['Shipping','50+ Countries']].map(([l,v]) => (
+              <div className="hero-stat" key={l}>
+                <span className="hero-stat-label">{l}</span>
+                <span className="hero-stat-value">{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="hero-badge-row">
+          {[['12+','Years'], ['500+','Brands'], ['50+','Countries'], ['98%','On-Time']].map(([n,l]) => (
+            <div className="hero-badge-item" key={l}>
+              <div className="hero-badge-num">{n}</div>
+              <div className="hero-badge-label">{l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Trusted By ── */}
+      <section className="section-sm">
+        <div className="container" style={{ textAlign: 'center' }}>
+          <span className="eyebrow" style={{ margin: '0 auto 28px', display: 'block' }}>Trusted By Leading Brands Worldwide</span>
+          <div className="logo-wall" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'36px 48px', opacity:0.55 }}>
+            {['aurora', 'lumina', 'vere', 'nocturne', 'selene', 'meraki'].map(b => (
+              <img src={`/assets/images/logo-${b}.svg`} alt={b} key={b} style={{ height:28, filter:'grayscale(1) brightness(2)' }} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Dual Path ── */}
+      <div className="dual-path">
+        <Link to="/products" className="dual-card">
+          <span className="eyebrow">Standard Collection</span>
+          <h3>Browse Our Catalog</h3>
+          <p>Proven box designs across 8 categories. Select a style, customize for your brand — fast turnaround, low MOQ.</p>
+          <div className="dual-card-arrow">&rarr;</div>
+        </Link>
+        <Link to="/contact" className="dual-card">
+          <span className="eyebrow">Bespoke Solutions</span>
+          <h3>Request Custom Design</h3>
+          <p>From sketch to delivery, every detail engineered for your brand. Free 3D mockups within 48 hours.</p>
+          <div className="dual-card-arrow">&rarr;</div>
+        </Link>
+      </div>
+
+      {/* ── Products ── */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container" style={{ marginBottom: 48 }}>
+          <div className="section-header" style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
+            <div>
+              <div className="gold-line" />
+              <span className="eyebrow">Our Products</span>
+              <h2>8 Packaging Categories</h2>
+            </div>
+            <Link to="/products" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>View All &rarr;</Link>
+          </div>
+        </div>
+        <div className="product-grid">
+          {products.map(p => (
+            <Link to={`/products/${p.id}`} className="product-card" key={p.title}>
+              <div className="product-card-img-wrap">
+                <img src={p.img} alt={p.title} className="product-card-img" />
+              </div>
+              <div className="product-card-body">
+                <h4>{p.title}</h4>
+                <p>{p.desc}</p>
+                <span className="product-card-tag">{p.tag}</span>
+                <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  style={{ display:'inline-flex', alignItems:'center', gap:6, marginTop:12, fontSize:12, color:'var(--gold)', textDecoration:'none', border:'1px solid var(--border)', padding:'6px 12px' }}>
+                  💬 WhatsApp Quote
+                </a>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Factory-Direct vs Platforms ── */}
+      <section className="section" style={{ background:'var(--black-2)', borderTop:'1px solid var(--border-dim)', borderBottom:'1px solid var(--border-dim)' }}>
+        <div className="container" style={{ maxWidth: 960 }}>
+          <div style={{ textAlign:'center', marginBottom: 56 }}>
+            <div className="gold-line gold-line-center" />
+            <span className="eyebrow">Why Choose Mili Packaging</span>
+            <h2>Factory-Direct vs Online Platforms</h2>
+          </div>
+          <div className="compare-table">
+            <div className="compare-header">
+              <div /><div className="compare-col-gold">Mili Packaging</div><div>Online Platforms</div>
+            </div>
+            {[
+              ['Price', 'Factory-direct pricing', '30–50% middleman markup'],
+              ['Quality', 'AQL 2.5 inspection at source', 'No quality control guarantee'],
+              ['Customization', 'Free design & 3D mockups', 'Limited or paid add-on'],
+              ['Lead Time', '7–15 days direct production', 'Unpredictable — 3rd party delays'],
+              ['Samples', '2 rounds free samples', 'Paid samples, long wait'],
+              ['Support', 'Dedicated account manager', 'Automated / no personal contact'],
+            ].map(([label, mili, other]) => (
+              <div className="compare-row" key={label}>
+                <div className="compare-label">{label}</div>
+                <div className="compare-cell compare-cell-good">{mili}</div>
+                <div className="compare-cell compare-cell-bad">{other}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Process ── */}
+      <section className="section">
+        <div className="container">
+          <div style={{ textAlign:'center', marginBottom: 64 }}>
+            <div className="gold-line gold-line-center" />
+            <span className="eyebrow">How It Works</span>
+            <h2>From Brief to Delivery in 3 Steps</h2>
+          </div>
+          <div className="process-grid">
+            {[
+              ['01','Consult & Design','Share your vision, product specs, and budget. Our team recommends the optimal structure, material, and finish — with free 3D mockups within 48 hours.'],
+              ['02','Sample & Approve','We produce free structural samples in 3–5 days. Review, refine, and approve. Pre-production samples with full printing available before bulk run.'],
+              ['03','Produce & Ship','In-house manufacturing with AQL 2.5 QC throughout. We handle global logistics — FOB, DDP, door-to-door across 50+ countries.'],
+            ].map(([n,t,d]) => (
+              <div className="process-step" key={n}>
+                <div className="process-num">{n}</div>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pillars ── */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="pillars-grid">
+          {[
+            ['🌿','Eco-Friendly','FSC-certified paper, soy inks, biodegradable options for every product line.'],
+            ['📦','Low MOQ 100 pcs','Start small, scale fast. Designed for growing brands at every stage.'],
+            ['🎨','Free Design','Professional structural design & graphic layout included at no extra charge.'],
+            ['🏭','Factory Direct','Own factory + own QC = premium quality without the middleman markup.'],
+          ].map(([i,h,p]) => (
+            <div className="pillar" key={h}>
+              <div className="pillar-icon">{i}</div>
+              <h4>{h}</h4>
+              <p>{p}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Industries ── */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container" style={{ marginBottom: 48 }}>
+          <div className="gold-line" />
+          <span className="eyebrow">Industry Solutions</span>
+          <h2>Built for Your Industry</h2>
+        </div>
+        <div className="industry-grid">
+          {industries.map((ind) => (
+            <Link to="/industries" className="industry-card" key={ind.name}>
+              <img src={ind.img} alt={ind.name} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:0.45 }} />
+              <div className="industry-card-overlay">
+                <h4>{ind.name}</h4>
+                <p>{ind.desc}</p>
+                <span className="industry-card-link">Explore &rarr;</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Portfolio Preview ── */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container" style={{ marginBottom: 48, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
+          <div>
+            <div className="gold-line" />
+            <span className="eyebrow">Our Work</span>
+            <h2>Selected Projects</h2>
+          </div>
+          <Link to="/portfolio" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>All Projects &rarr;</Link>
+        </div>
+        <div className="portfolio-grid">
+          <Link to="/portfolio" className="portfolio-card">
+            <img src="/assets/images/case-cosmetics.jpg" alt="Cosmetics case study" className="portfolio-card-img" />
+            <div className="portfolio-card-overlay">
+              <div className="portfolio-card-tags">
+                <span className="portfolio-tag">Cosmetics</span>
+                <span className="portfolio-tag">Magnetic Box</span>
+                <span className="portfolio-tag">Gold Foil</span>
+              </div>
+              <h4>Aurora Beauty — Gift Box Series</h4>
+              <p>2,000-unit premium cosmetics gift set with custom magnetic boxes and laser-etched branding</p>
+            </div>
+          </Link>
+          <Link to="/portfolio" className="portfolio-card">
+            <img src="/assets/images/case-jewelry.jpg" alt="Jewelry case study" className="portfolio-card-img" />
+            <div className="portfolio-card-overlay">
+              <div className="portfolio-card-tags">
+                <span className="portfolio-tag">Jewelry</span>
+                <span className="portfolio-tag">Rigid Box</span>
+                <span className="portfolio-tag">Embossing</span>
+              </div>
+              <h4>Lumina Jewels — Signature Packaging</h4>
+              <p>Matching ring, necklace & bracelet box set with black velvet interior and embossed gold logo</p>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Testimonials ── */}
+      <section className="section" style={{ background:'var(--black-2)', borderTop:'1px solid var(--border-dim)' }}>
+        <div className="container">
+          <div style={{ textAlign:'center', marginBottom: 64 }}>
+            <div className="gold-line gold-line-center" />
+            <span className="eyebrow">Client Words</span>
+            <h2>What Our Partners Say</h2>
+          </div>
+          <div className="testi-grid">
+            {testimonials.map(t => (
+              <div className="testi-card" key={t.author}>
+                <div className="testi-text">{t.text}</div>
+                <div className="testi-author">{t.author}</div>
+                <div className="testi-role">{t.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA Band ── */}
+      <section className="cta-band">
+        <div className="gold-line gold-line-center" />
+        <span className="eyebrow">Ready to Start?</span>
+        <h2>Elevate Your Packaging Today</h2>
+        <p>Tell us your brief. Get a tailored quote within 24 hours. Free design, free samples, zero obligation.</p>
+        <div className="cta-band-actions">
+          <a href="/contact" className="btn-gold">Start Your Project</a>
+          <a href="/products" className="btn-outline-gold">Browse Products</a>
+        </div>
+      </section>
+
+      {/* Floating CTA */}
+      <a href="/contact" className="sticky-quote">Quick Quote</a>
+      <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer" className="whatsapp-btn">💬</a>
+    </>
+  );
+}
