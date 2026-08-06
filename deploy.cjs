@@ -31,7 +31,7 @@ console.log(`Embedded ${Object.keys(files).length} files`);
 
 const filesJson = JSON.stringify(files);
 const worker = `
-const F=JSON.parse(atob('${Buffer.from(filesJson).toString('base64')}'));
+const F=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob('${Buffer.from(filesJson).toString('base64')}'),c=>c.charCodeAt(0))));
 const M=Object.fromEntries(Object.entries({
   '.html':'text/html;charset=UTF-8','.css':'text/css;charset=UTF-8','.js':'application/javascript',
   '.svg':'image/svg+xml','.json':'application/json','.txt':'text/plain','.xml':'application/xml'
