@@ -1,23 +1,23 @@
 import { Link } from 'react-router-dom';
 // v20260728-update
 const products = [
-  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero.jpg', tag: 'MOQ 500 pcs | 15 Days' },
-  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
-  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
-  { id: 4, title: 'Custom Mailer Box', desc: 'Branded fold-over with gold stamping', img: '/assets/images/product-mailer.jpg', tag: 'MOQ 500 pcs | Soft Touch' },
-  { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
-  { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry.jpg', tag: 'MOQ 200 pcs | Embossing' },
-  { id: 7, title: 'Shipping Box', desc: 'Eco-friendly corrugated mailers', img: '/assets/images/shipping-box-kraft.jpg', tag: 'MOQ 1000 pcs | FSC Paper' },
-  { id: 8, title: 'Paper Bag', desc: 'Branded retail & boutique bags', img: '/assets/images/gift-bag-black.jpg', tag: 'MOQ 500 pcs | Foil Stamp' },
+  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero-v2.jpg', tag: 'MOQ 500 pcs | 15 Days' },
+  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer-v2.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
+  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift-v2.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
+  { id: 4, title: 'Custom Mailer Box', desc: 'Branded fold-over with gold stamping', img: '/assets/images/product-mailer-v2.jpg', tag: 'MOQ 500 pcs | Soft Touch' },
+  { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics-v2.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
+  { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry-v2.jpg', tag: 'MOQ 200 pcs | Embossing' },
+  { id: 7, title: 'Shipping Box', desc: 'Eco-friendly corrugated mailers', img: '/assets/images/shipping-box-kraft-v2.jpg', tag: 'MOQ 1000 pcs | FSC Paper' },
+  { id: 8, title: 'Paper Bag', desc: 'Branded retail & boutique bags', img: '/assets/images/gift-bag-black-v2.jpg', tag: 'MOQ 500 pcs | Foil Stamp' },
 ];
 
 const industries = [
   { name: 'Cosmetics & Beauty',  desc: 'Luxury magnetic boxes & custom inserts', img: '/assets/images/cosmetic-box-black.jpg' },
   { name: 'Jewelry & Watches',   desc: 'Velvet-lined, gold foil, drawer-style', img: '/assets/images/jewelry-box-black.jpg' },
-  { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/gift-bag-black.jpg' },
-  { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/shipping-box-kraft.jpg' },
+  { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/gift-bag-black-v2.jpg' },
+  { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/shipping-box-kraft-v2.jpg' },
   { name: 'Electronics',         desc: 'Precision foam inserts & anti-static', img: '/assets/images/mag-box-black-gold.jpg' },
-  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/case-jewelry.jpg' },
+  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/case-jewelry-v2.jpg' },
 ];
 
 const testimonials = [
@@ -32,7 +32,7 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">
-          <img src="/assets/images/hero-black-gold.jpg" alt="Mili Packaging factory-direct custom packaging" />
+          <img src="/assets/images/hero-black-gold-v2.jpg" alt="Mili Packaging factory-direct custom packaging" />
         </div>
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -232,7 +232,7 @@ export default function Home() {
         </div>
         <div className="portfolio-grid">
           <Link to="/portfolio" className="portfolio-card">
-            <img src="/assets/images/case-cosmetics.jpg" alt="Cosmetics case study" className="portfolio-card-img" />
+            <img src="/assets/images/case-cosmetics-v2.jpg" alt="Cosmetics case study" className="portfolio-card-img" />
             <div className="portfolio-card-overlay">
               <div className="portfolio-card-tags">
                 <span className="portfolio-tag">Cosmetics</span>
@@ -244,7 +244,7 @@ export default function Home() {
             </div>
           </Link>
           <Link to="/portfolio" className="portfolio-card">
-            <img src="/assets/images/case-jewelry.jpg" alt="Jewelry case study" className="portfolio-card-img" />
+            <img src="/assets/images/case-jewelry-v2.jpg" alt="Jewelry case study" className="portfolio-card-img" />
             <div className="portfolio-card-overlay">
               <div className="portfolio-card-tags">
                 <span className="portfolio-tag">Jewelry</span>
