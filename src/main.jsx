@@ -15,6 +15,7 @@ import Support from './pages/Support';
 import Warranty from './pages/Warranty';
 import ShippingPolicy from './pages/ShippingPolicy';
 import ReturnsPolicy from './pages/ReturnsPolicy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import './styles.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/warranty" element={<Warranty />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/returns-policy" element={<ReturnsPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
       <Footer />
     </Router>

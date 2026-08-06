@@ -1,7 +1,26 @@
-node_modules
-dist
-.accio
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-seo/
+dist-*/
+dist[0-9]*/
+dist.zip
+deploy.zip
+
+# Environment variables (contains API keys — never commit)
 .env
 .env.local
 .env.*.local
+
+# Local-only deploy scripts (contain Cloudflare token)
+deploy.local.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
 .DS_Store
+Thumbs.db

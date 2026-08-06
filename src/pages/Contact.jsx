@@ -24,14 +24,18 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.target);
+    // Honeypot anti-spam: bots fill this hidden field, humans never see it
+    if (formData.get('company_website')) return;
     setLoading(true);
     setError(null);
 
-    const formData = new FormData(e.target);
     const data = {
       name: formData.get('name'),
       company: formData.get('company'),
       email: formData.get('email'),
+      phone: formData.get('phone'),
+      industry: formData.get('industry'),
       product_type: formData.get('productType'),
       quantity: formData.get('quantity'),
       message: formData.get('message'),
@@ -119,6 +123,10 @@ export default function Contact() {
             {/* Form col */}
             <form onSubmit={handleSubmit} style={{ background:'var(--black-2)', border:'1px solid var(--border-dim)', padding:'44px 40px' }}>
               <h3 style={{ marginBottom:28 }}>Get a Free Quote</h3>
+
+              {/* Honeypot anti-spam field (hidden from humans) */}
+              <input type="text" name="company_website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                style={{ position:'absolute', left:'-9999px', width:'1px', height:'1px', opacity:0 }} />
 
               {error && (
                 <div style={{ color:'var(--red)', background:'rgba(255,0,0,0.1)', padding:'10px 15px', borderRadius:4, marginBottom:20, fontSize:13 }}>

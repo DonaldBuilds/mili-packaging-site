@@ -1,3 +1,9 @@
 User-agent: *
 Allow: /
-Sitemap: https://mili-packaging.site.accio.ai/sitemap.xml
+Disallow: /assets/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /assets/
+
+Sitemap: https://mili-packaging.com/sitemap.xml

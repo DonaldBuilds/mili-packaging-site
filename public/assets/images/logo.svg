@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <g transform="translate(6,4)">
+    <polygon points="12,0 28,8 28,22 12,30 0,22 0,8" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <polygon points="28,8 40,2 40,16 28,22" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <polygon points="12,30 28,22 40,16 24,24" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+    <rect x="16" y="14" width="10" height="6" fill="#c9a84c" opacity="0.4"/>
+  </g>
+  <text x="56" y="32" font-family="system-ui,-apple-system,sans-serif" font-size="20" font-weight="700" fill="#c9a84c" letter-spacing="-0.5">mili</text>
+  <text x="110" y="22" font-family="system-ui,-apple-system,sans-serif" font-size="7" font-weight="400" fill="#c9a84c" letter-spacing="2" text-transform="uppercase">CUSTOM PACKAGING</text>
+</svg>

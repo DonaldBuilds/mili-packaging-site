@@ -6,12 +6,20 @@ export default function Footer() {
       <div className="footer-grid">
         <div>
           <div className="footer-brand">
-            <img src="/assets/images/logo-mili.png" alt="Mili Packaging" />
+            <img src="/assets/images/logo.svg" alt="mili custom packaging" style={{ height: 28 }} />
           </div>
-          <p>Premium custom packaging manufacturer serving global brands since 2012. Factory-direct quality, low MOQ, free design, worldwide delivery.</p>
+          <p style={{ fontSize:12, marginBottom:4, color:'var(--gold)' }}>Jiangxi Mili Packaging Materials Co., Ltd.</p>
+          <p>Factory-direct custom packaging manufacturer serving global brands. Free design, low MOQ 100pcs, worldwide delivery.</p>
           <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
-            {['FSC Certified','ISO 9001','SGS Audited','AQL 2.5 QC'].map(cert => (
-              <span key={cert} style={{ fontSize: 10, letterSpacing: '0.06em', color: 'var(--gold)', border: '1px solid var(--border)', padding: '4px 10px' }}>{cert}</span>
+            {[
+              { img: '/assets/images/cert-fsc.svg', label: 'FSC Certified' },
+              { img: '/assets/images/cert-iso.svg', label: 'ISO 9001' },
+              { img: '/assets/images/cert-sgs.svg', label: 'SGS Audited' },
+              { img: '/assets/images/cert-aql.svg', label: 'AQL 2.5 QC' },
+            ].map(cert => (
+              <span key={cert.label} style={{ display:'inline-flex', alignItems:'center', gap:8, fontSize:10, letterSpacing:'0.06em', color:'var(--gold)', border:'1px solid var(--border)', padding:'4px 10px' }}>
+                <img src={cert.img} alt={cert.label} style={{ height: 18 }} />{cert.label}
+              </span>
             ))}
           </div>
           <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
@@ -54,6 +62,7 @@ export default function Footer() {
             <li><Link to="/about">About Us</Link></li>
             <li><Link to="/portfolio">Portfolio</Link></li>
             <li><Link to="/faq">FAQ</Link></li>
+            <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/support">Support</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
@@ -71,9 +80,10 @@ export default function Footer() {
           <Link to="/warranty" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Warranty</Link>
           <Link to="/shipping-policy" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Shipping Policy</Link>
           <Link to="/returns-policy" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Returns Policy</Link>
+          <Link to="/privacy-policy" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Privacy Policy</Link>
           <Link to="/support" style={{ color:'var(--gray-2)', textDecoration:'none' }}>Support</Link>
         </div>
-        <span>Jiangxi Ouruike Packaging Materials Co., Ltd.</span>
+        <span>Jiangxi Mili Packaging Materials Co., Ltd.</span>
       </div>
     </footer>
   );

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-
+// v20260728-update
 const products = [
-  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/mag-box-black-gold.jpg', tag: 'MOQ 500 pcs | 15 Days' },
-  { id: 2, title: 'Jewelry Box', desc: 'Velvet-lined precision jewelry cases', img: '/assets/images/jewelry-box-black.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
-  { id: 3, title: 'Cosmetic Box', desc: 'Luxury beauty & skincare packaging', img: '/assets/images/cosmetic-box-black.jpg', tag: 'MOQ 300 pcs | Free Design' },
-  { id: 4, title: 'Drawer Box', desc: 'Rigid slide-out drawer structure', img: '/assets/images/magnetic-box-detail.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
+  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero.jpg', tag: 'MOQ 500 pcs | 15 Days' },
+  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
+  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
+  { id: 4, title: 'Custom Mailer Box', desc: 'Branded fold-over with gold stamping', img: '/assets/images/product-mailer.jpg', tag: 'MOQ 500 pcs | Soft Touch' },
   { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
   { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry.jpg', tag: 'MOQ 200 pcs | Embossing' },
   { id: 7, title: 'Shipping Box', desc: 'Eco-friendly corrugated mailers', img: '/assets/images/shipping-box-kraft.jpg', tag: 'MOQ 1000 pcs | FSC Paper' },
@@ -21,9 +21,9 @@ const industries = [
 ];
 
 const testimonials = [
-  { text: '"The quality exceeded our expectations. Our unboxing content went viral — we directly attribute 40% of our social growth to the packaging."', author: 'Sarah L.', role: 'Brand Manager, Aurora Beauty' },
-  { text: '"Finally found a packaging partner who understands luxury. The gold foil stamping across 10,000 units was absolutely flawless."', author: 'David C.', role: 'CEO, Lumina Jewels' },
-  { text: '"Sample approval to delivery in 18 days. Mili handled design, production, customs. Genuinely zero headache experience."', author: 'Maria K.', role: 'Operations Director, Vere Apparel' },
+  { text: '"The quality exceeded our expectations. Our unboxing content went viral — we directly attribute 40% of our social growth to the packaging."', author: 'Sarah L.', role: 'Brand Manager, US Cosmetics Brand' },
+  { text: '"Finally found a packaging partner who understands luxury. The gold foil stamping across 10,000 units was absolutely flawless."', author: 'David C.', role: 'CEO, UK Jewelry Brand' },
+  { text: '"Sample approval to delivery in 18 days. Mili handled design, production, customs. Genuinely zero headache experience."', author: 'Maria K.', role: 'Operations Director, EU Apparel Brand' },
 ];
 
 export default function Home() {
@@ -57,7 +57,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-badge-row">
-          {[['12+','Years'], ['500+','Brands'], ['50+','Countries'], ['98%','On-Time']].map(([n,l]) => (
+          {[['Since 2018','Est.'], ['500+','Brands'], ['50+','Countries'], ['98%','On-Time']].map(([n,l]) => (
             <div className="hero-badge-item" key={l}>
               <div className="hero-badge-num">{n}</div>
               <div className="hero-badge-label">{l}</div>
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="container" style={{ textAlign: 'center' }}>
           <span className="eyebrow" style={{ margin: '0 auto 28px', display: 'block' }}>Trusted By Leading Brands Worldwide</span>
           <div className="logo-wall" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'36px 48px', opacity:0.55 }}>
-            {['aurora', 'lumina', 'vere', 'nocturne', 'selene', 'meraki'].map(b => (
+            {['aurora', 'lumina', 'vere', 'nocturne'].map(b => (
               <img src={`/assets/images/logo-${b}.svg`} alt={b} key={b} style={{ height:28, filter:'grayscale(1) brightness(2)' }} />
             ))}
           </div>
@@ -239,8 +239,8 @@ export default function Home() {
                 <span className="portfolio-tag">Magnetic Box</span>
                 <span className="portfolio-tag">Gold Foil</span>
               </div>
-              <h4>Aurora Beauty — Gift Box Series</h4>
-              <p>2,000-unit premium cosmetics gift set with custom magnetic boxes and laser-etched branding</p>
+              <h4>Skincare Brand (USA) — Magnetic Gift Box Series</h4>
+              <p>Luxury cosmetics packaging with gold foil logo and custom magnetic closure. FSC-certified materials used.</p>
             </div>
           </Link>
           <Link to="/portfolio" className="portfolio-card">
@@ -251,8 +251,8 @@ export default function Home() {
                 <span className="portfolio-tag">Rigid Box</span>
                 <span className="portfolio-tag">Embossing</span>
               </div>
-              <h4>Lumina Jewels — Signature Packaging</h4>
-              <p>Matching ring, necklace & bracelet box set with black velvet interior and embossed gold logo</p>
+              <h4>Jewelry Startup (UK) — Drawer Box Series</h4>
+              <p>Velvet-lined drawer box with ribbon pull. Custom embossed logo and satin interior. Delivered in 2 weeks.</p>
             </div>
           </Link>
         </div>

@@ -8,6 +8,7 @@ const links = [
   { to: '/portfolio', label: 'Portfolio' },
   { to: '/about', label: 'About' },
   { to: '/faq', label: 'FAQ' },
+  { to: '/blog', label: 'Blog' },
 ];
 
 export default function Navbar() {
@@ -18,7 +19,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-logo">
-          <img src="/assets/images/logo-mili.png" alt="Mili Packaging" />
+          <img src="/assets/images/logo.svg" alt="mili custom packaging" style={{ height: 28 }} />
         </Link>
         <ul className="navbar-links">
           {links.map(({ to, label }) => (

@@ -1,0 +1,13 @@
+const fs = require('fs');
+const html = fs.readFileSync('index.html','utf8');
+const ld = (html.match(/ld\+json/gi)||[]).length;
+console.log('JSON-LD blocks:', ld);
+const title = html.match(/<title>([^<]*)<\/title>/);
+if (title) console.log('Title:', title[1].slice(0,70));
+const desc = html.match(/description[^>]*content="([^"]+)"/);
+if (desc) console.log('Desc:', desc[1].slice(0,100)+'...');
+const ogImg = html.match(/og:image[^>]*content="([^"]+)"/);
+if (ogImg) console.log('OG Image:', ogImg[1]);
+const sitemap = fs.readFileSync('public/sitemap.xml','utf8');
+const urls = (sitemap.match(/<loc>([^<]+)<\/loc>/g)||[]).length;
+console.log('Sitemap URLs:', urls);

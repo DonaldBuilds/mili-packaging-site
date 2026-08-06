@@ -25,7 +25,7 @@ export default function About() {
           <div className="gold-line" />
           <span className="eyebrow">About Mili Packaging</span>
           <h1>We Don't Just Make Boxes.<br />We Make Brands Memorable.</h1>
-          <p>Jiangxi Ouruike Packaging Materials Co., Ltd. — a premium B2B custom packaging manufacturer with 12+ years of experience serving global brands.</p>
+          <p>Jiangxi Mili Packaging Materials Co., Ltd. — a premium B2B custom packaging manufacturer founded in 2018, serving global brands.</p>
         </div>
       </div>
 
@@ -47,12 +47,12 @@ export default function About() {
             <div>
               <div className="gold-line" />
               <span className="eyebrow">Our Story</span>
-              <h2 style={{ marginBottom: 24 }}>A Decade of<br />Manufacturing Excellence</h2>
+              <h2 style={{ marginBottom: 24 }}>Built on<br />Manufacturing Excellence</h2>
               <p style={{ color:'var(--gray-3)', fontSize:15, lineHeight:1.8, marginBottom:16 }}>
                 Founded in Jiangxi — China's packaging manufacturing heartland — Mili Packaging was built on one belief: every product deserves packaging that elevates it.
               </p>
               <p style={{ color:'var(--gray-3)', fontSize:15, lineHeight:1.8, marginBottom:16 }}>
-                Over 12 years, we grew from a local workshop into a full-service global packaging partner, serving 500+ brands across 50+ countries. Our in-house design, production, and QC teams operate as one integrated unit — delivering factory-direct quality at scale.
+                Since 2018, we have grown from a local workshop into a full-service global packaging partner, serving 500+ brands across 50+ countries. Our in-house design, production, and QC teams operate as one integrated unit — delivering factory-direct quality at scale.
               </p>
               <p style={{ color:'var(--gray-3)', fontSize:15, lineHeight:1.8 }}>
                 We are FSC-certified, committed to sustainable manufacturing, and genuinely invested in every client's brand story. When your packaging wins, we win.
