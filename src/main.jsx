@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -18,9 +18,32 @@ import ReturnsPolicy from './pages/ReturnsPolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import './styles.css';
 
+function TitleManager() {
+  const location = useLocation();
+  useEffect(() => {
+    const titles = {
+      '/': 'Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs',
+      '/products': 'Packaging Products | Custom Boxes, Bags & Mailers | Mili Packaging',
+      '/about': 'About Us | Jiangxi Mili Packaging Materials Co., Ltd.',
+      '/contact': 'Contact Us | Get a Free Packaging Quote | Mili Packaging',
+      '/faq': 'FAQ | Custom Packaging Questions Answered | Mili Packaging',
+      '/portfolio': 'Portfolio | Packaging Case Studies | Mili Packaging',
+      '/industries': 'Industries | Packaging Solutions by Sector | Mili Packaging',
+      '/support': 'Support | Design, QC & After-Sales | Mili Packaging',
+      '/warranty': 'Warranty | Mili Packaging',
+      '/shipping-policy': 'Shipping Policy | Mili Packaging',
+      '/returns-policy': 'Returns Policy | Mili Packaging',
+      '/privacy-policy': 'Privacy Policy | Mili Packaging',
+    };
+    document.title = titles[location.pathname] || 'Mili Packaging | Custom Packaging Manufacturer';
+  }, [location]);
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <TitleManager />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

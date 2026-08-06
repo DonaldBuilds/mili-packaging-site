@@ -27,7 +27,7 @@ export default function Footer() {
               style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
               WhatsApp
             </a>
-            <a href="mailto:18296876285@163.com"
+            <a href="mailto:info@mili-packaging.com"
               style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
               Email Us
             </a>
@@ -62,13 +62,13 @@ export default function Footer() {
             <li><Link to="/about">About Us</Link></li>
             <li><Link to="/portfolio">Portfolio</Link></li>
             <li><Link to="/faq">FAQ</Link></li>
-            <li><Link to="/blog">Blog</Link></li>
+            <li><a href="/blog/" style={{ color: 'inherit', textDecoration: 'none' }}>Blog</a></li>
             <li><Link to="/support">Support</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
           <div style={{ marginTop: 24 }}>
             <h5 style={{ marginBottom: 10 }}>Contact</h5>
-            <p><a href="mailto:18296876285@163.com">18296876285@163.com</a></p>
+            <p><a href="mailto:info@mili-packaging.com">info@mili-packaging.com</a></p>
             <p style={{ marginTop: 4 }}><a href="https://wa.me/8618296876285">+86 182 9687 6285</a></p>
             <p style={{ marginTop: 4, color: 'var(--gray-2)' }}>Jiangxi, China</p>
           </div>

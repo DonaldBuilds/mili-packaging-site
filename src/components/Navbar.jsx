@@ -8,7 +8,7 @@ const links = [
   { to: '/portfolio', label: 'Portfolio' },
   { to: '/about', label: 'About' },
   { to: '/faq', label: 'FAQ' },
-  { to: '/blog', label: 'Blog' },
+  { to: '/blog', label: 'Blog', external: true },
 ];
 
 export default function Navbar() {
@@ -22,11 +22,15 @@ export default function Navbar() {
           <img src="/assets/images/logo.svg" alt="mili custom packaging" style={{ height: 28 }} />
         </Link>
         <ul className="navbar-links">
-          {links.map(({ to, label }) => (
+          {links.map(({ to, label, external }) => (
             <li key={to}>
-              <Link to={to} style={{ color: pathname === to ? 'var(--gold)' : '' }}>
-                {label}
-              </Link>
+              {external ? (
+                <a href="/blog/" style={{ color: pathname === '/blog' ? 'var(--gold)' : '' }}>{label}</a>
+              ) : (
+                <Link to={to} style={{ color: pathname === to ? 'var(--gold)' : '' }}>
+                  {label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
@@ -37,13 +41,21 @@ export default function Navbar() {
       </div>
       {open && (
         <div style={{ background: 'var(--black-2)', padding: '20px', borderTop: '1px solid var(--border-dim)' }}>
-          {links.map(({ to, label }) => (
-            <Link key={to} to={to} onClick={() => setOpen(false)} style={{
-              display: 'flex', alignItems: 'center', minHeight: 44, padding: '10px 0',
-              color: pathname === to ? 'var(--gold)' : 'var(--gray-3)',
-              textDecoration: 'none', fontSize: 14,
-              borderBottom: '1px solid var(--border-dim)',
-            }}>{label}</Link>
+          {links.map(({ to, label, external }) => (
+            external ? (
+              <a key={to} href="/blog/" onClick={() => setOpen(false)} style={{
+                display: 'flex', alignItems: 'center', minHeight: 44, padding: '10px 0',
+                color: 'var(--gray-3)', textDecoration: 'none', fontSize: 14,
+                borderBottom: '1px solid var(--border-dim)',
+              }}>{label}</a>
+            ) : (
+              <Link key={to} to={to} onClick={() => setOpen(false)} style={{
+                display: 'flex', alignItems: 'center', minHeight: 44, padding: '10px 0',
+                color: pathname === to ? 'var(--gold)' : 'var(--gray-3)',
+                textDecoration: 'none', fontSize: 14,
+                borderBottom: '1px solid var(--border-dim)',
+              }}>{label}</Link>
+            )
           ))}
             <a href="/contact" onClick={() => setOpen(false)} style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',

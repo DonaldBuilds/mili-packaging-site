@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const stats = [['12+','Years Experience'],['500+','Brands Served'],['50+','Countries Shipped'],['98%','On-Time Rate']];
+const stats = [['Since 2018','Established'],['500+','Brands Served'],['50+','Countries Shipped'],['98%','On-Time Rate']];
 const factory = [['20,000 m²','Production Area'],['2M+ pcs/mo','Capacity'],['200+','Workers'],['ISO 9001','Certified']];
 const values = [
   ['Precision','Every box meets AQL 2.5 inspection standards. We do not ship until it is right.'],

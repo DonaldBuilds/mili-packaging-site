@@ -1,4 +1,4 @@
-export default function PrivacyPolicy() {
+﻿export default function PrivacyPolicy() {
   return (
     <div className="page-scaffold">
       <div className="page-hero">
@@ -117,7 +117,7 @@ export default function PrivacyPolicy() {
             For any privacy-related questions or requests, contact:<br />
             Jiangxi Mili Packaging Materials Co., Ltd.<br />
             Nanchang, Jiangxi, China<br />
-            Email: 18296876285@163.com<br />
+            Email: info@mili-packaging.com<br />
             WhatsApp: +86 182 9687 6285
           </p>
 

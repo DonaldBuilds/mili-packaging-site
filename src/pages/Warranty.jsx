@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 
 export default function Warranty() {
   return (
@@ -46,7 +46,7 @@ export default function Warranty() {
             <h2 style={{ marginBottom: 24 }}>How to Make a Warranty Claim</h2>
             <div style={{ display:'grid', gap: 2 }}>
               {[
-                ['Step 1','Document the Issue','Within 30 days of delivery, email us at 18296876285@163.com with: photos/videos of the issue, affected quantity, your order number, and a brief description.'],
+                ['Step 1','Document the Issue','Within 30 days of delivery, email us at info@mili-packaging.com with: photos/videos of the issue, affected quantity, your order number, and a brief description.'],
                 ['Step 2','Our Review','Our QC team reviews your claim within 48 hours. We may request additional photos, a sample return, or a video call to inspect the issue together.'],
                 ['Step 3','Resolution','If the claim is verified, we will offer one of the following: replacement production at no cost, credit note for your next order, or a partial refund proportional to the affected quantity.'],
               ].map(([step, title, desc]) => (
@@ -100,7 +100,7 @@ export default function Warranty() {
           <div style={{ padding:'36px', background:'var(--black-2)', border:'1px solid var(--border)', textAlign:'center' }}>
             <span className="eyebrow">Need Help With a Claim?</span>
             <h3 style={{ marginBottom:12 }}>Contact Our QC Team</h3>
-            <p style={{ color:'var(--gray-3)', marginBottom:28, fontSize:15 }}>Email us at 18296876285@163.com with your order number and photos of the issue.</p>
+            <p style={{ color:'var(--gray-3)', marginBottom:28, fontSize:15 }}>Email us at info@mili-packaging.com with your order number and photos of the issue.</p>
             <Link to="/contact" className="btn-gold">Contact Us</Link>
           </div>
         </div>

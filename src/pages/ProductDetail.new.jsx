@@ -1,4 +1,4 @@
-﻿import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 const productData = {
   '1': {
@@ -44,7 +44,7 @@ const productData = {
     ],
   },
   '4': {
-    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/product-drawer-v2.jpg',
+    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/magnetic-box-detail.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper', size: 'Custom - any dimension',
     priceFrom: '1.40', priceTo: '4.20',
     desc: 'A refined slide-out drawer box with a satisfying ribbon pull. The outer sleeve and inner tray are each wrapped in printed paper, allowing two-tone color combinations and full-brand storytelling across both surfaces. A favorite for premium retail and gifting.',

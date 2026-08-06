@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 
 export default function ReturnsPolicy() {
   return (
@@ -78,7 +78,7 @@ export default function ReturnsPolicy() {
             <h2 style={{ marginBottom: 24 }}>Return Process</h2>
             <div style={{ display:'grid', gap: 2 }}>
               {[
-                ['1','Contact Us Within 30 Days','Email 18296876285@163.com with your order number, photos or videos showing the issue, and a description. Most claims are resolved without requiring a physical return.'],
+                ['1','Contact Us Within 30 Days','Email info@mili-packaging.com with your order number, photos or videos showing the issue, and a description. Most claims are resolved without requiring a physical return.'],
                 ['2','QC Review','Our team assesses your claim within 48 hours. We may request additional evidence, a video call, or a sample return for inspection.'],
                 ['3','Resolution','If the claim is verified, we offer: (a) replacement production at no cost, (b) a credit note toward your next order, or (c) a proportional refund. Resolution type is mutually agreed based on the situation.'],
                 ['4','Return Shipping','If a physical return is necessary, we provide a prepaid return label or arrange carrier pickup. Do not return items without prior authorization.'],
@@ -137,9 +137,9 @@ export default function ReturnsPolicy() {
           <div style={{ padding:'36px', background:'var(--black-2)', border:'1px solid var(--border)', textAlign:'center' }}>
             <span className="eyebrow">Need to Start a Return?</span>
             <h3 style={{ marginBottom:12 }}>Contact Our Returns Team</h3>
-            <p style={{ color:'var(--gray-3)', marginBottom:28, fontSize:15 }}>Email 18296876285@163.com with your order number and photos. We respond within 48 hours.</p>
+            <p style={{ color:'var(--gray-3)', marginBottom:28, fontSize:15 }}>Email info@mili-packaging.com with your order number and photos. We respond within 48 hours.</p>
             <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
-              <a href="mailto:18296876285@163.com" className="btn-gold">Email Returns</a>
+              <a href="mailto:info@mili-packaging.com" className="btn-gold">Email Returns</a>
               <Link to="/warranty" className="btn-outline-gold">View Warranty</Link>
             </div>
           </div>
