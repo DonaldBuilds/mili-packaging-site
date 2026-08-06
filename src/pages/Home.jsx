@@ -37,7 +37,7 @@ export default function Home() {
         <div className="hero-overlay" />
         <div className="hero-content">
           <h1>Custom Luxury Gift Box<br />Manufacturer in China</h1>
-          <p>Custom Boxes with Your Logo — Free Design · MOQ 100 pcs · 50+ Countries.</p>
+          <p>Custom Boxes with Your Logo - Free Design | MOQ 100 pcs | 50+ Countries.</p>
           <div className="hero-badges">
             {['FSC Certified', 'ISO 9001', 'SGS Audited'].map(b => (
               <span className="hero-badge" key={b}>
