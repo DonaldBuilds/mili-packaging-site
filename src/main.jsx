@@ -10,7 +10,7 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import FAQ from './pages/FAQ';
 import Portfolio from './pages/Portfolio';
-import Industries from './pages/Industries';
+import Industries, { industries as industryList } from './pages/Industries';
 import Support from './pages/Support';
 import Warranty from './pages/Warranty';
 import ShippingPolicy from './pages/ShippingPolicy';
@@ -35,7 +35,23 @@ function TitleManager() {
       '/returns-policy': 'Returns Policy | Mili Packaging',
       '/privacy-policy': 'Privacy Policy | Mili Packaging',
     };
-    document.title = titles[location.pathname] || 'Mili Packaging | Custom Packaging Manufacturer';
+    const path = location.pathname;
+    let title = titles[path] || 'Mili Packaging | Custom Packaging Manufacturer';
+    let desc = null;
+    if (path.startsWith('/industries/')) {
+      const ind = industryList.find(i => path === '/industries/' + i.slug);
+      if (ind) { title = ind.title; desc = ind.description; }
+    }
+    document.title = title;
+    if (desc) {
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'description';
+        document.head.appendChild(meta);
+      }
+      meta.content = desc;
+    }
   }, [location]);
   return null;
 }
@@ -54,6 +70,7 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/industries" element={<Industries />} />
+        <Route path="/industries/:slug" element={<Industries />} />
         <Route path="/support" element={<Support />} />
         <Route path="/warranty" element={<Warranty />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />

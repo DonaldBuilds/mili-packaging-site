@@ -612,3 +612,25 @@ html, body { overflow-x: hidden; }
   .whatsapp-btn { width: 48px; height: 48px; font-size: 24px; bottom: 16px; right: 16px; }
   .sticky-quote { bottom: 150px; right: 16px; padding: 8px 14px; font-size: 11px; }
 }
+
+/* Navbar products dropdown (Module 5) */
+.navbar-dropdown {
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  background: var(--black-2); border: 1px solid var(--border-dim);
+  padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  min-width: 460px; z-index: 200;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.55);
+}
+.navbar-dropdown a {
+  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  font-size: 13px; color: var(--gray-3); text-decoration: none;
+}
+.navbar-dropdown a:hover { color: var(--gold); background: rgba(201,168,76,0.08); }
+.badge-new {
+  background: var(--gold); color: var(--black); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.06em; padding: 2px 7px; text-transform: uppercase; white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .navbar-dropdown { display: none; }
+}
+

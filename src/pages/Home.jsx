@@ -1,15 +1,14 @@
 ﻿import { Link } from 'react-router-dom';
-// v20260728-update
-const products = [
-  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero-v5.jpg', tag: 'MOQ 500 pcs | 15 Days' },
-  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer-v5.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
-  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift-v5.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
-  { id: 4, title: 'Custom Mailer Box', desc: 'Branded fold-over with gold stamping', img: '/assets/images/product-mailer-v3.jpg', tag: 'MOQ 500 pcs | Soft Touch' },
-  { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics-v4.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
-  { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry-v4.jpg', tag: 'MOQ 200 pcs | Embossing' },
-  { id: 7, title: 'Shipping Box', desc: 'Eco-friendly corrugated mailers', img: '/assets/images/shipping-box-kraft-v4.jpg', tag: 'MOQ 1000 pcs | FSC Paper' },
-  { id: 8, title: 'Paper Bag', desc: 'Branded retail & boutique bags', img: '/assets/images/gift-bag-black-v3.jpg', tag: 'MOQ 500 pcs | Foil Stamp' },
-];
+import { productGroups } from '../data/products';
+// v20260808-update: 9 product groups, fixed business-value order (Module 1)
+const products = productGroups.map(g => ({
+  id: g.slug,
+  title: g.name,
+  desc: g.tagline,
+  img: g.heroImg,
+  tag: `MOQ ${g.moq} pcs | From $${g.priceFrom}`,
+  isNew: !!g.isNew,
+}));
 
 const industries = [
   { name: 'Cosmetics & Beauty',  desc: 'Luxury magnetic boxes & custom inserts', img: '/assets/images/case-cosmetics-v4.jpg' },
@@ -97,7 +96,7 @@ export default function Home() {
         <Link to="/products" className="dual-card">
           <span className="eyebrow">Standard Collection</span>
           <h3>Browse Our Catalog</h3>
-          <p>Proven box designs across 8 categories. Select a style, customize for your brand — fast turnaround, low MOQ.</p>
+          <p>Proven box designs across 9 categories. Select a style, customize for your brand — fast turnaround, low MOQ.</p>
           <div className="dual-card-arrow">&rarr;</div>
         </Link>
         <Link to="/contact" className="dual-card">
@@ -122,7 +121,10 @@ export default function Home() {
         </div>
         <div className="product-grid">
           {products.map(p => (
-            <Link to={`/products/${p.id}`} className="product-card" key={p.title}>
+            <Link to={`/products/${p.id}`} className="product-card" key={p.title} style={{ position: 'relative', textDecoration: 'none' }}>
+              {p.isNew && (
+                <span style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 10px', textTransform: 'uppercase' }}>New</span>
+              )}
               <div className="product-card-img-wrap">
                 <img src={p.img} alt={p.title} className="product-card-img" />
               </div>

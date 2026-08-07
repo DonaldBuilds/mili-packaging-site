@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { productGroups } from '../data/products';
 
 const channels = [
   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>, title:'Email', info:'info@mili-packaging.com', sub:'Reply within 2 business hours', href:'mailto:info@mili-packaging.com' },
@@ -176,7 +177,7 @@ export default function Contact() {
                   <label className="form-label">Product Type</label>
                   <select className="form-select" name="productType" defaultValue="">
                     <option value="" disabled>Select product</option>
-                    {['Paper Box','Gift Box','Magnetic Gift Box','Jewelry Box','Cosmetic Box','Shipping Box','Paper Bag','Not sure — need advice'].map(o => <option key={o}>{o}</option>)}
+                    {[...productGroups.map(g => g.name), 'Not sure — need advice'].map(o => <option key={o}>{o}</option>)}
                   </select>
                 </div>
                 <div className="form-group">

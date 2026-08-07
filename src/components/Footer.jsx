@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { productGroups } from '../data/products';
+import { industries } from '../pages/Industries';
 
 export default function Footer() {
   return (
@@ -36,24 +38,17 @@ export default function Footer() {
         <div>
           <h5>Products</h5>
           <ul>
-            <li><Link to="/products">Paper Boxes</Link></li>
-            <li><Link to="/products">Gift Boxes</Link></li>
-            <li><Link to="/products">Magnetic Gift Boxes</Link></li>
-            <li><Link to="/products">Jewelry Boxes</Link></li>
-            <li><Link to="/products">Cosmetic Boxes</Link></li>
-            <li><Link to="/products">Shipping Boxes</Link></li>
-            <li><Link to="/products">Paper Bags</Link></li>
+            {productGroups.map(g => (
+              <li key={g.slug}><Link to={`/products/${g.slug}`}>{g.name}</Link></li>
+            ))}
           </ul>
         </div>
         <div>
           <h5>Industries</h5>
           <ul>
-            <li><Link to="/industries">Cosmetics & Beauty</Link></li>
-            <li><Link to="/industries">Jewelry & Watches</Link></li>
-            <li><Link to="/industries">Apparel & Fashion</Link></li>
-            <li><Link to="/industries">Food & Beverage</Link></li>
-            <li><Link to="/industries">Electronics</Link></li>
-            <li><Link to="/industries">Corporate Gifts</Link></li>
+            {industries.map(i => (
+              <li key={i.slug}><Link to={`/industries/${i.slug}`}>{i.name}</Link></li>
+            ))}
           </ul>
         </div>
         <div>
