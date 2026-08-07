@@ -11,12 +11,12 @@ const products = productGroups.map(g => ({
 }));
 
 const industries = [
-  { name: 'Cosmetics & Beauty',  desc: 'Luxury magnetic boxes & custom inserts', img: '/assets/images/case-cosmetics-v4.jpg' },
-  { name: 'Jewelry & Watches',   desc: 'Velvet-lined, gold foil, drawer-style', img: '/assets/images/case-jewelry-v4.jpg' },
-  { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/gift-bag-black-v3.jpg' },
-  { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/shipping-box-kraft-v4.jpg' },
-  { name: 'Electronics',         desc: 'Precision foam inserts & anti-static', img: '/assets/images/product-mailer-v3.jpg' },
-  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/jewelry-mili-v5.jpg' },
+  { name: 'Cosmetics & Beauty',  desc: 'Luxury magnetic boxes & custom inserts', img: '/assets/images/product-cosmetic.webp' },
+  { name: 'Jewelry & Watches',   desc: 'Velvet-lined, gold foil, drawer-style', img: '/assets/images/product-jewelry.webp' },
+  { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/product-bag.webp' },
+  { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/product-corrugated.webp' },
+  { name: 'Electronics',         desc: 'Precision foam inserts & anti-static', img: '/assets/images/product-mailer.webp' },
+  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/product-rigid.webp' },
 ];
 
 const testimonials = [
@@ -31,7 +31,7 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">
-          <img src="/assets/images/hero-collection-v2.jpg" alt="Mili Packaging custom luxury boxes, jewelry cases, magnetic gift boxes, cosmetic boxes and paper bags" />
+          <img src="/assets/images/hero-collection.webp" alt="Mili Packaging custom luxury boxes, jewelry cases, magnetic gift boxes, cosmetic boxes and paper bags" />
         </div>
         <div className="hero-overlay" />
         <div className="hero-content">

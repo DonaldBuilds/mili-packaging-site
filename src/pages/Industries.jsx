@@ -1,11 +1,11 @@
-import { Link, useParams } from 'react-router-dom';
+﻿import { Link, useParams } from 'react-router-dom';
 import { productGroups } from '../data/products';
 
 export const industries = [
   {
     slug: 'fashion-apparel',
     name: 'Fashion & Apparel',
-    img: '/assets/images/product-mailer-v7.png',
+    img: '/assets/images/product-mailer.webp',
     hero: 'E-commerce-first packaging for apparel brands',
     intro: 'From tape-free mailers to boutique paper bags, apparel brands get packaging that arrives beautifully and ships affordably.',
     painPoints: [
@@ -27,7 +27,7 @@ export const industries = [
   {
     slug: 'food-beverage',
     name: 'Food & Beverage',
-    img: '/assets/images/product-folding-v7.png',
+    img: '/assets/images/product-folding.webp',
     hero: 'Food-safe folding cartons & gift presentation',
     intro: 'Folding cartons, rigid gift boxes and kraft shippers engineered for confectionery, tea, gourmet food and beverage brands.',
     painPoints: [
@@ -49,7 +49,7 @@ export const industries = [
   {
     slug: 'beauty-skincare',
     name: 'Beauty & Skincare',
-    img: '/assets/images/product-cosmetic-v7.png',
+    img: '/assets/images/product-cosmetic.webp',
     hero: 'Complete sets: outer box + inserts + finishing',
     intro: 'Skincare, fragrance and cosmetics brands get complete packaging sets — outer box, EVA/foam inserts, bottle holders and premium finishing.',
     painPoints: [
@@ -71,7 +71,7 @@ export const industries = [
   {
     slug: 'electronics-tech',
     name: 'Electronics & Tech',
-    img: '/assets/images/product-corrugated-v7.png',
+    img: '/assets/images/product-corrugated.webp',
     hero: 'Precision inserts & heavy-duty protection',
     intro: 'Protective packaging for electronics — precision foam and EVA inserts, rigid presentation boxes and corrugated shippers for global transit.',
     painPoints: [
@@ -93,7 +93,7 @@ export const industries = [
   {
     slug: 'subscription-dtc',
     name: 'Subscription & DTC',
-    img: '/assets/images/product-sample-v7.png',
+    img: '/assets/images/product-sample.webp',
     hero: 'Scalable unboxing for subscription brands',
     intro: 'Subscription and DTC brands scale fast with tape-free mailers, multi-SKU cartons and starter kits that test structures before you commit.',
     painPoints: [

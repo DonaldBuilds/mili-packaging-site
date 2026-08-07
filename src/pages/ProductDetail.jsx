@@ -70,8 +70,15 @@ export default function ProductDetail() {
 
   const tab = group.isParent ? (group.tabs.find(t => t.id === activeTab) || group.tabs[0]) : null;
   const boundary = group.boundary ? boundaryTexts[group.boundary] : null;
-  const img = tab ? tab.img : group.heroImg;
+  const baseImg = tab ? tab.img : group.heroImg;
   const faq = group.faq || [];
+  const [view, setView] = useState('scene');
+  const gallery = [
+    { id: 'white', label: 'White', img: group.whiteImg },
+    { id: 'scene', label: 'Scene', img: baseImg },
+    { id: 'craft', label: 'Details', img: (group.craftImg && group.craftImg[0]) || baseImg },
+  ];
+  const mainImg = (gallery.find(g => g.id === view) || gallery[1]).img;
 
   return (
     <div className="page-scaffold" style={{ paddingTop: 120 }}>
@@ -84,11 +91,24 @@ export default function ProductDetail() {
 
         {/* 1. Hero image + 3 selling points */}
         <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center', marginBottom: 72 }}>
-          <div style={{ position: 'relative', background: 'var(--black-2)', border: '1px solid var(--border-dim)' }}>
-            {group.isNew && (
-              <span style={{ position: 'absolute', top: 16, right: 16, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', textTransform: 'uppercase' }}>New</span>
-            )}
-            <img src={img} alt={group.name} style={{ width: '100%', display: 'block' }} />
+          <div>
+            <div style={{ position: 'relative', background: 'var(--black-2)', border: '1px solid var(--border-dim)' }}>
+              {group.isNew && (
+                <span style={{ position: 'absolute', top: 16, right: 16, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', textTransform: 'uppercase' }}>New</span>
+              )}
+              <img src={mainImg} alt={`${group.name} packaging`} style={{ width: '100%', display: 'block' }} loading={view === 'white' ? 'eager' : 'lazy'} />
+            </div>
+            <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+              {gallery.map(g => (
+                <button key={g.id} onClick={() => setView(g.id)}
+                  style={{
+                    flex: 1, padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
+                    background: 'var(--black-3)', overflow: 'hidden', minHeight: 64,
+                  }}>
+                  <img src={g.img} alt={`${group.name} ${g.label}`} style={{ width: '100%', height: 64, objectFit: 'cover', display: 'block' }} loading="lazy" />
+                </button>
+              ))}
+            </div>
           </div>
           <div>
             <div className="gold-line" />
