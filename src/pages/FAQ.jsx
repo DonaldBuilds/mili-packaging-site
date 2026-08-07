@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const faqData = [
   { cat:'Orders & MOQ', items:[
-    { q:'What is your minimum order quantity (MOQ)?', a:'Standard MOQ is 500 pieces for most box types. Jewelry boxes start from 100 pieces. For first-time or trial orders, contact us — we offer flexible options for startups and new clients.' },
+    { q:'What is your minimum order quantity (MOQ)?', a:'Standard MOQ is 100 pcs for most box types. Watch boxes start from 50 pcs. For first-time or trial orders, contact us — we offer flexible options for startups and new clients.' },
     { q:'Can I order different products in one order?', a:'Yes. You can combine multiple box types, sizes, and designs in one order. Each variant may have its own MOQ, but we consolidate production for efficiency and cost savings.' },
     { q:'How do I start an order?', a:'Fill out our inquiry form with your requirements. We respond within 24 hours with a quote, recommended product, and timeline. Upon approval, we move to design and sampling.' },
     { q:'Do you offer rush orders?', a:'Yes, rush production (5–7 day turnaround) is available for select products at a premium. Contact us with your deadline and we will advise on feasibility.' },

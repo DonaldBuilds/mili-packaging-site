@@ -15,7 +15,7 @@ const whyUs = [
   'Factory-direct pricing, no middlemen',
   'Dedicated account manager for your project',
   'Global shipping to 50+ countries',
-  'MOQ from 100 pcs for jewelry boxes',
+  'MOQ from 100 pcs, watch boxes from 50 pcs',
 ];
 
 export default function Contact() {
