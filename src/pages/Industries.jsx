@@ -61,7 +61,7 @@ const industries = [
     name: 'Corporate Gifts',
     hero: 'Make every business relationship feel personal.',
     intro: 'Corporate gifting is relationship marketing at scale. The packaging must reflect the sender\'s brand while making the recipient feel valued — regardless of order volume.',
-    img: '/assets/images/jewelry-mili-v4.jpg',
+    img: '/assets/images/jewelry-mili-v5.jpg',
     painPoints: ['Consistent quality at 1,000+ unit scales', 'Custom branding for sender company, not product brand', 'Tight delivery deadlines around events & holidays', 'Mix of SKUs in single gift set'],
     solutions: ['Custom branded magnetic boxes with company logo', 'Curated gift set box with branded interior print', 'Bulk order discounts from 1,000+ units', 'DDP delivery direct to recipient or event venue'],
     recommended: ['Magnetic Gift Box', 'Gift Box Set', 'Paper Gift Bag'],

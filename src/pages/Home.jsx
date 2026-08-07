@@ -1,9 +1,9 @@
 ﻿import { Link } from 'react-router-dom';
 // v20260728-update
 const products = [
-  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero-v4.jpg', tag: 'MOQ 500 pcs | 15 Days' },
-  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer-v3.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
-  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift-v3.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
+  { id: 1, title: 'Magnetic Gift Box', desc: 'Premium flip-top magnetic closure', img: '/assets/images/product-hero-v5.jpg', tag: 'MOQ 500 pcs | 15 Days' },
+  { id: 2, title: 'Drawer Slide Box', desc: 'Rigid slide-out with ribbon pull', img: '/assets/images/product-drawer-v5.jpg', tag: 'MOQ 500 pcs | Ribbon Pull' },
+  { id: 3, title: 'Luxury Gift Box', desc: 'Gold satin ribbon & custom foil logo', img: '/assets/images/product-gift-v5.jpg', tag: 'MOQ 100 pcs | Gold Foil' },
   { id: 4, title: 'Custom Mailer Box', desc: 'Branded fold-over with gold stamping', img: '/assets/images/product-mailer-v3.jpg', tag: 'MOQ 500 pcs | Soft Touch' },
   { id: 5, title: 'Perfume Box', desc: 'Custom inserts for fragrance packaging', img: '/assets/images/case-cosmetics-v4.jpg', tag: 'MOQ 500 pcs | Hot Stamp' },
   { id: 6, title: 'Watch Display Box', desc: 'PU leather + velvet interior', img: '/assets/images/case-jewelry-v4.jpg', tag: 'MOQ 200 pcs | Embossing' },
@@ -17,7 +17,7 @@ const industries = [
   { name: 'Apparel & Fashion',   desc: 'Branded mailers & tissue packaging', img: '/assets/images/gift-bag-black-v3.jpg' },
   { name: 'Food & Beverage',     desc: 'Food-grade kraft & window cutout', img: '/assets/images/shipping-box-kraft-v4.jpg' },
   { name: 'Electronics',         desc: 'Precision foam inserts & anti-static', img: '/assets/images/product-mailer-v3.jpg' },
-  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/jewelry-mili-v4.jpg' },
+  { name: 'Corporate Gifts',     desc: 'Bespoke gifting with brand identity', img: '/assets/images/jewelry-mili-v5.jpg' },
 ];
 
 const testimonials = [

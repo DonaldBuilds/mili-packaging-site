@@ -12,10 +12,10 @@ const categories = [
 ];
 
 const allProducts = [
-  { id: 1, name: 'Premium Magnetic Gift Box', category: 'magnetic', img: '/assets/images/product-gift-v3.jpg', moq: '500 pcs', leadTime: '15 Days', material: 'Rigid greyboard + art paper' },
-  { id: 2, name: 'Velvet Jewelry Display Case', category: 'jewelry', img: '/assets/images/jewelry-mili-v4.jpg', moq: '100 pcs', leadTime: '12 Days', material: 'Rigid board + velvet lining' },
-  { id: 3, name: 'Luxury Skincare Gift Set Box', category: 'cosmetic', img: '/assets/images/product-hero-v4.jpg', moq: '300 pcs', leadTime: '15 Days', material: 'Rigid board + specialty paper' },
-  { id: 4, name: 'Rigid Drawer Slide Box', category: 'rigid', img: '/assets/images/product-drawer-v3.jpg', moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper' },
+  { id: 1, name: 'Premium Magnetic Gift Box', category: 'magnetic', img: '/assets/images/product-gift-v5.jpg', moq: '500 pcs', leadTime: '15 Days', material: 'Rigid greyboard + art paper' },
+  { id: 2, name: 'Velvet Jewelry Display Case', category: 'jewelry', img: '/assets/images/jewelry-mili-v5.jpg', moq: '100 pcs', leadTime: '12 Days', material: 'Rigid board + velvet lining' },
+  { id: 3, name: 'Luxury Skincare Gift Set Box', category: 'cosmetic', img: '/assets/images/product-hero-v5.jpg', moq: '300 pcs', leadTime: '15 Days', material: 'Rigid board + specialty paper' },
+  { id: 4, name: 'Rigid Drawer Slide Box', category: 'rigid', img: '/assets/images/product-drawer-v5.jpg', moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper' },
   { id: 5, name: 'Premium Perfume Packaging Box', category: 'cosmetic', img: '/assets/images/case-cosmetics-v4.jpg', moq: '500 pcs', leadTime: '15 Days', material: 'Rigid board + satin interior' },
   { id: 6, name: 'Watch Display Gift Box', category: 'jewelry', img: '/assets/images/case-jewelry-v4.jpg', moq: '200 pcs', leadTime: '12 Days', material: 'PU leather + velvet cushion' },
   { id: 7, name: 'Eco Kraft Shipping Mailer', category: 'shipping', img: '/assets/images/shipping-box-kraft-v4.jpg', moq: '1000 pcs', leadTime: '10 Days', material: 'FSC-certified kraft corrugated' },

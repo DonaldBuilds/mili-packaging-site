@@ -19,7 +19,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-logo" style={{ display: 'inline-flex', alignItems: 'center' }}>
-          <img src="/assets/images/logo-horizontal-clear.png" alt="Mili Packaging" style={{ height: 46, width: 'auto', display: 'block', objectFit: 'contain' }} />
+          <img src="/assets/images/logo-horizontal-clear.png" alt="Mili Packaging" style={{ height: 30, width: 'auto', display: 'block', objectFit: 'contain' }} />
         </Link>
         <ul className="navbar-links">
           {links.map(({ to, label, external }) => (

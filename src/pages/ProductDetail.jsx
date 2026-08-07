@@ -2,7 +2,7 @@
 
 const productData = {
   '1': {
-    name: 'Premium Magnetic Gift Box', category: 'Magnetic Boxes', img: '/assets/images/product-gift-v3.jpg',
+    name: 'Premium Magnetic Gift Box', category: 'Magnetic Boxes', img: '/assets/images/product-gift-v5.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: 'Rigid greyboard + 157g art paper wrap', size: 'Custom - any dimension',
     priceFrom: '1.20', priceTo: '3.80',
     desc: 'A rigid magnetic closure box engineered for premium unboxing moments. The flip-top lid opens with a satisfying snap, revealing a fully customizable interior. Ideal for products where first impression drives perceived value - cosmetics, electronics, and luxury gifts.',
@@ -16,7 +16,7 @@ const productData = {
     ],
   },
   '2': {
-    name: 'Velvet Jewelry Display Case', category: 'Jewelry Boxes', img: '/assets/images/jewelry-mili-v4.jpg',
+    name: 'Velvet Jewelry Display Case', category: 'Jewelry Boxes', img: '/assets/images/jewelry-mili-v5.jpg',
     moq: '100 pcs', leadTime: '12 Days', material: 'Rigid board + black velvet lining', size: 'Custom - any dimension',
     priceFrom: '1.50', priceTo: '4.50',
     desc: 'Boutique-grade jewelry presentation boxes with plush velvet interiors and precision-fit cutouts for rings, necklaces, earrings, and bracelets. The soft-touch exterior with debossed or foil logo delivers a premium retail experience at factory-direct pricing.',
@@ -30,7 +30,7 @@ const productData = {
     ],
   },
   '3': {
-    name: 'Luxury Skincare Gift Set Box', category: 'Cosmetic Boxes', img: '/assets/images/product-hero-v4.jpg',
+    name: 'Luxury Skincare Gift Set Box', category: 'Cosmetic Boxes', img: '/assets/images/product-hero-v5.jpg',
     moq: '300 pcs', leadTime: '15 Days', material: 'Rigid board + specialty art paper', size: 'Custom - any dimension',
     priceFrom: '1.80', priceTo: '4.80',
     desc: 'A showcase box designed to make skincare sets feel like an event. The flip-top or magnetic structure reveals a tailored EVA insert holding each bottle securely. Premium finishes - hot foil, spot UV, and matte lamination - elevate the perceived value of your product.',
@@ -44,7 +44,7 @@ const productData = {
     ],
   },
   '4': {
-    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/product-drawer-v3.jpg',
+    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/product-drawer-v5.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper', size: 'Custom - any dimension',
     priceFrom: '1.40', priceTo: '4.20',
     desc: 'A refined slide-out drawer box with a satisfying ribbon pull. The outer sleeve and inner tray are each wrapped in printed paper, allowing two-tone color combinations and full-brand storytelling across both surfaces. A favorite for premium retail and gifting.',
