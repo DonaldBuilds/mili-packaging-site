@@ -5,7 +5,7 @@ export const industries = [
   {
     slug: 'fashion-apparel',
     name: 'Fashion & Apparel',
-    img: '/assets/images/product-mailer-v3.jpg',
+    img: '/assets/images/product-mailer-v7.png',
     hero: 'E-commerce-first packaging for apparel brands',
     intro: 'From tape-free mailers to boutique paper bags, apparel brands get packaging that arrives beautifully and ships affordably.',
     points: ['Tape-free, brand-printed mailers', 'Tissue, stickers & bag inserts', 'Retail & boutique paper bags', 'Seasonal collection packaging'],
@@ -16,7 +16,7 @@ export const industries = [
   {
     slug: 'food-beverage',
     name: 'Food & Beverage',
-    img: '/assets/images/product-folding-v6.png',
+    img: '/assets/images/product-folding-v7.png',
     hero: 'Food-safe folding cartons & gift presentation',
     intro: 'Folding cartons, rigid gift boxes and kraft shippers engineered for confectionery, tea, gourmet food and beverage brands.',
     points: ['Food-safe FSC-certified stock', 'Folding cartons with windows', 'Rigid gift sets for gifting', 'Bulk kraft shippers'],
@@ -27,7 +27,7 @@ export const industries = [
   {
     slug: 'beauty-skincare',
     name: 'Beauty & Skincare',
-    img: '/assets/images/case-cosmetics-v4.jpg',
+    img: '/assets/images/product-cosmetic-v7.png',
     hero: 'Complete sets: outer box + inserts + finishing',
     intro: 'Skincare, fragrance and cosmetics brands get complete packaging sets — outer box, EVA/foam inserts, bottle holders and premium finishing.',
     points: ['Complete set solutions', 'EVA & foam bottle cradles', 'Foil stamping & soft-touch', 'Magnetic & drawer structures'],
@@ -38,7 +38,7 @@ export const industries = [
   {
     slug: 'electronics-tech',
     name: 'Electronics & Tech',
-    img: '/assets/images/shipping-box-kraft-v4.jpg',
+    img: '/assets/images/product-corrugated-v7.png',
     hero: 'Precision inserts & heavy-duty protection',
     intro: 'Protective packaging for electronics — precision foam and EVA inserts, rigid presentation boxes and corrugated shippers for global transit.',
     points: ['Anti-static foam options', 'Precision die-cut inserts', 'Rigid unboxing presentation', 'Double-wall export shippers'],
@@ -49,7 +49,7 @@ export const industries = [
   {
     slug: 'subscription-dtc',
     name: 'Subscription & DTC',
-    img: '/assets/images/product-sample-v6.png',
+    img: '/assets/images/product-sample-v7.png',
     hero: 'Scalable unboxing for subscription brands',
     intro: 'Subscription and DTC brands scale fast with tape-free mailers, multi-SKU cartons and starter kits that test structures before you commit.',
     points: ['Tape-free mailer programs', 'Multi-SKU carton systems', 'Sample & starter kits', 'Volume pricing from 3,000 pcs'],
