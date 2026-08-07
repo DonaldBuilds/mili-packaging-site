@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="footer-grid">
         <div>
           <div className="footer-brand">
-            <img src="/assets/images/logo.svg" alt="mili custom packaging" style={{ height: 28 }} />
+            <img src="/assets/images/logo-horizontal-clear.png" alt="mili custom packaging" style={{ height: 36 }} />
           </div>
           <p style={{ fontSize:12, marginBottom:4, color:'var(--gold)' }}>Jiangxi Mili Packaging Materials Co., Ltd.</p>
           <p>Factory-direct custom packaging manufacturer serving global brands. Free design, low MOQ 100pcs, worldwide delivery.</p>
