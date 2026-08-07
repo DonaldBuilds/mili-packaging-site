@@ -32,7 +32,7 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">
-          <img src="/assets/images/hero-collection.jpg" alt="Mili Packaging custom luxury boxes, jewelry cases, magnetic gift boxes, cosmetic boxes and paper bags" />
+          <img src="/assets/images/hero-collection-v2.jpg" alt="Mili Packaging custom luxury boxes, jewelry cases, magnetic gift boxes, cosmetic boxes and paper bags" />
         </div>
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -64,17 +64,15 @@ export default function Home() {
         </div>
         <div className="hero-badge-row">
           {[
-            { d: 'M12 2c0 6-4 10-10 10 0-6 4-10 10-10zm0 0c0 6 4 10 10 10 0-6-4-10-10-10z', n: 'Since 2018', l: 'Established' },
-            { d: 'M12 2l10 5-10 5L2 7l10-5zM2 17l10 5 10-5M2 12l10 5 10-5', n: '500+', l: 'Brands Served' },
-            { d: 'M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z', n: '50+', l: 'Countries' },
-            { d: 'M20 6L9 17l-5-5', n: '98%', l: 'On-Time' },
-            { d: 'M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5', n: '100 pcs', l: 'Low MOQ' },
-            { d: 'M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z', n: '15 Days', l: 'Lead Time' },
-            { d: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z', n: 'Free', l: 'Design' },
-            { d: 'M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z', n: 'AQL 2.5', l: 'Quality QC' },
-          ].map(({ d, n, l }) => (
+            { d: 'M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z', c: '#E0A83C', n: '48h', l: 'Quote & 3D Mockup' },
+            { d: 'M3 8h18v12H3V8zM3 12h18M8 4v4M16 4v4', c: '#4FA8C9', n: '7 Days', l: 'Pre-Production Sample' },
+            { d: 'M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3zM9 12l2 2 4-4', c: '#5FB878', n: 'AQL 2.5', l: 'Quality Inspected' },
+            { d: 'M20 6L9 17l-5-5', c: '#C9A227', n: '100%', l: 'On-Time Delivery' },
+            { d: 'M4 20c0-9 7-16 16-16-1 9-7 16-16 16zM4 20c4-4 7-8 8-13', c: '#7CB342', n: 'FSC', l: 'Certified Material' },
+            { d: 'M12 2l10 5-10 5L2 7l10-5zM2 17l10 5 10-5M2 12l10 5 10-5', c: '#7E8AC8', n: '500+', l: 'Brands Served' },
+          ].map(({ d, c, n, l }) => (
             <div className="hero-badge-item" key={l}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="hero-badge-icon" aria-hidden="true"><path d={d} /></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="hero-badge-icon" aria-hidden="true"><path d={d} /></svg>
               <div className="hero-badge-num">{n}</div>
               <div className="hero-badge-label">{l}</div>
             </div>
