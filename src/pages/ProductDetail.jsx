@@ -44,7 +44,7 @@ const productData = {
     ],
   },
   '4': {
-    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/product-drawer-v2.jpg',
+    name: 'Rigid Drawer Slide Box', category: 'Rigid Boxes', img: '/assets/images/product-drawer-v3.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper', size: 'Custom - any dimension',
     priceFrom: '1.40', priceTo: '4.20',
     desc: 'A refined slide-out drawer box with a satisfying ribbon pull. The outer sleeve and inner tray are each wrapped in printed paper, allowing two-tone color combinations and full-brand storytelling across both surfaces. A favorite for premium retail and gifting.',
@@ -58,7 +58,7 @@ const productData = {
     ],
   },
   '5': {
-    name: 'Premium Perfume Packaging Box', category: 'Cosmetic Boxes', img: '/assets/images/case-cosmetics-v2.jpg',
+    name: 'Premium Perfume Packaging Box', category: 'Cosmetic Boxes', img: '/assets/images/case-cosmetics-v3.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: 'Rigid board + satin interior', size: 'Custom - any dimension',
     priceFrom: '1.60', priceTo: '4.60',
     desc: 'Fragrance packaging that mirrors the luxury of the scent inside. A rigid structure with satin or velvet interior holds the perfume bottle in a precision-cut cradle, while hot-stamped foil and soft-touch finishes create a tactile, high-end unboxing experience.',
@@ -72,7 +72,7 @@ const productData = {
     ],
   },
   '6': {
-    name: 'Watch Display Gift Box', category: 'Jewelry Boxes', img: '/assets/images/case-jewelry-v2.jpg',
+    name: 'Watch Display Gift Box', category: 'Jewelry Boxes', img: '/assets/images/case-jewelry-v3.jpg',
     moq: '200 pcs', leadTime: '12 Days', material: 'PU leather + velvet cushion', size: 'Custom - any dimension',
     priceFrom: '2.20', priceTo: '5.50',
     desc: 'A luxury watch presentation box with a cushioned pillow holder that presents the timepiece like a trophy. PU leather or velvet exterior, magnetic snap closure, and debossed or foil logo combine durability with elegance - built to protect and impress.',
@@ -86,7 +86,7 @@ const productData = {
     ],
   },
   '7': {
-    name: 'Eco Kraft Shipping Mailer', category: 'Shipping Boxes', img: '/assets/images/shipping-box-kraft-v2.jpg',
+    name: 'Eco Kraft Shipping Mailer', category: 'Shipping Boxes', img: '/assets/images/shipping-box-kraft-v3.jpg',
     moq: '1000 pcs', leadTime: '10 Days', material: 'FSC-certified kraft corrugated', size: 'Custom - any dimension',
     priceFrom: '0.30', priceTo: '1.20',
     desc: 'A durable, eco-friendly mailer built for DTC e-commerce. FSC-certified corrugated construction with full-color flexo printing turns your shipping box into a brand touchpoint - while tear strips, die-cut windows, and custom tape streamline fulfillment.',
@@ -100,7 +100,7 @@ const productData = {
     ],
   },
   '8': {
-    name: 'Branded Retail Paper Bag', category: 'Paper Bags', img: '/assets/images/gift-bag-black-v2.jpg',
+    name: 'Branded Retail Paper Bag', category: 'Paper Bags', img: '/assets/images/gift-bag-black-v3.jpg',
     moq: '500 pcs', leadTime: '12 Days', material: '180g coated art paper', size: 'Custom - any dimension',
     priceFrom: '0.50', priceTo: '1.80',
     desc: 'A retail-ready paper bag that carries your brand from counter to street. Matte or glossy coated paper with foil-stamped logos, cotton rope handles, and reinforced bottoms - durable enough for bottles, heavy goods, and repeat use as a walking billboard.',

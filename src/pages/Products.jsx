@@ -16,10 +16,10 @@ const allProducts = [
   { id: 2, name: 'Velvet Jewelry Display Case', category: 'jewelry', img: '/assets/images/jewelry-box-black.jpg', moq: '100 pcs', leadTime: '12 Days', material: 'Rigid board + velvet lining' },
   { id: 3, name: 'Luxury Skincare Gift Set Box', category: 'cosmetic', img: '/assets/images/cosmetic-box-black.jpg', moq: '300 pcs', leadTime: '15 Days', material: 'Rigid board + specialty paper' },
   { id: 4, name: 'Rigid Drawer Slide Box', category: 'rigid', img: '/assets/images/magnetic-box-detail.jpg', moq: '500 pcs', leadTime: '15 Days', material: '2mm greyboard + coated paper' },
-  { id: 5, name: 'Premium Perfume Packaging Box', category: 'cosmetic', img: '/assets/images/case-cosmetics-v2.jpg', moq: '500 pcs', leadTime: '15 Days', material: 'Rigid board + satin interior' },
-  { id: 6, name: 'Watch Display Gift Box', category: 'jewelry', img: '/assets/images/case-jewelry-v2.jpg', moq: '200 pcs', leadTime: '12 Days', material: 'PU leather + velvet cushion' },
-  { id: 7, name: 'Eco Kraft Shipping Mailer', category: 'shipping', img: '/assets/images/shipping-box-kraft-v2.jpg', moq: '1000 pcs', leadTime: '10 Days', material: 'FSC-certified kraft corrugated' },
-  { id: 8, name: 'Branded Retail Paper Bag', category: 'bags', img: '/assets/images/gift-bag-black-v2.jpg', moq: '500 pcs', leadTime: '12 Days', material: '180g coated art paper' },
+  { id: 5, name: 'Premium Perfume Packaging Box', category: 'cosmetic', img: '/assets/images/case-cosmetics-v3.jpg', moq: '500 pcs', leadTime: '15 Days', material: 'Rigid board + satin interior' },
+  { id: 6, name: 'Watch Display Gift Box', category: 'jewelry', img: '/assets/images/case-jewelry-v3.jpg', moq: '200 pcs', leadTime: '12 Days', material: 'PU leather + velvet cushion' },
+  { id: 7, name: 'Eco Kraft Shipping Mailer', category: 'shipping', img: '/assets/images/shipping-box-kraft-v3.jpg', moq: '1000 pcs', leadTime: '10 Days', material: 'FSC-certified kraft corrugated' },
+  { id: 8, name: 'Branded Retail Paper Bag', category: 'bags', img: '/assets/images/gift-bag-black-v3.jpg', moq: '500 pcs', leadTime: '12 Days', material: '180g coated art paper' },
 ];
 
 export default function Products() {

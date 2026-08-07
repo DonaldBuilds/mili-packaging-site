@@ -18,9 +18,8 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-logo" style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-          <img src="/assets/images/logo-icon.png" alt="Mili Packaging logo" style={{ height: 30, width: 'auto', display: 'block' }} />
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20, color: 'var(--gold)', letterSpacing: '0.04em', lineHeight: 1 }}>MILI</span>
+        <Link to="/" className="navbar-logo" style={{ display: 'inline-flex', alignItems: 'center' }}>
+          <img src="/assets/images/logo-full.png" alt="Mili Packaging" style={{ height: 36, width: 'auto', display: 'block', objectFit: 'contain' }} />
         </Link>
         <ul className="navbar-links">
           {links.map(({ to, label, external }) => (
