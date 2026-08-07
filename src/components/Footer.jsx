@@ -60,6 +60,8 @@ export default function Footer() {
             <li><a href="/blog/" style={{ color: 'inherit', textDecoration: 'none' }}>Blog</a></li>
             <li><Link to="/support">Support</Link></li>
             <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="/shipping-delivery">Shipping &amp; Delivery</Link></li>
+            <li><Link to="/payment-terms">Payment Terms</Link></li>
           </ul>
           <div style={{ marginTop: 24 }}>
             <h5 style={{ marginBottom: 10 }}>Contact</h5>

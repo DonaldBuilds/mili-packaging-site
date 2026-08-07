@@ -42,7 +42,7 @@ const M=Object.fromEntries(Object.entries({
   '.xml':['application/xml','public,max-age=3600']
 }).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
 const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
-const SPA=['/products','/contact','/about','/faq','/portfolio','/industries','/support','/warranty','/shipping-policy','/returns-policy'];
+const SPA=['/products','/contact','/about','/faq','/portfolio','/industries','/support','/warranty','/shipping-policy','/returns-policy','/shipping-delivery','/payment-terms'];
 const BLOG_PATHS=['/blog','/blog/'];
 
 export default{async fetch(r){
@@ -87,19 +87,39 @@ const body = Buffer.from([
   `--${BOUNDARY}--${CRLF}`
 ].join(''));
 
-const req = https.request({
-  hostname: 'api.cloudflare.com',
-  path: `/client/v4/accounts/${ACCT}/workers/scripts/${NAME}`,
-  method: 'PUT',
-  headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': `multipart/form-data; boundary=${BOUNDARY}`, 'Content-Length': body.length }
-}, res => {
-  let d = '';
-  res.on('data', c => d += c);
-  res.on('end', () => {
-    const j = JSON.parse(d);
-    console.log(j.success ? '✅ Deployed! Refresh mili-packaging.com' : '❌ '+JSON.stringify(j.errors));
+function deploy(attempt) {
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'api.cloudflare.com',
+      path: `/client/v4/accounts/${ACCT}/workers/scripts/${NAME}`,
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': `multipart/form-data; boundary=${BOUNDARY}`, 'Content-Length': body.length }
+    }, res => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          if (j.success) { console.log(`✅ Deployed on attempt ${attempt}!`); resolve(); }
+          else { console.error('❌ ' + JSON.stringify(j.errors)); reject(new Error('api_error')); }
+        } catch (e) { reject(e); }
+      });
+    });
+    req.on('error', e => { console.error(`Attempt ${attempt} failed: ${e.message}`); reject(e); });
+    req.write(body);
+    req.end();
   });
-});
-req.on('error', e => console.error(e.message));
-req.write(body);
-req.end();
+}
+
+(async () => {
+  const MAX = 4;
+  for (let i = 1; i <= MAX; i++) {
+    try {
+      await deploy(i);
+      process.exit(0);
+    } catch (e) {
+      if (i === MAX) { console.error('Deploy failed after ' + MAX + ' attempts.'); process.exit(1); }
+      await new Promise(r => setTimeout(r, 3000));
+    }
+  }
+})();

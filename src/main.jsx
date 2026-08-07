@@ -22,6 +22,8 @@ const BlogPost = lazy(() => import('./pages/BlogPost'));
 const Support = lazy(() => import('./pages/Support'));
 const Warranty = lazy(() => import('./pages/Warranty'));
 const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy'));
+const ShippingDelivery = lazy(() => import('./pages/ShippingDelivery'));
+const PaymentTerms = lazy(() => import('./pages/PaymentTerms'));
 const ReturnsPolicy = lazy(() => import('./pages/ReturnsPolicy'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
@@ -43,6 +45,8 @@ function TitleManager() {
       '/support': 'Support | Design, QC & After-Sales | Mili Packaging',
       '/warranty': 'Warranty | Mili Packaging',
       '/shipping-policy': 'Shipping Policy | Mili Packaging',
+      '/shipping-delivery': 'Shipping & Delivery | Logistics & Incoterms | Mili Packaging',
+      '/payment-terms': 'Payment Terms | T/T, L/C & Trade Assurance | Mili Packaging',
       '/returns-policy': 'Returns Policy | Mili Packaging',
       '/privacy-policy': 'Privacy Policy | Mili Packaging',
     };
@@ -117,6 +121,8 @@ function App() {
           <Route path="/support" element={<Support />} />
           <Route path="/warranty" element={<Warranty />} />
           <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/shipping-delivery" element={<ShippingDelivery />} />
+          <Route path="/payment-terms" element={<PaymentTerms />} />
           <Route path="/returns-policy" element={<ReturnsPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
