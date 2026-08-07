@@ -32,7 +32,7 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">
-          <img src="/assets/images/hero-black-gold-v2.jpg" alt="Mili Packaging factory-direct custom packaging" />
+          <img src="/assets/images/hero-collection.jpg" alt="Mili Packaging custom luxury boxes, jewelry cases, magnetic gift boxes, cosmetic boxes and paper bags" />
         </div>
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -63,8 +63,18 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-badge-row">
-          {[['Since 2018','Est.'], ['500+','Brands'], ['50+','Countries'], ['98%','On-Time']].map(([n,l]) => (
+          {[
+            { d: 'M12 2c0 6-4 10-10 10 0-6 4-10 10-10zm0 0c0 6 4 10 10 10 0-6-4-10-10-10z', n: 'Since 2018', l: 'Established' },
+            { d: 'M12 2l10 5-10 5L2 7l10-5zM2 17l10 5 10-5M2 12l10 5 10-5', n: '500+', l: 'Brands Served' },
+            { d: 'M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z', n: '50+', l: 'Countries' },
+            { d: 'M20 6L9 17l-5-5', n: '98%', l: 'On-Time' },
+            { d: 'M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5', n: '100 pcs', l: 'Low MOQ' },
+            { d: 'M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z', n: '15 Days', l: 'Lead Time' },
+            { d: 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z', n: 'Free', l: 'Design' },
+            { d: 'M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z', n: 'AQL 2.5', l: 'Quality QC' },
+          ].map(({ d, n, l }) => (
             <div className="hero-badge-item" key={l}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="hero-badge-icon" aria-hidden="true"><path d={d} /></svg>
               <div className="hero-badge-num">{n}</div>
               <div className="hero-badge-label">{l}</div>
             </div>

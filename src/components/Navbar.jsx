@@ -18,8 +18,9 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="navbar-logo">
-          <img src="/assets/images/logo.svg" alt="mili custom packaging" style={{ height: 28 }} />
+        <Link to="/" className="navbar-logo" style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2l8 4.5v9L12 20.5 4 15.5v-9L12 2zM12 2v9M4 6.5l8 4.5 8-4.5M4 15.5l8 4.5 8-4.5" /></svg>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 20, color: 'var(--gold)', letterSpacing: '0.04em', lineHeight: 1 }}>MILI</span>
         </Link>
         <ul className="navbar-links">
           {links.map(({ to, label, external }) => (
