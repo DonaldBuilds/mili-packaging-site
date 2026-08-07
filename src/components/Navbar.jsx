@@ -60,7 +60,7 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <a href="/contact" className="navbar-cta">Get a Quote</a>
+        <a href="/contact" className="navbar-cta">GET FREE QUOTE</a>
         <button className="navbar-hamburger" onClick={() => setOpen(!open)}>
           <span /><span /><span />
         </button>
@@ -109,7 +109,7 @@ export default function Navbar() {
             background: 'var(--gold)', color: 'var(--black)',
             padding: '12px 20px', textAlign: 'center',
             textDecoration: 'none', fontSize: 13, letterSpacing: '0.06em',
-          }}>Get a Quote</a>
+          }}>GET FREE QUOTE</a>
         </div>
       )}
     </nav>

@@ -68,7 +68,7 @@ export default function Contact() {
       <section style={{ padding:'180px 0 120px', textAlign:'center', maxWidth:560, margin:'0 auto' }}>
         <div className="gold-line gold-line-center" />
         <span className="eyebrow">Thank You</span>
-        <h1 style={{ marginBottom:20 }}>Inquiry Received</h1>
+        <h1 style={{ marginBottom:20 }}>Thank you! Your quote request is being processed. &#128640;</h1>
         <p style={{ color:'var(--gray-3)', fontSize:16, marginBottom:40 }}>
           Our team will review your project and respond within 24 hours. In the meantime, explore our portfolio or browse our product catalog.
         </p>
@@ -128,7 +128,7 @@ export default function Contact() {
             </div>
 
             {/* Form col */}
-            <form onSubmit={handleSubmit} style={{ background:'var(--black-2)', border:'1px solid var(--border-dim)', padding:'44px 40px' }}>
+            <form id="quote-form" onSubmit={handleSubmit} style={{ background:'var(--black-2)', border:'1px solid var(--border-dim)', padding:'44px 40px' }}>
               <h3 style={{ marginBottom:28 }}>Get a Free Quote</h3>
 
               {/* Honeypot anti-spam fields (hidden from humans, skipped by browser auto-fill) */}
