@@ -33,9 +33,14 @@ const filesJson = JSON.stringify(files);
 const worker = `
 const F=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob('${Buffer.from(filesJson).toString('base64')}'),c=>c.charCodeAt(0))));
 const M=Object.fromEntries(Object.entries({
-  '.html':'text/html;charset=UTF-8','.css':'text/css;charset=UTF-8','.js':'application/javascript',
-  '.svg':'image/svg+xml','.json':'application/json','.txt':'text/plain','.xml':'application/xml'
-}).map(([k,v])=>[k,{'content-type':v,'cache-control':'public,max-age=3600'}]));
+  '.html':['text/html;charset=UTF-8','public,max-age=600'],
+  '.css':['text/css;charset=UTF-8','public,max-age=3600'],
+  '.js':['application/javascript','public,max-age=3600'],
+  '.svg':['image/svg+xml','public,max-age=3600'],
+  '.json':['application/json','public,max-age=3600'],
+  '.txt':['text/plain','public,max-age=3600'],
+  '.xml':['application/xml','public,max-age=3600']
+}).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
 const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
 const SPA=['/products','/contact','/about','/faq','/portfolio','/industries','/support','/warranty','/shipping-policy','/returns-policy'];
 const BLOG_PATHS=['/blog','/blog/'];

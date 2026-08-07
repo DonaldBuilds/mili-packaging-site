@@ -179,7 +179,8 @@ h4 { font-size: 16px; }
 @media (max-width: 768px) {
   .hero { display: block; }
   .hero-content { padding: 0 20px; }
-  .hero-badge-row { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; padding: 28px 20px; }
+  .hero-badge-row { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; padding: 28px 20px 120px; }
+  .sticky-quote { display: none; }
   .hero-badge-num { font-size: 26px; }
   .hero-badge-label { font-size: 9px; max-width: 140px; }
   .hero-badge-icon { width: 20px; height: 20px; }
