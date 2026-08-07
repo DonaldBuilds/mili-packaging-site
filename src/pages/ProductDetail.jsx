@@ -1,11 +1,61 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { productGroups, boundaryTexts, getGroup } from '../data/products';
 
 export default function ProductDetail() {
   const { slug } = useParams();
   const group = getGroup(slug);
   const [activeTab, setActiveTab] = useState('magnetic');
+
+  useEffect(() => {
+    if (!group) return;
+    const schemas = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: group.name,
+        description: `${group.tagline}. ${group.sellingPoints.map(s => s[1]).join(' ')}`,
+        image: `https://mili-packaging.com${group.heroImg}`,
+        brand: { '@type': 'Brand', name: 'Mili Packaging' },
+        manufacturer: { '@type': 'Organization', name: 'Jiangxi Mili Packaging Materials Co., Ltd.' },
+        offers: {
+          '@type': 'AggregateOffer',
+          priceCurrency: 'USD',
+          lowPrice: group.priceFrom,
+          highPrice: group.priceTo,
+          offerCount: '1',
+          availability: 'https://schema.org/InStock',
+          areaServed: 'Worldwide',
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://mili-packaging.com/#/' },
+          { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://mili-packaging.com/#/products' },
+          { '@type': 'ListItem', position: 3, name: group.name, item: `https://mili-packaging.com/#/products/${group.slug}` },
+        ],
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: (group.faq || []).map(([q, a]) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      },
+    ];
+    const scripts = schemas.map(schema => {
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.text = JSON.stringify(schema);
+      document.head.appendChild(s);
+      return s;
+    });
+    return () => { scripts.forEach(s => document.head.removeChild(s)); };
+  }, [group]);
 
   if (!group) {
     return (

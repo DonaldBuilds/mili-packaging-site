@@ -126,7 +126,7 @@ export default function Home() {
                 <span style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 10px', textTransform: 'uppercase' }}>New</span>
               )}
               <div className="product-card-img-wrap">
-                <img src={p.img} alt={p.title} className="product-card-img" />
+                <img src={p.img} alt={p.title} className="product-card-img" loading="lazy" />
               </div>
               <div className="product-card-body">
                 <h4>{p.title}</h4>

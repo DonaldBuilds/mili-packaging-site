@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { productGroups } from '../data/products';
+import { trackEvent } from '../lib/track';
 
 const channels = [
   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>, title:'Email', info:'info@mili-packaging.com', sub:'Reply within 2 business hours', href:'mailto:info@mili-packaging.com' },
@@ -54,6 +55,7 @@ export default function Contact() {
         .insert([data]);
 
       if (submitError) throw submitError;
+      trackEvent('form_submit', { product_type: data.product_type, industry: data.industry, quantity: data.quantity });
       setSubmitted(true);
     } catch (err) {
       console.error('Submission error:', err);

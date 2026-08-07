@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { productGroups } from '../data/products';
 
@@ -75,7 +75,7 @@ export default function Products() {
                 }}>New</span>
               )}
               <div className="product-card-img-wrap">
-                <img src={g.heroImg} alt={g.name} className="product-card-img" />
+                <img src={g.heroImg} alt={g.name} className="product-card-img" loading="lazy" />
               </div>
               <div className="product-card-body">
                 <h4>{g.name}</h4>

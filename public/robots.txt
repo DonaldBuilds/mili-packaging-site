@@ -1,9 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /assets/
 
 User-agent: Googlebot
 Allow: /
-Disallow: /assets/
 
 Sitemap: https://mili-packaging.com/sitemap.xml
