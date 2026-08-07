@@ -2,7 +2,7 @@
 
 const productData = {
   '1': {
-    name: 'Premium Magnetic Gift Box', category: 'Magnetic Boxes', img: '/assets/images/mag-box-black-gold.jpg',
+    name: 'Premium Magnetic Gift Box', category: 'Magnetic Boxes', img: '/assets/images/product-gift-v3.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: 'Rigid greyboard + 157g art paper wrap', size: 'Custom - any dimension',
     priceFrom: '1.20', priceTo: '3.80',
     desc: 'A rigid magnetic closure box engineered for premium unboxing moments. The flip-top lid opens with a satisfying snap, revealing a fully customizable interior. Ideal for products where first impression drives perceived value - cosmetics, electronics, and luxury gifts.',
@@ -16,7 +16,7 @@ const productData = {
     ],
   },
   '2': {
-    name: 'Velvet Jewelry Display Case', category: 'Jewelry Boxes', img: '/assets/images/jewelry-box-black.jpg',
+    name: 'Velvet Jewelry Display Case', category: 'Jewelry Boxes', img: '/assets/images/jewelry-mili-v4.jpg',
     moq: '100 pcs', leadTime: '12 Days', material: 'Rigid board + black velvet lining', size: 'Custom - any dimension',
     priceFrom: '1.50', priceTo: '4.50',
     desc: 'Boutique-grade jewelry presentation boxes with plush velvet interiors and precision-fit cutouts for rings, necklaces, earrings, and bracelets. The soft-touch exterior with debossed or foil logo delivers a premium retail experience at factory-direct pricing.',
@@ -30,7 +30,7 @@ const productData = {
     ],
   },
   '3': {
-    name: 'Luxury Skincare Gift Set Box', category: 'Cosmetic Boxes', img: '/assets/images/cosmetic-box-black.jpg',
+    name: 'Luxury Skincare Gift Set Box', category: 'Cosmetic Boxes', img: '/assets/images/product-hero-v4.jpg',
     moq: '300 pcs', leadTime: '15 Days', material: 'Rigid board + specialty art paper', size: 'Custom - any dimension',
     priceFrom: '1.80', priceTo: '4.80',
     desc: 'A showcase box designed to make skincare sets feel like an event. The flip-top or magnetic structure reveals a tailored EVA insert holding each bottle securely. Premium finishes - hot foil, spot UV, and matte lamination - elevate the perceived value of your product.',
@@ -58,7 +58,7 @@ const productData = {
     ],
   },
   '5': {
-    name: 'Premium Perfume Packaging Box', category: 'Cosmetic Boxes', img: '/assets/images/case-cosmetics-v3.jpg',
+    name: 'Premium Perfume Packaging Box', category: 'Cosmetic Boxes', img: '/assets/images/case-cosmetics-v4.jpg',
     moq: '500 pcs', leadTime: '15 Days', material: 'Rigid board + satin interior', size: 'Custom - any dimension',
     priceFrom: '1.60', priceTo: '4.60',
     desc: 'Fragrance packaging that mirrors the luxury of the scent inside. A rigid structure with satin or velvet interior holds the perfume bottle in a precision-cut cradle, while hot-stamped foil and soft-touch finishes create a tactile, high-end unboxing experience.',
@@ -72,7 +72,7 @@ const productData = {
     ],
   },
   '6': {
-    name: 'Watch Display Gift Box', category: 'Jewelry Boxes', img: '/assets/images/case-jewelry-v3.jpg',
+    name: 'Watch Display Gift Box', category: 'Jewelry Boxes', img: '/assets/images/case-jewelry-v4.jpg',
     moq: '200 pcs', leadTime: '12 Days', material: 'PU leather + velvet cushion', size: 'Custom - any dimension',
     priceFrom: '2.20', priceTo: '5.50',
     desc: 'A luxury watch presentation box with a cushioned pillow holder that presents the timepiece like a trophy. PU leather or velvet exterior, magnetic snap closure, and debossed or foil logo combine durability with elegance - built to protect and impress.',
@@ -86,7 +86,7 @@ const productData = {
     ],
   },
   '7': {
-    name: 'Eco Kraft Shipping Mailer', category: 'Shipping Boxes', img: '/assets/images/shipping-box-kraft-v3.jpg',
+    name: 'Eco Kraft Shipping Mailer', category: 'Shipping Boxes', img: '/assets/images/shipping-box-kraft-v4.jpg',
     moq: '1000 pcs', leadTime: '10 Days', material: 'FSC-certified kraft corrugated', size: 'Custom - any dimension',
     priceFrom: '0.30', priceTo: '1.20',
     desc: 'A durable, eco-friendly mailer built for DTC e-commerce. FSC-certified corrugated construction with full-color flexo printing turns your shipping box into a brand touchpoint - while tear strips, die-cut windows, and custom tape streamline fulfillment.',
