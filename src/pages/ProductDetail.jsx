@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { productGroups, boundaryTexts, getGroup, getDetail, priceDisclaimer } from '../data/products';
+import { productGroups, boundaryTexts, getGroup, getDetail, getSkus, priceDisclaimer } from '../data/products';
 import { industries } from './Industries';
 
 const industryName = (slug) => {
@@ -83,6 +83,8 @@ export default function ProductDetail() {
   }
 
   const isSample = !!(detail && detail.pricing && detail.pricing.fixed);
+  const skus = getSkus(slug);
+  const skuMoq = group.slug === 'watch-boxes' ? 'MOQ 50 pcs' : 'MOQ 100 pcs';
   const pricing = (detail && detail.pricing) || { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['0.00', '0.00', '0.00'] };
   const specs = (detail && detail.specs) || [];
   const copy = (detail && detail.copy) || [];
@@ -298,6 +300,40 @@ export default function ProductDetail() {
                 <div key={k} className="detail-specrow" style={{ background: i % 2 ? 'var(--black-3)' : 'var(--black-2)', borderBottom: i < specs.length - 1 ? '1px solid var(--border-dim)' : 'none' }}>
                   <div style={{ fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600 }}>{k}</div>
                   <div style={{ fontSize: 13.5, color: 'var(--gray-2)', lineHeight: 1.7 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ④b Product Line — 6 standard SKU configurations */}
+        {skus.length > 0 && (
+          <section style={{ marginBottom: 72 }}>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <div className="gold-line gold-line-center" />
+              <span className="eyebrow">Product Line</span>
+              <h2>6 Standard Configurations</h2>
+              <p style={{ color: 'var(--gray-3)', fontSize: 13, marginTop: 10, maxWidth: 620, margin: '10px auto 0' }}>
+                Reference prices in USD (EXW) based on standard sizes. Every configuration is fully customizable — the final quote is confirmed by our sales team.
+              </p>
+            </div>
+            <div className="detail-related">
+              {skus.map(s => (
+                <div key={s.name} id={`sku-${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} style={{ border: '1px solid var(--border-dim)', background: 'var(--black-2)', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ background: 'var(--black-3)' }}>
+                    <img src={s.img} alt={s.name} loading="lazy" style={{ width: '100%', display: 'block', aspectRatio: '4/3', objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <h4 style={{ fontSize: 13.5, marginBottom: 6 }}>{s.name}</h4>
+                    <p style={{ fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.7, margin: '0 0 12px', flex: 1 }}>{s.spec}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                      <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>From ${s.price}</span>
+                      <span style={{ border: '1px solid rgba(201,162,39,0.45)', color: 'var(--gold-light)', fontSize: 9.5, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '3px 8px', fontWeight: 700 }}>
+                        {isSample ? 'Credited to Bulk' : skuMoq}
+                      </span>
+                    </div>
+                    <Link to="/contact#quote-form" style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em', textDecoration: 'none' }}>Get Quote for This SKU &rarr;</Link>
+                  </div>
                 </div>
               ))}
             </div>
