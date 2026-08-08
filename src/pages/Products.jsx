@@ -58,7 +58,7 @@ export default function Products() {
             <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>
               {group.slug === 'sample-starter-kits' ? 'Kit $29' : `From $${p.price}`}
             </span>
-            <span style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em' }}>View &rarr;</span>
+            <span style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em', marginRight: 36 }}>View &rarr;</span>
           </div>
         </div>
       </Link>

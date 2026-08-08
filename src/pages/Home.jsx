@@ -1,15 +1,18 @@
 ﻿import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { productGroups } from '../data/products';
-// v20260808-update: 9 product groups, fixed business-value order (Module 1)
-const products = productGroups.map(g => ({
-  id: g.slug,
-  title: g.name,
-  desc: g.tagline,
-  img: g.heroImg,
-  tag: g.slug === 'sample-starter-kits' ? 'Fixed $29 Kit | 12 sample boxes' : `MOQ ${g.moq} pcs | From $${g.priceFrom} (100 pcs)`,
-  isNew: !!g.isNew,
-}));
+import { productGroups, getProduct } from '../data/products';
+// v20260809-update: Best-Selling shows 8 featured products from the newest (competitor-benchmarked)
+// listings — one per group, 4×2 grid, sample & starter kits excluded.
+const featuredProducts = [
+  { group: 'rigid-gift-boxes', slug: 'black-magnetic-gift-box' },
+  { group: 'cosmetic-boxes', slug: 'valentine-magnetic-folding-box' },
+  { group: 'jewelry-boxes', slug: 'drawer-sliding-jewelry-box' },
+  { group: 'watch-boxes', slug: 'modern-luxury-single-watch-box' },
+  { group: 'mailer-boxes', slug: 'custom-logo-mailer-box' },
+  { group: 'folding-cartons', slug: 'marbled-foldable-gift-box' },
+  { group: 'paper-bags', slug: 'hard-handle-kraft-bag' },
+  { group: 'corrugated-shipping', slug: 'eco-printed-shipping-box' },
+];
 
 // 5 industry cards mapped to industry pages with recommended box types (mapping table)
 const industries = [
@@ -244,27 +247,30 @@ export default function Home() {
             <Link to="/products" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>View All &rarr;</Link>
           </div>
         </div>
-        <div className="product-grid">
-          {products.map(p => (
-            <Link to={p.id === 'sample-starter-kits' ? '/sample-kits' : `/products/${p.id}`} className="product-card" key={p.title} style={{ position: 'relative', textDecoration: 'none' }}>
-              {p.isNew && (
+        <div className="best-grid">
+          {featuredProducts.map(({ group, slug }) => {
+            const p = getProduct(group, slug);
+            const g = productGroups.find(x => x.slug === group);
+            if (!p || !g) return null;
+            return (
+              <Link to={`/products/${group}/${p.slug}`} className="product-card" key={p.slug} style={{ position: 'relative', textDecoration: 'none' }}>
                 <span style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 10px', textTransform: 'uppercase' }}>New</span>
-              )}
-              <div className="product-card-img-wrap">
-                <img src={p.img} alt={p.title} className="product-card-img" loading="lazy" />
-              </div>
-              <div className="product-card-body">
-                <h4>{p.title}</h4>
-                <p>{p.desc}</p>
-                <span className="product-card-tag">{p.tag}</span>
-              </div>
-              <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
-                onClick={e => e.stopPropagation()}
-                style={{ position:'absolute', right:14, bottom:14, zIndex:2, width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(37,211,102,0.12)', borderRadius:'50%' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-              </a>
-            </Link>
-          ))}
+                <div className="product-card-img-wrap">
+                  <img src={p.img} alt={p.name} className="product-card-img" loading="lazy" />
+                </div>
+                <div className="product-card-body">
+                  <h4>{p.name}</h4>
+                  <p>{p.tagline}</p>
+                  <span className="product-card-tag">{g.name} · From ${p.price}</span>
+                </div>
+                <a href={`https://wa.me/8618296876285?text=${encodeURIComponent(`Hi, I'm interested in ${p.name}`)}`} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+                  onClick={e => e.stopPropagation()}
+                  style={{ position:'absolute', right:14, bottom:14, zIndex:2, width:34, height:34, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(37,211,102,0.12)', borderRadius:'50%' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </a>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -355,7 +361,7 @@ export default function Home() {
         <div className="industry-grid">
           {industries.map((ind) => (
             <Link to={ind.to} className="industry-card" key={ind.name}>
-              <img src={ind.img} alt={ind.name} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:0.45 }} />
+              <img src={ind.img} alt={ind.name} className="industry-card-bg" />
               <div className="industry-card-overlay">
                 <h4>{ind.name}</h4>
                 <p>{ind.desc}</p>

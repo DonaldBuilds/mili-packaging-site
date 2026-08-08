@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
-import { getGroup, getProduct, productCatalog, productGroups, priceDisclaimer } from '../data/products';
+import { getGroup, getProduct, productCatalog, productGroups, priceDisclaimer, detailData } from '../data/products';
 
 const WA_LINK = (text) => `https://wa.me/8618296876285?text=${encodeURIComponent(text)}`;
 const RECENT_KEY = 'mili_recent_products';
@@ -114,21 +114,12 @@ export default function ProductItem() {
     ['Consistent Quality', 'AQL 2.5 QC at every workstation, FSC-certified materials and SGS-audited production — quality you can rely on at scale.'],
   ];
 
-  // Migrated competitor products (extraImgs set) show ONLY their own gallery images —
-  // no group white/craft/tab images mixed in. Legacy SKUs keep the old gallery behaviour.
-  const gallery = product.extraImgs && product.extraImgs.length
-    ? [
-        { id: 'scene', label: 'Scene', img: product.img },
-        ...product.extraImgs.filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img).slice(0, 5).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
-      ]
-    : [
-        { id: 'scene', label: 'Scene', img: product.img },
-        { id: 'white', label: 'White', img: group.whiteImg },
-        ...[...(group.craftImg || []), ...(group.tabs ? group.tabs.map(t => t.img) : [])]
-          .filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img && img !== group.whiteImg)
-          .slice(0, 4)
-          .map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
-      ].slice(0, 6);
+  // Gallery shows ONLY this product's own images (main + extraImgs).
+  // Group white/craft/tab images are NEVER mixed in, so every gallery matches its product.
+  const gallery = [
+    { id: 'scene', label: 'Scene', img: product.img },
+    ...(product.extraImgs || []).filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img).slice(0, 5).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
+  ];
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
   const stepView = (dir) => {
     const idx = gallery.findIndex(g => g.id === view);
@@ -137,6 +128,22 @@ export default function ProductItem() {
   };
   const isKit = group.slug === 'sample-starter-kits';
   const ctaLabel = isKit ? 'Order Sample Kit – $29' : 'Get Free Quote';
+
+  // Tiered pricing: explicit tierPrice wins; otherwise derive from the group's price ratios
+  // (100/1,000/5,000) anchored on this product's reference price.
+  const groupPricing = detailData[group.slug]?.pricing;
+  const tierRows = product.tierPrice
+    ? [
+        { qty: '100 pcs', price: product.tierPrice[100] },
+        { qty: '1,000 pcs', price: product.tierPrice[1000] },
+        { qty: '5,000 pcs', price: product.tierPrice[5000] },
+      ]
+    : (groupPricing && !groupPricing.fixed
+        ? groupPricing.tiers.map((t, i) => ({
+            qty: t,
+            price: i === 1 ? product.price : (+(parseFloat(product.price) * parseFloat(groupPricing.prices[i]) / parseFloat(groupPricing.prices[1]))).toFixed(2),
+          }))
+        : null);
 
   return (
     <div className="page-scaffold" style={{ paddingTop: 120 }}>
@@ -199,10 +206,14 @@ export default function ProductItem() {
               </div>
             ) : (
               <div style={{ marginBottom: 10 }}>
-                <div style={{ fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gray-2)', marginBottom: 8 }}>Reference Price (USD, EXW)</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, border: '1px solid var(--border-dim)', background: 'var(--black-3)', padding: '12px 16px' }}>
-                  <div style={{ fontSize: 24, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${product.price}</div>
-                  <div style={{ fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.6 }}>per unit from<br />1,000 pcs (EXW)</div>
+                <div style={{ fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gray-2)', marginBottom: 8 }}>Reference Pricing (USD, EXW)</div>
+                <div style={{ border: '1px solid var(--border-dim)', background: 'var(--black-3)' }}>
+                  {tierRows.map((r, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', borderBottom: i < tierRows.length - 1 ? '1px solid var(--border-dim)' : 'none' }}>
+                      <div style={{ fontSize: 12, color: 'var(--gray-2)', letterSpacing: '0.04em' }}>{r.qty}</div>
+                      <div style={{ fontSize: 20, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${r.price}</div>
+                    </div>
+                  ))}
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--gray-3)', marginTop: 8, lineHeight: 1.6 }}>{priceDisclaimer}</div>
               </div>
