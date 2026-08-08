@@ -140,10 +140,13 @@ export default function Home() {
           </div>
           {/* P4: 社会证明滚动条 — CTA按钮上方 */}
           <SocialProofTicker />
-          {/* P7: CTA文案微调 */}
-          <div className="hero-actions">
-            <a href="/contact" className="btn-gold">Get My Free Quote</a>
-            <a href="/portfolio" className="btn-outline-white">See Our Work →</a>
+          {/* P7: CTA按钮组 + 下方短金线（宽度对齐按钮，问题2） */}
+          <div className="hero-actions-wrap">
+            <div className="hero-actions">
+              <a href="/contact" className="btn-gold">Get My Free Quote</a>
+              <a href="/portfolio" className="btn-outline-white">See Our Work →</a>
+            </div>
+            <div className="hero-accent" aria-hidden="true" />
           </div>
           {/* P6: 底部参数条加对比锚点 */}
           <div className="hero-stats-row">
