@@ -6,7 +6,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
-import { productGroups } from './data/products';
+import ProductItem from './pages/ProductItem';
+import { productGroups, productCatalog } from './data/products';
 import { getPost } from './data/posts';
 import { initGlobalClickTracking } from './lib/track';
 import './styles.css';
@@ -60,8 +61,17 @@ function TitleManager() {
     let title = titles[path] || 'Mili Packaging | Custom Packaging Manufacturer';
     let desc = null;
     if (path.startsWith('/products/')) {
-      const g = productGroups.find(x => path === '/products/' + x.slug);
-      if (g) {
+      const parts = path.split('/').filter(Boolean); // ['products', slug, productSlug?]
+      const g = productGroups.find(x => x.slug === parts[1]);
+      if (g && parts[2]) {
+        // Independent product page: /products/:slug/:productSlug
+        const list = productCatalog[g.slug] || [];
+        const p = list.find(x => x.slug === parts[2]);
+        if (p) {
+          title = `${p.name} | MOQ ${g.slug === 'watch-boxes' ? 50 : g.slug === 'sample-starter-kits' ? '1 kit' : g.moq} pcs | Mili Packaging`;
+          desc = `${p.name} - ${p.tagline}. ${p.spec}. Reference price from $${p.price} per unit (EXW). Factory-direct custom ${g.name.toLowerCase()} with free design & 3D mockup.`;
+        }
+      } else if (g) {
         title = g.slug === 'sample-starter-kits'
           ? `${g.name} | Fixed $29 Sample Kit | Mili Packaging`
           : `${g.name} | MOQ ${g.moq} pcs | Mili Packaging`;
@@ -122,6 +132,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:slug/:productSlug" element={<ProductItem />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />

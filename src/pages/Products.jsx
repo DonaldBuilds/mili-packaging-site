@@ -1,52 +1,46 @@
 ﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { productGroups } from '../data/products';
+import { productGroups, productCatalog } from '../data/products';
 
 const WA_PHONE = '8618296876285';
+const GROUP_ORDER = ['rigid-gift-boxes','cosmetic-boxes','jewelry-boxes','watch-boxes','mailer-boxes','folding-cartons','paper-bags','corrugated-shipping','sample-starter-kits'];
 
 export default function Products() {
-  const [activeTab, setActiveTab] = useState('magnetic');
   const [activeFilter, setActiveFilter] = useState('all');
-  const rigid = productGroups[0];
-  const tab = rigid.tabs.find(t => t.id === activeTab) || rigid.tabs[0];
+  const [activeTab, setActiveTab] = useState('magnetic');
 
-  // Non-parent groups (8 cards below flagship section)
-  const groups = productGroups.slice(1);
+  // Groups in display order (with products)
+  const groups = GROUP_ORDER
+    .map(slug => productGroups.find(g => g.slug === slug))
+    .filter(Boolean)
+    .map(g => ({ ...g, products: productCatalog[g.slug] || [] }));
 
   // True category filtering (luxopack-style): selected category shows only its products
-  const isRigidVisible = activeFilter === 'all' || activeFilter === 'rigid-gift-boxes';
   const visibleGroups = activeFilter === 'all' ? groups : groups.filter(g => g.slug === activeFilter);
+  const rigid = groups[0];
+  const tab = rigid && (rigid.tabs.find(t => t.id === activeTab) || rigid.tabs[0]);
 
-  const renderCard = (g) => (
-    <Link to={`/products/${g.slug}`} className="product-card" key={g.slug} style={{ textDecoration: 'none', position: 'relative' }}>
-      {g.badge && (
-        <span className="product-badge"><span className="product-badge-emoji">{g.badge.icon}</span>{g.badge.label}</span>
-      )}
+  const productCard = (group, p) => (
+    <Link to={`/products/${group.slug}/${p.slug}`} className="product-card" key={p.slug} style={{ textDecoration: 'none', position: 'relative' }}>
       <div className="product-card-img-wrap">
-        <img src={g.heroImg} alt={g.name} className="product-card-img" loading="lazy" />
+        <img src={p.img} alt={p.name} className="product-card-img" loading="lazy" />
       </div>
       <div className="product-card-body">
-        <h4>{g.name}</h4>
-        <p>{g.tagline}</p>
+        <h4 style={{ fontSize: 14.5, lineHeight: 1.35 }}>{p.name}</h4>
+        <p style={{ minHeight: 40 }}>{p.tagline}</p>
         <div className="product-spec-strip">
-          <div className="product-spec-cell"><div className="product-spec-label">MOQ</div><div className="product-spec-value">{g.slug === 'sample-starter-kits' ? '1 Kit' : `${g.moq} pcs`}</div></div>
-          <div className="product-spec-cell"><div className="product-spec-label">Lead Time</div><div className="product-spec-value">{g.leadTime}</div></div>
-          <div className="product-spec-cell"><div className="product-spec-label">{g.keySpec.label}</div><div className="product-spec-value">{g.keySpec.value}</div></div>
+          <div className="product-spec-cell"><div className="product-spec-label">MOQ</div><div className="product-spec-value">{p.moq}</div></div>
+          <div className="product-spec-cell"><div className="product-spec-label">Lead Time</div><div className="product-spec-value">{group.leadTime}</div></div>
+          <div className="product-spec-cell"><div className="product-spec-label">{group.keySpec.label}</div><div className="product-spec-value">{group.keySpec.value}</div></div>
         </div>
-        <div className="product-feature-tags">
-          {g.featureTags.map(tag => <span key={tag} className="product-feature-tag">{tag}</span>)}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>
-              {g.slug === 'sample-starter-kits' ? 'Kit $29' : `From $${g.priceFrom}`}
-            </span>
-            <span style={{ display: 'block', fontSize: 10, color: 'var(--gray-3)', marginTop: 2 }}>ref. @1,000 pcs (EXW)</span>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+          <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>
+            {group.slug === 'sample-starter-kits' ? 'Kit $29' : `From $${p.price}`}
+          </span>
           <span style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em' }}>View &rarr;</span>
         </div>
       </div>
-      <a href={`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(`Hi, I'm interested in ${g.name}`)}`}
+      <a href={`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(`Hi, I'm interested in ${p.name}`)}`}
         target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
         onClick={e => e.stopPropagation()}
         style={{ position: 'absolute', right: 14, bottom: 14, zIndex: 2, width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(37,211,102,0.12)', borderRadius: '50%' }}>
@@ -63,7 +57,7 @@ export default function Products() {
           <span className="eyebrow">Product Gallery</span>
           <h1>Premium Packaging Collection</h1>
           <p style={{ color: 'var(--gray-3)', maxWidth: 680, marginTop: 12 }}>
-            9 packaging categories, factory-direct. Free design, structural samples, and global delivery — MOQ from 50 pcs.
+            9 packaging categories, 54 factory-direct products. Free design, structural samples, and global delivery — MOQ from 50 pcs.
           </p>
         </div>
 
@@ -77,7 +71,7 @@ export default function Products() {
           >
             All Products
           </button>
-          {productGroups.map(g => (
+          {groups.map(g => (
             <button
               key={g.slug}
               role="tab"
@@ -93,74 +87,69 @@ export default function Products() {
         {/* Filtered result meta */}
         <div style={{ marginBottom: 20, fontSize: 13, color: 'var(--gray-2)' }}>
           {activeFilter === 'all'
-            ? `${productGroups.length} product categories`
-            : productGroups.find(g => g.slug === activeFilter)?.name}
+            ? `${groups.length} categories · ${groups.reduce((s, g) => s + g.products.length, 0)} products`
+            : `${groups.find(g => g.slug === activeFilter)?.name} · ${groups.find(g => g.slug === activeFilter)?.products.length} products`}
         </div>
 
-        {/* Rigid Gift Boxes — flagship parent group (visible on All / Rigid filter) */}
-        {isRigidVisible && (
-          <section style={{ margin: '16px 0 56px', background: 'var(--black-2)', border: '1px solid var(--border-dim)', padding: '40px 36px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
-              <div>
-                <span className="eyebrow" style={{ color: 'var(--gold)' }}>Flagship</span>
-                <h2 style={{ margin: '6px 0 6px' }}>Rigid Gift Boxes</h2>
-                <p style={{ color: 'var(--gray-3)', fontSize: 13 }}>{rigid.tagline}</p>
-              </div>
-              <Link to="/products/rigid-gift-boxes" className="btn-outline-gold" style={{ textDecoration: 'none', fontSize: 12, padding: '10px 22px' }}>View Details &rarr;</Link>
-            </div>
-
-            {/* 4 structure tabs */}
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
-              {rigid.tabs.map(t => (
-                <button key={t.id} onClick={() => setActiveTab(t.id)}
-                  style={{
-                    padding: '10px 20px', fontSize: 12, letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer',
-                    background: activeTab === t.id ? 'var(--gold)' : 'transparent',
-                    color: activeTab === t.id ? 'var(--black)' : 'var(--gray-3)',
-                    border: '1px solid ' + (activeTab === t.id ? 'var(--gold)' : 'var(--border)'),
-                    minHeight: 44,
-                  }}>
-                  {t.label}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 36, alignItems: 'center' }}>
-              <div style={{ background: 'var(--black-3)', border: '1px solid var(--border-dim)', position: 'relative' }}>
-                <span className="product-badge"><span className="product-badge-emoji">{rigid.badge.icon}</span>{rigid.badge.label}</span>
-                <img src={tab.img} alt={tab.label} style={{ width: '100%', display: 'block' }} />
-              </div>
-              <div>
-                <h3 style={{ marginBottom: 10 }}>{tab.label}</h3>
-                <p style={{ color: 'var(--gray-3)', fontSize: 14, lineHeight: 1.8, marginBottom: 20 }}>{tab.desc}</p>
-                <div className="product-spec-strip" style={{ maxWidth: 420 }}>
-                  <div className="product-spec-cell"><div className="product-spec-label">MOQ</div><div className="product-spec-value">{rigid.moq} pcs</div></div>
-                  <div className="product-spec-cell"><div className="product-spec-label">Lead Time</div><div className="product-spec-value">{rigid.leadTime}</div></div>
-                  <div className="product-spec-cell"><div className="product-spec-label">{rigid.keySpec.label}</div><div className="product-spec-value">{rigid.keySpec.value}</div></div>
+        {/* Category sections — vertical stacked, filtered by active pill */}
+        {visibleGroups.map((g, idx) => {
+          const isRigid = g.slug === 'rigid-gift-boxes';
+          return (
+            <section key={g.slug} style={{ marginBottom: 64, borderTop: '1px solid var(--border-dim)', paddingTop: 40 }}>
+              {/* Group header — vertical layout */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16, marginBottom: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20 }}>
+                  <span style={{
+                    fontFamily: 'var(--font-display)', fontSize: 44, lineHeight: 1, color: 'transparent',
+                    WebkitTextStroke: '1px rgba(201,162,39,0.55)', fontWeight: 700,
+                  }}>{String(idx + 1).padStart(2, '0')}</span>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                      <h2 style={{ margin: 0, fontSize: 'clamp(22px, 2.2vw, 30px)', fontFamily: 'var(--font-display)' }}>{g.name}</h2>
+                      {g.badge && (
+                        <span className="product-badge" style={{ position: 'static', display: 'inline-flex' }}>
+                          <span className="product-badge-emoji">{g.badge.icon}</span>{g.badge.label}
+                        </span>
+                      )}
+                      {g.isNew && <span className="badge-new">New</span>}
+                    </div>
+                    <p style={{ color: 'var(--gray-3)', fontSize: 13, margin: '8px 0 0', maxWidth: 560, lineHeight: 1.7 }}>{g.tagline}</p>
+                  </div>
                 </div>
-                <div className="product-feature-tags">
-                  {rigid.featureTags.map(tag => <span key={tag} className="product-feature-tag">{tag}</span>)}
-                </div>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  <Link to="/contact" className="btn-gold" style={{ textDecoration: 'none' }}>Get a Quote</Link>
-                  <a href={`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(`Hi, I'm interested in Rigid Gift Boxes - ${tab.label}`)}`}
-                    target="_blank" rel="noopener noreferrer" className="btn-outline-gold" style={{ textDecoration: 'none' }}>WhatsApp</a>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <Link to={`/products/${g.slug}`} className="btn-outline-gold" style={{ textDecoration: 'none', fontSize: 12, padding: '10px 20px' }}>Category Details &rarr;</Link>
                 </div>
               </div>
-            </div>
-          </section>
-        )}
 
-        {/* Category cards — filtered by active pill */}
-        {visibleGroups.length > 0 ? (
-          <div className="product-grid">
-            {visibleGroups.map(g => renderCard(g))}
-          </div>
-        ) : (
-          <div style={{ padding: '80px 0', textAlign: 'center', color: 'var(--gray-3)', fontSize: 14 }}>
-            No products in this category yet.
-          </div>
-        )}
+              {/* Rigid flagship: 4 structure tabs above the product grid */}
+              {isRigid && (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
+                  {g.tabs.map(t => (
+                    <button key={t.id} onClick={() => setActiveTab(t.id)}
+                      style={{
+                        padding: '9px 18px', fontSize: 11.5, letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer',
+                        background: activeTab === t.id ? 'var(--gold)' : 'transparent',
+                        color: activeTab === t.id ? 'var(--black)' : 'var(--gray-3)',
+                        border: '1px solid ' + (activeTab === t.id ? 'var(--gold)' : 'var(--border)'),
+                        minHeight: 40,
+                      }}>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* 6 independent products — each links to its own detail page */}
+              {g.products.length > 0 ? (
+                <div className="product-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                  {g.products.map(p => productCard(g, p))}
+                </div>
+              ) : (
+                <p style={{ color: 'var(--gray-3)', fontSize: 13 }}>Products in this category are coming soon.</p>
+              )}
+            </section>
+          );
+        })}
 
         {/* Factory-direct consultation CTA — luxopack style */}
         <section style={{ margin: '64px 0 8px', background: 'var(--black-2)', border: '1px solid var(--gold)', padding: '44px 40px', textAlign: 'center' }}>
