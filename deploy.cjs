@@ -111,11 +111,58 @@ function deploy(attempt) {
   });
 }
 
+function purgeCache() {
+  return new Promise((resolve) => {
+    const listReq = https.request({
+      hostname: 'api.cloudflare.com',
+      path: '/client/v4/zones?per_page=50',
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${TOKEN}` }
+    }, res => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          const zones = (j.result || []).map(z => z.id);
+          if (!zones.length) { console.log('⚠️ No zones found for purge — HTML is no-cache so deploy is effective immediately.'); return resolve(); }
+          let done = 0;
+          zones.forEach(zid => {
+            const body = JSON.stringify({ purge_everything: true });
+            const req2 = https.request({
+              hostname: 'api.cloudflare.com',
+              path: `/client/v4/zones/${zid}/purge_cache`,
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
+            }, res2 => {
+              let d2 = '';
+              res2.on('data', c => d2 += c);
+              res2.on('end', () => {
+                try {
+                  const j2 = JSON.parse(d2);
+                  console.log(j2.success ? `✅ Purged zone ${zid}` : `⚠️ Purge failed for ${zid}: ${JSON.stringify(j2.errors)}`);
+                } catch (e) { console.log('⚠️ Purge parse error for ' + zid); }
+                if (++done === zones.length) resolve();
+              });
+            });
+            req2.on('error', e => { console.log(`⚠️ Purge request error for ${zid}: ${e.message}`); if (++done === zones.length) resolve(); });
+            req2.write(body);
+            req2.end();
+          });
+        } catch (e) { console.log('⚠️ Purge zone list error: ' + e.message); resolve(); }
+      });
+    });
+    listReq.on('error', e => { console.log('⚠️ Purge zone list request error: ' + e.message); resolve(); });
+    listReq.end();
+  });
+}
+
 (async () => {
   const MAX = 4;
   for (let i = 1; i <= MAX; i++) {
     try {
       await deploy(i);
+      await purgeCache();
       process.exit(0);
     } catch (e) {
       if (i === MAX) { console.error('Deploy failed after ' + MAX + ' attempts.'); process.exit(1); }
