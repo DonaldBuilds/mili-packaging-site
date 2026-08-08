@@ -26,6 +26,7 @@ const ShippingDelivery = lazy(() => import('./pages/ShippingDelivery'));
 const PaymentTerms = lazy(() => import('./pages/PaymentTerms'));
 const ReturnsPolicy = lazy(() => import('./pages/ReturnsPolicy'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const SampleKitLanding = lazy(() => import('./pages/SampleKitLanding'));
 
 const groupDesc = (g) => {
   if (g.slug === 'sample-starter-kits') {
@@ -53,6 +54,7 @@ function TitleManager() {
       '/payment-terms': 'Payment Terms | T/T, L/C & Trade Assurance | Mili Packaging',
       '/returns-policy': 'Returns Policy | Mili Packaging',
       '/privacy-policy': 'Privacy Policy | Mili Packaging',
+      '/sample-kits': 'Sample & Starter Kit | Test 12 Box Styles for $29 | Mili Packaging',
     };
     const path = location.pathname;
     let title = titles[path] || 'Mili Packaging | Custom Packaging Manufacturer';
@@ -70,6 +72,8 @@ function TitleManager() {
     } else if (path.startsWith('/blog/')) {
       const p = getPost(path.replace('/blog/', ''));
       if (p) { title = `${p.title} | Mili Packaging`; desc = p.excerpt; }
+    } else if (path === '/sample-kits') {
+      desc = 'Order the Mili sample & starter kit: 12 material and finish sample boxes branded with your logo. $29 including worldwide shipping, fully credited to your first bulk order.';
     }
     document.title = title;
     if (desc) {
@@ -134,6 +138,7 @@ function App() {
           <Route path="/payment-terms" element={<PaymentTerms />} />
           <Route path="/returns-policy" element={<ReturnsPolicy />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/sample-kits" element={<SampleKitLanding />} />
         </Routes>
       </Suspense>
       <Footer />

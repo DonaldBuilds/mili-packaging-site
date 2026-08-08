@@ -197,6 +197,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Service Promise Bar（承诺条，位于 Trusted By 下方，不进 Hero） ── */}
+      <section style={{ borderTop:'1px solid var(--border-dim)', borderBottom:'1px solid var(--border-dim)', background:'var(--black-2)' }}>
+        <div className="container" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center', gap:'12px 40px', padding:'18px 0' }}>
+          {[
+            { n: '24h', l: 'Quote' },
+            { n: '48h', l: 'Free 3D Mockup' },
+            { n: '3–5 Days', l: 'Free Structural Samples' },
+            { n: '15 Days', l: 'Bulk Lead Time' },
+            { n: 'MOQ 100', l: 'Watch from 50' },
+          ].map(({ n, l }, i) => (
+            <div key={l} style={{ display:'flex', alignItems:'center', gap:12 }}>
+              {i > 0 && <span aria-hidden="true" style={{ width:1, height:22, background:'rgba(201,168,76,0.25)' }} />}
+              <span style={{ color:'var(--gold)', fontWeight:700, fontSize:15, fontFamily:'var(--font-display)' }}>{n}</span>
+              <span style={{ color:'var(--gray-3)', fontSize:11, letterSpacing:'0.07em', textTransform:'uppercase', fontWeight:600 }}>{l}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Dual Path ── */}
       <div className="dual-path">
         <Link to="/products" className="dual-card">
@@ -227,7 +246,7 @@ export default function Home() {
         </div>
         <div className="product-grid">
           {products.map(p => (
-            <Link to={`/products/${p.id}`} className="product-card" key={p.title} style={{ position: 'relative', textDecoration: 'none' }}>
+            <Link to={p.id === 'sample-starter-kits' ? '/sample-kits' : `/products/${p.id}`} className="product-card" key={p.title} style={{ position: 'relative', textDecoration: 'none' }}>
               {p.isNew && (
                 <span style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 10px', textTransform: 'uppercase' }}>New</span>
               )}

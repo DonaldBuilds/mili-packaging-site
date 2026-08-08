@@ -62,6 +62,7 @@ export default function Footer() {
             <li><Link to="/contact">Contact</Link></li>
             <li><Link to="/shipping-delivery">Shipping &amp; Delivery</Link></li>
             <li><Link to="/payment-terms">Payment Terms</Link></li>
+            <li><Link to="/sample-kits">Sample Kit – $29</Link></li>
           </ul>
           <div style={{ marginTop: 24 }}>
             <h5 style={{ marginBottom: 10 }}>Contact</h5>
