@@ -3,8 +3,9 @@ const path = require('path');
 const https = require('https');
 const zlib = require('zlib');
 
+const SKIP_UPLOAD = process.env.SKIP_UPLOAD === '1';
 const TOKEN = process.env.CF_API_TOKEN || '';
-if (!TOKEN) { console.error('Missing CF_API_TOKEN environment variable. Set it before running deploy.'); process.exit(1); }
+if (!TOKEN && !SKIP_UPLOAD) { console.error('Missing CF_API_TOKEN environment variable. Set it before running deploy.'); process.exit(1); }
 const ACCT = '411618ac8eb6523118fd89739f6df2b9';
 const NAME = 'flat-mud-c136';
 const BOUNDARY = '----CF' + Date.now();
@@ -36,7 +37,15 @@ const filesJson = JSON.stringify(files);
 const gz = zlib.gzipSync(Buffer.from(filesJson, 'utf8'));
 const b64 = gz.toString('base64');
 const worker = `
-const F=JSON.parse(new TextDecoder().decode(await new Response(new Blob([Uint8Array.from(atob('${b64}'),c=>c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()));
+const B64='${b64}';
+let F=null;
+async function getF(){
+  if(F)return F;
+  // Decompress lazily INSIDE the fetch handler: CF forbids async I/O in global scope (error 10021).
+  const txt=await new Response(new Blob([Uint8Array.from(atob(B64),c=>c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  F=JSON.parse(txt);
+  return F;
+}
 const M=Object.fromEntries(Object.entries({
   '.html':['text/html;charset=UTF-8','no-cache'],
   '.css':['text/css;charset=UTF-8','public,max-age=3600'],
@@ -51,6 +60,7 @@ const SPA=['/products','/contact','/about','/faq','/portfolio','/industries','/s
 const BLOG_PATHS=['/blog','/blog/'];
 
 export default{async fetch(r){
+  const F=await getF();
   const url=new URL(r.url);
   let p=url.pathname;
   if(p==='/')p='/index.html';
@@ -84,6 +94,12 @@ export default{async fetch(r){
 const wSize = Buffer.byteLength(worker, 'utf8');
 console.log(`Worker: ${(wSize/1024).toFixed(0)}KB (limit 1MB)`);
 if (wSize > 1000000) { console.error('Too large!'); process.exit(1); }
+
+if (SKIP_UPLOAD) {
+  fs.writeFileSync(path.join(BASE, 'worker.test.mjs'), worker, 'utf8');
+  console.log('SKIP_UPLOAD: wrote dist-seo/worker.test.mjs for local smoke test');
+  process.exit(0);
+}
 
 const metadata = JSON.stringify({ main_module: 'worker.js' });
 const body = Buffer.from([
