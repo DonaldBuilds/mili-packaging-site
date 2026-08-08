@@ -299,7 +299,7 @@ export const getGroup = (slug) => productGroups.find(g => g.slug === slug);
 // ── Detail page data (Module: 10-block product template) ─────────────────────
 // pricing.tiers/prices = reference unit price (USD, EXW) by order quantity.
 // Sample kit uses pricing.fixed instead.
-export const priceDisclaimer = 'Reference prices in USD per unit (EXW), based on standard size and material. Final quote depends on exact dimensions, material, finishing and quantity. Volume discounts available from 3,000 pcs.';
+export const priceDisclaimer = '*Reference FOB pricing based on standard specs. Final quote within 24 hrs based on your exact specifications.';
 
 const specsBase = (moq, lead, cert, extra = {}) => [
   ...(extra.rows || []),
@@ -680,6 +680,37 @@ export const productCatalog = {
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2-bottle cradle, foam insert, foil logo'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
+    {
+      slug: 'black-magnetic-gift-box',
+      name: 'Black Magnetic Gift Box',
+      tagline: 'Magnetic-lid rigid gift box with precision insert',
+      spec: '2.5mm greyboard, magnet lid, matte lamination',
+      price: '2.40',
+      img: '/assets/images/mig-black-magnetic-box-1.webp',
+      moq: '100 pcs',
+      extraImgs: ['/assets/images/mig-black-magnetic-box-2.webp', '/assets/images/mig-black-magnetic-box-3.webp'],
+      specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2.5mm greyboard, magnetic lid, matte lamination'], ['Material', 'Greyboard + art paper (FSC-certified options)'], ['Finish', 'Matte Lamination / Gold Foil'], ['Insert', 'Custom molded foam / EVA insert'], ['Food-Safe', 'FDA-compliant material options'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+      copy: [
+        'A rigid magnetic gift box built from 2.5mm greyboard wrapped in art paper with a matte lamination. The lid closes with a precise magnetic snap and the base holds a custom-cut molded insert, so the presentation feels heavy, exact and premium from the first touch.',
+        'Built for luxury retail and gifting - jewelry, watches, perfume, electronics and premium confectionery, where the packaging itself has to sell the product and protect it in transit.',
+        'Mili manufactures it in-house with FSC-certified board options, FDA-compliant material choices and AQL 2.5 QC at every workstation. Free design support and a 3D mockup within 48 hours, plus 2 rounds of free structural samples before bulk.',
+      ],
+      chips: ['Matte Lamination', 'Gold Foil Stamping', 'Magnetic Closure', 'Custom Foam Insert', 'Soft-Touch Option', 'FSC Paper'],
+      process: [
+        ['01', 'Inquiry & Quote', 'Send your brief - structure, size, material, finishing and quantity. We reply with a tailored quote and free 3D mockup within 24 hours.'],
+        ['02', 'Free Sampling', '2 rounds of free structural samples in 3-5 days. Review, refine and approve before bulk production.'],
+        ['03', 'Bulk Production', 'In-house manufacturing with AQL 2.5 QC at every workstation. Standard bulk lead time 12-15 days.'],
+        ['04', 'Global Delivery', 'FOB, CIF or DDP door-to-door across 50+ countries, with export-grade packing and tracking.'],
+      ],
+      industry: { to: '/industries/electronics-tech', text: 'Custom magnetic gift boxes with precision inserts for electronics, jewelry and luxury retail.' },
+      faq: [
+        ['What is the minimum order for the Black Magnetic Gift Box?', 'MOQ is just 100 pcs - ideal for testing a new SKU or a limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can the insert be customized to fit my product exactly?', 'Yes. We produce a custom molded foam or EVA insert from your product drawings, with free structural samples before bulk production.'],
+        ['Which materials and finishes are available?', '2.5mm greyboard with art paper or special paper wrap; matte or gloss lamination, gold/silver foil stamping, spot UV, embossing and soft-touch options. FSC-certified and FDA food-safe materials on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time for bulk production?', 'Standard bulk lead time is 12-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
+    },
   ],
   'cosmetic-boxes': [
     {
@@ -928,6 +959,37 @@ export const productCatalog = {
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'FSC kraft, no lamination, self-seal'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
+    {
+      slug: 'custom-logo-mailer-box',
+      name: 'Custom Logo Mailer Box',
+      tagline: 'Two-tone mailer with full interior brand print',
+      spec: 'E-flute, white outside, printed interior, custom logo',
+      price: '1.20',
+      img: '/assets/images/mig-custom-mailer-box-1.webp',
+      moq: '100 pcs',
+      extraImgs: ['/assets/images/mig-custom-mailer-box-2.webp', '/assets/images/mig-custom-mailer-box-3.webp'],
+      specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'E-flute corrugated, tuck-top / ear-lock mailer'], ['Material', 'Recycled kraft / white liner'], ['Print', 'Full-color inside & out, custom logo'], ['Finish', 'Matte Lamination option'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+      copy: [
+        'A custom-logo mailer built from E-flute corrugated board with a clean white exterior and a bold printed interior. Full-color artwork inside and out turns a standard shipping box into a branded unboxing moment.',
+        'Made for e-commerce brands, subscription services and DTC labels that ship products directly to customers and want the first impression to match the product inside.',
+        'Mili prints the interior and exterior in one pass with water-based inks on FSC-certified board. Low MOQ of 100 pcs, free structural samples and a 48-hour 3D mockup make it easy to launch.',
+      ],
+      chips: ['Full-Color Inside Print', 'Custom Logo', 'Matte Lamination', 'Recycled Board', 'Self-Seal Option', 'Low MOQ'],
+      process: [
+        ['01', 'Inquiry & Quote', 'Send your brief - structure, size, material, finishing and quantity. We reply with a tailored quote and free 3D mockup within 24 hours.'],
+        ['02', 'Free Sampling', '2 rounds of free structural samples in 3-5 days. Review, refine and approve before bulk production.'],
+        ['03', 'Bulk Production', 'In-house manufacturing with AQL 2.5 QC at every workstation. Standard bulk lead time 10-12 days.'],
+        ['04', 'Global Delivery', 'FOB, CIF or DDP door-to-door across 50+ countries, with export-grade packing and tracking.'],
+      ],
+      industry: { to: '/industries/subscription-dtc', text: 'Branded mailers that make every subscription and e-commerce shipment an unboxing moment.' },
+      faq: [
+        ['What is the MOQ for a custom mailer box?', 'MOQ is 100 pcs - low enough to test a new design or a seasonal campaign without over-committing.'],
+        ['Can you print inside the box as well as outside?', 'Yes. We print full-color artwork on both the exterior and interior, which is the signature look of premium subscription and DTC mailers.'],
+        ['What sizes and materials are available?', 'Any custom size from your product dimensions, in E-flute or B-flute corrugated board with recycled kraft or white liners. FSC-certified board available.'],
+        ['How long do samples take?', 'Structural samples ship in 3-5 days (free, 2 rounds). A pre-production sample with your artwork takes 1-2 weeks and is credited to your bulk order.'],
+        ['Can I get a self-seal strip or tear strip?', 'Yes - both are available. Tell us your unboxing flow and we will recommend the right closure for your product.'],
+      ],
+    },
   ],
   'folding-cartons': [
     {
@@ -989,6 +1051,37 @@ export const productCatalog = {
       img: '/assets/images/sku-folding-kraft.webp',
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'FSC kraft, soy ink, no lamination'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+    },
+    {
+      slug: 'marbled-foldable-gift-box',
+      name: 'Marbled Foldable Gift Box',
+      tagline: 'Flat-fold marbled carton with premium unboxing',
+      spec: '300gsm C2S, matte lamination, marbled print',
+      price: '0.85',
+      img: '/assets/images/mig-marbled-foldable-box-1.webp',
+      moq: '100 pcs',
+      extraImgs: ['/assets/images/mig-marbled-foldable-box-2.webp'],
+      specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '300-350gsm C2S, flat-fold, auto-lock bottom'], ['Material', 'C2S / kraft / recycled board'], ['Print', 'Full-color CMYK marbled pattern'], ['Finish', 'Matte Lamination'], ['Structure', 'Flat-fold collapsible, saves 70% freight space'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+      copy: [
+        'A flat-fold carton printed with a bold marbled pattern and matte lamination. It ships and stores flat, then pops into shape with an auto-lock bottom - premium looks without the freight cost of a rigid box.',
+        'Perfect for fashion and apparel brands, boutique retail and any business shipping garments, gifts or accessories that want a statement box at a folding-carton price.',
+        'Mili prints your pattern or artwork in full CMYK on 300-350gsm board, with FSC-certified and recycled options. Free 3D mockup in 48 hours and 2 rounds of free structural samples.',
+      ],
+      chips: ['Flat-Fold Design', 'Full-Color CMYK', 'Matte Lamination', 'Auto-Lock Bottom', 'Recycled Board', 'Custom Pattern'],
+      process: [
+        ['01', 'Inquiry & Quote', 'Send your brief - structure, size, material, finishing and quantity. We reply with a tailored quote and free 3D mockup within 24 hours.'],
+        ['02', 'Free Sampling', '2 rounds of free structural samples in 3-5 days. Review, refine and approve before bulk production.'],
+        ['03', 'Bulk Production', 'In-house manufacturing with AQL 2.5 QC at every workstation. Standard bulk lead time 10-12 days.'],
+        ['04', 'Global Delivery', 'FOB, CIF or DDP door-to-door across 50+ countries, with export-grade packing and tracking.'],
+      ],
+      industry: { to: '/industries/fashion-apparel', text: 'Marbled and custom-print foldable boxes for fashion, apparel and boutique retail.' },
+      faq: [
+        ['What is the MOQ for a marbled foldable box?', 'MOQ is 100 pcs - a low-cost way to launch a signature box design.'],
+        ['Can I use my own pattern or artwork?', 'Yes. Send your pattern or brand artwork and we print it in full CMYK with matte lamination. We can also design a marbled pattern for you, free.'],
+        ['How much freight space does flat-folding save?', 'A flat-fold box takes roughly 70% less shipping and storage space than a pre-erected box, which usually cuts your freight cost per box significantly.'],
+        ['What materials can be used?', '300-350gsm C2S, kraft or recycled board, all FSC-certified options available.'],
+        ['Is the bottom auto-locking?', 'Yes - the box pops into shape with an auto-lock bottom and needs no tape or glue to assemble.'],
+      ],
     },
   ],
   'paper-bags': [
@@ -1052,6 +1145,37 @@ export const productCatalog = {
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '35x25x40cm, reinforced bottom'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
+    {
+      slug: 'hard-handle-kraft-bag',
+      name: 'Hard Handle Kraft Bag',
+      tagline: 'Rigid-handle kraft shopping bag with custom print',
+      spec: '120gsm kraft, hard patch handle, full-color print',
+      price: '1.40',
+      img: '/assets/images/mig-hard-handle-kraft-bag-1.webp',
+      moq: '100 pcs',
+      extraImgs: ['/assets/images/mig-hard-handle-kraft-bag-2.webp'],
+      specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Hard patch / rivet / ribbon handle, square bottom'], ['Material', 'Kraft paper 100-150gsm, recycled & biodegradable options'], ['Print', 'Offset / silk-screen / flexo / gravure, hot stamping'], ['Finish', 'Matte / gloss lamination, nano UV, over 20 colors'], ['Structure', 'Reinforced square bottom, 10 pcs per bundle'], ['Sampling', 'Free stock samples; 2 rounds free structural samples'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+      copy: [
+        'A hard-handle kraft shopping bag with a reinforced square bottom and full-color brand printing. The rigid patch handle carries real weight comfortably, so the bag works as packaging and as a walking advertisement after checkout.',
+        'Made for retail brands, food and beverage shops, boutiques and event gifting - anywhere customers walk out carrying your brand.',
+        'Mili produces it from recyclable, biodegradable kraft with Henkel-grade adhesives and prints your logo in offset, silk-screen or flexo with hot stamping and nano UV options. MOQ is just 100 pcs.',
+      ],
+      chips: ['Hard Handle', 'Reinforced Bottom', 'Full-Color Print', 'Hot Stamping', 'Biodegradable Kraft', 'Ribbon Option'],
+      process: [
+        ['01', 'Inquiry & Quote', 'Send your brief - size, handle type, printing and quantity. We reply with a tailored quote and free design support within 24 hours.'],
+        ['02', 'Free Sampling', 'Free stock samples available; 2 rounds of free structural samples in 3-5 days.'],
+        ['03', 'Bulk Production', 'In-house manufacturing with AQL 2.5 QC at every workstation. Standard bulk lead time 10-12 days.'],
+        ['04', 'Global Delivery', 'FOB, CIF or DDP door-to-door across 50+ countries, with export-grade packing and tracking.'],
+      ],
+      industry: { to: '/industries/food-beverage', text: 'Custom kraft shopping bags for retail, food & beverage and event gifting.' },
+      faq: [
+        ['What is the MOQ for custom kraft bags?', 'MOQ is just 100 pcs - low enough to test a design before scaling.'],
+        ['Which handle options are available?', 'Hard patch handle, rivet handle, ribbon handle or twisted kraft weave - choose what fits your brand and weight load.'],
+        ['Can you print my logo on the bag?', 'Yes. Offset, silk-screen, flexo or gravure printing with over 20 color options, plus hot stamping, lamination and nano UV finishes.'],
+        ['Are the bags eco-friendly?', 'Yes - recyclable and biodegradable kraft with strong, food-safe adhesives, and FSC-certified paper available on request.'],
+        ['What sizes can you make?', 'Any custom size from your spec. Square-bottom construction with a reinforced base carries heavier loads.'],
+      ],
+    },
   ],
   'corrugated-shipping': [
     {
@@ -1113,6 +1237,37 @@ export const productCatalog = {
       img: '/assets/images/sku-corrugated-flatpack.webp',
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Bulk flat pack, moisture wrap'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+    },
+    {
+      slug: 'eco-printed-shipping-box',
+      name: 'Eco Printed Shipping Box',
+      tagline: 'Biodegradable custom-print shipping box',
+      spec: 'E-flute corrugated, water-based ink, custom print',
+      price: '1.00',
+      img: '/assets/images/mig-eco-printed-shipping-box-1.webp',
+      moq: '100 pcs',
+      extraImgs: ['/assets/images/mig-eco-printed-shipping-box-2.webp'],
+      specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'E-flute corrugated, tuck-top shipping box'], ['Material', 'Recycled kraft, biodegradable & compostable'], ['Print', 'Full-color custom print inside & out'], ['Ink', 'Water-based, eco-friendly inks'], ['Structure', 'Lightweight mailer / gift box hybrid'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
+      copy: [
+        'A biodegradable corrugated shipping box printed in full color with water-based inks. It is light enough to cut shipping weight, strong enough to protect the contents, and printed inside and out so every surface carries your brand.',
+        'For eco-conscious DTC brands, subscription services and food & beverage companies that want sustainable packaging without losing the branded unboxing feel.',
+        'Mili builds it from recycled, compostable kraft on FSC-certified board, with water-based inks and AQL 2.5 QC. Custom sizes, free 3D mockup in 48 hours and MOQ from 100 pcs.',
+      ],
+      chips: ['Biodegradable', 'Water-Based Ink', 'Full-Color Print', 'Recycled Kraft', 'FSC Board', 'Lightweight'],
+      process: [
+        ['01', 'Inquiry & Quote', 'Send your brief - structure, size, material, finishing and quantity. We reply with a tailored quote and free 3D mockup within 24 hours.'],
+        ['02', 'Free Sampling', '2 rounds of free structural samples in 3-5 days. Review, refine and approve before bulk production.'],
+        ['03', 'Bulk Production', 'In-house manufacturing with AQL 2.5 QC at every workstation. Standard bulk lead time 10-12 days.'],
+        ['04', 'Global Delivery', 'FOB, CIF or DDP door-to-door across 50+ countries, with export-grade packing and tracking.'],
+      ],
+      industry: { to: '/industries/subscription-dtc', text: 'Eco printed shipping boxes for subscription brands and sustainable DTC packaging.' },
+      faq: [
+        ['What is the MOQ for custom printed shipping boxes?', 'MOQ is 100 pcs - ideal for testing a new pack design or a seasonal drop.'],
+        ['Is the box fully biodegradable?', 'Yes - recycled kraft corrugated with water-based inks, compostable and recyclable. FSC-certified board available.'],
+        ['Can you print inside the box?', 'Yes, full-color print on both interior and exterior surfaces for a complete branded experience.'],
+        ['What sizes are available?', 'Any custom size from your product dimensions, from small gift-box size up to full shipping cartons.'],
+        ['How strong is an E-flute box?', 'E-flute is lightweight but rigid - ideal for cosmetics, apparel, food and electronics up to moderate weights. Heavier loads can use B-flute or double wall.'],
+      ],
     },
   ],
   'sample-starter-kits': [

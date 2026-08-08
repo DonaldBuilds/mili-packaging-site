@@ -44,6 +44,15 @@ export default function ProductItem() {
           { '@type': 'ListItem', position: 4, name: product.name, item: `https://mili-packaging.com/#/products/${group.slug}/${product.slug}` },
         ],
       },
+      ...(product.faq && product.faq.length ? [{
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: product.faq.map(([q, a]) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }] : []),
     ];
     const scripts = schemas.map(schema => {
       const s = document.createElement('script');
@@ -106,6 +115,7 @@ export default function ProductItem() {
   ];
 
   const extraProductImgs = [
+    ...(product.extraImgs || []),
     ...(group.craftImg || []),
     ...(group.tabs ? group.tabs.map(t => t.img) : []),
   ];
@@ -256,6 +266,108 @@ export default function ProductItem() {
             ))}
           </div>
         </section>
+
+        {/* ③ Copy - What / Who / Why (rich products only) */}
+        {product.copy && product.copy.length === 3 && (
+          <section style={{ margin: '0 0 64px' }}>
+            <div className="section-header" style={{ textAlign: 'left', alignItems: 'flex-start', marginBottom: 28 }}>
+              <div>
+                <div className="gold-line" />
+                <span className="eyebrow">About This Product</span>
+                <h2 style={{ margin: 0 }}>{product.name}, Explained</h2>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gap: 2, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+              {[
+                ['What It Is', product.copy[0]],
+                ['Who It Is For', product.copy[1]],
+                ['Why Choose Mili', product.copy[2]],
+              ].map(([t, c], i) => (
+                <div key={t} style={{ background: 'var(--black-2)', padding: '26px 28px', display: 'grid', gridTemplateColumns: '60px 1fr', gap: 20 }}>
+                  <div style={{ fontSize: 28, color: 'var(--gold)', fontFamily: 'var(--font-display)', opacity: 0.9 }}>0{i + 1}</div>
+                  <div>
+                    <h3 style={{ fontSize: 15, marginBottom: 8, color: 'var(--gold)', letterSpacing: '0.03em' }}>{t}</h3>
+                    <p style={{ color: 'var(--gray-3)', fontSize: 13.5, lineHeight: 1.8, margin: 0 }}>{c}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ③b Finish / option chips */}
+        {product.chips && product.chips.length > 0 && (
+          <section style={{ margin: '0 0 64px' }}>
+            <div className="section-header" style={{ textAlign: 'left', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <div className="gold-line" />
+                <span className="eyebrow">Finishing &amp; Options</span>
+                <h2 style={{ margin: 0 }}>Customization Chips</h2>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {product.chips.map(c => (
+                <span key={c} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid rgba(201,162,39,0.4)', background: 'rgba(201,162,39,0.08)', color: 'var(--gold)', fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', padding: '9px 18px' }}>
+                  <span style={{ color: 'var(--gold)', fontSize: 11 }}>&#10022;</span>{c}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ③c Process steps */}
+        {product.process && product.process.length === 4 && (
+          <section style={{ margin: '0 0 64px' }}>
+            <div className="section-header" style={{ textAlign: 'left', alignItems: 'flex-start', marginBottom: 28 }}>
+              <div>
+                <div className="gold-line" />
+                <span className="eyebrow">How It Works</span>
+                <h2 style={{ margin: 0 }}>From Brief to Delivery</h2>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+              {product.process.map(([n, t, d]) => (
+                <div key={n} style={{ background: 'var(--black-2)', padding: '24px 22px' }}>
+                  <div style={{ fontSize: 26, color: 'var(--gold)', fontFamily: 'var(--font-display)', opacity: 0.9, marginBottom: 10 }}>{n}</div>
+                  <h4 style={{ fontSize: 13, margin: '0 0 8px', color: 'var(--gold)' }}>{t}</h4>
+                  <p style={{ color: 'var(--gray-3)', fontSize: 12, lineHeight: 1.7, margin: 0 }}>{d}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ③d Industry link */}
+        {product.industry && (
+          <section style={{ margin: '0 0 64px', padding: '22px 28px', background: 'var(--black-2)', border: '1px solid rgba(201,168,76,0.35)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gray-2)', marginBottom: 6 }}>Built For Your Industry</div>
+              <div style={{ fontSize: 15, fontWeight: 600 }}>{product.industry.text}</div>
+            </div>
+            <Link to={product.industry.to} className="btn-outline-gold" style={{ textDecoration: 'none', fontSize: 12.5, padding: '12px 24px', whiteSpace: 'nowrap' }}>Explore Industry Solutions &rarr;</Link>
+          </section>
+        )}
+
+        {/* ③e FAQ */}
+        {product.faq && product.faq.length > 0 && (
+          <section style={{ margin: '0 0 64px' }}>
+            <div className="section-header" style={{ textAlign: 'left', alignItems: 'flex-start', marginBottom: 28 }}>
+              <div>
+                <div className="gold-line" />
+                <span className="eyebrow">Questions</span>
+                <h2 style={{ margin: 0 }}>Frequently Asked Questions</h2>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gap: 2, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+              {product.faq.map(([q, a]) => (
+                <div key={q} style={{ background: 'var(--black-2)', padding: '22px 26px' }}>
+                  <h4 style={{ fontSize: 14, margin: '0 0 8px', color: 'var(--gold)', fontWeight: 600 }}>{q}</h4>
+                  <p style={{ color: 'var(--gray-3)', fontSize: 13, lineHeight: 1.7, margin: 0 }}>{a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ⑤ Recommended products - same category + recently viewed, auto-updated */}
         {recommended.length > 0 && (
