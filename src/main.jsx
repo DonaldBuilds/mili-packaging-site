@@ -121,10 +121,17 @@ function IndustryTitles() {
   return null;
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, [pathname]);
+  return null;
+}
+
 function App() {
   useEffect(() => { initGlobalClickTracking(); }, []);
   return (
     <Router>
+      <ScrollToTop />
       <TitleManager />
       <IndustryTitles />
       <Navbar />

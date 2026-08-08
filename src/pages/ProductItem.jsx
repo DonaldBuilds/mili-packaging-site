@@ -1,8 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getGroup, getProduct, productCatalog, priceDisclaimer } from '../data/products';
+import { useEffect, useMemo, useState } from 'react';
+import { getGroup, getProduct, productCatalog, productGroups, priceDisclaimer } from '../data/products';
 
 const WA_LINK = (text) => `https://wa.me/8618296876285?text=${encodeURIComponent(text)}`;
+const RECENT_KEY = 'mili_recent_products';
+
+const readRecent = () => {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
+};
 
 export default function ProductItem() {
   const { slug, productSlug } = useParams();
@@ -50,6 +55,16 @@ export default function ProductItem() {
     return () => { scripts.forEach(s => document.head.removeChild(s)); };
   }, [group, product]);
 
+  // Track recently viewed (drives the auto-updating recommended section)
+  useEffect(() => {
+    if (!group || !product) return;
+    try {
+      const list = readRecent().filter(x => !(x.group === group.slug && x.slug === product.slug));
+      list.unshift({ group: group.slug, slug: product.slug, t: Date.now() });
+      localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, 12)));
+    } catch { /* storage unavailable - ignore */ }
+  }, [group, product]);
+
   if (!group || !product) {
     return (
       <div className="page-scaffold" style={{ paddingTop: 140, textAlign: 'center' }}>
@@ -62,7 +77,28 @@ export default function ProductItem() {
   }
 
   const groupSkus = productCatalog[group.slug] || [];
-  const siblings = groupSkus.filter(p => p.slug !== product.slug).slice(0, 3);
+  // Recommended: recently viewed from other categories + same-category products (4-6 total)
+  const recommended = useMemo(() => {
+    const seen = new Set();
+    const out = [];
+    const push = (g, p) => {
+      const k = `${g}/${p.slug}`;
+      if (!p || seen.has(k)) return;
+      seen.add(k);
+      out.push({ group: g, product: p });
+    };
+    readRecent()
+      .filter(r => r.group !== group.slug)
+      .forEach(r => { if (out.length < 3) push(r.group, getProduct(r.group, r.slug)); });
+    groupSkus.forEach(p => { if (out.length < 6 && p.slug !== product.slug) push(group.slug, p); });
+    if (out.length < 6) {
+      productGroups.forEach(g => {
+        if (g.slug === group.slug) return;
+        (productCatalog[g.slug] || []).forEach(p => { if (out.length < 6) push(g.slug, p); });
+      });
+    }
+    return out;
+  }, [group, groupSkus, product.slug]);
   const sellingPoints = [
     ['Custom to Your Brand', 'Your logo, brand colors, size and finish — every product is made to order with free design support and a 3D mockup within 48h.'],
     ['Factory-Direct Pricing', 'No middleman markups. Reference price from $' + product.price + ' per unit (EXW), with volume discounts available from 3,000 pcs.'],
@@ -174,7 +210,7 @@ export default function ProductItem() {
               <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none', flex: 1, textAlign: 'center', fontSize: 14 }}>
                 {ctaLabel}
               </Link>
-              <a href={WA_LINK(`Hi, I'm interested in ${product.name}`)} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+              <a href={WA_LINK(`Hi, I'm interested in ${product.name}`)} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className="wa-btn"
                 style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(37,211,102,0.12)', border: '1px solid rgba(37,211,102,0.4)', borderRadius: '50%', flexShrink: 0 }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               </a>
@@ -221,37 +257,37 @@ export default function ProductItem() {
           </div>
         </section>
 
-        {/* ⑤ Related products in same group */}
-        {siblings.length > 0 && (
+        {/* ⑤ Recommended products - same category + recently viewed, auto-updated */}
+        {recommended.length > 0 && (
           <section style={{ margin: '0 0 72px' }}>
             <div className="section-header" style={{ textAlign: 'left', alignItems: 'flex-start', marginBottom: 28 }}>
               <div>
                 <div className="gold-line" />
-                <span className="eyebrow">More from {group.name}</span>
+                <span className="eyebrow">Recommended For You</span>
                 <h2 style={{ margin: 0 }}>Related Products</h2>
               </div>
             </div>
-            <div className="product-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-              {siblings.map(s => (
-                <div className="product-card" key={s.slug} style={{ position: 'relative' }}>
-                  <Link to={`/products/${group.slug}/${s.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <div className="product-grid">
+              {recommended.map(({ group: g, product: p }) => (
+                <div className="product-card" key={`${g}/${p.slug}`} style={{ position: 'relative' }}>
+                  <Link to={`/products/${g}/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                     <div className="product-card-img-wrap">
-                      <img src={s.img} alt={s.name} className="product-card-img" loading="lazy" />
+                      <img src={p.img} alt={p.name} className="product-card-img" loading="lazy" />
                     </div>
                     <div className="product-card-body">
-                      <h4>{s.name}</h4>
-                      <p>{s.tagline}</p>
+                      <h4>{p.name}</h4>
+                      <p>{p.tagline}</p>
                       <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                        <span className="product-card-tag">{s.moq}</span>
-                        <span className="product-card-tag">From ${s.price}</span>
+                        <span className="product-card-tag">{p.moq}</span>
+                        <span className="product-card-tag">From ${p.price}</span>
                       </div>
                     </div>
                   </Link>
                 </div>
               ))}
             </div>
-            <div style={{ marginTop: 24, textAlign: 'center' }}>
-              <Link to={`/products/${group.slug}`} className="btn-outline-gold" style={{ textDecoration: 'none' }}>View All {group.name} &rarr;</Link>
+            <div style={{ textAlign: 'right', marginTop: 20 }}>
+              <Link to="/products" className="view-more-link">View More <span aria-hidden="true">&rarr;</span></Link>
             </div>
           </section>
         )}
