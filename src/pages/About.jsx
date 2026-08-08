@@ -76,10 +76,82 @@ export default function About() {
             <span className="eyebrow">Factory Strength</span>
             <h2>Precision at Scale</h2>
           </div>
-          <img src="/assets/images/factory-workshop.jpg" alt="Mili Packaging factory" style={{ width:'100%', aspectRatio:'16/8', objectFit:'cover', marginBottom: 2 }} />
+          {/* Factory entrance */}
+          <img src="/assets/images/factory-gate.jpg" alt="Mili Packaging factory entrance, Jiangxi Mili Packaging Materials Co., Ltd." style={{ width:'100%', aspectRatio:'16/8', objectFit:'cover', marginBottom: 2 }} />
           <div className="stat-row" style={{ marginTop: 2 }}>
             {factory.map(([n,l]) => (
               <div className="stat-box" key={l}><div className="stat-num" style={{ fontSize:32 }}>{n}</div><div className="stat-label">{l}</div></div>
+            ))}
+          </div>
+
+          {/* Production floor & craft process */}
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:12, margin:'72px 0 36px' }}>
+            <div>
+              <div className="gold-line" />
+              <span className="eyebrow">Inside Our Factory</span>
+              <h2 style={{ margin: 0 }}>Production Floor</h2>
+            </div>
+            <p style={{ color:'var(--gray-3)', fontSize:13, maxWidth:420, margin:0 }}>
+              From raw greyboard to finished box — every craft step runs under one roof: die-cutting, foil stamping, insert cutting, hand assembly, QC and warehousing.
+            </p>
+          </div>
+          <div className="factory-grid" style={{ marginBottom: 72 }}>
+            {[
+              ['Die-Cutting', '/assets/images/factory-diecut.jpg'],
+              ['Foil Stamping', '/assets/images/factory-foil.jpg'],
+              ['Insert Cutting', '/assets/images/factory-insert.jpg'],
+              ['Manual Assembly', '/assets/images/factory-assembly.jpg'],
+              ['Quality Control', '/assets/images/factory-qc.jpg'],
+              ['Finished Goods Warehouse', '/assets/images/factory-warehouse.jpg'],
+            ].map(([t, img]) => (
+              <div className="factory-tile" key={t}>
+                <img src={img} alt={`${t} at Mili Packaging`} loading="lazy" />
+                <div className="factory-tile-label">
+                  <span style={{ fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--gold)', fontWeight:700 }}>{t}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sample room */}
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:12, marginBottom: 36 }}>
+            <div>
+              <div className="gold-line" />
+              <span className="eyebrow">Sample Room</span>
+              <h2 style={{ margin: 0 }}>1,000+ Samples on Display</h2>
+            </div>
+            <p style={{ color:'var(--gray-3)', fontSize:13, maxWidth:420, margin:0 }}>
+              Our showroom is organized by category — rigid gift boxes, cosmetics, jewelry, mailers and corrugated — so you can compare structures, materials and finishes side by side.
+            </p>
+          </div>
+          <div className="sample-room-grid">
+            <div className="factory-tile" style={{ aspectRatio:'auto', minHeight: 420 }}>
+              <img src="/assets/images/factory-sample-room.jpg" alt="Mili Packaging sample room panorama" loading="lazy" style={{ height:'100%' }} />
+            </div>
+            <div className="sample-room-col">
+              <div className="factory-tile">
+                <img src="/assets/images/factory-showroom.jpg" alt="Mili Packaging showroom with category displays" loading="lazy" />
+              </div>
+              <div className="factory-tile">
+                <img src="/assets/images/factory-shelves.jpg" alt="Mili Packaging sample shelves with branded boxes" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div className="factory-grid" style={{ marginTop: 2 }}>
+            {[
+              ['Workshop Panorama', '/assets/images/factory-floor.jpg'],
+              ['Production Overview', '/assets/images/factory-overview.jpg'],
+              ['Industry Applications', '/assets/images/factory-industry-cases.jpg'],
+              ['Factory Capabilities', '/assets/images/factory-capability.jpg'],
+              ['Custom Design', '/assets/images/factory-showroom.jpg'],
+              ['Factory-Direct', '/assets/images/factory-gate.jpg'],
+            ].map(([t, img]) => (
+              <div className="factory-tile" key={t}>
+                <img src={img} alt={`${t} at Mili Packaging`} loading="lazy" />
+                <div className="factory-tile-label">
+                  <span style={{ fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--gold)', fontWeight:700 }}>{t}</span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
