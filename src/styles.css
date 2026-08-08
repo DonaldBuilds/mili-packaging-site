@@ -764,7 +764,7 @@ html, body { overflow-x: hidden; }
   position: sticky; top: 112px;
   display: flex; flex-direction: column;
   min-height: 0;
-  max-height: calc(100vh - 210px);
+  max-height: calc(100vh - 170px);
 }
 .detail-main-wrap {
   position: relative; overflow: hidden;
