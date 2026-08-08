@@ -58,26 +58,24 @@ function SocialProofTicker() {
     return () => clearInterval(t);
   }, []);
   return (
+    /* 问题1修复：去掉边框和背景色，改为极细分隔线+透明背景，不遮背景图 */
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 10,
-      background: 'rgba(37,211,102,0.06)',
-      border: '1px solid rgba(37,211,102,0.22)',
-      padding: '9px 16px', borderRadius: 2,
-      marginBottom: 20,
+      display: 'flex', alignItems: 'center', gap: 8,
+      borderBottom: '1px solid rgba(255,255,255,0.08)',
+      padding: '6px 0', marginBottom: 18,
     }}>
       <span style={{
-        width: 7, height: 7, borderRadius: '50%',
-        background: '#25D366', boxShadow: '0 0 7px #25D366',
-        flexShrink: 0, animation: 'spPulse 2s ease-in-out infinite',
+        width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+        background: '#25D366', boxShadow: '0 0 6px rgba(37,211,102,0.8)',
+        animation: 'spPulse 2s ease-in-out infinite',
       }} />
       <span style={{
-        fontSize: 12.5, color: 'rgba(220,220,220,0.82)',
-        transition: 'opacity 0.28s ease, transform 0.28s ease',
+        fontSize: 12, color: 'rgba(210,210,210,0.72)',
+        transition: 'opacity 0.25s ease',
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(4px)',
-        display: 'block', lineHeight: 1.5,
+        lineHeight: 1.4, letterSpacing: '0.01em',
       }}>
-        🟢 {SOCIAL_PROOF[idx]}
+        {SOCIAL_PROOF[idx]}
       </span>
     </div>
   );
@@ -100,22 +98,40 @@ export default function Home() {
         {/* P1c: 左侧渐变遮罩提升文字可读性(WCAG AA) */}
         <div className="hero-overlay" />
         <div className="hero-content">
-          {/* P1: 主标题嵌入 MOQ 100 pcs 差异化卖点 */}
+          {/* P1: H1大写无衬线 — 主标题 + MOQ差异化行（问题3：字体风格对标luxopack） */}
           <h1>
-            <span className="h1-desktop">Custom Luxury Gift Box Manufacturer<br />
-              <span style={{ color: 'var(--gold)', fontSize: '0.72em', fontWeight: 600, letterSpacing: '0.01em' }}>MOQ 100 pcs · Factory-Direct · China</span>
+            <span className="h1-desktop">
+              CUSTOM LUXURY GIFT BOX<br />MANUFACTURER IN CHINA
             </span>
-            <span className="h1-mobile">Custom Luxury Gift Box<br />Manufacturer in China<br />
-              <span style={{ color: 'var(--gold)', fontSize: '0.8em', fontWeight: 600 }}>MOQ 100 pcs · Factory-Direct</span>
+            <span className="h1-mobile">
+              CUSTOM LUXURY<br />GIFT BOX MANUFACTURER<br />IN CHINA
             </span>
           </h1>
-          {/* P2: 副标题改为价值主张句，融入社会证明 */}
-          <p>Trusted by 500+ brands across 50+ countries. Free design consultation, structural samples in 7 days, factory-direct pricing — no agents, no markups.</p>
-          {/* 信任标签补年份 */}
+          {/* MOQ差异化副行 — 金色，字号缩小，不做uppercase */}
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16, marginTop:-8 }}>
+            <span style={{ color:'var(--gold)', fontSize:15, fontWeight:600, letterSpacing:'0.04em' }}>
+              MOQ 100 pcs
+            </span>
+            <span style={{ color:'rgba(201,168,76,0.4)', fontSize:13 }}>·</span>
+            <span style={{ color:'var(--gold)', fontSize:15, fontWeight:600, letterSpacing:'0.04em' }}>
+              Factory-Direct
+            </span>
+            <span style={{ color:'rgba(201,168,76,0.4)', fontSize:13 }}>·</span>
+            <span style={{ color:'rgba(201,168,76,0.75)', fontSize:15, fontWeight:500, letterSpacing:'0.04em' }}>
+              China
+            </span>
+          </div>
+          {/* P2: 副标题三行结构化排版（问题5） */}
+          <p style={{ marginBottom:18 }}>
+            Trusted by 500+ brands across 50+ countries.<br />
+            Free design &amp; samples in 7 days · Factory-direct pricing.<br />
+            <span style={{ color:'rgba(180,180,180,0.55)', fontStyle:'italic', fontSize:'0.9em' }}>No agents. No markups.</span>
+          </p>
+          {/* 信任标签 — ISO更新为2018（问题4） */}
           <div className="hero-badges">
             {[
               { label: 'FSC Certified', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
-              { label: 'ISO 9001:2015', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
+              { label: 'ISO 9001:2018', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
               { label: 'SGS Audited', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
             ].map(({ label, icon }) => (
               <span className="hero-badge" key={label}>{icon}{label}</span>
