@@ -165,29 +165,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* P3: 6宫格数据卡 1+2+3 视觉分层 */}
+        {/* 右侧卖点卡 — 仅保留底部 4 个卖点（48h/7Days/AQL2.5 已按需求移除） */}
         <div className="hero-badge-row hero-badge-row--tiered">
-          {/* TIER 1 — 48h 主卡（全宽，金色高亮，视觉焦点） */}
-          <div className="hb-tier1">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" /></svg>
-            <div>
-              <div className="hb-t1-num">48h</div>
-              <div className="hb-t1-label">Quote &amp; 3D Mockup</div>
-              <div className="hb-t1-compare">⏱ Industry standard: 3–5 business days</div>
-            </div>
-          </div>
-          {/* TIER 2 — 7 Days + AQL 2.5（双列次级卡） */}
-          {[
-            { d: 'M3 8h18v12H3V8zM3 12h18M8 4v4M16 4v4', c: '#4FA8C9', n: '7 Days', l: 'Sample Ready', sub: 'Free structural × 2 rounds' },
-            { d: 'M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3zM9 12l2 2 4-4', c: '#5FB878', n: 'AQL 2.5', l: 'QC Standard', sub: 'At every production stage' },
-          ].map(({ d, c, n, l, sub }) => (
-            <div className="hb-tier2" key={n}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>
-              <div className="hb-t2-num" style={{ color: c }}>{n}</div>
-              <div className="hb-t2-label">{l}</div>
-              <div className="hb-t2-sub">{sub}</div>
-            </div>
-          ))}
           {/* TIER 3 — 4个支撑数据小卡（全宽行） */}
           <div className="hb-tier3-row">
             {[

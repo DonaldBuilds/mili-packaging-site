@@ -186,65 +186,20 @@ h4 { font-size: 15px; font-weight: 600; }
   text-shadow: 0 1px 14px rgba(0,0,0,0.6);
 }
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-/* ── Hero badge row: 1+2+3 tiered layout ── */
+/* ── Hero badge row: 4 selling-point stats ── */
 .hero-badge-row {
   position: relative; z-index: 2;
   max-width: 1380px; margin: 0 auto; padding: 0 48px 36px;
   border-top: 1px solid rgba(212,175,55,0.2);
 }
 .hero-badge-row--tiered {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
-  gap: 2px;
+  display: block;
   background: rgba(0,0,0,0.38);
   backdrop-filter: blur(2px);
   padding: 0 48px 36px;
   border: none;
   border-top: 1px solid rgba(212,175,55,0.2);
 }
-
-/* TIER 1 — 48h 全宽主卡 */
-.hb-tier1 {
-  grid-column: 1 / -1;
-  display: flex; align-items: center; gap: 18px;
-  padding: 20px 28px;
-  background: rgba(212,175,55,0.10);
-  border-bottom: 1px solid rgba(212,175,55,0.25);
-}
-.hb-t1-num {
-  font-family: var(--font-display);
-  font-size: 52px; font-weight: 700;
-  color: #D4AF37; line-height: 1;
-  letter-spacing: -0.02em;
-}
-.hb-t1-label {
-  font-size: 11px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: #EDEDED;
-  margin-top: 3px; font-weight: 700;
-}
-.hb-t1-compare {
-  font-size: 10.5px; color: rgba(220,220,220,0.75);
-  margin-top: 5px; font-style: italic; font-weight: 600;
-}
-
-/* TIER 2 — 双列次级卡 */
-.hb-tier2 {
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 16px 22px;
-  background: rgba(255,255,255,0.025);
-  border-right: 1px solid rgba(255,255,255,0.05);
-}
-.hb-t2-num {
-  font-family: var(--font-display);
-  font-size: 32px; font-weight: 700; line-height: 1;
-}
-.hb-t2-label {
-  font-size: 10px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: #E0E0E0;
-  font-weight: 700;
-}
-.hb-t2-sub { font-size: 11px; color: rgba(210,210,210,0.85); margin-top: 2px; font-weight: 600; }
 
 /* TIER 3 — 4列小卡 */
 .hb-tier3 {
@@ -302,13 +257,9 @@ h4 { font-size: 15px; font-weight: 600; }
   .hero-actions { justify-content: center; }
   .hero-stats-row { margin-top: 16px; gap: 24px; }
   .hero-badge-row { grid-template-columns: 1fr; padding: 0; }
-  .hero-badge-row--tiered { grid-template-columns: 1fr; padding: 0 20px 24px; }
+  .hero-badge-row--tiered { padding: 0 20px 24px; }
   .hero-actions-wrap { display: flex; justify-content: center; }
   .hero-accent { width: 220px; margin: 0 auto; }
-  .hb-tier1 { padding: 14px 16px; gap: 12px; }
-  .hb-t1-num { font-size: 38px; }
-  .hb-tier2 { padding: 12px 16px; }
-  .hb-t2-num { font-size: 24px; }
   .hb-tier3-row { grid-template-columns: repeat(2, 1fr); }
   .hero-badge-item { gap: 5px; padding: 0 6px; }
   .hero-badge-num { font-size: 21px; }
