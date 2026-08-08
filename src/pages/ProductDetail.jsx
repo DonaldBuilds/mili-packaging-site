@@ -118,6 +118,11 @@ export default function ProductDetail() {
     ...extraImgs.filter((img, i, arr) => img && arr.indexOf(img) === i && img !== baseImg && img !== group.whiteImg).slice(0, 4).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
   ].slice(0, 6);
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
+  const stepView = (dir) => {
+    const idx = gallery.findIndex(g => g.id === view);
+    const next = gallery[(idx + dir + gallery.length) % gallery.length];
+    if (next) setView(next.id);
+  };
   const moqLabel = isSample ? 'Fixed $29 Kit' : `MOQ ${group.moq} pcs`;
   const waText = `Hi, I'm interested in ${group.name}${isSample ? ' (Sample Kit)' : ''}`;
   const ctaLabel = isSample ? 'Order Sample Kit – $29' : 'Get Free Quote';
@@ -142,11 +147,13 @@ export default function ProductDetail() {
         {/* ② First screen: gallery (left) + inquiry box (right) */}
         <section className="detail-hero">
           <div className="detail-gallery-sticky">
-            <div style={{ position: 'relative', background: '#0c0c0c', border: '1px solid var(--border-dim)', overflow: 'hidden' }}>
+            <div className="detail-main-wrap">
               {group.isNew && (
                 <span style={{ position: 'absolute', top: 14, left: 14, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 12px', textTransform: 'uppercase' }}>New</span>
               )}
               <img src={mainImg} alt={`${group.name} custom packaging`} className="detail-main-img" loading={view === 'scene' ? 'eager' : 'lazy'} />
+              <button type="button" className="gallery-arrow gallery-arrow-prev" onClick={() => stepView(-1)} aria-label="Previous image"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg></button>
+              <button type="button" className="gallery-arrow gallery-arrow-next" onClick={() => stepView(1)} aria-label="Next image"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg></button>
             </div>
             <div className="detail-thumbs">
               {gallery.map(g => (
@@ -163,13 +170,13 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          <div style={{ background: 'var(--black-2)', border: '1px solid var(--gold)', padding: '32px 28px' }}>
+          <div style={{ background: 'var(--black-2)', border: '1px solid var(--gold)', padding: '26px 24px' }}>
             <div className="gold-line" />
             <span className="eyebrow">{group.tagline}</span>
-            <h1 style={{ fontSize: 'clamp(26px, 2.6vw, 38px)', margin: '10px 0 16px', fontFamily: 'var(--font-display)' }}>{group.name}</h1>
+            <h1 style={{ fontSize: 'clamp(24px, 2.3vw, 33px)', margin: '8px 0 12px', fontFamily: 'var(--font-display)' }}>{group.name}</h1>
 
             {/* MOQ badge */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
               <span style={{ display: 'inline-block', background: 'rgba(201,162,39,0.14)', border: '1px solid var(--gold)', color: 'var(--gold)', fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '6px 14px' }}>{moqLabel}</span>
               {isSample && <span style={{ display: 'inline-block', border: '1px solid var(--border)', color: 'var(--gray-2)', fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '6px 14px' }}>Credited to Bulk Order</span>}
             </div>
@@ -182,33 +189,33 @@ export default function ProductDetail() {
                     <div style={{ fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gray-2)', marginBottom: 4 }}>Sample &amp; Starter Kit</div>
                     <div style={{ fontSize: 15 }}>12 material &amp; finish sample boxes</div>
                   </div>
-                  <div style={{ fontSize: 26, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${pricing.price}</div>
+                  <div style={{ fontSize: 22, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${pricing.price}</div>
                 </div>
-                <div style={{ padding: '10px 16px', fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.6 }}>Including worldwide shipping. The full fee is credited to your first bulk order.</div>
+                <div style={{ padding: '8px 16px', fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.6 }}>Including worldwide shipping. The full fee is credited to your first bulk order.</div>
               </div>
             ) : (
               <div style={{ marginBottom: 10 }}>
                 <div style={{ fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gray-2)', marginBottom: 8 }}>Reference Pricing (USD, EXW)</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
                   {pricing.tiers.map((tier, i) => (
-                    <div key={tier} style={{ background: 'var(--black-3)', padding: '12px 8px', textAlign: 'center' }}>
+                    <div key={tier} style={{ background: 'var(--black-3)', padding: '10px 6px', textAlign: 'center' }}>
                       <div style={{ fontSize: 11, color: 'var(--gray-2)', marginBottom: 6 }}>{tier}</div>
-                      <div style={{ fontSize: 22, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${pricing.prices[i]}</div>
+                      <div style={{ fontSize: 19, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>${pricing.prices[i]}</div>
                     </div>
                   ))}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--gray-3)', marginTop: 8, lineHeight: 1.6 }}>{priceDisclaimer}</div>
+                <div style={{ fontSize: 11, color: 'var(--gray-3)', marginTop: 6, lineHeight: 1.6 }}>{priceDisclaimer}</div>
               </div>
             )}
 
             {/* Trust badges */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, margin: '16px 0 22px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, margin: '12px 0 16px' }}>
               {[
                 ['FSC', 'Certified Material'],
                 ['AQL 2.5', 'Quality Inspected'],
                 ['7-15 Days', 'Bulk Lead Time'],
               ].map(([n, l]) => (
-                <div key={n} style={{ border: '1px solid var(--border-dim)', padding: '10px 6px', textAlign: 'center' }}>
+                <div key={n} style={{ border: '1px solid var(--border-dim)', padding: '8px 6px', textAlign: 'center' }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--gold)' }}>{n}</div>
                   <div style={{ fontSize: 10, color: 'var(--gray-3)', marginTop: 3, lineHeight: 1.4 }}>{l}</div>
                 </div>

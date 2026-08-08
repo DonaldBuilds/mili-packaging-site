@@ -759,10 +759,31 @@ html, body { overflow-x: hidden; }
 }
 
 /* ═══ Product Detail 10-block template ═══ */
-.detail-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 36px; align-items: start; margin-bottom: 64px; }
-.detail-gallery-sticky { position: sticky; top: 112px; }
-.detail-main-img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: contain; background: #0c0c0c; }
-.detail-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.detail-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 36px; align-items: stretch; margin-bottom: 64px; }
+.detail-gallery-sticky {
+  position: sticky; top: 112px;
+  display: flex; flex-direction: column;
+  min-height: 0;
+  max-height: calc(100vh - 210px);
+}
+.detail-main-wrap {
+  position: relative; overflow: hidden;
+  flex: 1 1 auto; min-height: 300px;
+  background: #0c0c0c; border: 1px solid var(--border-dim);
+}
+.detail-main-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+.detail-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; flex: 0 0 auto; }
+.gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(10,10,10,0.5); border: 1px solid rgba(201,162,39,0.45);
+  color: var(--gold); cursor: pointer; z-index: 3;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.gallery-arrow:hover { background: rgba(10,10,10,0.85); border-color: var(--gold); }
+.gallery-arrow-prev { left: 12px; }
+.gallery-arrow-next { right: 12px; }
 .detail-thumb-btn {
   width: 72px; height: 72px; flex-shrink: 0; padding: 0; cursor: pointer;
   border: 2px solid transparent; background: var(--black-3); overflow: hidden;
@@ -777,6 +798,9 @@ html, body { overflow-x: hidden; }
 .detail-related { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
 @media (max-width: 900px) {
   .detail-hero { grid-template-columns: 1fr; }
+  .detail-gallery-sticky { position: static; max-height: none; }
+  .detail-main-wrap { flex: none; min-height: 0; aspect-ratio: 1/1; }
+  .detail-main-img { position: static; }
   .detail-steps { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
