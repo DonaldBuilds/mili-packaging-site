@@ -107,11 +107,16 @@ export default function ProductDetail() {
   const tab = group.isParent ? (group.tabs.find(t => t.id === activeTab) || group.tabs[0]) : null;
   const boundary = group.boundary ? boundaryTexts[group.boundary] : null;
   const baseImg = tab ? tab.img : group.heroImg;
+  const extraImgs = [
+    ...(group.craftImg || []),
+    ...(group.tabs ? group.tabs.slice(1).map(t => t.img) : []),
+    ...(skus ? skus.slice(0, 3).map(s => s.img) : []),
+  ];
   const gallery = [
     { id: 'scene', label: 'Scene', img: baseImg },
     { id: 'white', label: 'White', img: group.whiteImg },
-    { id: 'craft', label: 'Details', img: (group.craftImg && group.craftImg[0]) || baseImg },
-  ];
+    ...extraImgs.filter((img, i, arr) => img && arr.indexOf(img) === i && img !== baseImg && img !== group.whiteImg).slice(0, 4).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
+  ].slice(0, 6);
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
   const moqLabel = isSample ? 'Fixed $29 Kit' : `MOQ ${group.moq} pcs`;
   const waText = `Hi, I'm interested in ${group.name}${isSample ? ' (Sample Kit)' : ''}`;
@@ -136,21 +141,23 @@ export default function ProductDetail() {
 
         {/* ② First screen: gallery (left) + inquiry box (right) */}
         <section className="detail-hero">
-          <div>
-            <div style={{ position: 'relative', background: 'var(--black-2)', border: '1px solid var(--border-dim)' }}>
+          <div className="detail-gallery-sticky">
+            <div style={{ position: 'relative', background: '#0c0c0c', border: '1px solid var(--border-dim)', overflow: 'hidden' }}>
               {group.isNew && (
-                <span style={{ position: 'absolute', top: 16, right: 16, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', textTransform: 'uppercase' }}>New</span>
+                <span style={{ position: 'absolute', top: 14, left: 14, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 12px', textTransform: 'uppercase' }}>New</span>
               )}
-              <img src={mainImg} alt={`${group.name} custom packaging`} style={{ width: '100%', display: 'block', aspectRatio: '1/1', objectFit: 'cover' }} loading={view === 'scene' ? 'eager' : 'lazy'} />
+              <img src={mainImg} alt={`${group.name} custom packaging`} className="detail-main-img" loading={view === 'scene' ? 'eager' : 'lazy'} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>
+            <div className="detail-thumbs">
               {gallery.map(g => (
-                <button key={g.id} onClick={() => setView(g.id)}
-                  style={{
-                    padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
-                    background: 'var(--black-3)', overflow: 'hidden', aspectRatio: '1/1',
-                  }}>
-                  <img src={g.img} alt={`${group.name} ${g.label}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
+                <button
+                  key={g.id}
+                  className={`detail-thumb-btn${view === g.id ? ' active' : ''}`}
+                  onMouseEnter={() => setView(g.id)}
+                  onClick={() => setView(g.id)}
+                  aria-label={g.label}
+                >
+                  <img src={g.img} alt={`${group.name} ${g.label}`} loading="lazy" />
                 </button>
               ))}
             </div>

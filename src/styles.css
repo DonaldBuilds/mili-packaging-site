@@ -759,7 +759,17 @@ html, body { overflow-x: hidden; }
 }
 
 /* ═══ Product Detail 10-block template ═══ */
-.detail-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 44px; align-items: start; margin-bottom: 64px; }
+.detail-hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 36px; align-items: start; margin-bottom: 64px; }
+.detail-gallery-sticky { position: sticky; top: 112px; }
+.detail-main-img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: contain; background: #0c0c0c; }
+.detail-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.detail-thumb-btn {
+  width: 72px; height: 72px; flex-shrink: 0; padding: 0; cursor: pointer;
+  border: 2px solid transparent; background: var(--black-3); overflow: hidden;
+  transition: border-color 0.18s;
+}
+.detail-thumb-btn.active { border-color: var(--gold); }
+.detail-thumb-btn img { width: 100%; height: 100%; object-fit: contain; display: block; background: #0c0c0c; }
 .detail-strip3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border-dim); border: 1px solid var(--border-dim); }
 .detail-copyrow { display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: flex-start; }
 .detail-specrow { display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding: 14px 22px; }
