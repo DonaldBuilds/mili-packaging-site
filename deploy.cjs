@@ -56,7 +56,6 @@ const M=Object.fromEntries(Object.entries({
   '.xml':['application/xml','public,max-age=3600']
 }).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
 const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
-const SPA=['/products','/contact','/about','/faq','/portfolio','/industries','/support','/warranty','/shipping-policy','/returns-policy','/shipping-delivery','/payment-terms'];
 const BLOG_PATHS=['/blog','/blog/'];
 
 export default{async fetch(r){
@@ -81,8 +80,7 @@ export default{async fetch(r){
     return new Response(F[k],{headers:Object.assign({},H,h)});
   }
 
-  // SPA routes → redirect to hash route for proper navigation
-  for(const s of SPA){if(p===s||p.startsWith(s+'/'))return Response.redirect(url.origin+'/#'+p.replace(/^\\//,''),301)}
+  // SPA routes → fall through to index.html (History-mode routing, no hash redirects)
 
   // Image proxy from Accio CDN
   if(/\\.(jpg|png|webp|jpeg)\$/i.test(k))return fetch('https://mili-packaging.site.accio.ai/'+k,{cf:{cacheEverything:true}});

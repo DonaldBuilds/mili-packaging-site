@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -28,6 +28,11 @@ const PaymentTerms = lazy(() => import('./pages/PaymentTerms'));
 const ReturnsPolicy = lazy(() => import('./pages/ReturnsPolicy'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const SampleKitLanding = lazy(() => import('./pages/SampleKitLanding'));
+
+// Legacy hash-URL compatibility: #/products/xxx → /products/xxx (clean History URL)
+if (window.location.hash.startsWith('#/')) {
+  window.location.replace(window.location.hash.slice(1));
+}
 
 const groupDesc = (g) => {
   if (g.slug === 'sample-starter-kits') {
@@ -86,6 +91,13 @@ function TitleManager() {
       desc = 'Order the Mili sample & starter kit: 12 material and finish sample boxes branded with your logo. $29 including worldwide shipping, fully credited to your first bulk order.';
     }
     document.title = title;
+    // Dynamic canonical + og:url — each route gets its own clean (hash-free) URL
+    const canonical = 'https://mili-packaging.com' + (path === '/' ? '/' : path);
+    let cl = document.querySelector('link[rel="canonical"]');
+    if (!cl) { cl = document.createElement('link'); cl.rel = 'canonical'; document.head.appendChild(cl); }
+    cl.href = canonical;
+    const og = document.querySelector('meta[property="og:url"]');
+    if (og) og.content = canonical;
     if (desc) {
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {

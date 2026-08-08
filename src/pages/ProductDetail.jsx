@@ -46,9 +46,9 @@ export default function ProductDetail() {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://mili-packaging.com/#/' },
-          { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://mili-packaging.com/#/products' },
-          { '@type': 'ListItem', position: 3, name: group.name, item: `https://mili-packaging.com/#/products/${group.slug}` },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://mili-packaging.com/' },
+          { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://mili-packaging.com/products' },
+          { '@type': 'ListItem', position: 3, name: group.name, item: `https://mili-packaging.com/products/${group.slug}` },
         ],
       },
       {
@@ -69,7 +69,7 @@ export default function ProductDetail() {
           position: i + 1,
           name: s.name,
           description: s.spec,
-          url: `https://mili-packaging.com/#/products/${group.slug}`,
+          url: `https://mili-packaging.com/products/${group.slug}`,
         })),
       }] : []),
     ];

@@ -38,10 +38,10 @@ export default function ProductItem() {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://mili-packaging.com/#/' },
-          { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://mili-packaging.com/#/products' },
-          { '@type': 'ListItem', position: 3, name: group.name, item: `https://mili-packaging.com/#/products/${group.slug}` },
-          { '@type': 'ListItem', position: 4, name: product.name, item: `https://mili-packaging.com/#/products/${group.slug}/${product.slug}` },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://mili-packaging.com/' },
+          { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://mili-packaging.com/products' },
+          { '@type': 'ListItem', position: 3, name: group.name, item: `https://mili-packaging.com/products/${group.slug}` },
+          { '@type': 'ListItem', position: 4, name: product.name, item: `https://mili-packaging.com/products/${group.slug}/${product.slug}` },
         ],
       },
       ...(product.faq && product.faq.length ? [{
