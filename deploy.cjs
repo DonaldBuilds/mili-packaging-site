@@ -33,7 +33,7 @@ const filesJson = JSON.stringify(files);
 const worker = `
 const F=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob('${Buffer.from(filesJson).toString('base64')}'),c=>c.charCodeAt(0))));
 const M=Object.fromEntries(Object.entries({
-  '.html':['text/html;charset=UTF-8','public,max-age=600'],
+  '.html':['text/html;charset=UTF-8','no-cache'],
   '.css':['text/css;charset=UTF-8','public,max-age=3600'],
   '.js':['application/javascript','public,max-age=3600'],
   '.svg':['image/svg+xml','public,max-age=3600'],
