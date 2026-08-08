@@ -741,15 +741,23 @@ html, body { overflow-x: hidden; }
 .navbar-dropdown {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
   background: var(--black-2); border: 1px solid var(--border-dim);
-  padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
-  min-width: 460px; z-index: 200;
+  padding: 6px; display: flex; flex-direction: column;
+  min-width: 250px; z-index: 200;
   box-shadow: 0 24px 48px rgba(0,0,0,0.55);
 }
 .navbar-dropdown a {
-  display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 14px;
   font-size: 13px; color: var(--gray-3); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
 }
+.navbar-dropdown a:last-child { border-bottom: none; }
 .navbar-dropdown a:hover { color: var(--gold); background: rgba(201,168,76,0.08); }
+.navbar-dropdown a.navbar-dropdown-all {
+  border-top: 1px solid var(--border-dim); border-bottom: none;
+  margin-top: 6px; padding-top: 12px; font-weight: 700; color: var(--gold);
+}
 .badge-new {
   background: var(--gold); color: var(--black); font-size: 9px; font-weight: 700;
   letter-spacing: 0.06em; padding: 2px 7px; text-transform: uppercase; white-space: nowrap;

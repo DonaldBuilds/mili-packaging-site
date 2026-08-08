@@ -51,10 +51,17 @@ export default function Navbar() {
                 <div className="navbar-dropdown">
                   {productGroups.map(g => (
                     <Link to={`/products/${g.slug}`} key={g.slug} onClick={() => setDrop(false)}>
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.name}</span>
-                      {g.isNew && <span className="badge-new">New</span>}
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {g.name}
+                        {g.isNew && <span className="badge-new">New</span>}
+                      </span>
+                      <span style={{ color: 'var(--gold)', opacity: 0.5, fontSize: 13 }}>›</span>
                     </Link>
                   ))}
+                  <Link to="/products" onClick={() => setDrop(false)} className="navbar-dropdown-all">
+                    <span>All Products</span>
+                    <span style={{ color: 'var(--gold)', fontSize: 13 }}>›</span>
+                  </Link>
                 </div>
               )}
             </li>
