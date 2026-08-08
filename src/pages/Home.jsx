@@ -58,11 +58,10 @@ function SocialProofTicker() {
     return () => clearInterval(t);
   }, []);
   return (
-    /* 问题1修复：去掉边框和背景色，改为极细分隔线+透明背景，不遮背景图 */
+    /* 问题1修复：去掉边框和背景色，下划线缩短为文字宽度（问题3） */
     <div style={{
       display: 'flex', alignItems: 'center', gap: 8,
-      borderBottom: '1px solid rgba(255,255,255,0.08)',
-      padding: '6px 0', marginBottom: 18,
+      marginBottom: 18, width: 'max-content', maxWidth: '100%',
     }}>
       <span style={{
         width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
@@ -74,6 +73,8 @@ function SocialProofTicker() {
         transition: 'opacity 0.25s ease',
         opacity: visible ? 1 : 0,
         lineHeight: 1.4, letterSpacing: '0.01em',
+        borderBottom: '1px solid rgba(255,255,255,0.12)',
+        paddingBottom: 3,
       }}>
         {SOCIAL_PROOF[idx]}
       </span>
