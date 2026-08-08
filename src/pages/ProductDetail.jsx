@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { productGroups, boundaryTexts, getGroup, getDetail, getSkus, priceDisclaimer } from '../data/products';
+import { productGroups, boundaryTexts, getGroup, getDetail, getSkus, priceDisclaimer, productCatalog } from '../data/products';
 import { industries } from './Industries';
 
 const industryName = (slug) => {
@@ -141,16 +141,16 @@ export default function ProductDetail() {
               {group.isNew && (
                 <span style={{ position: 'absolute', top: 16, right: 16, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', textTransform: 'uppercase' }}>New</span>
               )}
-              <img src={mainImg} alt={`${group.name} custom packaging`} style={{ width: '100%', display: 'block' }} loading={view === 'scene' ? 'eager' : 'lazy'} />
+              <img src={mainImg} alt={`${group.name} custom packaging`} style={{ width: '100%', display: 'block', aspectRatio: '1/1', objectFit: 'cover' }} loading={view === 'scene' ? 'eager' : 'lazy'} />
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>
               {gallery.map(g => (
                 <button key={g.id} onClick={() => setView(g.id)}
                   style={{
-                    flex: 1, padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
-                    background: 'var(--black-3)', overflow: 'hidden', minHeight: 64,
+                    padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
+                    background: 'var(--black-3)', overflow: 'hidden', aspectRatio: '1/1',
                   }}>
-                  <img src={g.img} alt={`${group.name} ${g.label}`} style={{ width: '100%', height: 64, objectFit: 'cover', display: 'block' }} loading="lazy" />
+                  <img src={g.img} alt={`${group.name} ${g.label}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
                 </button>
               ))}
             </div>
@@ -330,27 +330,33 @@ export default function ProductDetail() {
               </p>
             </div>
             <div className="detail-related">
-              {skus.map(s => (
-                <div key={s.name} id={`sku-${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} style={{ border: '1px solid var(--border-dim)', background: 'var(--black-2)', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ background: 'var(--black-3)' }}>
-                    <img src={s.img} alt={s.name} loading="lazy" style={{ width: '100%', display: 'block', aspectRatio: '4/3', objectFit: 'cover' }} />
-                  </div>
-                  <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <h4 style={{ fontSize: 13.5, marginBottom: 6 }}>{s.name}</h4>
-                    <p style={{ fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.7, margin: '0 0 12px', flex: 1 }}>{s.spec}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                      <div>
-                        <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>From ${s.price}</span>
-                        {!isSample && <span style={{ display: 'block', fontSize: 9.5, color: 'var(--gray-3)', marginTop: 2 }}>ref. @1,000 pcs (EXW)</span>}
+              {skus.map(s => {
+                const prod = (productCatalog[slug] || []).find(p => p.name === s.name);
+                const href = prod ? `/products/${slug}/${prod.slug}` : '/contact#quote-form';
+                return (
+                  <div key={s.name} id={`sku-${s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} style={{ border: '1px solid var(--border-dim)', background: 'var(--black-2)', display: 'flex', flexDirection: 'column' }}>
+                    <Link to={href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                      <div style={{ background: 'var(--black-3)' }}>
+                        <img src={s.img} alt={s.name} loading="lazy" style={{ width: '100%', display: 'block', aspectRatio: '1/1', objectFit: 'cover' }} />
                       </div>
-                      <span style={{ border: '1px solid rgba(201,162,39,0.45)', color: 'var(--gold-light)', fontSize: 9.5, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '3px 8px', fontWeight: 700 }}>
-                        {isSample ? 'Credited to Bulk' : skuMoq}
-                      </span>
-                    </div>
-                    <Link to="/contact#quote-form" style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em', textDecoration: 'none' }}>Get Quote for This SKU &rarr;</Link>
+                      <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                        <h4 style={{ fontSize: 13.5, marginBottom: 6 }}>{s.name}</h4>
+                        <p style={{ fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.7, margin: '0 0 12px', flex: 1 }}>{s.spec}</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                          <div>
+                            <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>From ${s.price}</span>
+                            {!isSample && <span style={{ display: 'block', fontSize: 9.5, color: 'var(--gray-3)', marginTop: 2 }}>ref. @1,000 pcs (EXW)</span>}
+                          </div>
+                          <span style={{ border: '1px solid rgba(201,162,39,0.45)', color: 'var(--gold-light)', fontSize: 9.5, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '3px 8px', fontWeight: 700 }}>
+                            {isSample ? 'Credited to Bulk' : skuMoq}
+                          </span>
+                        </div>
+                        <span style={{ color: 'var(--gold)', fontSize: 12.5, letterSpacing: '0.04em' }}>View Details &rarr;</span>
+                      </div>
+                    </Link>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}

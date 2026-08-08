@@ -96,16 +96,16 @@ export default function ProductItem() {
               {group.isNew && (
                 <span style={{ position: 'absolute', top: 16, right: 16, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '5px 12px', textTransform: 'uppercase' }}>New</span>
               )}
-              <img src={mainImg} alt={`${product.name} custom packaging`} style={{ width: '100%', display: 'block' }} loading={view === 'scene' ? 'eager' : 'lazy'} />
+              <img src={mainImg} alt={`${product.name} custom packaging`} style={{ width: '100%', display: 'block', aspectRatio: '1/1', objectFit: 'cover' }} loading={view === 'scene' ? 'eager' : 'lazy'} />
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>
               {gallery.map(g => (
                 <button key={g.id} onClick={() => setView(g.id)}
                   style={{
-                    flex: 1, padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
-                    background: 'var(--black-3)', overflow: 'hidden', minHeight: 64,
+                    padding: 0, cursor: 'pointer', border: view === g.id ? '2px solid var(--gold)' : '1px solid var(--border-dim)',
+                    background: 'var(--black-3)', overflow: 'hidden', aspectRatio: '1/1',
                   }}>
-                  <img src={g.img} alt={`${product.name} ${g.label}`} style={{ width: '100%', height: 64, objectFit: 'cover', display: 'block' }} loading="lazy" />
+                  <img src={g.img} alt={`${product.name} ${g.label}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="lazy" />
                 </button>
               ))}
             </div>
@@ -220,19 +220,21 @@ export default function ProductItem() {
             </div>
             <div className="product-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
               {siblings.map(s => (
-                <Link to={`/products/${group.slug}/${s.slug}`} key={s.slug} className="product-card" style={{ textDecoration: 'none' }}>
-                  <div className="product-card-img-wrap">
-                    <img src={s.img} alt={s.name} className="product-card-img" loading="lazy" />
-                  </div>
-                  <div className="product-card-body">
-                    <h4>{s.name}</h4>
-                    <p>{s.tagline}</p>
-                    <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                      <span className="product-card-tag">{s.moq}</span>
-                      <span className="product-card-tag">From ${s.price}</span>
+                <div className="product-card" key={s.slug} style={{ position: 'relative' }}>
+                  <Link to={`/products/${group.slug}/${s.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                    <div className="product-card-img-wrap">
+                      <img src={s.img} alt={s.name} className="product-card-img" loading="lazy" />
                     </div>
-                  </div>
-                </Link>
+                    <div className="product-card-body">
+                      <h4>{s.name}</h4>
+                      <p>{s.tagline}</p>
+                      <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                        <span className="product-card-tag">{s.moq}</span>
+                        <span className="product-card-tag">From ${s.price}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
               ))}
             </div>
             <div style={{ marginTop: 24, textAlign: 'center' }}>
