@@ -7,7 +7,7 @@ const products = productGroups.map(g => ({
   title: g.name,
   desc: g.tagline,
   img: g.heroImg,
-  tag: g.slug === 'sample-starter-kits' ? 'Fixed $29 Kit | 12 sample boxes' : `MOQ ${g.moq} pcs | From $${g.priceFrom}`,
+  tag: g.slug === 'sample-starter-kits' ? 'Fixed $29 Kit | 12 sample boxes' : `MOQ ${g.moq} pcs | From $${g.priceFrom} (100 pcs)`,
   isNew: !!g.isNew,
 }));
 

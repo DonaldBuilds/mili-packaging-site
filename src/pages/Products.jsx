@@ -82,7 +82,7 @@ export default function Products() {
                 <p>{g.tagline}</p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
                   <span className="product-card-tag">{g.slug === 'sample-starter-kits' ? 'Fixed $29 Kit | 12 sample boxes' : `MOQ: ${g.moq} pcs`}</span>
-                  <span className="product-card-tag">From ${g.priceFrom}</span>
+                  <span className="product-card-tag">{g.slug === 'sample-starter-kits' ? 'Kit $29 incl. shipping' : `From $${g.priceFrom} (100 pcs)`}</span>
                 </div>
               </div>
               <a href={`https://wa.me/8618296876285?text=Hi, I'm interested in ${encodeURIComponent(g.name)}`}

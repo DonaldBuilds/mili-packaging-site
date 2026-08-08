@@ -60,6 +60,18 @@ export default function ProductDetail() {
           acceptedAnswer: { '@type': 'Answer', text: a },
         })),
       },
+      ...(getSkus(group.slug).length > 0 ? [{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: `${group.name} — Standard Configurations`,
+        itemListElement: getSkus(group.slug).map((s, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: s.name,
+          description: s.spec,
+          url: `https://mili-packaging.com/#/products/${group.slug}`,
+        })),
+      }] : []),
     ];
     const scripts = schemas.map(schema => {
       const s = document.createElement('script');
@@ -327,7 +339,10 @@ export default function ProductDetail() {
                     <h4 style={{ fontSize: 13.5, marginBottom: 6 }}>{s.name}</h4>
                     <p style={{ fontSize: 12, color: 'var(--gray-3)', lineHeight: 1.7, margin: '0 0 12px', flex: 1 }}>{s.spec}</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                      <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>From ${s.price}</span>
+                      <div>
+                        <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: 15, fontFamily: 'var(--font-display)' }}>From ${s.price}</span>
+                        {!isSample && <span style={{ display: 'block', fontSize: 9.5, color: 'var(--gray-3)', marginTop: 2 }}>ref. @1,000 pcs (EXW)</span>}
+                      </div>
                       <span style={{ border: '1px solid rgba(201,162,39,0.45)', color: 'var(--gold-light)', fontSize: 9.5, letterSpacing: '0.07em', textTransform: 'uppercase', padding: '3px 8px', fontWeight: 700 }}>
                         {isSample ? 'Credited to Bulk' : skuMoq}
                       </span>

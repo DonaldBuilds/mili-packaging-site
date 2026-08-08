@@ -24,7 +24,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-rigid-white.webp',
     craftImg: ['/assets/images/craft-foil.webp', '/assets/images/craft-magnetic.webp'],
     moq: 100,
-    priceFrom: '1.20',
+    priceFrom: '2.40',
     priceTo: '5.50',
     boundary: 'rigid',
     sellingPoints: [
@@ -55,7 +55,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-cosmetic-white.webp',
     craftImg: ['/assets/images/craft-insert.webp', '/assets/images/craft-foil.webp'],
     moq: 100,
-    priceFrom: '1.80',
+    priceFrom: '0.95',
     priceTo: '4.80',
     boundary: 'cosmetic',
     sellingPoints: [
@@ -80,7 +80,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-jewelry-white.webp',
     craftImg: ['/assets/images/craft-deboss.webp', '/assets/images/craft-insert.webp'],
     moq: 100,
-    priceFrom: '1.50',
+    priceFrom: '1.80',
     priceTo: '4.50',
     boundary: null,
     sellingPoints: [
@@ -105,7 +105,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-watch-white.webp',
     craftImg: ['/assets/images/craft-deboss.webp', '/assets/images/craft-magnetic.webp'],
     moq: 50,
-    priceFrom: '2.20',
+    priceFrom: '4.90',
     priceTo: '5.50',
     boundary: null,
     sellingPoints: [
@@ -123,7 +123,7 @@ export const productGroups = [
     faq: [
       ['What is the minimum order for watch boxes?', 'MOQ is 50 pcs - the lowest on our site. A sample is recommended first to confirm fit for your watch model.'],
       ['Does the box fit automatic watches?', 'Yes - the pillow holder fits cases up to 50mm, and winder compartments can be added for automatics.'],
-      ['What is the price range?', 'USD 2.20-5.50 per unit (EXW) depending on size, material and finishing.'],
+      ['What is the price range?', 'USD 4.90-5.50 per unit (EXW) at MOQ 50 pcs, depending on size, material and finishing.'],
     ],
   },
   {
@@ -134,7 +134,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-mailer-white.webp',
     craftImg: ['/assets/images/craft-foil.webp'],
     moq: 100,
-    priceFrom: '0.60',
+    priceFrom: '1.20',
     priceTo: '2.20',
     boundary: 'mailer',
     sellingPoints: [
@@ -159,7 +159,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-folding-white.webp',
     craftImg: ['/assets/images/craft-foil.webp'],
     moq: 100,
-    priceFrom: '0.30',
+    priceFrom: '0.85',
     priceTo: '1.50',
     boundary: 'folding',
     sellingPoints: [
@@ -184,7 +184,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-bag-white.webp',
     craftImg: ['/assets/images/craft-deboss.webp'],
     moq: 100,
-    priceFrom: '0.50',
+    priceFrom: '1.40',
     priceTo: '1.80',
     boundary: null,
     sellingPoints: [
@@ -209,7 +209,7 @@ export const productGroups = [
     whiteImg: '/assets/images/product-corrugated-white.webp',
     craftImg: ['/assets/images/craft-insert.webp'],
     moq: 100,
-    priceFrom: '0.30',
+    priceFrom: '1.00',
     priceTo: '1.20',
     boundary: 'corrugated',
     sellingPoints: [
@@ -505,7 +505,7 @@ export const getDetail = (slug) => detailData[slug];
 // price = reference "From $" (USD, EXW); final quote confirmed by sales team.
 export const skuCatalog = {
   'rigid-gift-boxes': [
-    { name: 'Magnetic Flip-Top Gift Box', spec: '1.5mm greyboard, gold foil, matte lamination', price: '1.20', img: '/assets/images/product-magnetic.webp' },
+    { name: 'Magnetic Flip-Top Gift Box', spec: '1.5mm greyboard, gold foil, matte lamination', price: '1.20', img: '/assets/images/sku-rigid-magnetic.webp' },
     { name: 'Lift-Off Lid & Base Box', spec: '2.5mm greyboard, linen wrap, embossed logo', price: '1.45', img: '/assets/images/product-lidbase.webp' },
     { name: 'Book-Style Hinged Box', spec: 'Book-end hinge, soft-touch, ribbon pull', price: '1.35', img: '/assets/images/product-book.webp' },
     { name: 'Drawer & Slide Gift Box', spec: 'Sliding drawer, satin ribbon, magnetic stop', price: '1.40', img: '/assets/images/product-drawer.webp' },
@@ -514,14 +514,14 @@ export const skuCatalog = {
   ],
   'cosmetic-boxes': [
     { name: 'Serum & Bottle Carton Set', spec: '350gsm white card, EVA bottle holder', price: '0.38', img: '/assets/images/product-cosmetic.webp' },
-    { name: 'Cream Jar Magnetic Set', spec: 'Rigid base + lid, soft-touch, gold foil', price: '1.25', img: '/assets/images/product-rigid.webp' },
+    { name: 'Cream Jar Magnetic Set', spec: 'Rigid base + lid, soft-touch, gold foil', price: '1.25', img: '/assets/images/sku-cosmetic-jar.webp' },
     { name: 'Skincare Layered Tray Box', spec: '3-layer tray unboxing, custom inserts', price: '1.60', img: '/assets/images/product-lidbase.webp' },
     { name: 'Lipstick Slider Box', spec: 'Drawer slider, velvet interior', price: '0.90', img: '/assets/images/product-drawer.webp' },
     { name: 'Perfume Box with Foam Cradle', spec: 'Rigid, foam cradle, satin lining', price: '1.70', img: '/assets/images/product-magnetic.webp' },
     { name: 'Cosmetic 6-Piece Gift Set Box', spec: 'Multi-compartment, brand foil, divider', price: '1.95', img: '/assets/images/product-book.webp' },
   ],
   'jewelry-boxes': [
-    { name: 'Single Ring Box', spec: '60x60x35mm, velvet, foil logo', price: '0.90', img: '/assets/images/product-jewelry.webp' },
+    { name: 'Single Ring Box', spec: '60x60x35mm, velvet, foil logo', price: '0.90', img: '/assets/images/sku-jewelry-ring.webp' },
     { name: 'Double Ring Box', spec: '2 slots, suede microfiber', price: '1.05', img: '/assets/images/product-magnetic.webp' },
     { name: 'Necklace & Bracelet Box', spec: 'Long rigid case, velvet insert', price: '1.30', img: '/assets/images/product-lidbase.webp' },
     { name: 'Earring Stud Box', spec: '12-pair foam display grid', price: '1.20', img: '/assets/images/product-book.webp' },
@@ -529,7 +529,7 @@ export const skuCatalog = {
     { name: 'Book-Style Jewelry Case', spec: 'Hinged book, anti-tarnish lining', price: '1.35', img: '/assets/images/product-gift.webp' },
   ],
   'watch-boxes': [
-    { name: 'Single Watch Box', spec: 'PU leather, pillow holder, fits 50mm', price: '4.90', img: '/assets/images/product-watch.webp' },
+    { name: 'Single Watch Box', spec: 'PU leather, pillow holder, fits 50mm', price: '4.90', img: '/assets/images/sku-watch-single.webp' },
     { name: 'Watch & Bracelet Set Box', spec: '2 compartments, velvet + pillow', price: '5.60', img: '/assets/images/product-magnetic.webp' },
     { name: '6-Slot Watch Box', spec: '6 velvet pillows + jewelry drawer', price: '9.80', img: '/assets/images/product-book.webp' },
     { name: 'Automatic Winder Box', spec: 'Winder slot + storage compartment', price: '7.20', img: '/assets/images/product-lidbase.webp' },
@@ -538,7 +538,7 @@ export const skuCatalog = {
   ],
   'mailer-boxes': [
     { name: 'Self-Seal Mailer 8x6x4"', spec: 'E-flute, interior brand print', price: '0.55', img: '/assets/images/product-mailer.webp' },
-    { name: 'Subscription Mailer 10x8x4"', spec: 'Tear strip, full color inside/out', price: '0.70', img: '/assets/images/product-mailer.webp' },
+    { name: 'Subscription Mailer 10x8x4"', spec: 'Tear strip, full color inside/out', price: '0.70', img: '/assets/images/sku-mailer-subscription.webp' },
     { name: 'Apparel Mailer 12x9x3"', spec: 'Garment-friendly, die-cut handle', price: '0.75', img: '/assets/images/product-folding.webp' },
     { name: 'Cube Mailer 6x6x6"', spec: 'Die-cut window, self-seal', price: '0.50', img: '/assets/images/product-corrugated.webp' },
     { name: 'Heavy-Duty Mailer 14x10x6"', spec: 'Double wall, tear strip', price: '0.95', img: '/assets/images/product-corrugated.webp' },
@@ -547,14 +547,14 @@ export const skuCatalog = {
   'folding-cartons': [
     { name: 'Tuck-End Carton 4x2x1"', spec: '300gsm C2S, CMYK print', price: '0.21', img: '/assets/images/product-folding.webp' },
     { name: 'Reverse Tuck Carton', spec: '350gsm, matte lamination', price: '0.26', img: '/assets/images/product-cosmetic.webp' },
-    { name: 'Crash-Lock Bottom Carton', spec: 'Auto bottom, food-safe inks', price: '0.30', img: '/assets/images/product-folding.webp' },
+    { name: 'Crash-Lock Bottom Carton', spec: 'Auto bottom, food-safe inks', price: '0.30', img: '/assets/images/sku-folding-food.webp' },
     { name: 'Window-Patch Carton', spec: 'Die-cut window, food grade', price: '0.35', img: '/assets/images/product-cosmetic.webp' },
     { name: 'Sleeve & Tray Carton', spec: '2-piece, spot UV', price: '0.33', img: '/assets/images/product-folding.webp' },
     { name: 'Food-Grade Kraft Carton', spec: 'FSC kraft, soy ink, no lamination', price: '0.24', img: '/assets/images/product-bag.webp' },
   ],
   'paper-bags': [
     { name: 'Square-Bottom Kraft Bag', spec: '22x10x27cm, cotton rope handle', price: '0.42', img: '/assets/images/product-bag.webp' },
-    { name: 'Luxury Art Paper Bag', spec: '200g art paper, gold foil, ribbon', price: '0.72', img: '/assets/images/product-bag.webp' },
+    { name: 'Luxury Art Paper Bag', spec: '200g art paper, gold foil, ribbon', price: '0.72', img: '/assets/images/sku-paperbag-luxury.webp' },
     { name: 'Twisted-Handle Bag', spec: 'Twisted paper handle, full print', price: '0.38', img: '/assets/images/product-bag-white.webp' },
     { name: 'Die-Cut Handle Bag', spec: 'Punch-out handle, kraft', price: '0.30', img: '/assets/images/product-bag.webp' },
     { name: 'Boutique Laminated Bag', spec: 'Matte lamination, spot UV', price: '0.55', img: '/assets/images/product-bag-white.webp' },
@@ -564,7 +564,7 @@ export const skuCatalog = {
     { name: 'RSC Single-Wall 12x9x6"', spec: 'B-flute, kraft liner', price: '0.30', img: '/assets/images/product-corrugated.webp' },
     { name: 'Double-Wall Heavy Box 18x14x12"', spec: '5-layer, ECT tested', price: '0.65', img: '/assets/images/product-corrugated.webp' },
     { name: 'Die-Cut Mailer Shipper', spec: 'E-flute, brand print', price: '0.45', img: '/assets/images/product-mailer.webp' },
-    { name: 'E-Commerce Branded Shipper', spec: 'Full-color flexo, logo, tear strip', price: '0.55', img: '/assets/images/product-corrugated.webp' },
+    { name: 'E-Commerce Branded Shipper', spec: 'Full-color flexo, logo, tear strip', price: '0.55', img: '/assets/images/sku-corrugated-branded.webp' },
     { name: 'Large Moving Box 24x18x18"', spec: 'Double wall, handles', price: '0.85', img: '/assets/images/product-corrugated-white.webp' },
     { name: 'Flat-Pack Export Carton', spec: 'Bulk flat pack, moisture wrap', price: '0.38', img: '/assets/images/product-corrugated.webp' },
   ],
@@ -574,7 +574,7 @@ export const skuCatalog = {
     { name: 'E-Commerce Mailer Sample Kit', spec: 'Mailers + folding cartons, self-seal', price: '29', img: '/assets/images/product-mailer.webp' },
     { name: 'Food & Beverage Sample Kit', spec: 'Food-safe cartons + kraft options', price: '29', img: '/assets/images/product-folding.webp' },
     { name: 'Corporate Gift Sample Kit', spec: 'Rigid magnetic/book/drawer gift boxes', price: '29', img: '/assets/images/product-rigid.webp' },
-    { name: 'Complete Material & Finish Kit', spec: 'All 12 structures — the flagship kit', price: '29', img: '/assets/images/product-sample.webp' },
+    { name: 'Complete Material & Finish Kit', spec: 'All 12 structures — the flagship kit', price: '29', img: '/assets/images/sku-sample-kit.webp' },
   ],
 };
 
