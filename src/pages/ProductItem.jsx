@@ -267,7 +267,7 @@ export default function ProductItem() {
                 <h2 style={{ margin: 0 }}>Related Products</h2>
               </div>
             </div>
-            <div className="product-grid">
+            <div className="product-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
               {recommended.map(({ group: g, product: p }) => (
                 <div className="product-card" key={`${g}/${p.slug}`} style={{ position: 'relative' }}>
                   <Link to={`/products/${g}/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>

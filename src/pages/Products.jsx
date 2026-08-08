@@ -5,6 +5,22 @@ import { productGroups, productCatalog } from '../data/products';
 const WA_PHONE = '8618296876285';
 const GROUP_ORDER = ['rigid-gift-boxes','cosmetic-boxes','jewelry-boxes','watch-boxes','mailer-boxes','folding-cartons','paper-bags','corrugated-shipping','sample-starter-kits'];
 
+const fi = (p) => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{p}</svg>
+);
+const FILTER_ICONS = {
+  all: fi(<><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>),
+  'rigid-gift-boxes': fi(<><path d="M20 12v10H4V12" /><rect x="2" y="7" width="20" height="5" /><path d="M12 22V7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></>),
+  'cosmetic-boxes': fi(<path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.4 0z" />),
+  'jewelry-boxes': fi(<><path d="M6 3h12l4 6-10 12L2 9z" /><path d="M11 3L8 9l4 12 4-12-3-6" /><path d="M2 9h20" /></>),
+  'watch-boxes': fi(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+  'mailer-boxes': fi(<><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M21 7l-9 6-9-6" /></>),
+  'folding-cartons': fi(<><path d="M12 2 3 7l9 5 9-5-9-5z" /><path d="M3 12l9 5 9-5" /><path d="M3 17l9 5 9-5" /></>),
+  'paper-bags': fi(<><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></>),
+  'corrugated-shipping': fi(<><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><path d="M3.3 7l8.7 5 8.7-5" /><path d="M12 22V12" /></>),
+  'sample-starter-kits': fi(<><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></>),
+};
+
 export default function Products() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeTab, setActiveTab] = useState('magnetic');
@@ -74,6 +90,7 @@ export default function Products() {
             className={`product-filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
             onClick={() => setActiveFilter('all')}
           >
+            {FILTER_ICONS.all}
             All Products
           </button>
           {groups.map(g => (
@@ -84,6 +101,7 @@ export default function Products() {
               className={`product-filter-pill ${activeFilter === g.slug ? 'active' : ''}`}
               onClick={() => setActiveFilter(g.slug)}
             >
+              {FILTER_ICONS[g.slug]}
               {g.name}
             </button>
           ))}
@@ -146,7 +164,7 @@ export default function Products() {
 
               {/* 6 independent products — each links to its own detail page */}
               {g.products.length > 0 ? (
-                <div className="product-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                <div className="product-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
                   {g.products.map(p => productCard(g, p))}
                 </div>
               ) : (

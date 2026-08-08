@@ -49,19 +49,19 @@ export default function Navbar() {
               )}
               {dropdown && drop && (
                 <div className="navbar-dropdown">
+                  <Link to="/products" onClick={() => setDrop(false)} className="navbar-dropdown-all">
+                    <span>All Products</span>
+                    <span style={{ color: 'var(--gold)', fontSize: 12 }}>›</span>
+                  </Link>
                   {productGroups.map(g => (
                     <Link to={`/products/${g.slug}`} key={g.slug} onClick={() => setDrop(false)}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {g.name}
                         {g.isNew && <span className="badge-new">New</span>}
                       </span>
-                      <span style={{ color: 'var(--gold)', opacity: 0.5, fontSize: 13 }}>›</span>
+                      <span style={{ color: 'var(--gold)', opacity: 0.5, fontSize: 12 }}>›</span>
                     </Link>
                   ))}
-                  <Link to="/products" onClick={() => setDrop(false)} className="navbar-dropdown-all">
-                    <span>All Products</span>
-                    <span style={{ color: 'var(--gold)', fontSize: 13 }}>›</span>
-                  </Link>
                 </div>
               )}
             </li>
