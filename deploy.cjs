@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const zlib = require('zlib');
 
 const TOKEN = process.env.CF_API_TOKEN || '';
 if (!TOKEN) { console.error('Missing CF_API_TOKEN environment variable. Set it before running deploy.'); process.exit(1); }
@@ -30,8 +31,12 @@ while (queue.length) {
 console.log(`Embedded ${Object.keys(files).length} files`);
 
 const filesJson = JSON.stringify(files);
+// Gzip the embedded payload so the worker script stays well under CF's 1MB limit
+// (raw base64 of all assets grew past 1MB as the catalog expanded).
+const gz = zlib.gzipSync(Buffer.from(filesJson, 'utf8'));
+const b64 = gz.toString('base64');
 const worker = `
-const F=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob('${Buffer.from(filesJson).toString('base64')}'),c=>c.charCodeAt(0))));
+const F=JSON.parse(new TextDecoder().decode(await new Response(new Blob([Uint8Array.from(atob('${b64}'),c=>c.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()));
 const M=Object.fromEntries(Object.entries({
   '.html':['text/html;charset=UTF-8','no-cache'],
   '.css':['text/css;charset=UTF-8','public,max-age=3600'],
