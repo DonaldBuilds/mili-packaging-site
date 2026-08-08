@@ -11,6 +11,7 @@ const faqLead = [
   ['What is the minimum order?', 'MOQ starts from 100 pcs for most structures. Watch boxes start from 50 pcs. Trial runs and sample kits are available for new brands.'],
   ['How long is production?', 'Standard lead time is 12-15 days from design approval. Structural samples ship in 3-5 days, pre-production samples in 5-7 days.'],
   ['Can I get free samples?', 'Yes - 2 rounds of free structural samples for every new project. Pre-production samples with full printing are available with the cost deducted from your bulk order.'],
+  ['Can I combine different box styles in one order?', 'Yes - mix structures, sizes and finishes in a single order. Each variant keeps its own MOQ, and we consolidate production to save you cost.'],
 ];
 
 export const productGroups = [
@@ -258,3 +259,243 @@ export const productGroups = [
 ];
 
 export const getGroup = (slug) => productGroups.find(g => g.slug === slug);
+
+// ── Detail page data (Module: 10-block product template) ─────────────────────
+// pricing.tiers/prices = reference unit price (USD, EXW) by order quantity.
+// Sample kit uses pricing.fixed instead.
+export const priceDisclaimer = 'Reference prices in USD per unit (EXW), based on standard size and material. Final quote depends on exact dimensions, material, finishing and quantity. Volume discounts available from 3,000 pcs.';
+
+const specsBase = (moq, lead, cert, extra = {}) => [
+  ...(extra.rows || []),
+  ['MOQ', moq],
+  ['Lead Time', lead],
+  ['Sampling', '2 rounds of free structural samples; pre-production sample fee credited to your bulk order'],
+  ['Certification', cert],
+];
+
+export const detailData = {
+  'rigid-gift-boxes': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['2.40', '1.20', '0.85'] },
+    specs: specsBase('100 pcs', '12-15 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Magnetic flip-top, lid & base (lift-off), drawer & slide, book-style hinged'],
+        ['Material', '1.5-3.0mm rigid greyboard, 157-1200gsm art paper wrap, linen / leatherette / PU cover, FSC-certified board'],
+        ['Sizes', 'Fully custom - 60x60x20mm to 500x400x150mm. Free 3D structural mockup within 48h'],
+        ['Printing', 'Offset printing, CMYK + Pantone spot colors, up to 8 colors, digital proof before bulk'],
+        ['Finishing', 'Gold/silver foil stamping, embossing & debossing, spot UV, matte / soft-touch lamination, magnetic closure, ribbon pull'],
+        ['Interior', 'Velvet, satin, suede, EVA or foam inserts with precision cutouts'],
+      ],
+    }),
+    copy: [
+      'Rigid gift boxes are our flagship: thick greyboard walls wrapped in art paper, linen or leatherette, closed with a magnetic snap, lift-off lid, sliding drawer or hinged book-style cover. They are built in our own factory from 1.5-3.0mm greyboard, so the weight and snap feel expensive before the lid even opens.',
+      'Designed for cosmetics and skincare sets, jewelry and watches, electronics and corporate gifting - any brand where the unboxing moment is part of the product itself. Retailers use them for premium shelf display; e-commerce brands use them to create shareable unboxing content.',
+      'Because we manufacture rigid boxes in-house, you get factory-direct pricing, free structural design with a 3D mockup in 48 hours, and AQL 2.5 inspection on every batch - no middleman markup, no quality surprises.',
+    ],
+    industryLinks: ['beauty-skincare', 'electronics-tech'],
+    related: ['cosmetic-boxes', 'jewelry-boxes', 'paper-bags'],
+    faq: [
+      ...faqLead,
+      ['Which structure fits my product best?', 'Magnetic flip-top suits frequent opening, lid & base is the classic retail format, drawer & slide works well for jewelry and stationery, and book-style opens like a display case. Send us your product and we will recommend the best option within 24 hours.'],
+    ],
+  },
+  'cosmetic-boxes': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['0.95', '0.38', '0.24'] },
+    specs: specsBase('100 pcs', '12-15 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Folding carton set, rigid magnetic set, lift-off lid set, layered tray unboxing'],
+        ['Material', '250-400gsm art paper / white card (350gsm standard), FSC-certified paperboard'],
+        ['Sizes', 'Custom sizes for 1-8 piece sets; bottle cradles die-cut to exact dimensions'],
+        ['Printing', 'Offset + flexo, CMYK + Pantone, full-coverage foil, digital proof'],
+        ['Finishing', 'Soft-touch lamination, hot foil stamping, spot UV gloss, matte lamination'],
+        ['Interior', 'EVA / foam inserts, bottle holders, paper dividers and layered trays'],
+      ],
+    }),
+    copy: [
+      'Cosmetic boxes are complete packaging sets: an outer box - folding carton or rigid - plus a custom EVA or paper insert and bottle holder, finished with foil stamping or soft-touch lamination.',
+      'For skincare, serum, perfume and beauty subscription brands that ship glass bottles and need precision-fit protection plus a premium shelf presence in one coordinated system.',
+      'One supplier handles the box, insert and finishing together, which keeps your line consistent, cuts lead time to 12-15 days and removes the coordination cost of juggling multiple vendors.',
+    ],
+    industryLinks: ['beauty-skincare', 'subscription-dtc'],
+    related: ['rigid-gift-boxes', 'folding-cartons', 'paper-bags'],
+    faq: [
+      ...faqLead,
+      ['Can the insert protect glass bottles in transit?', 'Yes - EVA and foam cradles are die-cut to your exact bottle dimensions and tested for courier and export shipping.'],
+    ],
+  },
+  'jewelry-boxes': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['1.80', '0.90', '0.65'] },
+    specs: specsBase('100 pcs', '12-15 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Drawer & slide, hinged book-style, magnetic flip-top, single ring box'],
+        ['Material', 'Rigid greyboard with velvet, suede microfiber or leatherette exterior'],
+        ['Sizes', 'From 60x60x35mm single ring boxes to 300x220mm multi-piece collections'],
+        ['Printing', 'Offset + foil stamping, CMYK + Pantone, digital proof'],
+        ['Finishing', 'Gold/silver foil stamping, embossing & debossing, soft-touch finish, satin ribbon'],
+        ['Interior', 'Velvet, suede or anti-tarnish fabric lining with precision-fit foam cutouts'],
+      ],
+    }),
+    copy: [
+      'Jewelry boxes are velvet-lined presentation cases - drawer-and-slide, hinged book-style or magnetic flip-top - with precision cutouts that hold every ring, necklace, bracelet or earring exactly in place.',
+      'For jewelry retailers, wedding and bridal brands, and e-commerce labels that want customers to keep the box long after the purchase.',
+      'We line with anti-tarnish fabrics, match your brand color on velvet and satin, and foil-stamp or deboss your logo - at a MOQ of just 100 pcs with factory-direct pricing.',
+    ],
+    industryLinks: ['fashion-apparel', 'subscription-dtc'],
+    related: ['watch-boxes', 'rigid-gift-boxes', 'paper-bags'],
+    faq: [
+      ...faqLead,
+      ['Do the linings prevent tarnish?', 'We offer anti-tarnish treated fabric and silica-gel insert options for silver and gold-plated pieces.'],
+    ],
+  },
+  'watch-boxes': {
+    pricing: { tiers: ['50 pcs', '1,000 pcs', '5,000 pcs'], prices: ['4.90', '3.80', '2.90'] },
+    specs: specsBase('50 pcs', '12-15 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Single watch box, watch + bracelet set, book-style display, travel case'],
+        ['Material', 'PU leather exterior, rigid greyboard, velvet / suede interior'],
+        ['Sizes', 'Fits case diameters up to 50mm and bracelet lengths to 200mm; custom pillow sizes on request'],
+        ['Printing', 'Offset + foil stamping, CMYK + Pantone, digital proof'],
+        ['Finishing', 'Gold/silver embossing, debossed logo, foil stamping, magnetic snap or clasp closure'],
+        ['Interior', 'Velvet or PU pillow holder, suede lining, optional winder and bracelet slots'],
+      ],
+    }),
+    copy: [
+      'Watch boxes are cushioned presentation cases with a PU leather or velvet pillow holder that fits case diameters up to 50mm, with room for winder and bracelet slots.',
+      'For watch retailers, pre-owned dealers, boutiques and limited-edition launches - anyone who needs protection and presentation in one piece.',
+      'Watch boxes start at a MOQ of just 50 pcs - the lowest on our site - so small dealers and launch tests get factory-direct quality without over-ordering.',
+    ],
+    industryLinks: ['fashion-apparel', 'electronics-tech'],
+    related: ['jewelry-boxes', 'rigid-gift-boxes'],
+    faq: [
+      ['What is the minimum order for watch boxes?', 'MOQ is 50 pcs - the lowest on our site. A sample is recommended first to confirm fit for your watch model.'],
+      ['Does the box fit automatic watches?', 'Yes - the pillow holder fits cases up to 50mm, and winder compartments can be added for automatics.'],
+      ['What is the price range?', 'USD 4.90-2.90 per unit (EXW) depending on quantity; size, material and finishing affect the final quote.'],
+      faqLead[2],
+      faqLead[3],
+    ],
+  },
+  'mailer-boxes': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['1.20', '0.55', '0.38'] },
+    specs: specsBase('100 pcs', '10-12 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Fold-over mailer, self-seal mailer, die-cut window mailer, tear-strip mailer'],
+        ['Material', 'E-flute corrugated, kraft paperboard, coated art paper, FSC-certified stock'],
+        ['Sizes', 'Stock sizes 150x100x30mm to 400x300x150mm plus fully custom dimensions'],
+        ['Printing', 'Full-color flexo print inside and out, CMYK + Pantone'],
+        ['Finishing', 'Interior brand print, gold stamping, custom tape, die-cut handle, tear strip'],
+        ['Interior', 'Printed inner surface - the box itself is the unboxing experience'],
+      ],
+    }),
+    copy: [
+      'Mailer boxes are e-commerce shipping boxes with an integrated self-seal strip - no tape, no extra labor - printed in full color inside and out.',
+      'For DTC brands, apparel and footwear sellers, subscription boxes and cosmetics delivery where the shipping box itself is the first brand touchpoint.',
+      'We print E/B-flute mailers with gold stamping and interior brand print, so your unboxing moment starts at the doorstep - at MOQ 100 pcs with 10-12 day turnaround.',
+    ],
+    industryLinks: ['subscription-dtc', 'fashion-apparel'],
+    related: ['corrugated-shipping', 'paper-bags', 'sample-starter-kits'],
+    faq: [
+      ...faqLead,
+      ['Do mailer boxes need tape?', 'No - the integrated adhesive strip seals with one press. No tape gun, no extra labor.'],
+    ],
+  },
+  'folding-cartons': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['0.85', '0.33', '0.21'] },
+    specs: specsBase('100 pcs', '10-12 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / food-contact inks available', {
+      rows: [
+        ['Structure', 'Tuck-end carton, reverse tuck, sleeve & tray, crash-lock (auto bottom)'],
+        ['Material', '300-450gsm paperboard, FSC-certified stock, food-safe grades available'],
+        ['Sizes', 'From 50x30x15mm to 300x200x100mm; flat-pack delivery to cut freight cost'],
+        ['Printing', 'Offset + flexo, CMYK + Pantone, digital proof'],
+        ['Finishing', 'Matte / gloss lamination, spot UV, embossing, window patch'],
+        ['Interior', 'Coated or kraft interior, optional food-grade lining'],
+      ],
+    }),
+    copy: [
+      'Folding cartons are single-layer paperboard boxes that ship flat and pop up in seconds - tuck-end, reverse tuck, sleeve-and-tray or crash-lock bottom.',
+      'For food, confectionery, tea, pharmacy and FMCG brands that need vibrant retail shelf presence at the lowest possible unit cost.',
+      'We offer food-safe grades, window patching and full CMYK print at reference prices from $0.21 - the most cost-efficient format in our catalog.',
+    ],
+    industryLinks: ['food-beverage', 'beauty-skincare'],
+    related: ['cosmetic-boxes', 'mailer-boxes', 'paper-bags'],
+    faq: [
+      ...faqLead,
+      ['Are the cartons food-safe?', 'Yes - food-safe inks and FSC-certified board are available, with window patching for direct product visibility.'],
+    ],
+  },
+  'paper-bags': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['1.40', '0.62', '0.42'] },
+    specs: specsBase('100 pcs', '10-12 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / AQL 2.5 QC', {
+      rows: [
+        ['Structure', 'Square-bottom bag, pinch-bottom bag, twisted-handle bag, die-cut handle bag'],
+        ['Material', '120-300g art paper, kraft paper, laminated paper, FSC-certified stock'],
+        ['Sizes', 'Stock sizes 200x100x250mm to 350x250x400mm plus custom dimensions'],
+        ['Printing', 'Offset printing, CMYK + Pantone, full-bleed coverage'],
+        ['Finishing', 'Foil stamping, matte lamination, spot UV, embossing'],
+        ['Handles', 'Cotton rope, ribbon, twisted paper or die-cut handles in matching brand colors'],
+      ],
+    }),
+    copy: [
+      'Paper bags are branded retail bags in 120-300g art or kraft paper with cotton rope, ribbon, twisted-paper or die-cut handles.',
+      'For boutiques, luxury goods, cosmetics and fragrance counters, and events where the bag carries your brand from counter to street.',
+      'Reinforced bottoms hold 10-15kg, and foil stamping plus spot UV turn a simple bag into a walking billboard - MOQ 100 pcs, factory-direct.',
+    ],
+    industryLinks: ['fashion-apparel', 'beauty-skincare'],
+    related: ['rigid-gift-boxes', 'cosmetic-boxes', 'mailer-boxes'],
+    faq: [
+      ...faqLead,
+      ['How much weight can the bags carry?', 'Reinforced-bottom bags hold 10-15kg depending on paper weight and size. We run load tests before bulk production.'],
+    ],
+  },
+  'corrugated-shipping': {
+    pricing: { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['1.00', '0.45', '0.30'] },
+    specs: specsBase('100 pcs', '10 days bulk; structural sample 3-5 days', 'FSC / ISO 9001 / ISTA transit testing available', {
+      rows: [
+        ['Structure', 'Standard RSC, die-cut mailer style, double-wall heavy duty, flat-pack bulk'],
+        ['Material', 'E / B / C-flute corrugated, kraft linerboard, 5-layer double-wall options'],
+        ['Sizes', 'From 150x100x100mm to 600x400x400mm single wall, larger on double wall'],
+        ['Printing', 'Flexo printing, CMYK, 1-4 colors'],
+        ['Finishing', 'Custom tape, die-cut handles, tear strip, corner protection'],
+        ['Strength', 'Compression-tested; edge crush test (ECT) values provided on request'],
+      ],
+    }),
+    copy: [
+      'Corrugated shipping boxes are heavy-duty E/B/C-flute cartons - including 5-layer double-wall - built to survive bulk freight and international transit.',
+      'For warehouses, logistics teams, industrial parts and any brand shipping heavy or fragile goods at scale.',
+      'Every box is compression-tested with ECT values on request, and volume reference prices from $0.30 keep your cost per shipment low.',
+    ],
+    industryLinks: ['electronics-tech', 'subscription-dtc'],
+    related: ['mailer-boxes', 'folding-cartons'],
+    faq: [
+      ...faqLead,
+      ['Do you provide compression test data?', 'Yes - edge crush test (ECT) and compression results are available for every flute combination we produce.'],
+    ],
+  },
+  'sample-starter-kits': {
+    pricing: { fixed: true, price: '29', note: 'Fixed $29 including worldwide shipping. The full fee is credited to your first bulk order.' },
+    specs: specsBase('N/A - fixed kit', 'Ships in 5-7 days worldwide', 'FSC-certified materials included', {
+      rows: [
+        ['Contents', '12 material & finish sample boxes: magnetic, lid & base, drawer, book-style, folding, bag + finishing demos'],
+        ['Material', 'Mixed rigid + folding, kraft + coated + leatherette, FSC-certified options'],
+        ['Sizes', 'Standard kit ships in a 350x250x150mm rigid gift box with protective inserts'],
+        ['Branding', 'Your logo foil-stamped on every sample in the standard mili gold-mark placement'],
+        ['Finishing', 'Foil, emboss, spot UV, matte and soft-touch demos on each structure'],
+        ['Interior', 'Custom insert demos (EVA, velvet, foam)'],
+      ],
+    }),
+    copy: [
+      'Sample & starter kits bundle 12 material and finish sample boxes - magnetic, lid & base, drawer, book-style, folding and bag - each branded with your logo in our standard gold placement.',
+      'For brand owners and design teams deciding on structure, material and finishing before committing to bulk production.',
+      'The kit ships worldwide in 5-7 days at a fixed $29 including shipping, and the full fee is credited to your first bulk order - risk-free evaluation.',
+    ],
+    industryLinks: ['subscription-dtc', 'beauty-skincare', 'food-beverage'],
+    related: ['rigid-gift-boxes', 'mailer-boxes', 'cosmetic-boxes'],
+    faq: [
+      ['What is included in the kit?', '12 sample boxes covering magnetic, lid & base, drawer, book-style, folding and bag structures, plus material and finish comparison samples.'],
+      ['How fast do kits ship?', 'Sample kits ship within 5-7 days worldwide. Samples are branded with your logo in our standard gold placement.'],
+      ['Can I request specific structures in the kit?', 'Yes - tell us your product category and we will tailor the kit to the most relevant structures and finishes.'],
+      ['Is the kit cost refundable?', 'Yes - the full $29 fee is deducted from your first bulk order.'],
+      ['Do I get design help with the kit?', 'Yes - our design team reviews the samples with you and recommends the best structure for your product, free of charge.'],
+    ],
+  },
+};
+
+export const getDetail = (slug) => detailData[slug];

@@ -154,22 +154,123 @@ h4 { font-size: 16px; }
 }
 .hero-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(105deg, rgba(10,10,10,0.7) 42%, rgba(10,10,10,0.15) 100%);
+  /* P1c: 强化左侧渐变遮罩 — 文字区0.82→0.22，WCAG AA合规 */
+  background: linear-gradient(
+    105deg,
+    rgba(0,0,0,0.84) 0%,
+    rgba(0,0,0,0.62) 40%,
+    rgba(0,0,0,0.22) 68%,
+    rgba(0,0,0,0.08) 100%
+  );
 }
 .hero-content {
   position: relative; z-index: 2;
   width: 100%; min-width: 0; max-width: 1380px; margin: 0 auto; padding: 0 48px;
 }
-.hero-content h1 { max-width: 860px; margin-bottom: 24px; font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.15; letter-spacing: -0.01em; }
+.hero-content h1 { max-width: 860px; margin-bottom: 24px; font-size: clamp(2.2rem, 4.2vw, 3.4rem); line-height: 1.15; letter-spacing: -0.01em;
+  /* P1c: text-shadow提升可读性 */
+  text-shadow: 0 2px 28px rgba(0,0,0,0.7), 0 0 10px rgba(0,0,0,0.45); }
 .h1-mobile { display: none; }
-.hero-content p { color: var(--gray-3); font-size: 17px; max-width: 520px; margin-bottom: 40px; }
+.hero-content p { color: var(--gray-3); font-size: 17px; max-width: 520px; margin-bottom: 20px;
+  text-shadow: 0 1px 14px rgba(0,0,0,0.6); }
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+/* ── Hero badge row: 1+2+3 tiered layout ── */
 .hero-badge-row {
   position: relative; z-index: 2;
-  max-width: 1380px; margin: 0 auto; padding: 36px 48px;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 56px;
-  border-top: 1px solid var(--border-dim);
+  max-width: 1380px; margin: 0 auto; padding: 0 48px 36px;
+  border-top: 1px solid rgba(212,175,55,0.2);
 }
+.hero-badge-row--tiered {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 2px;
+  background: rgba(0,0,0,0.38);
+  backdrop-filter: blur(2px);
+  padding: 0;
+  border: none;
+  border-top: 1px solid rgba(212,175,55,0.2);
+}
+
+/* TIER 1 — 48h 全宽主卡 */
+.hb-tier1 {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 18px;
+  padding: 20px 28px;
+  background: rgba(212,175,55,0.10);
+  border-bottom: 1px solid rgba(212,175,55,0.25);
+}
+.hb-t1-num {
+  font-family: var(--font-display);
+  font-size: 52px; font-weight: 700;
+  color: #D4AF37; line-height: 1;
+  letter-spacing: -0.02em;
+}
+.hb-t1-label {
+  font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #C8C8C8;
+  margin-top: 3px;
+}
+.hb-t1-compare {
+  font-size: 10.5px; color: rgba(200,200,200,0.5);
+  margin-top: 5px; font-style: italic;
+}
+
+/* TIER 2 — 双列次级卡 */
+.hb-tier2 {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 22px;
+  background: rgba(255,255,255,0.025);
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.hb-t2-num {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 700; line-height: 1;
+}
+.hb-t2-label {
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #A8A8A8;
+}
+.hb-t2-sub { font-size: 11px; color: rgba(150,150,150,0.7); margin-top: 2px; }
+
+/* TIER 3 — 4列小卡 */
+.hb-tier3 {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 8px; text-align: center;
+  background: rgba(255,255,255,0.015);
+  border-right: 1px solid rgba(255,255,255,0.04);
+}
+.hb-tier3:last-child { border-right: none; }
+.hb-t3-num {
+  font-family: var(--font-display);
+  font-size: 21px; font-weight: 700; color: #E0E0E0;
+}
+.hb-t3-label {
+  font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(160,160,160,0.7);
+}
+
+/* TIER 3 row — spans full width, 4-col sub-grid */
+.hb-tier3-row {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 2px; background: rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* P6: stat compare sub-text */
+.hero-stat-compare {
+  font-size: 9.5px; color: rgba(200,200,200,0.38);
+  letter-spacing: 0.04em; margin-top: 2px; white-space: nowrap;
+}
+
+/* P4: social proof green dot pulse */
+@keyframes spPulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(37,211,102,0.7); }
+  50%       { box-shadow: 0 0 12px rgba(37,211,102,1); }
+}
+
+/* legacy compat (keeps old .hero-badge-item if referenced elsewhere) */
 .hero-badge { text-align: center; }
 .hero-badge-item { text-align: center; white-space: nowrap; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 0 12px; }
 .hero-badge-icon { opacity: 0.92; }
@@ -184,11 +285,18 @@ h4 { font-size: 16px; }
   .hero-badges { gap: 10px; justify-content: center; margin-bottom: 16px; }
   .hero-actions { justify-content: center; }
   .hero-stats-row { margin-top: 16px; gap: 24px; }
-  .hero-badge-row { grid-template-columns: repeat(3, 1fr); gap: 22px 10px; padding: 22px 14px 96px; }
+  .hero-badge-row { grid-template-columns: 1fr; padding: 0; }
+  .hero-badge-row--tiered { grid-template-columns: 1fr; }
+  .hb-tier1 { padding: 14px 16px; gap: 12px; }
+  .hb-t1-num { font-size: 38px; }
+  .hb-tier2 { padding: 12px 16px; }
+  .hb-t2-num { font-size: 24px; }
+  .hb-tier3-row { grid-template-columns: repeat(2, 1fr); }
   .hero-badge-item { gap: 5px; padding: 0 6px; }
   .hero-badge-num { font-size: 21px; }
   .hero-badge-label { font-size: 8px; max-width: 104px; }
   .hero-badge-icon { width: 16px; height: 16px; }
+  .hero-stat-compare { display: none; }
   .sticky-quote { display: none; }
   .h1-desktop { display: none; }
   .h1-mobile { display: block; }
@@ -558,10 +666,18 @@ html, body { overflow-x: hidden; }
 .hero-badges { display: flex; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-2); background: rgba(12,12,14,0.55); border: 1px solid rgba(201,168,76,0.35); padding: 7px 14px; border-radius: 2px; backdrop-filter: blur(4px); }
 .hero-badge svg { color: var(--gold); flex-shrink: 0; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(10,10,10,0.82) 0%, rgba(10,10,10,0.4) 55%, rgba(10,10,10,0.08) 100%); z-index: 1; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(4,4,6,0.88) 0%, rgba(4,4,6,0.52) 50%, rgba(4,4,6,0.10) 100%); z-index: 1; }
 .hero-content { position: relative; z-index: 2; }
-.hero-stats-row { display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
-.hero-stat { display: flex; flex-direction: column; gap: 4px; }
+.hero-stats-row {
+  display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap;
+  padding: 14px 20px;
+  background: rgba(0,0,0,0.42);
+  backdrop-filter: blur(4px);
+  border-top: 1px solid rgba(212,175,55,0.18);
+  border-bottom: 1px solid rgba(212,175,55,0.10);
+  margin-left: -20px; margin-right: -20px;
+}
+.hero-stat { display: flex; flex-direction: column; gap: 3px; }
 .hero-stat-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-3); }
 .hero-stat-value { font-size: 14px; font-weight: 500; color: var(--gold); }
 
@@ -632,5 +748,25 @@ html, body { overflow-x: hidden; }
 }
 @media (max-width: 900px) {
   .navbar-dropdown { display: none; }
+}
+
+/* ═══ Product Detail 10-block template ═══ */
+.detail-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 44px; align-items: start; margin-bottom: 64px; }
+.detail-strip3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border-dim); border: 1px solid var(--border-dim); }
+.detail-copyrow { display: grid; grid-template-columns: 90px 1fr; gap: 20px; align-items: flex-start; }
+.detail-specrow { display: grid; grid-template-columns: 220px 1fr; gap: 20px; padding: 14px 22px; }
+.detail-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--border-dim); border: 1px solid var(--border-dim); }
+.detail-related { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+@media (max-width: 900px) {
+  .detail-hero { grid-template-columns: 1fr; }
+  .detail-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .detail-strip3, .detail-related { grid-template-columns: 1fr; }
+  .detail-specrow { grid-template-columns: 1fr; gap: 6px; padding: 14px 16px; }
+  .detail-copyrow { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 480px) {
+  .detail-steps { grid-template-columns: 1fr; }
 }
 

@@ -27,8 +27,12 @@ const PaymentTerms = lazy(() => import('./pages/PaymentTerms'));
 const ReturnsPolicy = lazy(() => import('./pages/ReturnsPolicy'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 
-const groupDesc = (g) =>
-  `Custom ${g.name.toLowerCase()}: ${g.tagline}. From $${g.priceFrom}-$${g.priceTo} USD per unit, MOQ ${g.moq} pcs, 12-15 days lead time. Free design & 3D mockup, FSC certified, global delivery. Get a factory-direct quote.`;
+const groupDesc = (g) => {
+  if (g.slug === 'sample-starter-kits') {
+    return `${g.name}: 12 material & finish sample boxes branded with your logo. Fixed $29 including worldwide shipping, fee credited to your first bulk order. Ships in 5-7 days. Get your sample kit.`;
+  }
+  return `Custom ${g.name.toLowerCase()}: ${g.tagline}. Reference price from $${g.priceFrom} per unit (EXW), MOQ ${g.moq} pcs, 12-15 days lead time. Free design & 3D mockup, FSC certified, global delivery. Get a factory-direct quote.`;
+};
 
 function TitleManager() {
   const location = useLocation();
@@ -55,7 +59,12 @@ function TitleManager() {
     let desc = null;
     if (path.startsWith('/products/')) {
       const g = productGroups.find(x => path === '/products/' + x.slug);
-      if (g) { title = `${g.name} | Mili Packaging`; desc = groupDesc(g); }
+      if (g) {
+        title = g.slug === 'sample-starter-kits'
+          ? `${g.name} | Fixed $29 Sample Kit | Mili Packaging`
+          : `${g.name} | MOQ ${g.moq} pcs | Mili Packaging`;
+        desc = groupDesc(g);
+      }
     } else if (path.startsWith('/industries/')) {
       // industry pages resolve their own TDK via module import below
     } else if (path.startsWith('/blog/')) {

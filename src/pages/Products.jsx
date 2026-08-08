@@ -81,7 +81,7 @@ export default function Products() {
                 <h4>{g.name}</h4>
                 <p>{g.tagline}</p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                  <span className="product-card-tag">MOQ: {g.moq} pcs</span>
+                  <span className="product-card-tag">{g.slug === 'sample-starter-kits' ? 'Fixed $29 Kit | 12 sample boxes' : `MOQ: ${g.moq} pcs`}</span>
                   <span className="product-card-tag">From ${g.priceFrom}</span>
                 </div>
               </div>
