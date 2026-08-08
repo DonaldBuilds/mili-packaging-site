@@ -114,16 +114,21 @@ export default function ProductItem() {
     ['Consistent Quality', 'AQL 2.5 QC at every workstation, FSC-certified materials and SGS-audited production — quality you can rely on at scale.'],
   ];
 
-  const extraProductImgs = [
-    ...(product.extraImgs || []),
-    ...(group.craftImg || []),
-    ...(group.tabs ? group.tabs.map(t => t.img) : []),
-  ];
-  const gallery = [
-    { id: 'scene', label: 'Scene', img: product.img },
-    { id: 'white', label: 'White', img: group.whiteImg },
-    ...extraProductImgs.filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img && img !== group.whiteImg).slice(0, 4).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
-  ].slice(0, 6);
+  // Migrated competitor products (extraImgs set) show ONLY their own gallery images —
+  // no group white/craft/tab images mixed in. Legacy SKUs keep the old gallery behaviour.
+  const gallery = product.extraImgs && product.extraImgs.length
+    ? [
+        { id: 'scene', label: 'Scene', img: product.img },
+        ...product.extraImgs.filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img).slice(0, 5).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
+      ]
+    : [
+        { id: 'scene', label: 'Scene', img: product.img },
+        { id: 'white', label: 'White', img: group.whiteImg },
+        ...[...(group.craftImg || []), ...(group.tabs ? group.tabs.map(t => t.img) : [])]
+          .filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img && img !== group.whiteImg)
+          .slice(0, 4)
+          .map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
+      ].slice(0, 6);
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
   const stepView = (dir) => {
     const idx = gallery.findIndex(g => g.id === view);
