@@ -59,12 +59,23 @@
 
   <!-- ① 数据看板 -->
   <div id="tab-dash">
-    <h2>① 流量数据 · 自动同步与直达</h2>
+    <h2>① 自动同步数据看板（每 30 秒刷新）</h2>
     <div class="grid">
-      <div class="card"><h3>GA4 · 访问与转化</h3><p>用户 / 浏览 / 来源 / whatsapp_click 转化。数据面板每周更新，一键直达。</p><a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4 数据面板</a></div>
-      <div class="card"><h3>Google Search Console</h3><p>收录 / 关键词 / 点击展示。判断"买家能否搜到你"的第一入口。</p><a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a></div>
+      <div class="card"><h3>最近部署状态</h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
+      <div class="card"><h3>最近提交</h3><div id="dash-commits">加载中…</div></div>
+      <div class="card"><h3>询盘统计</h3><div id="dash-inquiries">加载中…</div></div>
+      <div class="card"><h3>产品数据</h3><div id="dash-products">加载中…</div></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>站点健康检查（关键页面）</h3>
+      <div id="dash-health" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px">加载中…</div>
+    </div>
+    <h2 style="margin-top:26px">平台数据直达</h2>
+    <div class="grid">
+      <div class="card"><h3>GA4 · 访问与转化</h3><p>用户 / 浏览 / 来源 / whatsapp_click 转化。</p><a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4 数据面板</a></div>
+      <div class="card"><h3>Google Search Console</h3><p>收录 / 关键词 / 点击展示。</p><a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a></div>
       <div class="card"><h3>Bing Webmaster</h3><p>Bing 索引与 sitemap 处理状态。</p><a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a></div>
-      <div class="card"><h3>站点自检</h3><p id="selfcheck">检测中…</p></div>
+      <div class="card"><h3>站点自检</h3><div id="selfcheck">检测中…</div></div>
     </div>
   </div>
 
@@ -88,6 +99,7 @@
         <div class="row">
           <div><label>主图路径</label><input id="f-img" /></div>
           <div><label>排序位置</label><input id="f-order" type="number" /></div>
+          <div><label>上架状态</label><select id="f-status"><option value="">— 保持当前 —</option><option value="active">上架（展示）</option><option value="hidden">下架（从列表/首页隐藏，直链仍可访问）</option></select></div>
         </div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">
           <button class="btn" id="ed-save">保存并发布（自动部署）</button>
@@ -172,11 +184,75 @@
 
   // ── Self-check ──
   var selfEl = document.getElementById('selfcheck');
-  Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
-    return fetch('/' + u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
-  })).then(function (rs) {
-    selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
-  });
+  function selfCheck() {
+    Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
+      return fetch('/' + u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
+    })).then(function (rs) {
+      selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
+    });
+  }
+  selfCheck();
+
+  // ── Auto-sync dashboard (30s refresh) ──
+  var GH_API = 'https://api.github.com/repos/DonaldBuilds/mili-packaging-site';
+  function el(id) { return document.getElementById(id); }
+  function fmtTime(t) { return t ? String(t).replace('T', ' ').slice(0, 16) : '—'; }
+  function loadDeploy() {
+    fetch(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.workflow_runs) return;
+      el('dash-deploy').innerHTML = d.workflow_runs.slice(0, 3).map(function (run) {
+        var ok = run.status === 'completed';
+        var done = run.conclusion === 'success';
+        return '<div class="status ' + (ok ? (done ? 'ok' : 'bad') : '') + '">' + (ok ? (done ? '✔ 成功' : '✘ ' + run.conclusion) : '… 进行中') + ' · ' + fmtTime(run.created_at) + '</div>';
+      }).join('');
+    }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; });
+  }
+  function loadCommits() {
+    fetch(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
+      if (!Array.isArray(d)) return;
+      el('dash-commits').innerHTML = d.map(function (c) {
+        return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--gray)">' + fmtTime(c.commit.author.date) + '</span><br/>' + (c.commit.message.split('\n')[0]).slice(0, 56) + '</div>';
+      }).join('');
+    }).catch(function () { el('dash-commits').innerHTML = '<div class="status bad">无法读取</div>'; });
+  }
+  function loadInquiryStats() {
+    fetch(SB_URL + '/rest/v1/inquiries?select=created_at&order=created_at.desc', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+    }).then(function (r) { return r.json(); }).then(function (rows) {
+      if (!Array.isArray(rows)) return;
+      var now = Date.now(), d7 = 0, d30 = 0;
+      rows.forEach(function (r) {
+        var t = new Date(r.created_at).getTime();
+        if (now - t < 7 * 864e5) d7++;
+        if (now - t < 30 * 864e5) d30++;
+      });
+      el('dash-inquiries').innerHTML = '<div class="status">总询盘：<b style="color:var(--gold)">' + rows.length + '</b></div><div class="status">近 7 天：<b style="color:var(--gold)">' + d7 + '</b> · 近 30 天：<b style="color:var(--gold)">' + d30 + '</b></div>';
+    }).catch(function () { el('dash-inquiries').innerHTML = '<div class="status bad">无法读取</div>'; });
+  }
+  function loadProductStats() {
+    fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
+      var prods = [];
+      d.productGroups.forEach(function (g) { prods = prods.concat(d.productCatalog[g.slug] || []); });
+      var prices = prods.map(function (p) { return parseFloat(p.price); }).filter(function (n) { return !isNaN(n); });
+      var hidden = prods.filter(function (p) { return p.status === 'hidden'; }).length;
+      var noTier = prods.filter(function (p) { return !p.tierPrice; }).length;
+      el('dash-products').innerHTML = '<div class="status">产品：<b style="color:var(--gold)">' + prods.length + '</b> 个 · 分组 ' + d.productGroups.length + '</div><div class="status">价格区间：$' + Math.min.apply(null, prices) + ' – $' + Math.max.apply(null, prices) + '</div><div class="status">下架中：' + hidden + ' · 分档价沿用组比例：' + noTier + '</div>';
+    }).catch(function () { el('dash-products').innerHTML = '<div class="status bad">无法读取</div>'; });
+  }
+  function loadHealth() {
+    var pages = ['/', '/products', '/products/rigid-gift-boxes', '/contact', '/about', '/faq', '/portfolio', '/industries', '/blog/', '/blog/1/', '/privacy-policy', '/sample-kits'];
+    Promise.all(pages.map(function (u) {
+      var t0 = Date.now();
+      return fetch(u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok, ms: Date.now() - t0, s: r.status }; }).catch(function () { return { u: u, ok: false, ms: 0, s: 0 }; });
+    })).then(function (rs) {
+      el('dash-health').innerHTML = rs.map(function (r) {
+        return '<div style="font-size:11.5px;padding:6px 8px;border:1px solid var(--border);border-radius:3px"><span class="' + (r.ok ? 'status ok' : 'status bad') + '">' + (r.ok ? '✔' : '✘') + '</span> ' + r.u + ' <span style="color:var(--gray)">' + (r.ok ? r.s + ' · ' + r.ms + 'ms' : 'FAIL') + '</span></div>';
+      }).join('');
+    });
+  }
+  function refreshDash() {
+    loadDeploy(); loadCommits(); loadInquiryStats(); loadProductStats(); loadHealth(); selfCheck();
+  }
 
   // ── Product editor: load data from GitHub raw (public repo) ──
   var RAW = 'https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/src/data/products.json';
@@ -222,6 +298,7 @@
     document.getElementById('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
     document.getElementById('f-img').value = p.img || '';
     document.getElementById('f-order').value = p.order || '';
+    document.getElementById('f-status').value = (p.status === 'hidden') ? 'hidden' : 'active';
     document.getElementById('ed-fields').classList.remove('hide');
   });
 
@@ -247,9 +324,11 @@
     var copy = document.getElementById('f-copy').value.trim();
     var img = document.getElementById('f-img').value.trim();
     var order = document.getElementById('f-order').value.trim();
+    var status = document.getElementById('f-status').value;
     if (copy) fields.copy = [copy];
     if (img) fields.img = img;
     if (order !== '') fields.order = order;
+    if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
     postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }], pin).then(function (res) {
       if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
@@ -308,6 +387,10 @@
     var t = buildTicket(); if (!t) return;
     (navigator.clipboard ? navigator.clipboard.writeText(t.subject + '\n\n' + t.text) : Promise.reject()).then(function () { flash('工单已复制'); }).catch(function () { flash('复制失败，请手动复制', true); });
   });
+
+  // Start auto-sync dashboard after all bindings are defined
+  refreshDash();
+  setInterval(refreshDash, 30000);
 })();
 </script>
 </body>

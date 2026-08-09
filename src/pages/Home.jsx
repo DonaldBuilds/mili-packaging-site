@@ -240,7 +240,7 @@ export default function Home() {
           {featuredProducts.map(({ group, slug }) => {
             const p = getProduct(group, slug);
             const g = productGroups.find(x => x.slug === group);
-            if (!p || !g) return null;
+            if (!p || !g || p.status === 'hidden') return null;
             return (
               <Link to={`/products/${group}/${p.slug}`} className="product-card" key={p.slug} style={{ position: 'relative', textDecoration: 'none' }}>
                 <span style={{ position: 'absolute', top: 12, right: 12, zIndex: 2, background: 'var(--gold)', color: 'var(--black)', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '4px 10px', textTransform: 'uppercase' }}>New</span>

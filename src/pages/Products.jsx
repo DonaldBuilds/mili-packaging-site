@@ -29,7 +29,7 @@ export default function Products() {
   const groups = GROUP_ORDER
     .map(slug => productGroups.find(g => g.slug === slug))
     .filter(Boolean)
-    .map(g => ({ ...g, products: productCatalog[g.slug] || [] }));
+    .map(g => ({ ...g, products: (productCatalog[g.slug] || []).filter(p => p.status !== 'hidden') }));
 
   // True category filtering (luxopack-style): selected category shows only its products
   const visibleGroups = activeFilter === 'all' ? groups : groups.filter(g => g.slug === activeFilter);
