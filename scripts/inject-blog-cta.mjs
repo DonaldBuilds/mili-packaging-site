@@ -84,6 +84,51 @@ function stripOld(html) {
   return html.slice(0, idx) + html.slice(bodyIdx);
 }
 
+// Related Guides — topic-based cross links (article file -> recommended articles)
+const TITLES = {
+  1: 'How to Choose the Right Packaging Box for Your Skincare Brand (2026 Guide)',
+  2: 'Rigid Box vs Folding Box: Which Is Right for Your Product?',
+  3: 'Gold Foil vs Hot Stamping vs Embossing: A Complete Finishing Guide',
+  4: 'How to Reduce Packaging Cost Without Sacrificing Quality',
+  5: '2026 Sustainable Packaging Trends Every Brand Should Know',
+  6: 'Magnetic Closure Box: The Ultimate Guide for Luxury Brands',
+  7: 'How to Write a Packaging Design Brief (Free Template Included)',
+  8: 'MOQ Explained: How to Order Custom Packaging in Small Quantities',
+  9: 'Perfume Box Design: 7 Elements That Make Customers Buy',
+  10: 'Shipping Packaging 101: How to Protect Products & Impress Customers',
+};
+const RELATED = {
+  1: [6, 2],
+  2: [8, 1],
+  3: [9, 7],
+  4: [8, 2],
+  5: [1, 10],
+  6: [1, 9],
+  7: [1, 6],
+  8: [2, 4],
+  9: [3, 6],
+  10: [5, 3],
+};
+const RELATED_STYLE = `
+.blog-related{margin:40px auto 0;max-width:760px;padding:24px;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:8px}
+.blog-related h4{color:#c9a84c;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.blog-related a{display:block;color:#ddd;font-size:14px;text-decoration:none;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+.blog-related a:hover{color:#c9a84c}
+`;
+
+function relatedBlock(n) {
+  const list = RELATED[n] || [];
+  if (!list.length) return '';
+  const links = list
+    .map((i) => `  <a href="/blog/${i}/">${TITLES[i]}</a>`)
+    .join('\n');
+  return `
+<div class="blog-related">
+<h4>Related Guides</h4>
+${links}
+</div>`;
+}
+
 const files = readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html'));
 let changed = 0;
 for (const f of files) {
@@ -93,8 +138,10 @@ for (const f of files) {
     console.log(`SKIP ${f}: no </body>`);
     continue;
   }
+  const n = /^(\d+)\.html$/.exec(f);
+  const extra = n ? RELATED_STYLE + relatedBlock(parseInt(n[1], 10)) : '';
   const cleaned = stripOld(html);
-  const out = cleaned.replace('</body>', SNIPPET + '\n</body>');
+  const out = cleaned.replace('</body>', SNIPPET + '\n' + extra + '\n</body>');
   writeFileSync(path, out);
   changed++;
   console.log(`INJECT ${f}`);

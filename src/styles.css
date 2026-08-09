@@ -731,6 +731,14 @@ html, body { overflow-x: hidden; }
   .compare-header > div:first-child, .compare-label { grid-column: 1/-1; padding-bottom: 4px; font-size: 12px; }
 }
 
+/* ═══ About team photos ═══ */
+.team-photos { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2px; margin-bottom: 40px; }
+.team-photos img { width: 100%; height: 340px; object-fit: cover; display: block; }
+@media (max-width: 768px) {
+  .team-photos { grid-template-columns: 1fr; }
+  .team-photos img { height: 240px; }
+}
+
 /* ═══ WhatsApp Floating Button with Dynamic Animation ═══ */
 .whatsapp-btn {
   position: fixed; bottom: 24px; right: 24px; z-index: 999;

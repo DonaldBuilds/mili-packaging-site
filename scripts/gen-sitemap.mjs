@@ -30,9 +30,8 @@ for (const slug of ['fashion-apparel', 'food-beverage', 'beauty-skincare', 'elec
   add(`/industries/${slug}`, 'monthly', '0.7');
 }
 
-// Blog: SPA article + static SEO articles (canonical uses trailing slash)
-add('/blog', 'weekly', '0.7');
-for (const p of posts) add(`/blog/${p.slug}`, 'monthly', '0.7');
+// Blog: static SEO articles only (trailing slash; SPA /blog routes retired)
+add('/blog/', 'weekly', '0.7');
 for (let i = 1; i <= 10; i++) add(`/blog/${i}/`, 'monthly', '0.7');
 
 // Static pages

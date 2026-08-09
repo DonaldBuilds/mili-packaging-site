@@ -349,7 +349,7 @@ export default function ProductItem() {
                 <h2 style={{ margin: 0 }}>From Brief to Delivery</h2>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+            <div className="detail-steps">
               {product.process.map(([n, t, d]) => (
                 <div key={n} style={{ background: 'var(--black-2)', padding: '24px 22px' }}>
                   <div style={{ fontSize: 26, color: 'var(--gold)', fontFamily: 'var(--font-display)', opacity: 0.9, marginBottom: 10 }}>{n}</div>

@@ -19,8 +19,6 @@ const About = lazy(() => import('./pages/About'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Industries = lazy(() => import('./pages/Industries'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
 const Support = lazy(() => import('./pages/Support'));
 const Warranty = lazy(() => import('./pages/Warranty'));
 const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy'));
@@ -53,7 +51,6 @@ function TitleManager() {
       '/faq': 'FAQ | Custom Packaging Questions Answered | Mili Packaging',
       '/portfolio': 'Portfolio | Packaging Case Studies | Mili Packaging',
       '/industries': 'Industries | Packaging Solutions by Sector | Mili Packaging',
-      '/blog': 'Blog | Packaging Guides & Buyers Resources | Mili Packaging',
       '/support': 'Support | Design, QC & After-Sales | Mili Packaging',
       '/warranty': 'Warranty | Mili Packaging',
       '/shipping-policy': 'Shipping Policy | Mili Packaging',
@@ -165,8 +162,6 @@ function App() {
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/industries" element={<Industries />} />
           <Route path="/industries/:slug" element={<Industries />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/support" element={<Support />} />
           <Route path="/warranty" element={<Warranty />} />
           <Route path="/shipping-policy" element={<ShippingPolicy />} />

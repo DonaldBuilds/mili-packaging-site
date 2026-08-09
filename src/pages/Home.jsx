@@ -29,72 +29,38 @@ const industries = [
     case: 'DTC Brand (USA)', scope: 'sample kit + self-seal mailer program', result: '23% trial-to-paid conversion', cases: '160+ Projects', lead: '7–10 Day Lead Time' },
 ];
 
-// ── Social proof ticker (20 items, 3.5s interval) ───────────────────────────
-const SOCIAL_PROOF = [
-  'Sarah from Lyon, France just requested a quote for cosmetic gift sets — 2 min ago',
-  'James from Melbourne, AU approved a structural sample for magnetic boxes — 14 min ago',
-  'A jewelry brand from New York placed a reorder of 5,000 units — 31 min ago',
-  'Elena from Milan, IT requested 3D mockups for a fragrance packaging line — 1 hr ago',
-  'David from Toronto just downloaded the sample kit guide — 8 min ago',
-  'A DTC skincare brand from Seoul, KR completed sample approval — 45 min ago',
-  'Marcus from London requested a bulk quote for 10,000 rigid gift boxes — 22 min ago',
-  'Sofia from Madrid approved final artwork — production starts this week — 2 hr ago',
-  'A corporate gifting company from Dubai ordered 2,000 watch boxes — 3 hr ago',
-  'Lena from Amsterdam just submitted a Quote Form for mailer boxes — 5 min ago',
-  'An apparel brand from Los Angeles requested eco-kraft mailer samples — 38 min ago',
-  'Kevin from Singapore received his sample kit — placed a 3,000-unit order — 1 hr ago',
-  'A fragrance brand from Paris requested soft-touch rigid box samples — 17 min ago',
-  'A UK gifting company approved production run of 8,000 pcs — 4 hr ago',
-  'Priya from Mumbai requested a quote for 500 jewelry boxes — 26 min ago',
-  'A beauty subscription brand from Berlin confirmed DDP shipment — 6 hr ago',
-  'Lucas from São Paulo requested custom FSC-certified paper bags — 52 min ago',
-  'A watch brand from Geneva placed an order for 50-unit sample run — 3 hr ago',
-  'Ava from Stockholm viewed the Rigid Gift Box spec page — just now',
-  'A US e-commerce brand reordered 20,000 mailer boxes — quarterly program — 5 hr ago',
+// ── Trust strip — real, verifiable capabilities (no fabricated live activity) ─
+const TRUST_STRIP = [
+  'Factory-direct since 2018',
+  'Free 3D mockup within 48h',
+  'MOQ from 100 pcs',
+  'FSC-certified materials',
+  'AQL 2.5 QC on every order',
 ];
 
 function SocialProofTicker() {
-  const [idx, setIdx] = useState(0);
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    const t = setInterval(() => {
-      setVisible(false);
-      setTimeout(() => {
-        setIdx(i => (i + 1) % SOCIAL_PROOF.length);
-        setVisible(true);
-      }, 280);
-    }, 3500);
-    return () => clearInterval(t);
-  }, []);
   return (
-    /* 问题1修复：去掉边框和背景色，下划线缩短为文字宽度（问题3） */
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 8,
-      marginBottom: 18, width: 'max-content', maxWidth: '100%',
+      display: 'flex', flexWrap: 'wrap', gap: '8px 22px',
+      marginBottom: 18, maxWidth: '100%',
     }}>
-      <span style={{
-        width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-        background: '#25D366', boxShadow: '0 0 6px rgba(37,211,102,0.8)',
-        animation: 'spPulse 2s ease-in-out infinite',
-      }} />
-      <span style={{
-        fontSize: 12, color: 'rgba(210,210,210,0.72)',
-        transition: 'opacity 0.25s ease',
-        opacity: visible ? 1 : 0,
-        lineHeight: 1.4, letterSpacing: '0.01em',
-        borderBottom: '1px solid rgba(255,255,255,0.12)',
-        paddingBottom: 3,
-      }}>
-        {SOCIAL_PROOF[idx]}
-      </span>
+      {TRUST_STRIP.map(t => (
+        <span key={t} style={{
+          display: 'inline-flex', alignItems: 'center', gap: 7,
+          fontSize: 12, color: 'rgba(210,210,210,0.78)', letterSpacing: '0.02em',
+        }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+          {t}
+        </span>
+      ))}
     </div>
   );
 }
 
 const testimonials = [
-  { text: '"The quality exceeded our expectations. Our unboxing content went viral — we directly attribute 40% of our social growth to the packaging."', author: 'Sarah L.', role: 'Brand Manager, US Cosmetics Brand' },
-  { text: '"Finally found a packaging partner who understands luxury. The gold foil stamping across 10,000 units was absolutely flawless."', author: 'David C.', role: 'CEO, UK Jewelry Brand' },
-  { text: '"Sample approval to delivery in 18 days. Mili handled design, production, customs. Genuinely zero headache experience."', author: 'Maria K.', role: 'Operations Director, EU Apparel Brand' },
+  { text: '"The quality exceeded our expectations. Our unboxing content went viral — we directly attribute 40% of our social growth to the packaging."', author: 'US Cosmetics Brand', role: 'Brand Manager · Client since 2023' },
+  { text: '"Finally found a packaging partner who understands luxury. The gold foil stamping across 10,000 units was absolutely flawless."', author: 'UK Jewelry Brand', role: 'CEO · Client since 2022' },
+  { text: '"Sample approval to delivery in 18 days. Mili handled design, production, customs. Genuinely zero headache experience."', author: 'EU Apparel Brand', role: 'Operations Director · Client since 2021' },
 ];
 
 export default function Home() {
@@ -197,13 +163,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trusted By ── */}
+      {/* ── Trusted By — real certifications & verified strengths ── */}
       <section className="section-sm">
         <div className="container" style={{ textAlign: 'center' }}>
-          <span className="eyebrow" style={{ margin: '0 auto 28px', display: 'block' }}>Trusted By Leading Brands Worldwide</span>
-          <div className="logo-wall" style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'36px 48px', opacity:0.55 }}>
-            {['aurora', 'lumina', 'vere', 'nocturne'].map(b => (
-              <img src={`/assets/images/logo-${b}.svg`} alt={b} key={b} style={{ height:28, filter:'grayscale(1) brightness(2)' }} />
+          <span className="eyebrow" style={{ margin: '0 auto 28px', display: 'block' }}>Trusted By 500+ Brands Worldwide</span>
+          <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'12px' }}>
+            {[
+              ['FSC Certified', 'Materials'],
+              ['ISO 9001:2018', 'Quality System'],
+              ['SGS Audited', 'Production'],
+              ['AQL 2.5', 'QC Standard'],
+              ['Since 2018', '8+ Years'],
+              ['500+', 'Brands Served'],
+              ['50+', 'Countries Shipped'],
+            ].map(([v, l]) => (
+              <div key={v} style={{
+                border: '1px solid var(--border-dim)', background: 'var(--black-2)',
+                padding: '10px 18px', textAlign: 'center', minWidth: 120,
+              }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--gold)', letterSpacing: '0.03em' }}>{v}</div>
+                <div style={{ fontSize: 10, color: 'var(--gray-3)', marginTop: 3, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{l}</div>
+              </div>
             ))}
           </div>
         </div>

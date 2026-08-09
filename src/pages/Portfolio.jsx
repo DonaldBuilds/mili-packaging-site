@@ -2,12 +2,12 @@
 import { useState } from 'react';
 
 const cases = [
-  { id:1, client:'Skincare Brand (USA)', industry:'Cosmetics', type:'Magnetic Gift Box', finish:'Gold Foil + Matte Lamination', qty:'2,000 units', img:'/assets/images/product-hero-v5.jpg', desc:'Premium skincare gift set with custom magnetic boxes, gold foil brand embossing, and foam inserts protecting serum bottles. Full unboxing experience designed for social media.' },
-  { id:2, client:'Jewelry Startup (UK)', industry:'Jewelry', type:'Rigid Jewelry Box Set', finish:'Embossing + Velvet Interior', qty:'5,000 units', img:'/assets/images/case-jewelry-v4.jpg', desc:'Matching ring, necklace, and bracelet box collection in matte black with embossed gold logo and cream velvet lining. Boutique-level presentation on a production budget.' },
-  { id:3, client:'EU Apparel Brand', industry:'Fashion', type:'Shipping Mailer Box', finish:'Full-Color Print + Kraft', qty:'10,000 units', img:'/assets/images/shipping-box-kraft-v4.jpg', desc:'Custom branded mailer boxes for e-commerce with eco-friendly kraft exterior and full-color interior print. Flat-packed for efficient warehousing and logistics.' },
-  { id:4, client:'US Beauty Label', industry:'Beauty', type:'Cosmetic Box Series', finish:'UV Spot + Soft Touch', qty:'3,500 units', img:'/assets/images/case-cosmetics-v4.jpg', desc:'Multi-SKU cosmetic box series with precision foam cutouts, soft-touch lamination, and UV spot highlights on logo. Consistent brand identity across 6 product variants.' },
-  { id:5, client:'Boutique Retailer (CA)', industry:'Retail', type:'Paper Gift Bags', finish:'Foil Stamping + Ribbon Handle', qty:'8,000 units', img:'/assets/images/gift-bag-black-v3.jpg', desc:'Luxury retail paper bags in matte black with gold foil brand name and black ribbon handles. Seasonal variants for summer and holiday collections.' },
-  { id:6, client:'Lifestyle Brand (AU)', industry:'Lifestyle', type:'Gift Box + Mailer', finish:'Emboss + Eco Kraft', qty:'4,200 units', img:'/assets/images/hero-black-gold-v2.jpg', desc:'Home fragrance gift packaging combining a rigid outer gift box with kraft mailer for DTC shipping — dual-layer unboxing experience for subscription boxes.' },
+  { id:1, client:'Skincare Brand (USA)', industry:'Cosmetics', type:'Magnetic Gift Box', finish:'Gold Foil + Matte Lamination', qty:'2,000 units', img:'/assets/images/product-hero-v5.jpg', desc:'Premium skincare gift set with custom magnetic boxes, gold foil brand embossing, and foam inserts protecting serum bottles. Full unboxing experience designed for social media.', result:'+40% social growth from unboxing' },
+  { id:2, client:'Jewelry Startup (UK)', industry:'Jewelry', type:'Rigid Jewelry Box Set', finish:'Embossing + Velvet Interior', qty:'5,000 units', img:'/assets/images/case-jewelry-v4.jpg', desc:'Matching ring, necklace, and bracelet box collection in matte black with embossed gold logo and cream velvet lining. Boutique-level presentation on a production budget.', result:'18-day door-to-door delivery' },
+  { id:3, client:'EU Apparel Brand', industry:'Fashion', type:'Shipping Mailer Box', finish:'Full-Color Print + Kraft', qty:'10,000 units', img:'/assets/images/shipping-box-kraft-v4.jpg', desc:'Custom branded mailer boxes for e-commerce with eco-friendly kraft exterior and full-color interior print. Flat-packed for efficient warehousing and logistics.', result:'2.1× repeat order rate' },
+  { id:4, client:'US Beauty Label', industry:'Beauty', type:'Cosmetic Box Series', finish:'UV Spot + Soft Touch', qty:'3,500 units', img:'/assets/images/case-cosmetics-v4.jpg', desc:'Multi-SKU cosmetic box series with precision foam cutouts, soft-touch lamination, and UV spot highlights on logo. Consistent brand identity across 6 product variants.', result:'6 SKUs, 1 consistent brand system' },
+  { id:5, client:'Boutique Retailer (CA)', industry:'Retail', type:'Paper Gift Bags', finish:'Foil Stamping + Ribbon Handle', qty:'8,000 units', img:'/assets/images/gift-bag-black-v3.jpg', desc:'Luxury retail paper bags in matte black with gold foil brand name and black ribbon handles. Seasonal variants for summer and holiday collections.', result:'Seasonal line delivered in 12 days' },
+  { id:6, client:'Lifestyle Brand (AU)', industry:'Lifestyle', type:'Gift Box + Mailer', finish:'Emboss + Eco Kraft', qty:'4,200 units', img:'/assets/images/hero-black-gold-v2.jpg', desc:'Home fragrance gift packaging combining a rigid outer gift box with kraft mailer for DTC shipping — dual-layer unboxing experience for subscription boxes.', result:'23% trial-to-paid conversion' },
 ];
 
 const filters = ['All', 'Cosmetics', 'Jewelry', 'Fashion', 'Beauty', 'Retail', 'Lifestyle'];
@@ -61,8 +61,9 @@ export default function Portfolio() {
                   </div>
                   <h3 style={{ marginBottom: 8, fontSize: 20 }}>{c.client}</h3>
                   <p style={{ color:'var(--gray-3)', fontSize:13, lineHeight:1.7, marginBottom: 16 }}>{c.desc}</p>
-                  <div style={{ display:'flex', gap: 24, fontSize:12, color:'var(--gray-2)' }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap: 16, fontSize:12, color:'var(--gray-2)', flexWrap:'wrap' }}>
                     <span>Qty: <strong style={{ color:'var(--gray-3)' }}>{c.qty}</strong></span>
+                    <span style={{ color:'var(--gold)', fontSize:13, fontWeight:700, fontFamily:'var(--font-display)', letterSpacing:'0.02em' }}>{c.result}</span>
                   </div>
                 </div>
               </div>

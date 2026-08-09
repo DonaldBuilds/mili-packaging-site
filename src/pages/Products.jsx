@@ -78,7 +78,7 @@ export default function Products() {
           <span className="eyebrow">Product Gallery</span>
           <h1>Premium Packaging Collection</h1>
           <p style={{ color: 'var(--gray-3)', maxWidth: 680, marginTop: 12 }}>
-            9 packaging categories, 54 factory-direct products. Free design, structural samples, and global delivery — MOQ from 50 pcs.
+            9 packaging categories, 73 factory-direct products. Free design, structural samples, and global delivery — MOQ from 100 pcs.
           </p>
         </div>
 
