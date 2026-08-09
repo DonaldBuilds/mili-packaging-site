@@ -82,25 +82,66 @@ Contact: [Name, Email, WhatsApp]
 <div class="faq"><p class="q">Q: How soon can I expect a quote after sending my brief?</p><p class="a">A: With a complete brief, Mili Packaging provides quotes within 24 hours. Incomplete briefs may take 2-3 days as our team follows up for missing information.</p></div>
 <div class="back"><a href="/blog/">Back to Blog</a> | <a href="/">Home</a></div>
 </article></div>
+
 <!-- mili-blog-conv -->
 <style>
-.blog-wa{position:fixed;bottom:24px;right:24px;z-index:999;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);animation:blogWaPulse 2s ease-in-out infinite;transition:transform .2s}
-.blog-wa:hover{transform:scale(1.1);animation:none}
+.blog-wa{position:fixed;bottom:24px;right:24px;z-index:900;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);animation:blogWaPulse 2s ease-in-out infinite;transition:transform .2s;text-decoration:none}
+.blog-wa:hover{transform:scale(1.08);animation:none}
+.blog-wa svg{width:30px;height:30px}
+.blog-wa-tip{position:absolute;right:calc(100% + 14px);top:50%;transform:translateY(-50%);white-space:nowrap;background:#141416;color:#F2F2F2;font-size:12px;font-weight:600;padding:9px 14px;border:1px solid rgba(255,255,255,.14);border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.blog-wa:hover .blog-wa-tip{opacity:1}
+.blog-wa-tip::after{content:'';position:absolute;left:100%;top:50%;transform:translateY(-50%);border:6px solid transparent;border-left-color:#141416}
 @keyframes blogWaPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4);transform:scale(1)}50%{box-shadow:0 4px 32px rgba(37,211,102,.7);transform:scale(1.05)}}
 .blog-cta{margin:56px auto 0;max-width:760px;padding:32px 24px;background:#141414;border:1px solid #c9a84c;text-align:center}
 .blog-cta h3{color:#c9a84c;font-size:18px;margin-bottom:8px;font-weight:700}
 .blog-cta p{color:#aaa;font-size:13.5px;margin-bottom:20px}
 .blog-cta a{display:inline-block;background:#c9a84c;color:#0a0a0a;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:14px 32px;margin:4px}
 .blog-cta a.ghost{background:transparent;color:#c9a84c;border:1px solid #c9a84c}
+.blog-wa-hint{position:fixed;right:24px;bottom:96px;z-index:899;max-width:300px;background:#141416;border:1px solid rgba(201,168,76,.55);border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.55);animation:blogWaHintIn .35s ease}
+.blog-wa-hint a{display:block;padding:16px 18px 14px;text-decoration:none}
+.blog-wa-hint strong{display:block;color:#c9a84c;font-size:13.5px;font-weight:700;line-height:1.45}
+.blog-wa-hint small{display:block;margin-top:6px;color:rgba(210,210,210,.7);font-size:11px;line-height:1.5}
+.blog-wa-hint-close{position:absolute;top:6px;right:8px;width:22px;height:22px;background:none;border:none;color:rgba(210,210,210,.55);font-size:16px;line-height:1;cursor:pointer;z-index:2;border-radius:50%}
+.blog-wa-hint-close:hover{color:#fff;background:rgba(255,255,255,.1)}
+@keyframes blogWaHintIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:768px){.blog-wa{bottom:calc(16px + env(safe-area-inset-bottom));right:16px;width:54px;height:54px}.blog-wa-hint{right:16px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:calc(100vw - 88px)}.blog-wa-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.blog-wa{animation:none}}
 </style>
-<a class="blog-wa" href="https://wa.me/8618296876285?text=Hi%2C%20I'd%20like%20a%20quote%20for%20custom%20packaging" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp - usually replies in 2h" title="Chat on WhatsApp - usually replies in 2h">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+<a class="blog-wa" href="https://wa.me/8618296876285?text=Hi%20Mili%20team!%20%F0%9F%91%8B%20I'd%20like%20a%20quote.%0A%E2%80%A2%20Product%3A%20%5Be.g.%20mailer%20box%20%2F%20rigid%20box%5D%0A%E2%80%A2%20Size%3A%20%5BL%C3%97W%C3%97H%5D%0A%E2%80%A2%20Quantity%3A%20%5Be.g.%20500%20pcs%5D%0A%E2%80%A2%20Material%2FPrinting%3A%20%5Be.g.%20kraft%2C%20full-color%20logo%5D%0A%E2%80%A2%20Destination%3A%20%5Bcountry%5D" target="_blank" rel="noopener noreferrer" data-track="whatsapp_click" aria-label="Chat with us on WhatsApp" title="Chat with us on WhatsApp">
+<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+<span class="blog-wa-tip">Chat with us on WhatsApp</span>
 </a>
 <div class="blog-cta">
 <h3>Planning a packaging project?</h3>
 <p>Free design consultation and 3D mockup within 48 hours. MOQ from 100 pcs.</p>
 <a href="/contact#quote-form">Get a Free Quote</a>
-<a class="ghost" href="https://wa.me/8618296876285?text=Hi%2C%20I'd%20like%20a%20quote%20for%20custom%20packaging">Chat on WhatsApp</a>
+<a class="ghost" href="https://wa.me/8618296876285?text=Hi%20Mili%20team!%20%F0%9F%91%8B%20I'd%20like%20a%20quote.%0A%E2%80%A2%20Product%3A%20%5Be.g.%20mailer%20box%20%2F%20rigid%20box%5D%0A%E2%80%A2%20Size%3A%20%5BL%C3%97W%C3%97H%5D%0A%E2%80%A2%20Quantity%3A%20%5Be.g.%20500%20pcs%5D%0A%E2%80%A2%20Material%2FPrinting%3A%20%5Be.g.%20kraft%2C%20full-color%20logo%5D%0A%E2%80%A2%20Destination%3A%20%5Bcountry%5D" data-track="whatsapp_click">Chat on WhatsApp</a>
 </div>
+<script>
+(function(){
+  var WA_HREF="https://wa.me/8618296876285?text=Hi%20Mili%20team!%20%F0%9F%91%8B%20I'd%20like%20a%20quote.%0A%E2%80%A2%20Product%3A%20%5Be.g.%20mailer%20box%20%2F%20rigid%20box%5D%0A%E2%80%A2%20Size%3A%20%5BL%C3%97W%C3%97H%5D%0A%E2%80%A2%20Quantity%3A%20%5Be.g.%20500%20pcs%5D%0A%E2%80%A2%20Material%2FPrinting%3A%20%5Be.g.%20kraft%2C%20full-color%20logo%5D%0A%E2%80%A2%20Destination%3A%20%5Bcountry%5D";
+  function fire(){try{if(window.gtag){window.gtag('event','whatsapp_click',{event_category:'engagement',event_label:'floating_button'});}}catch(e){}}
+  var btn=document.querySelector('.blog-wa');
+  if(btn){btn.addEventListener('click',fire);}
+  var cta=document.querySelector('.blog-cta a.ghost');
+  if(cta){cta.addEventListener('click',fire);}
+  var KEY='mili_wa_hint_dismissed';
+  try{
+    if(!sessionStorage.getItem(KEY)){
+      setTimeout(function(){
+        if(document.querySelector('.blog-wa-hint'))return;
+        var h=document.createElement('div');
+        h.className='blog-wa-hint';
+        h.setAttribute('role','status');
+        h.innerHTML='<button type="button" class="blog-wa-hint-close" aria-label="Dismiss message">×</button><a href="'+WA_HREF+'" target="_blank" rel="noopener noreferrer" data-track="whatsapp_click"><strong>Questions about MOQ or samples? Chat now 💬</strong><small>We reply within a few hours · Mon–Sat 9:00–18:00 (GMT+8)</small></a>';
+        var body=document.body;
+        body.appendChild(h);
+        h.querySelector('.blog-wa-hint-close').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();h.remove();try{sessionStorage.setItem(KEY,'1');}catch(e2){}});
+        h.querySelector('a').addEventListener('click',fire);
+      },8000+Math.random()*7000);
+    }
+  }catch(e){}
+})();
+</script>
 
 </body></html>

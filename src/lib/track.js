@@ -37,6 +37,9 @@ export function initGlobalClickTracking() {
   document.addEventListener('click', (e) => {
     const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
+    // Elements with data-track report their own analytics (e.g. WhatsAppButton
+    // fires gtag whatsapp_click with category/label) — skip to avoid double counting.
+    if (a.getAttribute('data-track')) return;
     const href = a.getAttribute('href') || '';
     if (href.indexOf('wa.me/') > -1 || href.indexOf('whatsapp.com') > -1) {
       trackEvent('whatsapp_click', { url: href });

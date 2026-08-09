@@ -748,6 +748,73 @@ html, body { overflow-x: hidden; }
   50% { box-shadow: 0 4px 32px rgba(37,211,102,0.7); transform: scale(1.05); }
 }
 
+/* ═══ High-conversion WhatsApp FAB (WhatsAppButton) ═══ */
+.wa-fab {
+  position: fixed; bottom: 24px; right: 24px; z-index: 900;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+}
+.wa-fab-btn {
+  position: relative; width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  animation: wp-pulse 2s ease-in-out infinite;
+  transition: transform 0.2s;
+}
+.wa-fab-btn svg { width: 30px; height: 30px; }
+.wa-fab-btn:hover { transform: scale(1.08); animation: none; }
+/* Hover text bubble (desktop) */
+.wa-fab-tip {
+  position: absolute; right: calc(100% + 14px); top: 50%; transform: translateY(-50%);
+  white-space: nowrap; background: #141416; color: #F2F2F2;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+  padding: 9px 14px; border: 1px solid rgba(255,255,255,0.14); border-radius: 6px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+.wa-fab-tip::after {
+  content: ''; position: absolute; left: 100%; top: 50%; transform: translateY(-50%);
+  border: 6px solid transparent; border-left-color: #141416;
+}
+.wa-fab-btn:hover .wa-fab-tip { opacity: 1; }
+/* Delayed first-visit hint bubble */
+.wa-fab-hint {
+  position: relative; max-width: 300px;
+  background: #141416; border: 1px solid rgba(201,168,76,0.55); border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.55);
+  animation: waHintIn 0.35s ease;
+}
+.wa-fab-hint a {
+  display: block; padding: 16px 18px 14px; text-decoration: none;
+}
+.wa-fab-hint strong {
+  display: block; color: var(--gold); font-size: 13.5px; font-weight: 700; line-height: 1.45;
+}
+.wa-fab-hint small {
+  display: block; margin-top: 6px; color: rgba(210,210,210,0.7); font-size: 11px; line-height: 1.5;
+}
+.wa-fab-hint-close {
+  position: absolute; top: 6px; right: 8px; width: 22px; height: 22px;
+  background: none; border: none; color: rgba(210,210,210,0.55); font-size: 16px; line-height: 1;
+  cursor: pointer; z-index: 2; border-radius: 50%;
+}
+.wa-fab-hint-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+@keyframes waHintIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 768px) {
+  .wa-fab { bottom: calc(16px + env(safe-area-inset-bottom)); right: 16px; }
+  .wa-fab-btn { width: 54px; height: 54px; }
+  .wa-fab-btn svg { width: 30px; height: 30px; }
+  .wa-fab-hint { max-width: calc(100vw - 88px); }
+  .wa-fab-tip { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wa-fab-btn, .whatsapp-btn { animation: none; }
+}
+
 /* Sticky Quick Quote button — compact pill, right side above WhatsApp, animated */
 .sticky-quote {
   position: fixed; bottom: 96px; right: 24px; z-index: 999;
