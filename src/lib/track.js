@@ -21,6 +21,10 @@ export function initGA4(id) {
     const s = document.createElement('script');
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    // Fire the initial page_view once gtag is ready (React effects run before initGA4 on first paint)
+    s.onload = () => {
+      try { window.gtag('event', 'page_view', { page_path: location.pathname + location.search }); } catch (e) { /* noop */ }
+    };
     document.head.appendChild(s);
   } catch (e) {
     // analytics must never break the site
