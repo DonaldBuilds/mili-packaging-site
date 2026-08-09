@@ -114,12 +114,20 @@ export default function ProductItem() {
     ['Consistent Quality', 'AQL 2.5 QC at every workstation, FSC-certified materials and SGS-audited production — quality you can rely on at scale.'],
   ];
 
-  // Gallery shows ONLY this product's own images (main + extraImgs).
-  // Group white/craft/tab images are NEVER mixed in, so every gallery matches its product.
-  const gallery = [
+  // Gallery: this product's own images first (main + extraImgs) — group white/craft/tab
+  // images are NEVER mixed in. Products with fewer than 6 own images get factory generic
+  // images in the fixed order 图2→图4→图3→图1 to complete a consistent 6-slot gallery.
+  const ownImgs = [
     { id: 'scene', label: 'Scene', img: product.img },
     ...(product.extraImgs || []).filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img).slice(0, 5).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
   ];
+  const FACTORY_FILL = [
+    { id: 'fac-2', label: 'Custom Options', img: '/assets/images/factory-2.webp' },
+    { id: 'fac-4', label: 'Showroom', img: '/assets/images/factory-4.webp' },
+    { id: 'fac-3', label: 'Our Factory', img: '/assets/images/factory-3.webp' },
+    { id: 'fac-1', label: 'Production Process', img: '/assets/images/factory-1.webp' },
+  ];
+  const gallery = [...ownImgs, ...FACTORY_FILL.slice(0, Math.max(0, 6 - ownImgs.length))];
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
   const stepView = (dir) => {
     const idx = gallery.findIndex(g => g.id === view);
