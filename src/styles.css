@@ -257,8 +257,6 @@ h4 { font-size: 15px; font-weight: 600; }
   .hero-left { max-width: 100%; }
   .hero-content h1 { font-size: 20px; line-height: 1.18; max-width: 100%; margin-bottom: 10px; letter-spacing: 0.01em; }
   .hero-content p { font-size: 13px; max-width: 100%; margin-bottom: 14px; line-height: 1.65; }
-  /* 手机端隐藏 FSC/ISO/SGS 认证徽章（信息过载，保留桌面端） */
-  .hero-badges { display: none; }
   /* 两个 CTA 按钮缩小并排一行，左右各占一半 */
   .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
   .hero-actions .btn-gold, .hero-actions .btn-outline-white { width: 100%; padding: 12px 6px; font-size: 10.5px; min-height: 44px; justify-content: center; text-align: center; white-space: nowrap; }
@@ -685,6 +683,10 @@ html, body { overflow-x: hidden; }
 
 /* ═══ Hero Certification Badges ═══ */
 .hero-badges { display: flex; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; }
+/* 手机端隐藏 FSC/ISO/SGS 认证徽章（信息过载，保留桌面端）— 必须位于基础定义之后才能覆盖级联 */
+@media (max-width: 768px) {
+  .hero-badges { display: none; }
+}
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-light); font-weight: 700; background: rgba(12,12,14,0.55); border: 1px solid rgba(201,168,76,0.45); padding: 8px 15px; border-radius: 2px; backdrop-filter: blur(4px); }
 .hero-badge svg { color: var(--gold); flex-shrink: 0; }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(4,4,6,0.88) 0%, rgba(4,4,6,0.52) 50%, rgba(4,4,6,0.10) 100%); z-index: 1; }
