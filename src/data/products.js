@@ -628,6 +628,19 @@ export const productCatalog = {
       price: '1.20',
       img: '/assets/images/sku-rigid-magnetic.webp',
       extraImgs: ['/assets/images/sku-rigid-magnetic-2.webp'],
+
+      copy: [
+        'Magnetic Flip-Top Gift Box delivers magnetic flip-top lid with a satisfying snap. 1.5mm greyboard, gold foil, matte lamination. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '1.5mm greyboard, gold foil, matte lamination'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -639,6 +652,19 @@ export const productCatalog = {
       price: '1.45',
       img: '/assets/images/sku-rigid-lidbase.webp',
       extraImgs: ['/assets/images/sku-rigid-lidbase-2.webp'],
+
+      copy: [
+        'Lift-Off Lid & Base Box delivers classic lift-off lid & base presentation box. 2.5mm greyboard, linen wrap, embossed logo. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2.5mm greyboard, linen wrap, embossed logo'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -650,6 +676,19 @@ export const productCatalog = {
       price: '1.35',
       img: '/assets/images/sku-rigid-book.webp',
       extraImgs: ['/assets/images/sku-rigid-book-2.webp'],
+
+      copy: [
+        'Book-Style Hinged Box delivers hinged book-style box that lays flat like a display case. Book-end hinge, soft-touch, ribbon pull. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Book-end hinge, soft-touch, ribbon pull'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -661,6 +700,19 @@ export const productCatalog = {
       price: '1.40',
       img: '/assets/images/sku-rigid-drawer.webp',
       extraImgs: ['/assets/images/sku-rigid-drawer-2.webp'],
+
+      copy: [
+        'Drawer & Slide Gift Box delivers slide-out drawer with satin ribbon pull. Sliding drawer, satin ribbon, magnetic stop. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Sliding drawer, satin ribbon, magnetic stop'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -672,6 +724,19 @@ export const productCatalog = {
       price: '1.85',
       img: '/assets/images/sku-rigid-twopiece.webp',
       extraImgs: ['/assets/images/sku-rigid-twopiece-2.webp'],
+
+      copy: [
+        'Two-Piece Set Box delivers two-compartment set with eva insert and velvet lining. 2 compartments, EVA insert, velvet lining. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2 compartments, EVA insert, velvet lining'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -683,6 +748,19 @@ export const productCatalog = {
       price: '2.10',
       img: '/assets/images/sku-rigid-bottle.webp',
       extraImgs: ['/assets/images/sku-rigid-bottle-2.webp'],
+
+      copy: [
+        'Bottle & Product Rigid Set delivers two-bottle cradle with precision foam insert. 2-bottle cradle, foam insert, foil logo. Engineered for luxury retail, jewelry and gifting programs, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for luxury retail, jewelry and gifting programs that need a premium first impression that justifies the price point - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2-bottle cradle, foam insert, foil logo'], ['Finish', 'Gold Foil'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -791,6 +869,19 @@ export const productCatalog = {
       price: '0.38',
       img: '/assets/images/sku-cosmetic-serum.webp',
       extraImgs: ['/assets/images/sku-cosmetic-serum-2.webp'],
+
+      copy: [
+        'Serum & Bottle Carton Set delivers folding set with eva bottle holder insert. 350gsm white card, EVA bottle holder. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '350gsm white card, EVA bottle holder'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -802,6 +893,19 @@ export const productCatalog = {
       price: '1.25',
       img: '/assets/images/sku-cosmetic-jar.webp',
       extraImgs: ['/assets/images/sku-cosmetic-jar-2.webp'],
+
+      copy: [
+        'Cream Jar Magnetic Set delivers magnetic base + lid set for cream jars. Rigid base + lid, soft-touch, gold foil. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Rigid base + lid, soft-touch, gold foil'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -813,6 +917,19 @@ export const productCatalog = {
       price: '1.60',
       img: '/assets/images/sku-cosmetic-tray.webp',
       extraImgs: ['/assets/images/sku-cosmetic-tray-2.webp'],
+
+      copy: [
+        'Skincare Layered Tray Box delivers three-layer tray unboxing for skincare sets. 3-layer tray unboxing, custom inserts. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '3-layer tray unboxing, custom inserts'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -824,6 +941,19 @@ export const productCatalog = {
       price: '0.90',
       img: '/assets/images/sku-cosmetic-lipstick.webp',
       extraImgs: ['/assets/images/sku-cosmetic-lipstick-2.webp'],
+
+      copy: [
+        'Lipstick Slider Box delivers slim drawer-style lipstick presentation box. Drawer slider, velvet interior. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Drawer slider, velvet interior'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -835,6 +965,19 @@ export const productCatalog = {
       price: '1.70',
       img: '/assets/images/sku-cosmetic-perfume.webp',
       extraImgs: ['/assets/images/sku-cosmetic-perfume-2.webp'],
+
+      copy: [
+        'Perfume Box with Foam Cradle delivers foam-cradled perfume presentation box. Rigid, foam cradle, satin lining. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Rigid, foam cradle, satin lining'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -846,6 +989,19 @@ export const productCatalog = {
       price: '1.95',
       img: '/assets/images/sku-cosmetic-set.webp',
       extraImgs: ['/assets/images/sku-cosmetic-set-2.webp'],
+
+      copy: [
+        'Cosmetic 6-Piece Gift Set Box delivers six-compartment cosmetic gift set box. Multi-compartment, brand foil, divider. Engineered for cosmetic and skincare brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for cosmetic and skincare brands that need a premium unboxing that mirrors product quality - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Multi-compartment, brand foil, divider'], ['Finish', 'Soft Touch'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -890,6 +1046,19 @@ export const productCatalog = {
       price: '0.90',
       img: '/assets/images/sku-jewelry-ring.webp',
       extraImgs: ['/assets/images/sku-jewelry-ring-2.webp'],
+
+      copy: [
+        'Single Ring Box delivers compact velvet ring presentation box. 60x60x35mm, velvet, foil logo. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '60x60x35mm, velvet, foil logo'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -901,6 +1070,19 @@ export const productCatalog = {
       price: '1.05',
       img: '/assets/images/sku-jewelry-double-ring.webp',
       extraImgs: ['/assets/images/sku-jewelry-double-ring-2.webp'],
+
+      copy: [
+        'Double Ring Box delivers two-slot suede ring box. 2 slots, suede microfiber. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2 slots, suede microfiber'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -912,6 +1094,19 @@ export const productCatalog = {
       price: '1.30',
       img: '/assets/images/sku-jewelry-necklace.webp',
       extraImgs: ['/assets/images/sku-jewelry-necklace-2.webp'],
+
+      copy: [
+        'Necklace & Bracelet Box delivers long rigid case for necklace and bracelet. Long rigid case, velvet insert. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Long rigid case, velvet insert'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -923,6 +1118,19 @@ export const productCatalog = {
       price: '1.20',
       img: '/assets/images/sku-jewelry-earring.webp',
       extraImgs: ['/assets/images/sku-jewelry-earring-2.webp'],
+
+      copy: [
+        'Earring Stud Box delivers twelve-pair foam display grid. 12-pair foam display grid. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '12-pair foam display grid'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -934,6 +1142,19 @@ export const productCatalog = {
       price: '2.40',
       img: '/assets/images/sku-jewelry-drawers.webp',
       extraImgs: ['/assets/images/sku-jewelry-drawers-2.webp'],
+
+      copy: [
+        '5-Drawer Collection Box delivers five-drawer collection with ribbon pulls. Multi-drawer, ribbon pulls, anti-tarnish. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Multi-drawer, ribbon pulls, anti-tarnish'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -945,6 +1166,19 @@ export const productCatalog = {
       price: '1.35',
       img: '/assets/images/sku-jewelry-book.webp',
       extraImgs: ['/assets/images/sku-jewelry-book-2.webp'],
+
+      copy: [
+        'Book-Style Jewelry Case delivers hinged book case with anti-tarnish lining. Hinged book, anti-tarnish lining. Engineered for jewelry brands and boutique retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for jewelry brands and boutique retailers that need a presentation that makes the piece feel even more valuable - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Hinged book, anti-tarnish lining'], ['Interior', 'Velvet Lining'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1082,6 +1316,19 @@ export const productCatalog = {
       price: '4.90',
       img: '/assets/images/sku-watch-single.webp',
       extraImgs: ['/assets/images/sku-watch-single-2.webp'],
+
+      copy: [
+        'Single Watch Box delivers pu leather watch box with cushioned pillow. PU leather, pillow holder, fits 50mm. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'PU leather, pillow holder, fits 50mm'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1093,6 +1340,19 @@ export const productCatalog = {
       price: '5.60',
       img: '/assets/images/sku-watch-bracelet.webp',
       extraImgs: ['/assets/images/sku-watch-bracelet-2.webp'],
+
+      copy: [
+        'Watch & Bracelet Set Box delivers two-compartment watch and bracelet set. 2 compartments, velvet + pillow. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '2 compartments, velvet + pillow'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1104,6 +1364,19 @@ export const productCatalog = {
       price: '9.80',
       img: '/assets/images/sku-watch-six.webp',
       extraImgs: ['/assets/images/sku-watch-six-2.webp'],
+
+      copy: [
+        '6-Slot Watch Box delivers six-pillow watch box with jewelry drawer. 6 velvet pillows + jewelry drawer. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', '6 velvet pillows + jewelry drawer'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1115,6 +1388,19 @@ export const productCatalog = {
       price: '7.20',
       img: '/assets/images/sku-watch-winder.webp',
       extraImgs: ['/assets/images/sku-watch-winder-2.webp'],
+
+      copy: [
+        'Automatic Winder Box delivers walnut winder box with glass display lid. Winder slot + storage compartment. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Winder slot + storage compartment'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1126,6 +1412,19 @@ export const productCatalog = {
       price: '4.20',
       img: '/assets/images/sku-watch-travel-roll.webp',
       extraImgs: ['/assets/images/sku-watch-travel-roll-2.webp'],
+
+      copy: [
+        'Travel Watch Roll Case delivers three-slot leather travel roll. Leather roll, 3 slots, zip closure. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Leather roll, 3 slots, zip closure'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1137,6 +1436,19 @@ export const productCatalog = {
       price: '5.90',
       img: '/assets/images/sku-watch-book.webp',
       extraImgs: ['/assets/images/sku-watch-book-2.webp'],
+
+      copy: [
+        'Book-Style Watch Box delivers hinged display case with suede lining. Hinged display, suede lining. Engineered for watch brands and high-end retailers, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for watch brands and high-end retailers that need a protective presentation worthy of the timepiece - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 50 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 50 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '50 pcs',
       specs: [['MOQ', '50 pcs'], ['Lead Time', '12–15 days'], ['Configuration', 'Hinged display, suede lining'], ['Material', 'PU Leather'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1214,6 +1526,19 @@ export const productCatalog = {
       price: '0.55',
       img: '/assets/images/sku-mailer-selfseal.webp',
       extraImgs: ['/assets/images/sku-mailer-selfseal-2.webp'],
+
+      copy: [
+        'Self-Seal Mailer 8x6x4" delivers tape-free self-seal e-commerce mailer. E-flute, interior brand print. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'E-flute, interior brand print'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1225,6 +1550,19 @@ export const productCatalog = {
       price: '0.70',
       img: '/assets/images/sku-mailer-subscription.webp',
       extraImgs: ['/assets/images/sku-mailer-subscription-2.webp'],
+
+      copy: [
+        'Subscription Mailer 10x8x4" delivers tear-strip subscription mailer with full print. Tear strip, full color inside/out. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Tear strip, full color inside/out'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1236,6 +1574,19 @@ export const productCatalog = {
       price: '0.75',
       img: '/assets/images/sku-mailer-apparel.webp',
       extraImgs: ['/assets/images/sku-mailer-apparel-2.webp'],
+
+      copy: [
+        'Apparel Mailer 12x9x3" delivers garment-friendly mailer with die-cut handle. Garment-friendly, die-cut handle. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Garment-friendly, die-cut handle'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1247,6 +1598,19 @@ export const productCatalog = {
       price: '0.50',
       img: '/assets/images/sku-mailer-cube.webp',
       extraImgs: ['/assets/images/sku-mailer-cube-2.webp'],
+
+      copy: [
+        'Cube Mailer 6x6x6" delivers square mailer with die-cut window. Die-cut window, self-seal. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Die-cut window, self-seal'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1258,6 +1622,19 @@ export const productCatalog = {
       price: '0.95',
       img: '/assets/images/sku-mailer-heavy.webp',
       extraImgs: ['/assets/images/sku-mailer-heavy-2.webp'],
+
+      copy: [
+        'Heavy-Duty Mailer 14x10x6" delivers double-wall heavy-duty shipping mailer. Double wall, tear strip. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Double wall, tear strip'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1269,6 +1646,19 @@ export const productCatalog = {
       price: '0.45',
       img: '/assets/images/sku-mailer-eco-kraft.webp',
       extraImgs: ['/assets/images/sku-mailer-eco-kraft-2.webp'],
+
+      copy: [
+        'Eco Kraft Mailer delivers fsc kraft mailer with self-seal strip. FSC kraft, no lamination, self-seal. Engineered for e-commerce and subscription brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and subscription brands that need a branded touchpoint on every order without heavy freight - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'FSC kraft, no lamination, self-seal'], ['Feature', 'Self-Seal Strip'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1376,6 +1766,19 @@ export const productCatalog = {
       price: '0.21',
       img: '/assets/images/sku-folding-tuck.webp',
       extraImgs: ['/assets/images/sku-folding-tuck-2.webp'],
+
+      copy: [
+        'Tuck-End Carton 4x2x1" delivers economical tuck-end folding carton. 300gsm C2S, CMYK print. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '300gsm C2S, CMYK print'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1387,6 +1790,19 @@ export const productCatalog = {
       price: '0.26',
       img: '/assets/images/sku-folding-reverse-tuck.webp',
       extraImgs: ['/assets/images/sku-folding-reverse-tuck-2.webp'],
+
+      copy: [
+        'Reverse Tuck Carton delivers reverse tuck carton with matte lamination. 350gsm, matte lamination. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '350gsm, matte lamination'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1398,6 +1814,19 @@ export const productCatalog = {
       price: '0.30',
       img: '/assets/images/sku-folding-food.webp',
       extraImgs: ['/assets/images/sku-folding-food-2.webp'],
+
+      copy: [
+        'Crash-Lock Bottom Carton delivers auto-bottom food-safe carton. Auto bottom, food-safe inks. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Auto bottom, food-safe inks'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1409,6 +1838,19 @@ export const productCatalog = {
       price: '0.35',
       img: '/assets/images/sku-folding-window.webp',
       extraImgs: ['/assets/images/sku-folding-window-2.webp'],
+
+      copy: [
+        'Window-Patch Carton delivers die-cut window carton for product visibility. Die-cut window, food grade. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Die-cut window, food grade'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1420,6 +1862,19 @@ export const productCatalog = {
       price: '0.33',
       img: '/assets/images/sku-folding-sleeve-tray.webp',
       extraImgs: ['/assets/images/sku-folding-sleeve-tray-2.webp'],
+
+      copy: [
+        'Sleeve & Tray Carton delivers two-piece sleeve and tray carton. 2-piece, spot UV. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '2-piece, spot UV'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1431,6 +1886,19 @@ export const productCatalog = {
       price: '0.24',
       img: '/assets/images/sku-folding-kraft.webp',
       extraImgs: ['/assets/images/sku-folding-kraft-2.webp'],
+
+      copy: [
+        'Food-Grade Kraft Carton delivers fsc kraft carton with soy ink. FSC kraft, soy ink, no lamination. Engineered for food, retail and e-commerce packaging, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for food, retail and e-commerce packaging that need a cost-efficient structure that still looks intentional - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'FSC kraft, soy ink, no lamination'], ['Print', 'Offset / Flexo'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1507,6 +1975,19 @@ export const productCatalog = {
       price: '0.42',
       img: '/assets/images/sku-paperbag-square.webp',
       extraImgs: ['/assets/images/sku-paperbag-square-2.webp'],
+
+      copy: [
+        'Square-Bottom Kraft Bag delivers kraft bag with reinforced square bottom. 22x10x27cm, cotton rope handle. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '22x10x27cm, cotton rope handle'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1518,6 +1999,19 @@ export const productCatalog = {
       price: '0.72',
       img: '/assets/images/sku-paperbag-luxury.webp',
       extraImgs: ['/assets/images/sku-paperbag-luxury-2.webp'],
+
+      copy: [
+        'Luxury Art Paper Bag delivers art paper bag with gold foil and ribbon. 200g art paper, gold foil, ribbon. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '200g art paper, gold foil, ribbon'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1529,6 +2023,19 @@ export const productCatalog = {
       price: '0.38',
       img: '/assets/images/sku-paperbag-twisted.webp',
       extraImgs: ['/assets/images/sku-paperbag-twisted-2.webp'],
+
+      copy: [
+        'Twisted-Handle Bag delivers twisted paper handle shopping bag. Twisted paper handle, full print. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Twisted paper handle, full print'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1540,6 +2047,19 @@ export const productCatalog = {
       price: '0.30',
       img: '/assets/images/sku-paperbag-diecut.webp',
       extraImgs: ['/assets/images/sku-paperbag-diecut-2.webp'],
+
+      copy: [
+        'Die-Cut Handle Bag delivers punch-out handle kraft bag. Punch-out handle, kraft. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Punch-out handle, kraft'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1551,6 +2071,19 @@ export const productCatalog = {
       price: '0.55',
       img: '/assets/images/sku-paperbag-boutique.webp',
       extraImgs: ['/assets/images/sku-paperbag-boutique-2.webp'],
+
+      copy: [
+        'Boutique Laminated Bag delivers matte laminated bag with spot uv. Matte lamination, spot UV. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Matte lamination, spot UV'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1562,6 +2095,19 @@ export const productCatalog = {
       price: '0.85',
       img: '/assets/images/sku-paperbag-xl.webp',
       extraImgs: ['/assets/images/sku-paperbag-xl-2.webp'],
+
+      copy: [
+        'Extra-Large Retail Bag delivers large-format retail bag, reinforced bottom. 35x25x40cm, reinforced bottom. Engineered for retail, fashion and boutique brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for retail, fashion and boutique brands that need a walking billboard that carries your brand out of the store - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '35x25x40cm, reinforced bottom'], ['Feature', 'Foil Stamp'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1638,6 +2184,19 @@ export const productCatalog = {
       price: '0.30',
       img: '/assets/images/sku-corrugated-rsc.webp',
       extraImgs: ['/assets/images/sku-corrugated-rsc-2.webp'],
+
+      copy: [
+        'RSC Single-Wall 12x9x6" delivers standard rsc single-wall shipping box. B-flute, kraft liner. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'B-flute, kraft liner'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1649,6 +2208,19 @@ export const productCatalog = {
       price: '0.65',
       img: '/assets/images/sku-corrugated-doublewall.webp',
       extraImgs: ['/assets/images/sku-corrugated-doublewall-2.webp'],
+
+      copy: [
+        'Double-Wall Heavy Box 18x14x12" delivers five-layer double-wall heavy box. 5-layer, ECT tested. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', '5-layer, ECT tested'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1660,6 +2232,19 @@ export const productCatalog = {
       price: '0.45',
       img: '/assets/images/sku-corrugated-diecut.webp',
       extraImgs: ['/assets/images/sku-corrugated-diecut-2.webp'],
+
+      copy: [
+        'Die-Cut Mailer Shipper delivers e-flute shipper with tear strip. E-flute, brand print. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'E-flute, brand print'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1671,6 +2256,19 @@ export const productCatalog = {
       price: '0.55',
       img: '/assets/images/sku-corrugated-branded.webp',
       extraImgs: ['/assets/images/sku-corrugated-branded-2.webp'],
+
+      copy: [
+        'E-Commerce Branded Shipper delivers branded flexo shipper with tear strip. Full-color flexo, logo, tear strip. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Full-color flexo, logo, tear strip'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1682,6 +2280,19 @@ export const productCatalog = {
       price: '0.85',
       img: '/assets/images/sku-corrugated-moving.webp',
       extraImgs: ['/assets/images/sku-corrugated-moving-2.webp'],
+
+      copy: [
+        'Large Moving Box 24x18x18" delivers double-wall moving box with hand holes. Double wall, handles. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Double wall, handles'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1693,6 +2304,19 @@ export const productCatalog = {
       price: '0.38',
       img: '/assets/images/sku-corrugated-flatpack.webp',
       extraImgs: ['/assets/images/sku-corrugated-flatpack-2.webp'],
+
+      copy: [
+        'Flat-Pack Export Carton delivers flat-pack export carton, moisture wrapped. Bulk flat pack, moisture wrap. Engineered for e-commerce and logistics-heavy brands, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for e-commerce and logistics-heavy brands that need protective shipping strength without compromising branding - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 100 pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 100 pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '100 pcs',
       specs: [['MOQ', '100 pcs'], ['Lead Time', '10–12 days'], ['Configuration', 'Bulk flat pack, moisture wrap'], ['Standard', 'FSC Certified'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1769,6 +2393,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-kit-beauty.webp',
       extraImgs: ['/assets/images/sku-kit-beauty-2.webp'],
+
+      copy: [
+        'Beauty & Cosmetic Sample Kit delivers 12 beauty-tailored box structures and finishes. 12 beauty-tailored structures + finishes. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', '12 beauty-tailored structures + finishes'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1780,6 +2417,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-kit-jewelry.webp',
       extraImgs: ['/assets/images/sku-kit-jewelry-2.webp'],
+
+      copy: [
+        'Jewelry & Watch Sample Kit delivers ring, necklace and watch structures in velvet. Ring, necklace, watch structures, velvet. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', 'Ring, necklace, watch structures, velvet'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1791,6 +2441,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-kit-mailer.webp',
       extraImgs: ['/assets/images/sku-kit-mailer-2.webp'],
+
+      copy: [
+        'E-Commerce Mailer Sample Kit delivers mailers and folding cartons with self-seal. Mailers + folding cartons, self-seal. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', 'Mailers + folding cartons, self-seal'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1802,6 +2465,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-kit-food.webp',
       extraImgs: ['/assets/images/sku-kit-food-2.webp'],
+
+      copy: [
+        'Food & Beverage Sample Kit delivers food-safe cartons and kraft options. Food-safe cartons + kraft options. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', 'Food-safe cartons + kraft options'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1813,6 +2489,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-kit-corporate.webp',
       extraImgs: ['/assets/images/sku-kit-corporate-2.webp'],
+
+      copy: [
+        'Corporate Gift Sample Kit delivers magnetic, book and drawer gift boxes. Rigid magnetic/book/drawer gift boxes. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', 'Rigid magnetic/book/drawer gift boxes'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },
@@ -1824,6 +2513,19 @@ export const productCatalog = {
       price: '29',
       img: '/assets/images/sku-sample-kit.webp',
       extraImgs: ['/assets/images/sku-sample-kit-2.webp'],
+
+      copy: [
+        'Complete Material & Finish Kit delivers all 12 structures in one flagship kit. All 12 structures — the flagship kit. Engineered for buyers evaluating materials and finishes, this structure pairs function and finish in one piece, so the packaging works as hard as the product inside it.',
+        'Built for buyers evaluating materials and finishes that need a hands-on way to compare structures before committing - from the first structural sample to repeat bulk orders, every detail is tailored around your product dimensions, branding and budget.',
+        'Mili manufactures it in-house with factory-direct pricing, free design support and a 3D mockup within 48 hours. MOQ from 1 kit pcs with AQL 2.5 QC on every batch and 2 rounds of free structural samples before you commit.',
+      ],
+      faq: [
+        ['What is the minimum order for this product?', 'MOQ is just 1 kit pcs - ideal for testing a new line or limited edition. Volume discounts apply from 1,000 pcs.'],
+        ['Can I customize the size and print?', 'Yes - any custom size from your spec, full-color CMYK + Pantone printing, plus foil stamping, embossing, lamination and spot UV finishes.'],
+        ['Is it eco-friendly?', 'Yes - recyclable and biodegradable materials with water-based inks, and FSC-certified paper available on request.'],
+        ['Do you offer free samples?', 'Yes - 2 rounds of free structural samples in 3-5 days. Pre-production samples with your artwork are credited to your bulk order.'],
+        ['What is the lead time?', 'Standard bulk lead time is 10-15 days after artwork approval, plus shipping (FOB, CIF or DDP door-to-door).'],
+      ],
       moq: '1 kit pcs',
       specs: [['MOQ', '1 kit'], ['Lead Time', '5–7 days'], ['Configuration', 'All 12 structures — the flagship kit'], ['Includes', '12 Samples'], ['Sampling', '2 rounds free structural samples; pre-production sample fee credited to bulk order'], ['Certification', 'FSC / ISO 9001 / SGS audited / AQL 2.5 QC']],
     },

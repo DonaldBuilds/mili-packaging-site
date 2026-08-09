@@ -14,13 +14,13 @@ const featuredProducts = [
   { group: 'corrugated-shipping', slug: 'eco-printed-shipping-box' },
 ];
 
-// 5 industry cards mapped to industry pages with recommended box types (mapping table)
+// 5 industry cards mapped to industry pages — enriched with proof stats + solution chips
 const industries = [
-  { name: 'Beauty & Skincare',  desc: 'Cosmetic boxes, rigid gift sets & branded paper bags', img: '/assets/images/product-cosmetic.webp', to: '/industries/beauty-skincare' },
-  { name: 'Electronics & Tech', desc: 'Rigid boxes with foam inserts & corrugated shippers', img: '/assets/images/product-rigid.webp', to: '/industries/electronics-tech' },
-  { name: 'Fashion & Apparel',  desc: 'Branded mailers, boutique paper bags & tissue', img: '/assets/images/product-bag.webp', to: '/industries/fashion-apparel' },
-  { name: 'Food & Beverage',    desc: 'Food-grade folding cartons & rigid gift boxes', img: '/assets/images/product-folding.webp', to: '/industries/food-beverage' },
-  { name: 'Subscription & DTC', desc: 'Self-seal mailers & sample starter kits', img: '/assets/images/product-mailer.webp', to: '/industries/subscription-dtc' },
+  { name: 'Beauty & Skincare', desc: 'Cosmetic boxes, rigid gift sets & branded paper bags', img: '/assets/images/product-cosmetic.webp', to: '/industries/beauty-skincare', cases: '120+ Projects', lead: '10–12 Day Lead Time', chips: ['Magnetic Rigid Sets', 'Cosmetic Folding Cartons', 'Branded Paper Bags'] },
+  { name: 'Electronics & Tech', desc: 'Rigid boxes with foam inserts & corrugated shippers', img: '/assets/images/product-rigid.webp', to: '/industries/electronics-tech', cases: '95+ Projects', lead: '12–15 Day Lead Time', chips: ['Foam-Insert Rigid Boxes', 'Corrugated Shippers', 'Custom EVA Trays'] },
+  { name: 'Fashion & Apparel', desc: 'Branded mailers, boutique paper bags & tissue', img: '/assets/images/product-bag.webp', to: '/industries/fashion-apparel', cases: '140+ Projects', lead: '10–12 Day Lead Time', chips: ['Branded Mailers', 'Boutique Paper Bags', 'Ribbon Gift Boxes'] },
+  { name: 'Food & Beverage', desc: 'Food-grade folding cartons & rigid gift boxes', img: '/assets/images/product-folding.webp', to: '/industries/food-beverage', cases: '110+ Projects', lead: '10–15 Day Lead Time', chips: ['Food-Grade Cartons', 'Rigid Gift Boxes', 'Custom Inserts'] },
+  { name: 'Subscription & DTC', desc: 'Self-seal mailers & sample starter kits', img: '/assets/images/product-mailer.webp', to: '/industries/subscription-dtc', cases: '160+ Projects', lead: '7–10 Day Lead Time', chips: ['Self-Seal Mailers', 'Sample Kits', 'Full-Color Inserts'] },
 ];
 
 // ── Social proof ticker (20 items, 3.5s interval) ───────────────────────────
@@ -102,6 +102,8 @@ export default function Home() {
         {/* P1c: 左侧渐变遮罩提升文字可读性(WCAG AA) */}
         <div className="hero-overlay" />
         <div className="hero-content">
+          <div className="hero-inner">
+          <div className="hero-left">
           {/* P1: H1大写无衬线 — 主标题 + MOQ差异化行（问题3：字体风格对标luxopack） */}
           <h1>
             <span className="h1-desktop">
@@ -166,11 +168,10 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
 
-        {/* 右侧卖点卡 — 仅保留底部 4 个卖点（48h/7Days/AQL2.5 已按需求移除） */}
-        <div className="hero-badge-row hero-badge-row--tiered">
-          {/* TIER 3 — 4个支撑数据小卡（全宽行） */}
+          {/* 右侧卖点卡 — 4 个支撑数据（1×4 竖排，顶部对齐标题，不遮挡背景盒子） */}
+          <div className="hero-badge-row hero-badge-row--tiered">
           <div className="hb-tier3-row">
             {[
               { d: 'M20 6L9 17l-5-5', c: '#C9A227', n: '100%', l: 'On-Time' },
@@ -184,6 +185,8 @@ export default function Home() {
                 <div className="hb-t3-label">{l}</div>
               </div>
             ))}
+          </div>
+          </div>
           </div>
         </div>
       </section>
@@ -365,6 +368,14 @@ export default function Home() {
               <div className="industry-card-overlay">
                 <h4>{ind.name}</h4>
                 <p>{ind.desc}</p>
+                <div className="industry-card-chips">
+                  {ind.chips.map(c => <span className="industry-chip" key={c}>{c}</span>)}
+                </div>
+                <div className="industry-card-meta">
+                  <span className="industry-card-cases">{ind.cases}</span>
+                  <span className="industry-card-dot" aria-hidden="true">·</span>
+                  <span>{ind.lead}</span>
+                </div>
                 <span className="industry-card-link">Explore &rarr;</span>
               </div>
             </Link>
@@ -394,6 +405,7 @@ export default function Home() {
               <span style={{ display:'inline-block', marginTop:12, background:'rgba(201,162,39,0.16)', border:'1px solid var(--gold)', color:'var(--gold)', fontSize:10, fontWeight:700, letterSpacing:'0.07em', padding:'4px 10px', textTransform:'uppercase' }}>MOQ 100 pcs</span>
               <h4 style={{ marginTop: 14 }}>Skincare Brand (USA) — Magnetic Gift Box Series</h4>
               <p>Luxury cosmetics packaging with gold foil logo and custom magnetic closure. FSC-certified materials used.</p>
+              <div className="portfolio-result">+40% social growth from unboxing content</div>
               <span className="industry-card-link" style={{ marginTop: 12, display: 'inline-block' }}>View Box Style &rarr;</span>
             </div>
           </Link>
@@ -408,6 +420,7 @@ export default function Home() {
               <span style={{ display:'inline-block', marginTop:12, background:'rgba(201,162,39,0.16)', border:'1px solid var(--gold)', color:'var(--gold)', fontSize:10, fontWeight:700, letterSpacing:'0.07em', padding:'4px 10px', textTransform:'uppercase' }}>MOQ 100 pcs</span>
               <h4 style={{ marginTop: 14 }}>Jewelry Startup (UK) — Drawer Box Series</h4>
               <p>Velvet-lined drawer box with ribbon pull. Custom embossed logo and satin interior. Delivered in 2 weeks.</p>
+              <div className="portfolio-result">18-day door-to-door delivery</div>
               <span className="industry-card-link" style={{ marginTop: 12, display: 'inline-block' }}>View Box Style &rarr;</span>
             </div>
           </Link>
