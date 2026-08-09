@@ -143,7 +143,7 @@ function ScrollToTop() {
 
 function App() {
   useEffect(() => {
-    initGA4(import.meta.env.VITE_GA4_ID);
+    initGA4(import.meta.env.VITE_GA4_ID || 'G-RC1NV5DELP');
     initGlobalClickTracking();
   }, []);
   return (
