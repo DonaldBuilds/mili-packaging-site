@@ -8,6 +8,25 @@ export function trackEvent(event, params = {}) {
   }
 }
 
+// GA4 initialization — loads gtag.js only when a Measurement ID is configured (VITE_GA4_ID).
+// send_page_view is disabled; SPA route changes fire page_view from TitleManager.
+export function initGA4(id) {
+  try {
+    if (!id || typeof window === 'undefined' || window.__ga4Loaded) return;
+    window.__ga4Loaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', id, { send_page_view: false });
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(s);
+  } catch (e) {
+    // analytics must never break the site
+  }
+}
+
 // Global listeners for WhatsApp / email clicks (registered once in App)
 export function initGlobalClickTracking() {
   if (typeof document === 'undefined') return;

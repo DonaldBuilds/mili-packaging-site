@@ -9,7 +9,7 @@ import ProductDetail from './pages/ProductDetail';
 import ProductItem from './pages/ProductItem';
 import { productGroups, productCatalog } from './data/products';
 import { getPost } from './data/posts';
-import { initGlobalClickTracking } from './lib/track';
+import { initGlobalClickTracking, initGA4 } from './lib/track';
 import './styles.css';
 
 // Lazy-loaded below-the-fold pages
@@ -98,6 +98,8 @@ function TitleManager() {
     cl.href = canonical;
     const og = document.querySelector('meta[property="og:url"]');
     if (og) og.content = canonical;
+    // GA4 SPA page_view on every route change (gtag loaded by initGA4 when VITE_GA4_ID set)
+    if (window.gtag) window.gtag('event', 'page_view', { page_path: location.pathname + location.search });
     if (desc) {
       let meta = document.querySelector('meta[name="description"]');
       if (!meta) {
@@ -140,7 +142,10 @@ function ScrollToTop() {
 }
 
 function App() {
-  useEffect(() => { initGlobalClickTracking(); }, []);
+  useEffect(() => {
+    initGA4(import.meta.env.VITE_GA4_ID);
+    initGlobalClickTracking();
+  }, []);
   return (
     <Router>
       <ScrollToTop />
