@@ -4,7 +4,7 @@
   "name": "awb-packaging",
   "kind": "react-vite",
   "devCommand": "vite",
-  "buildCommand": "vite build",
+  "buildCommand": "npm run build",
   "outputDir": "dist",
   "entry": "index.html",
   "createdBy": "accio-site-builder",
@@ -20,6 +20,6 @@
   },
   "subdomain": "mili-packaging",
   "publishedUrl": "https://mili-packaging.site.accio.ai",
-  "publishedAt": "2026-08-08T15:38:03.073Z",
-  "deployId": "dep_1786203481776_647d9214"
+  "publishedAt": "2026-08-09T01:41:51.151Z",
+  "deployId": "dep_1786239710978_7150910e"
 }
