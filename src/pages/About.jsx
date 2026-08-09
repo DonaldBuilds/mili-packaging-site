@@ -157,6 +157,31 @@ export default function About() {
         </div>
       </section>
 
+      {/* Team */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <div style={{ textAlign:'center', marginBottom: 56 }}>
+            <div className="gold-line gold-line-center" />
+            <span className="eyebrow">The People Behind Your Packaging</span>
+            <h2>Dedicated Teams, One Account Manager</h2>
+          </div>
+          <div className="values-grid">
+            {[
+              { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z" /><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><path d="M2 2l7.6 7.6" /></svg>, title: 'Design Team', desc: 'Structural and graphic designers who turn your brief into production-ready artwork — free 3D mockups within 48 hours.' },
+              { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4" /><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z" /></svg>, title: 'QC Team', desc: 'AQL 2.5 inspectors at material incoming, in-process and final random sampling. Nothing ships without QC sign-off.' },
+              { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v8" /></svg>, title: 'Production Team', desc: '200+ craftsmen running die-cutting, foil stamping, hand assembly and finishing across a 20,000㎡ facility.' },
+              { icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l5-1.5A10 10 0 1 0 12 2z" /><path d="M8.5 9.5c0 3 2.5 6 5.5 6l1.5-2-2-1-1 .6c-.8-.4-1.6-1.2-2-2l.6-1-1-2-1.6 1z" /></svg>, title: 'Account Managers', desc: 'Your single point of contact from sample to shipment — direct factory line, replies within 2 business hours.' },
+            ].map(t => (
+              <div className="value-card" key={t.title}>
+                <div className="pillar-icon">{t.icon}</div>
+                <h4>{t.title}</h4>
+                <p>{t.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Capability */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">

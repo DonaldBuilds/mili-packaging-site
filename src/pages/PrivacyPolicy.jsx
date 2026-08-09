@@ -25,12 +25,11 @@
           <ul style={{ listStyle: 'none', marginTop: 8 }}>
             {[
               'Full name',
-              'Company name',
               'Email address',
-              'Phone / WhatsApp number',
-              'Industry and product type of interest',
+              'Product type of interest',
               'Estimated order quantity',
               'Project brief / message content',
+              'Reference files you choose to upload (images, PDF, design files)',
             ].map((item, i) => (
               <li key={i} style={{ padding: '6px 0', borderBottom: '1px solid var(--border-dim)', paddingLeft: 18, position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 0, color: 'var(--gold)' }}>→</span>{item}

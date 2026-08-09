@@ -4,9 +4,11 @@ import { supabase } from '../lib/supabase';
 import { productGroups } from '../data/products';
 import { trackEvent } from '../lib/track';
 
+const WA_LINK = 'https://wa.me/8618296876285?text=' + encodeURIComponent("Hi, I'd like a quote for custom packaging");
+
 const channels = [
   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 6l-10 7L2 6" /></svg>, title:'Email', info:'info@mili-packaging.com', sub:'Reply within 2 business hours', href:'mailto:info@mili-packaging.com' },
-  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l5-1.5A10 10 0 1 0 12 2z" /><path d="M8.5 9.5c0 3 2.5 6 5.5 6l1.5-2-2-1-1 .6c-.8-.4-1.6-1.2-2-2l.6-1-1-2-1.6 1z" /></svg>, title:'WhatsApp', info:'+86 182 9687 6285', sub:'Mon–Sat 09:00–18:00 (GMT+8) · If WhatsApp is unavailable, email us', href:'https://wa.me/8618296876285' },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l5-1.5A10 10 0 1 0 12 2z" /><path d="M8.5 9.5c0 3 2.5 6 5.5 6l1.5-2-2-1-1 .6c-.8-.4-1.6-1.2-2-2l.6-1-1-2-1.6 1z" /></svg>, title:'WhatsApp', info:'+86 182 9687 6285', sub:'Mon–Sat 09:00–18:00 (GMT+8) · If WhatsApp is unavailable, email us', href:WA_LINK },
   { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>, title:'Factory', info:'Jiangxi, China', sub:'Visits welcome — please arrange in advance', href:null },
 ];
 
@@ -40,10 +42,7 @@ export default function Contact() {
 
     const data = {
       name: formData.get('name'),
-      company: formData.get('company'),
       email: formData.get('email'),
-      phone: formData.get('phone'),
-      industry: formData.get('industry'),
       product_type: formData.get('productType'),
       quantity: formData.get('quantity'),
       message: formData.get('message'),
@@ -55,7 +54,7 @@ export default function Contact() {
         .insert([data]);
 
       if (submitError) throw submitError;
-      trackEvent('form_submit', { product_type: data.product_type, industry: data.industry, quantity: data.quantity });
+      trackEvent('form_submit', { product_type: data.product_type, quantity: data.quantity });
       setSubmitted(true);
     } catch (err) {
       console.error('Submission error:', err);
@@ -144,59 +143,38 @@ export default function Contact() {
                 </div>
               )}
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Full Name *</label>
-                  <input className="form-input" name="name" type="text" required placeholder="Your name" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Company *</label>
-                  <input className="form-input" name="company" type="text" required placeholder="Company name" />
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Email *</label>
-                  <input className="form-input" name="email" type="email" required placeholder="you@company.com" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">WhatsApp / Phone</label>
-                  <input className="form-input" name="phone" type="tel" placeholder="+1 555 000 0000" />
-                </div>
+              <div className="form-group">
+                <label className="form-label">Full Name *</label>
+                <input className="form-input" name="name" type="text" required placeholder="Your name" />
               </div>
 
               <div className="form-group">
-                <label className="form-label">Industry *</label>
-                <select className="form-select" name="industry" required defaultValue="">
-                  <option value="" disabled>Select your industry</option>
-                  {['Cosmetics & Beauty','Jewelry & Watches','Apparel & Fashion','Food & Beverage','Electronics','Corporate Gifts','Other'].map(o => <option key={o}>{o}</option>)}
+                <label className="form-label">Email *</label>
+                <input className="form-input" name="email" type="email" required placeholder="you@company.com" />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Product Type</label>
+                <select className="form-select" name="productType" defaultValue="">
+                  <option value="" disabled>Select product</option>
+                  {[...productGroups.map(g => g.name), 'Not sure — need advice'].map(o => <option key={o}>{o}</option>)}
                 </select>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Product Type</label>
-                  <select className="form-select" name="productType" defaultValue="">
-                    <option value="" disabled>Select product</option>
-                    {[...productGroups.map(g => g.name), 'Not sure — need advice'].map(o => <option key={o}>{o}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Estimated Quantity</label>
-                  <input className="form-input" name="quantity" type="text" placeholder="e.g. 5,000 pcs" />
-                </div>
+              <div className="form-group">
+                <label className="form-label">Estimated Quantity</label>
+                <input className="form-input" name="quantity" type="text" placeholder="e.g. 5,000 pcs" />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Project Brief *</label>
-                <textarea className="form-textarea" name="message" required placeholder="Describe your project — box dimensions, material, finish, print requirements, budget range, and delivery deadline." style={{ minHeight:130 }}></textarea>
+                <textarea className="form-textarea" name="message" required placeholder="Describe your project — box dimensions, material, finish, print requirements, budget range, and delivery deadline." style={{ minHeight: 130 }}></textarea>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Upload Reference (optional)</label>
                 <input className="form-input" type="file" accept="image/*,.pdf,.ai,.cdr,.eps" />
-                <p style={{ fontSize:11, color:'var(--gray-2)', marginTop:5 }}>Images, PDF, AI, CDR, EPS accepted</p>
+                <p style={{ fontSize: 11, color: 'var(--gray-2)', marginTop: 5 }}>Images, PDF, AI, CDR, EPS accepted</p>
               </div>
 
               <div style={{ display:'flex', gap:12, alignItems:'center', marginBottom:20 }}>

@@ -31,6 +31,15 @@ export default function Blog() {
             </Link>
           ))}
         </div>
+
+        <div style={{ marginTop: 56, padding: '36px 28px', background: 'var(--black-2)', border: '1px solid var(--gold)', textAlign: 'center' }}>
+          <div style={{ fontSize: 17, color: 'var(--gold)', fontFamily: 'var(--font-display)', marginBottom: 8 }}>Planning a packaging project?</div>
+          <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 20 }}>Get a free design consultation and 3D mockup within 48 hours. MOQ from 100 pcs.</p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get Your Factory-Direct Quote Now &rarr;</Link>
+            <a href={`https://wa.me/8618296876285?text=${encodeURIComponent("Hi, I'd like a quote for custom packaging")}`} target="_blank" rel="noopener noreferrer" className="btn-outline-gold" style={{ textDecoration: 'none' }}>Chat on WhatsApp</a>
+          </div>
+        </div>
       </div>
     </div>
   );
