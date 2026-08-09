@@ -129,6 +129,35 @@ ${links}
 </div>`;
 }
 
+// BlogPosting JSON-LD for article pages (GEO + rich results)
+const HEAD_MARKER = '<!-- mili-blog-article -->';
+function articleSchema(n, title, desc) {
+  return `
+${HEAD_MARKER}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": ${JSON.stringify(title)},
+  "description": ${JSON.stringify(desc)},
+  "datePublished": "2026-08-04",
+  "dateModified": "2026-08-09",
+  "author": { "@type": "Organization", "name": "Mili Packaging", "url": "https://mili-packaging.com/" },
+  "publisher": { "@type": "Organization", "name": "Jiangxi Mili Packaging Materials Co., Ltd.", "url": "https://mili-packaging.com/" },
+  "mainEntityOfPage": "https://mili-packaging.com/blog/${n}/",
+  "image": "https://mili-packaging.com/assets/images/product-hero-v5.jpg",
+  "inLanguage": "en"
+}
+</script>`;
+}
+
+function stripHeadOld(html) {
+  const idx = html.indexOf(HEAD_MARKER);
+  if (idx === -1) return html;
+  const headIdx = html.indexOf('</head>');
+  return html.slice(0, idx) + html.slice(headIdx);
+}
+
 const files = readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html'));
 let changed = 0;
 for (const f of files) {
@@ -139,9 +168,20 @@ for (const f of files) {
     continue;
   }
   const n = /^(\d+)\.html$/.exec(f);
-  const extra = n ? RELATED_STYLE + relatedBlock(parseInt(n[1], 10)) : '';
-  const cleaned = stripOld(html);
-  const out = cleaned.replace('</body>', SNIPPET + '\n' + extra + '\n</body>');
+  let out = stripOld(html);
+  if (n) {
+    const i = parseInt(n[1], 10);
+    const title = TITLES[i] || '';
+    const desc = (html.match(/name="description" content="([^"]*)"/) || [])[1] || title;
+    out = stripHeadOld(out);
+    if (out.includes('</head>')) {
+      out = out.replace('</head>', articleSchema(i, title, desc) + '\n</head>');
+    }
+    const extra = RELATED_STYLE + relatedBlock(i);
+    out = out.replace('</body>', SNIPPET + '\n' + extra + '\n</body>');
+  } else {
+    out = out.replace('</body>', SNIPPET + '\n</body>');
+  }
   writeFileSync(path, out);
   changed++;
   console.log(`INJECT ${f}`);
