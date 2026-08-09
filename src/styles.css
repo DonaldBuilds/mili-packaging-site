@@ -682,6 +682,10 @@ html, body { overflow-x: hidden; }
   backdrop-filter: blur(3px);
   margin-left: -20px; margin-right: -20px;
 }
+/* Mobile: force 2×2 grid (must come AFTER the flex base above to win the cascade) */
+@media (max-width: 768px) {
+  .hero-stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 20px; margin-top: 14px; }
+}
 .hero-stat { display: flex; flex-direction: column; gap: 3px; }
 .hero-stat-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-3); font-weight: 600; }
 .hero-stat-value { font-size: 14px; font-weight: 700; color: var(--gold); }
