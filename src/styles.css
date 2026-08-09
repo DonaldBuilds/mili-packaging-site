@@ -731,6 +731,10 @@ html, body { overflow-x: hidden; }
   .compare-header > div:first-child, .compare-label { grid-column: 1/-1; padding-bottom: 4px; font-size: 12px; }
 }
 
+/* ═══ Home: Packaging Insights grid ═══ */
+.insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border-dim); border: 1px solid var(--border-dim); }
+@media (max-width: 768px) { .insights-grid { grid-template-columns: 1fr; } }
+
 /* ═══ About team photos ═══ */
 .team-photos { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2px; margin-bottom: 40px; }
 .team-photos img { width: 100%; height: 340px; object-fit: cover; display: block; }

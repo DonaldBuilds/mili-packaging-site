@@ -109,7 +109,7 @@ export default function Home() {
           <div className="hero-badges">
             {[
               { label: 'FSC Certified', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
-              { label: 'ISO 9001:2018', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
+              { label: 'ISO 9001', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
               { label: 'SGS Audited', icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg> },
             ].map(({ label, icon }) => (
               <span className="hero-badge" key={label}>{icon}{label}</span>
@@ -170,7 +170,7 @@ export default function Home() {
           <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'12px' }}>
             {[
               ['FSC Certified', 'Materials'],
-              ['ISO 9001:2018', 'Quality System'],
+              ['ISO 9001', 'Quality System'],
               ['SGS Audited', 'Production'],
               ['AQL 2.5', 'QC Standard'],
               ['Since 2018', '8+ Years'],
@@ -422,6 +422,30 @@ export default function Home() {
               <span className="industry-card-link">View Box Style &rarr;</span>
             </div>
           </Link>
+        </div>
+      </section>
+
+      {/* ── Packaging Insights (Blog internal links) ── */}
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container" style={{ marginBottom: 48 }}>
+          <div className="gold-line" />
+          <span className="eyebrow">Packaging Insights</span>
+          <h2>Guides for Smart Buyers</h2>
+        </div>
+        <div className="container">
+          <div className="insights-grid">
+            {[
+              ['/blog/1/', 'Buyer Guides', 'How to Choose the Right Packaging Box for Your Skincare Brand (2026 Guide)'],
+              ['/blog/6/', 'Luxury Structure', 'Magnetic Closure Box: The Ultimate Guide for Luxury Brands'],
+              ['/blog/3/', 'Finishing', 'Gold Foil vs Hot Stamping vs Embossing: A Complete Finishing Guide'],
+            ].map(([to, tag, title]) => (
+              <Link key={to} to={to} style={{ background:'var(--black-2)', padding:'26px 24px', textDecoration:'none', display:'block' }}>
+                <div style={{ fontSize:10, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--gold)', marginBottom:10 }}>{tag}</div>
+                <h4 style={{ fontSize:15, lineHeight:1.5, color:'var(--white)', margin:0 }}>{title}</h4>
+                <div style={{ marginTop:14, color:'var(--gold)', fontSize:12, letterSpacing:'0.06em' }}>Read Guide &rarr;</div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
