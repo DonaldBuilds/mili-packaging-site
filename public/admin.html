@@ -4,159 +4,280 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Mili Packaging 运营工作台</title>
+<title>Mili Packaging 运营工作台 v2</title>
 <style>
-  :root { --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --gold-dim:rgba(201,162,39,.18); --txt:#e8e8e8; --gray:#9a9a9a; }
+  :root { --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --txt:#e8e8e8; --gray:#9a9a9a; --ok:#4cd964; --bad:#ff6b6b; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--bg); color:var(--txt); font-family:'Segoe UI', system-ui, -apple-system, sans-serif; line-height:1.6; }
-  .wrap { max-width:1080px; margin:0 auto; padding:28px 20px 60px; }
+  body { background:var(--bg); color:var(--txt); font-family:'Segoe UI', system-ui, sans-serif; line-height:1.6; }
+  .wrap { max-width:1140px; margin:0 auto; padding:28px 20px 60px; }
   header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:18px; margin-bottom:26px; }
-  header h1 { font-size:22px; letter-spacing:.02em; }
-  header h1 span { color:var(--gold); }
-  header .badge { font-size:11px; color:var(--gold); border:1px solid rgba(201,162,39,.5); padding:3px 10px; border-radius:3px; }
+  header h1 { font-size:22px; } header h1 span { color:var(--gold); }
+  .badge { font-size:11px; color:var(--gold); border:1px solid rgba(201,162,39,.5); padding:3px 10px; border-radius:3px; }
   h2 { font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin:34px 0 14px; }
   h3 { font-size:14px; margin-bottom:6px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; }
   .card { background:var(--bg2); border:1px solid var(--border); padding:16px; border-radius:6px; }
   .card p { font-size:12.5px; color:var(--gray); margin:6px 0 12px; }
-  .card .num { font-size:26px; font-weight:700; color:var(--gold); font-family:Georgia, serif; }
-  a.btn { display:inline-block; background:var(--gold); color:#0a0a0a; font-weight:700; font-size:12px; letter-spacing:.05em; text-decoration:none; padding:9px 16px; border-radius:3px; }
-  a.btn.ghost { background:transparent; color:var(--gold); border:1px solid var(--gold); }
-  .status { font-size:12px; margin-top:10px; color:var(--gray); }
-  .status.ok { color:#4cd964; } .status.bad { color:#ff6b6b; }
+  a.btn, button.btn { display:inline-block; background:var(--gold); color:#0a0a0a; font-weight:700; font-size:12px; letter-spacing:.05em; text-decoration:none; padding:9px 16px; border-radius:3px; border:none; cursor:pointer; }
+  a.btn.ghost, button.btn.ghost { background:transparent; color:var(--gold); border:1px solid var(--gold); }
+  .status { font-size:12px; margin-top:6px; color:var(--gray); }
+  .status.ok { color:var(--ok); } .status.bad { color:var(--bad); }
   table { width:100%; border-collapse:collapse; font-size:12.5px; }
   th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
   th { color:var(--gold); font-weight:600; white-space:nowrap; }
   input, select, textarea { width:100%; background:#0e0e10; border:1px solid var(--border); color:var(--txt); padding:10px 12px; border-radius:3px; font-size:13px; margin-bottom:10px; }
   label { display:block; font-size:12px; color:var(--gray); margin-bottom:4px; }
-  .row { display:flex; gap:12px; } .row > div { flex:1; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; } .row > div { flex:1; min-width:200px; }
   .lock { text-align:center; padding:40px 20px; }
   .hint { font-size:12px; color:var(--gray); margin-top:6px; }
   .flash { position:fixed; top:16px; right:16px; background:#1d1d20; border:1px solid var(--gold); color:var(--gold); padding:12px 18px; font-size:13px; border-radius:4px; opacity:0; transition:opacity .3s; z-index:99; }
   .flash.show { opacity:1; }
+  .flash.err { border-color:var(--bad); color:var(--bad); }
   footer { margin-top:40px; border-top:1px solid var(--border); padding-top:16px; font-size:12px; color:var(--gray); }
-  a { color:var(--gold); }
+  .tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .tab { padding:8px 16px; border:1px solid var(--border); background:var(--bg2); color:var(--gray); cursor:pointer; font-size:13px; border-radius:3px; }
+  .tab.active { color:var(--gold); border-color:var(--gold); }
+  .hide { display:none; }
+  .meta { font-size:11px; color:var(--gray); }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Mili Packaging <span>运营工作台</span></h1>
+    <h1>Mili Packaging <span>运营工作台 v2</span></h1>
     <span class="badge">内部使用 · noindex</span>
   </header>
-
   <div class="flash" id="flash"></div>
 
-  <h2>① 流量数据 · 在哪看</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>GA4 · 访问与转化</h3>
-      <p>核心看板：用户数 / 浏览量 / 来源渠道 / whatsapp_click 转化。建议每周一看。</p>
-      <a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4</a>
-    </div>
-    <div class="card">
-      <h3>Google Search Console</h3>
-      <p>收录状态 / 关键词排名 / 点击与展示。GSC 是判断"买家能不能搜到你"的第一入口。</p>
-      <a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a>
-    </div>
-    <div class="card">
-      <h3>Bing Webmaster</h3>
-      <p>Bing 索引状态与 sitemap 处理进度（已提交，Processing 中）。</p>
-      <a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a>
-    </div>
-    <div class="card">
-      <h3>实时访问</h3>
-      <p>GA4 → 报告 → 实时。看此刻谁在线上、来自哪个国家。</p>
-      <a class="btn ghost" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">GA4 实时报告</a>
+  <div class="tabs">
+    <button class="tab active" data-tab="dash">数据看板</button>
+    <button class="tab" data-tab="editor">产品/内容编辑</button>
+    <button class="tab" data-tab="inquiry">询盘中心</button>
+    <button class="tab" data-tab="tools">后台工具</button>
+    <button class="tab" data-tab="ticket">修改工单</button>
+  </div>
+
+  <!-- ① 数据看板 -->
+  <div id="tab-dash">
+    <h2>① 流量数据 · 自动同步与直达</h2>
+    <div class="grid">
+      <div class="card"><h3>GA4 · 访问与转化</h3><p>用户 / 浏览 / 来源 / whatsapp_click 转化。数据面板每周更新，一键直达。</p><a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4 数据面板</a></div>
+      <div class="card"><h3>Google Search Console</h3><p>收录 / 关键词 / 点击展示。判断"买家能否搜到你"的第一入口。</p><a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a></div>
+      <div class="card"><h3>Bing Webmaster</h3><p>Bing 索引与 sitemap 处理状态。</p><a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a></div>
+      <div class="card"><h3>站点自检</h3><p id="selfcheck">检测中…</p></div>
     </div>
   </div>
 
-  <h2>② 询盘中心</h2>
-  <div class="card" id="inquiryCard">
-    <p>买家通过询盘表单提交的记录（来自 Supabase inquiries 表，自动同步）。</p>
-    <div id="inquiryArea">
-      <div class="lock">
-        <p>询盘数据含买家联系方式，需密码查看</p>
-        <input type="password" id="pin" placeholder="请输入访问密码" style="max-width:260px;margin:14px auto 6px;display:block;text-align:center" />
-        <button class="btn" id="unlockBtn" style="border:none;cursor:pointer">解锁查看</button>
-        <div class="hint">忘记密码？询问运营负责人（信息存于工作台交付文档）</div>
-      </div>
-    </div>
-  </div>
-
-  <h2>③ 内容修改工单</h2>
-  <div class="card">
-    <p>要改首页/产品/文章的文案或图片？填下表 → 生成工单（邮件发送给运营邮箱），或直接把需求告诉我（AI 运营助手），我会直接改并部署。</p>
-    <form id="ticketForm">
+  <!-- ② 产品/内容编辑 -->
+  <div id="tab-editor" class="hide">
+    <h2>② 产品 / 内容编辑（保存后约 2 分钟自动上线）</h2>
+    <div class="card">
       <div class="row">
-        <div>
-          <label>要修改的页面 / 位置 *</label>
-          <input id="t-page" required placeholder="如：首页 Hero 标题 / 产品 xxx 详情页 / Blog 文章 5" />
+        <div><label>产品分组</label><select id="ed-group"><option value="">— 加载中… —</option></select></div>
+        <div><label>产品</label><select id="ed-product"><option value="">— 先选分组 —</option></select></div>
+      </div>
+      <div id="ed-fields" class="hide">
+        <div class="row">
+          <div><label>产品名称</label><input id="f-name" /></div>
+          <div><label>参考价 (USD)</label><input id="f-price" /></div>
+          <div><label>MOQ</label><input id="f-moq" /></div>
         </div>
-        <div>
-          <label>优先级</label>
-          <select id="t-pri">
-            <option>正常</option><option>紧急</option><option>计划中</option>
-          </select>
+        <label>一句话卖点 (tagline)</label><input id="f-tagline" />
+        <label>规格简述 (spec)</label><input id="f-spec" />
+        <label>产品描述 (copy 第 1 段)</label><textarea id="f-copy" rows="3"></textarea>
+        <div class="row">
+          <div><label>主图路径</label><input id="f-img" /></div>
+          <div><label>排序位置</label><input id="f-order" type="number" /></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">
+          <button class="btn" id="ed-save">保存并发布（自动部署）</button>
+          <span class="meta">保存 = 提交 GitHub → 自动构建部署，约 2 分钟生效</span>
         </div>
       </div>
-      <label>要改成什么内容 *</label>
-      <textarea id="t-body" required rows="5" placeholder="描述清楚：当前是什么 → 想改成什么（附上新文案/新图片说明）"></textarea>
-      <button type="button" class="btn" id="ticketBtn" style="border:none;cursor:pointer">生成修改工单（邮件）</button>
-      <button type="button" class="btn ghost" id="copyBtn" style="margin-left:8px;cursor:pointer">复制工单文本</button>
-    </form>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>分组级设置（批量影响该组产品展示）</h3>
+      <div class="row">
+        <div><label>分组</label><select id="g-group"><option value="">— 选择分组 —</option></select></div>
+        <div><label>组名（显示名称）</label><input id="g-name" /></div>
+        <div><label>MOQ 默认值</label><input id="g-moq" /></div>
+      </div>
+      <button class="btn ghost" id="g-save">保存分组设置</button>
+    </div>
   </div>
 
-  <h2>④ 后台工具导航</h2>
-  <div class="grid">
-    <div class="card"><h3>Cloudflare</h3><p>域名 DNS / 缓存清理 / Worker 部署日志</p><a class="btn ghost" href="https://dash.cloudflare.com/" target="_blank" rel="noopener">打开</a></div>
-    <div class="card"><h3>GitHub 仓库</h3><p>站点源码 / 自动部署记录（Actions）</p><a class="btn ghost" href="https://github.com/DonaldBuilds/mili-packaging-site" target="_blank" rel="noopener">打开</a></div>
-    <div class="card"><h3>Supabase 数据库</h3><p>询盘表 inquiries / 邮件通知触发器</p><a class="btn ghost" href="https://supabase.com/dashboard" target="_blank" rel="noopener">打开</a></div>
-    <div class="card"><h3>Accio 站点</h3><p>备站 mili-packaging.site.accio.ai（新版本已同步）</p><a class="btn ghost" href="https://mili-packaging.site.accio.ai" target="_blank" rel="noopener">打开</a></div>
+  <!-- ③ 询盘中心 -->
+  <div id="tab-inquiry" class="hide">
+    <h2>③ 询盘中心</h2>
+    <div class="card" id="inquiryCard">
+      <div id="inquiryArea">
+        <div class="lock">
+          <p>询盘数据含买家联系方式，需密码查看</p>
+          <input type="password" id="pin" placeholder="访问密码" style="max-width:260px;margin:14px auto 6px;display:block;text-align:center" />
+          <button class="btn" id="unlockBtn" style="border:none;cursor:pointer">解锁查看</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h2>⑤ SEO 自检</h2>
-  <div class="grid">
-    <div class="card"><h3>sitemap.xml</h3><p>搜索引擎抓取地图（113 个 URL）</p><span class="status" id="st-sitemap">检测中…</span></div>
-    <div class="card"><h3>robots.txt</h3><p>抓取规则</p><span class="status" id="st-robots">检测中…</span></div>
-    <div class="card"><h3>llms.txt</h3><p>AI 引擎（ChatGPT/Perplexity）站点说明</p><span class="status" id="st-llms">检测中…</span></div>
+  <!-- ④ 后台工具 -->
+  <div id="tab-tools" class="hide">
+    <h2>④ 后台工具导航</h2>
+    <div class="grid">
+      <div class="card"><h3>Cloudflare</h3><p>域名 DNS / 缓存清理 / Worker 部署日志</p><a class="btn ghost" href="https://dash.cloudflare.com/" target="_blank" rel="noopener">打开</a></div>
+      <div class="card"><h3>GitHub 仓库</h3><p>源码 / 自动部署记录（Actions）</p><a class="btn ghost" href="https://github.com/DonaldBuilds/mili-packaging-site" target="_blank" rel="noopener">打开</a></div>
+      <div class="card"><h3>Supabase 数据库</h3><p>询盘表 / 邮件通知触发器</p><a class="btn ghost" href="https://supabase.com/dashboard" target="_blank" rel="noopener">打开</a></div>
+      <div class="card"><h3>Accio 备站</h3><p>mili-packaging.site.accio.ai</p><a class="btn ghost" href="https://mili-packaging.site.accio.ai" target="_blank" rel="noopener">打开</a></div>
+      <div class="card"><h3>GA4 转化设置</h3><p>whatsapp_click 等关键事件管理</p><a class="btn ghost" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开</a></div>
+      <div class="card"><h3>GSC 提交</h3><p>sitemap 提交 / 收录检查</p><a class="btn ghost" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开</a></div>
+    </div>
   </div>
 
-  <footer>Mili Packaging 运营工作台 v1.0 · 数据源：GA4 / GSC / Bing / Supabase · 内容修改由 AI 运营助手执行并自动部署</footer>
+  <!-- ⑤ 修改工单 -->
+  <div id="tab-ticket" class="hide">
+    <h2>⑤ 内容修改工单（非结构化内容）</h2>
+    <div class="card">
+      <p>改首页文案、Blog、政策页等非产品内容：填工单 → 发邮件给运营，或直接告诉我（AI 助手）执行。产品级修改请用「产品/内容编辑」页。</p>
+      <div class="row">
+        <div><label>页面 / 位置 *</label><input id="t-page" required placeholder="如：首页 Hero / About 团队区块" /></div>
+        <div><label>优先级</label><select id="t-pri"><option>正常</option><option>紧急</option></select></div>
+      </div>
+      <label>要改成什么 *</label><textarea id="t-body" rows="4" placeholder="当前是什么 → 想改成什么（附新文案）"></textarea>
+      <button class="btn" id="ticketBtn" style="border:none;cursor:pointer">生成工单邮件</button>
+      <button class="btn ghost" id="copyBtn" style="cursor:pointer">复制工单文本</button>
+    </div>
+  </div>
+
+  <footer>Mili Packaging 运营工作台 v2 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Bing / Supabase / GitHub</footer>
 </div>
 
 <script>
 (function () {
   var FLASH = document.getElementById('flash');
-  function flash(msg) {
+  function flash(msg, err) {
     FLASH.textContent = msg;
-    FLASH.classList.add('show');
-    setTimeout(function () { FLASH.classList.remove('show'); }, 3200);
+    FLASH.className = 'flash show' + (err ? ' err' : '');
+    setTimeout(function () { FLASH.classList.remove('show'); }, 3600);
   }
 
-  // ── ① SEO self-check ──
-  function check(url, el) {
-    fetch(url, { method: 'HEAD' }).then(function (r) {
-      var s = document.getElementById(el);
-      s.textContent = r.ok ? ('可用 · HTTP ' + r.status) : ('异常 · HTTP ' + r.status);
-      s.className = 'status ' + (r.ok ? 'ok' : 'bad');
-    }).catch(function () {
-      var s = document.getElementById(el);
-      s.textContent = '无法访问（请检查网络）';
-      s.className = 'status bad';
+  // ── Tabs ──
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      document.querySelectorAll('[id^="tab-"]').forEach(function (p) { p.classList.add('hide'); });
+      document.getElementById('tab-' + t.dataset.tab).classList.remove('hide');
     });
-  }
-  check('/sitemap.xml', 'st-sitemap');
-  check('/robots.txt', 'st-robots');
-  check('/llms.txt', 'st-llms');
+  });
 
-  // ── ② Inquiries (PIN-gated, Supabase REST with anon key) ──
+  // ── Self-check ──
+  var selfEl = document.getElementById('selfcheck');
+  Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
+    return fetch('/' + u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
+  })).then(function (rs) {
+    selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
+  });
+
+  // ── Product editor: load data from GitHub raw (public repo) ──
+  var RAW = 'https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/src/data/products.json';
+  var DATA = null;
+  var groupSel = document.getElementById('ed-group');
+  var prodSel = document.getElementById('ed-product');
+  var gGroupSel = document.getElementById('g-group');
+
+  fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
+    DATA = d;
+    var total = 0;
+    d.productGroups.forEach(function (g) {
+      var list = d.productCatalog[g.slug] || [];
+      total += list.length;
+      var opt = document.createElement('option');
+      opt.value = g.slug; opt.textContent = g.name + ' (' + list.length + ' 个)';
+      groupSel.appendChild(opt);
+      var opt2 = document.createElement('option');
+      opt2.value = g.slug; opt2.textContent = g.name;
+      gGroupSel.appendChild(opt2);
+    });
+    flash('产品数据已加载（' + d.productGroups.length + ' 组 / ' + total + ' 个产品）');
+  }).catch(function () { flash('产品数据加载失败，请检查网络', true); });
+
+  groupSel.addEventListener('change', function () {
+    prodSel.innerHTML = '<option value="">— 选择产品 —</option>';
+    var list = (DATA.productCatalog[groupSel.value] || []);
+    list.forEach(function (p) {
+      var opt = document.createElement('option');
+      opt.value = p.slug; opt.textContent = p.name + '  ($' + p.price + ')';
+      prodSel.appendChild(opt);
+    });
+  });
+
+  prodSel.addEventListener('change', function () {
+    var p = (DATA.productCatalog[groupSel.value] || []).find(function (x) { return x.slug === prodSel.value; });
+    if (!p) return;
+    document.getElementById('f-name').value = p.name || '';
+    document.getElementById('f-price').value = p.price || '';
+    document.getElementById('f-moq').value = p.moq || '';
+    document.getElementById('f-tagline').value = p.tagline || '';
+    document.getElementById('f-spec').value = p.spec || '';
+    document.getElementById('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
+    document.getElementById('f-img').value = p.img || '';
+    document.getElementById('f-order').value = p.order || '';
+    document.getElementById('ed-fields').classList.remove('hide');
+  });
+
+  // ── Save product (POST /api/content) ──
+  function postOps(ops, pin) {
+    return fetch('/api/content', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-ops-pin': pin },
+      body: JSON.stringify({ ops: ops })
+    }).then(function (r) { return r.json(); });
+  }
+  document.getElementById('ed-save').addEventListener('click', function () {
+    if (!groupSel.value || !prodSel.value) { flash('请选择分组与产品', true); return; }
+    var pin = prompt('请输入工作台操作密码：');
+    if (!pin) return;
+    var fields = {
+      name: document.getElementById('f-name').value.trim(),
+      price: document.getElementById('f-price').value.trim(),
+      moq: document.getElementById('f-moq').value.trim(),
+      tagline: document.getElementById('f-tagline').value.trim(),
+      spec: document.getElementById('f-spec').value.trim()
+    };
+    var copy = document.getElementById('f-copy').value.trim();
+    var img = document.getElementById('f-img').value.trim();
+    var order = document.getElementById('f-order').value.trim();
+    if (copy) fields.copy = [copy];
+    if (img) fields.img = img;
+    if (order !== '') fields.order = order;
+    flash('正在提交并触发自动部署…');
+    postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }], pin).then(function (res) {
+      if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
+    }).catch(function () { flash('网络错误，请重试', true); });
+  });
+
+  // ── Group save ──
+  document.getElementById('g-save').addEventListener('click', function () {
+    if (!gGroupSel.value) { flash('请选择分组', true); return; }
+    var pin = prompt('请输入工作台操作密码：');
+    if (!pin) return;
+    var fields = {};
+    var nm = document.getElementById('g-name').value.trim(); if (nm) fields.name = nm;
+    var moq = document.getElementById('g-moq').value.trim(); if (moq) fields.moq = moq;
+    if (!Object.keys(fields).length) { flash('没有要保存的修改', true); return; }
+    flash('正在提交…');
+    postOps([{ action: 'group', group: gGroupSel.value, fields: fields }], pin).then(function (res) {
+      if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
+    }).catch(function () { flash('网络错误', true); });
+  });
+
+  // ── Inquiries (PIN-gated) ──
   var SB_URL = 'https://qfecxuuvgbqqruzfgrpl.supabase.co';
   var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZWN4dXV2Z2JxcXJ1emZncnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODgwMDEsImV4cCI6MjEwMDU2NDAwMX0.l_nwv0I1ZogH34_2EFBcJKyMMkYAzWbOc3cEkkFUMp0';
   var PIN = 'mili2026';
   var area = document.getElementById('inquiryArea');
   document.getElementById('unlockBtn').addEventListener('click', function () {
-    if (document.getElementById('pin').value !== PIN) { flash('密码不正确'); return; }
+    if (document.getElementById('pin').value !== PIN) { flash('密码不正确', true); return; }
     fetch(SB_URL + '/rest/v1/inquiries?select=name,email,product_type,quantity,message,created_at&order=created_at.desc&limit=20', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
     }).then(function (r) { return r.json(); }).then(function (rows) {
@@ -166,20 +287,17 @@
       rows.forEach(function (r) {
         html += '<tr><td style="white-space:nowrap">' + (r.created_at || '').replace('T', ' ').slice(0, 16) + '</td><td>' + (r.name || '') + '</td><td>' + (r.email || '') + '</td><td>' + (r.product_type || '') + '</td><td>' + (r.quantity || '') + '</td><td style="max-width:220px">' + (r.message || '').slice(0, 80) + '</td></tr>';
       });
-      area.innerHTML = html + '</table><p class="hint">完整记录与通知设置：Supabase → Table Editor → inquiries</p>';
+      area.innerHTML = html + '</table><p class="hint">完整记录：Supabase → Table Editor → inquiries</p>';
     }).catch(function () { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; });
   });
 
-  // ── ③ Content ticket → email ──
+  // ── Ticket → mail ──
   function buildTicket() {
     var page = document.getElementById('t-page').value.trim();
     var pri = document.getElementById('t-pri').value;
     var body = document.getElementById('t-body').value.trim();
-    if (!page || !body) { flash('请填写页面位置和修改内容'); return null; }
-    return {
-      subject: '【内容修改·' + pri + '】' + page,
-      text: '页面位置：' + page + '\n优先级：' + pri + '\n\n修改内容：\n' + body
-    };
+    if (!page || !body) { flash('请填写页面位置和修改内容', true); return null; }
+    return { subject: '【内容修改·' + pri + '】' + page, text: '页面位置：' + page + '\n优先级：' + pri + '\n\n修改内容：\n' + body };
   }
   document.getElementById('ticketBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
@@ -188,9 +306,7 @@
   });
   document.getElementById('copyBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
-    var full = t.subject + '\n\n' + t.text;
-    (navigator.clipboard ? navigator.clipboard.writeText(full) : Promise.reject()).then(function () { flash('工单已复制，可粘贴发送给运营'); })
-      .catch(function () { flash('复制失败，请手动复制'); });
+    (navigator.clipboard ? navigator.clipboard.writeText(t.subject + '\n\n' + t.text) : Promise.reject()).then(function () { flash('工单已复制'); }).catch(function () { flash('复制失败，请手动复制', true); });
   });
 })();
 </script>

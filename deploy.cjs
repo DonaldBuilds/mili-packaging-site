@@ -58,12 +58,48 @@ const M=Object.fromEntries(Object.entries({
 const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
 const BLOG_PATHS=['/blog','/blog/'];
 
-export default{async fetch(r){
+export default{async fetch(r,env){
   const F=await getF();
   const url=new URL(r.url);
   let p=url.pathname;
   if(p==='/')p='/index.html';
-  let k=p.replace(/^\\//,'');
+  let k=p.replace(/^\//,'');
+  const OPS_PIN=(env&&env.OPS_PIN)||'mili2026';
+  const OPS_GH_PAT=(env&&env.OPS_GH_PAT)||'';
+
+  // ── Ops API: workbench product edits → GitHub commit → auto deploy ──
+  if(p==='/api/content'&&r.method==='POST'){
+    try{
+      if(r.headers.get('x-ops-pin')!==OPS_PIN)return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+      if(!OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'server-not-configured'}),{status:500,headers:{'content-type':'application/json'}});
+      const body=await r.json();
+      const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json';
+      const ghH={authorization:'Bearer '+OPS_GH_PAT,'accept':'application/vnd.github+json','user-agent':'mili-ops','content-type':'application/json'};
+      const cur=await fetch(gh,{headers:ghH});
+      if(!cur.ok)return new Response(JSON.stringify({ok:false,error:'github-read:'+cur.status}),{status:502,headers:{'content-type':'application/json'}});
+      const meta=await cur.json();
+      const data=JSON.parse(decodeURIComponent(escape(atob(meta.content))));
+      const ops=body.ops||[];
+      for(const op of ops){
+        if(op.action==='product'&&op.group&&op.slug&&op.fields){
+          const list=data.productCatalog[op.group];
+          if(!Array.isArray(list))return new Response(JSON.stringify({ok:false,error:'group-not-found:'+op.group}),{status:400,headers:{'content-type':'application/json'}});
+          const prod=list.find(x=>x.slug===op.slug);
+          if(!prod)return new Response(JSON.stringify({ok:false,error:'product-not-found:'+op.slug}),{status:400,headers:{'content-type':'application/json'}});
+          Object.assign(prod,op.fields);
+        } else if(op.action==='group'&&op.group&&op.fields){
+          const g=data.productGroups.find(x=>x.slug===op.group);
+          if(!g)return new Response(JSON.stringify({ok:false,error:'group-not-found:'+op.group}),{status:400,headers:{'content-type':'application/json'}});
+          Object.assign(g,op.fields);
+        } else {
+          return new Response(JSON.stringify({ok:false,error:'unknown-op'}),{status:400,headers:{'content-type':'application/json'}});
+        }
+      }
+      const put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify({message:'ops: workbench update '+new Date().toISOString().slice(0,16)+'Z',content:btoa(unescape(encodeURIComponent(JSON.stringify(data)))),sha:meta.sha})});
+      if(!put.ok)return new Response(JSON.stringify({ok:false,error:'github-write:'+put.status}),{status:502,headers:{'content-type':'application/json'}});
+      return new Response(JSON.stringify({ok:true,message:'updated & pushed — auto-deploy started'}),{headers:{'content-type':'application/json'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:String(e&&e.message||e)}),{status:500,headers:{'content-type':'application/json'}})}
+  }
 
   // Blog routes
   if(p==='/blog'||p==='/blog/'){return new Response(F['blog/index.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})})}
