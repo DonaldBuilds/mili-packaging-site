@@ -11,6 +11,13 @@ const links = [
   { to: '/blog', label: 'Blog', external: true },
 ];
 
+// Compact names for the desktop dropdown so the panel stays narrow (~half of before)
+const NAV_LABELS = {
+  'rigid-gift-boxes': 'Rigid Boxes',
+  'corrugated-shipping': 'Corrugated Boxes',
+  'sample-starter-kits': 'Sample Kits',
+};
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState(false);
@@ -56,7 +63,7 @@ export default function Navbar() {
                   {productGroups.map(g => (
                     <Link to={`/products/${g.slug}`} key={g.slug} onClick={() => setDrop(false)}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {g.name}
+                        {NAV_LABELS[g.slug] || g.name}
                         {g.isNew && <span className="badge-new">New</span>}
                       </span>
                       <span style={{ color: 'var(--gold)', opacity: 0.5, fontSize: 12 }}>›</span>

@@ -14,13 +14,19 @@ const featuredProducts = [
   { group: 'corrugated-shipping', slug: 'eco-printed-shipping-box' },
 ];
 
-// 5 industry cards mapped to industry pages — enriched with proof stats + solution chips
+// 5 industry cards — case-first: each card showcases a flagship custom project with a result
+// metric (not a re-list of product types).
 const industries = [
-  { name: 'Beauty & Skincare', desc: 'Cosmetic boxes, rigid gift sets & branded paper bags', img: '/assets/images/product-cosmetic.webp', to: '/industries/beauty-skincare', cases: '120+ Projects', lead: '10–12 Day Lead Time', chips: ['Magnetic Rigid Sets', 'Cosmetic Folding Cartons', 'Branded Paper Bags'] },
-  { name: 'Electronics & Tech', desc: 'Rigid boxes with foam inserts & corrugated shippers', img: '/assets/images/product-rigid.webp', to: '/industries/electronics-tech', cases: '95+ Projects', lead: '12–15 Day Lead Time', chips: ['Foam-Insert Rigid Boxes', 'Corrugated Shippers', 'Custom EVA Trays'] },
-  { name: 'Fashion & Apparel', desc: 'Branded mailers, boutique paper bags & tissue', img: '/assets/images/product-bag.webp', to: '/industries/fashion-apparel', cases: '140+ Projects', lead: '10–12 Day Lead Time', chips: ['Branded Mailers', 'Boutique Paper Bags', 'Ribbon Gift Boxes'] },
-  { name: 'Food & Beverage', desc: 'Food-grade folding cartons & rigid gift boxes', img: '/assets/images/product-folding.webp', to: '/industries/food-beverage', cases: '110+ Projects', lead: '10–15 Day Lead Time', chips: ['Food-Grade Cartons', 'Rigid Gift Boxes', 'Custom Inserts'] },
-  { name: 'Subscription & DTC', desc: 'Self-seal mailers & sample starter kits', img: '/assets/images/product-mailer.webp', to: '/industries/subscription-dtc', cases: '160+ Projects', lead: '7–10 Day Lead Time', chips: ['Self-Seal Mailers', 'Sample Kits', 'Full-Color Inserts'] },
+  { name: 'Beauty & Skincare', img: '/assets/images/product-cosmetic.webp', to: '/industries/beauty-skincare',
+    case: 'Skincare Brand (USA)', scope: '12,000 magnetic gift sets · gold foil logo', result: '+40% social growth from unboxing', cases: '120+ Projects', lead: '10–12 Day Lead Time' },
+  { name: 'Electronics & Tech', img: '/assets/images/product-rigid.webp', to: '/industries/electronics-tech',
+    case: 'Audio Brand (Germany)', scope: '8,000 foam-insert rigid boxes · EVA trays', result: '0% transit damage in 10k units', cases: '95+ Projects', lead: '12–15 Day Lead Time' },
+  { name: 'Fashion & Apparel', img: '/assets/images/product-bag.webp', to: '/industries/fashion-apparel',
+    case: 'Apparel Label (Australia)', scope: '20,000 branded kraft mailers', result: '2.1× repeat order rate', cases: '140+ Projects', lead: '10–12 Day Lead Time' },
+  { name: 'Food & Beverage', img: '/assets/images/product-folding.webp', to: '/industries/food-beverage',
+    case: 'Bakery Chain (Singapore)', scope: 'food-grade folding cartons, full-color print', result: 'MOQ 100 → 80,000 pcs/yr', cases: '110+ Projects', lead: '10–15 Day Lead Time' },
+  { name: 'Subscription & DTC', img: '/assets/images/product-mailer.webp', to: '/industries/subscription-dtc',
+    case: 'DTC Brand (USA)', scope: 'sample kit + self-seal mailer program', result: '23% trial-to-paid conversion', cases: '160+ Projects', lead: '7–10 Day Lead Time' },
 ];
 
 // ── Social proof ticker (20 items, 3.5s interval) ───────────────────────────
@@ -110,7 +116,7 @@ export default function Home() {
               CUSTOM LUXURY GIFT BOX<br />MANUFACTURER IN CHINA
             </span>
             <span className="h1-mobile">
-              CUSTOM LUXURY<br />GIFT BOX MANUFACTURER<br />IN CHINA
+              CUSTOM LUXURY GIFT BOX<br />MANUFACTURER IN CHINA
             </span>
           </h1>
           {/* MOQ差异化副行 — 金色，字号缩小，不做uppercase */}
@@ -366,17 +372,19 @@ export default function Home() {
             <Link to={ind.to} className="industry-card" key={ind.name}>
               <img src={ind.img} alt={ind.name} className="industry-card-bg" />
               <div className="industry-card-overlay">
+                <span className="industry-card-eyebrow">Featured Project</span>
                 <h4>{ind.name}</h4>
-                <p>{ind.desc}</p>
-                <div className="industry-card-chips">
-                  {ind.chips.map(c => <span className="industry-chip" key={c}>{c}</span>)}
+                <div className="industry-case">
+                  <span className="industry-case-title">{ind.case}</span>
+                  <span className="industry-case-scope">{ind.scope}</span>
                 </div>
+                <div className="industry-case-result">{ind.result}</div>
                 <div className="industry-card-meta">
                   <span className="industry-card-cases">{ind.cases}</span>
                   <span className="industry-card-dot" aria-hidden="true">·</span>
                   <span>{ind.lead}</span>
                 </div>
-                <span className="industry-card-link">Explore &rarr;</span>
+                <span className="industry-card-link">View Industry Solutions &rarr;</span>
               </div>
             </Link>
           ))}
@@ -388,40 +396,50 @@ export default function Home() {
         <div className="container" style={{ marginBottom: 48, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
           <div>
             <div className="gold-line" />
-            <span className="eyebrow">Our Work</span>
+            <span className="eyebrow">Production &amp; Projects</span>
             <h2>Selected Projects</h2>
           </div>
           <Link to="/portfolio" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>All Projects &rarr;</Link>
         </div>
         <div className="portfolio-grid">
-          <Link to="/products/rigid-gift-boxes" className="portfolio-card">
-            <img src="/assets/images/case-cosmetics-v3.jpg" alt="Cosmetics case study" className="portfolio-card-img" />
+          <Link to="/about" className="portfolio-card">
+            <img src="https://sc02.alicdn.com/kf/Hdddd8231f22a41c39c124e97c5094565r.jpg" alt="Mili in-house factory" className="portfolio-card-img" />
             <div className="portfolio-card-overlay">
-              <div className="portfolio-card-tags">
-                <span className="portfolio-tag">Cosmetic Boxes</span>
-                <span className="portfolio-tag">Rigid Gift Boxes</span>
-                <span className="portfolio-tag">Gold Foil</span>
-              </div>
-              <span style={{ display:'inline-block', marginTop:12, background:'rgba(201,162,39,0.16)', border:'1px solid var(--gold)', color:'var(--gold)', fontSize:10, fontWeight:700, letterSpacing:'0.07em', padding:'4px 10px', textTransform:'uppercase' }}>MOQ 100 pcs</span>
-              <h4 style={{ marginTop: 14 }}>Skincare Brand (USA) — Magnetic Gift Box Series</h4>
-              <p>Luxury cosmetics packaging with gold foil logo and custom magnetic closure. FSC-certified materials used.</p>
-              <div className="portfolio-result">+40% social growth from unboxing content</div>
-              <span className="industry-card-link" style={{ marginTop: 12, display: 'inline-block' }}>View Box Style &rarr;</span>
+              <span className="portfolio-eyebrow">Inside The Factory</span>
+              <h4>20,000㎡ In-House Production</h4>
+              <p>5 production lines, 200+ craftsmen — rigid, folding and bags under one roof.</p>
+              <div className="portfolio-result">AQL 2.5 QC at every workstation</div>
+              <span className="industry-card-link">About Mili &rarr;</span>
+            </div>
+          </Link>
+          <Link to="/portfolio" className="portfolio-card">
+            <img src="https://sc02.alicdn.com/kf/Hba1838990eb54f6ab9bdf969a7d9f7adP.jpg" alt="Mili packaging showroom" className="portfolio-card-img" />
+            <div className="portfolio-card-overlay">
+              <span className="portfolio-eyebrow">Showroom</span>
+              <h4>500+ Display Samples</h4>
+              <p>Touch and compare real finishes — magnetic, embossed, foil, linen.</p>
+              <div className="portfolio-result">Free 3D mockup within 48h</div>
+              <span className="industry-card-link">View Portfolio &rarr;</span>
+            </div>
+          </Link>
+          <Link to="/products/rigid-gift-boxes" className="portfolio-card">
+            <img src="/assets/images/case-cosmetics-v3.jpg" alt="Skincare brand case study" className="portfolio-card-img" />
+            <div className="portfolio-card-overlay">
+              <span className="portfolio-eyebrow">Client Case</span>
+              <h4>Skincare Brand (USA)</h4>
+              <p>12,000 magnetic gift sets with gold foil logo. FSC-certified materials.</p>
+              <div className="portfolio-result">+40% social growth from unboxing</div>
+              <span className="industry-card-link">View Box Style &rarr;</span>
             </div>
           </Link>
           <Link to="/products/jewelry-boxes" className="portfolio-card">
-            <img src="/assets/images/case-jewelry-v3.jpg" alt="Jewelry case study" className="portfolio-card-img" />
+            <img src="/assets/images/case-jewelry-v3.jpg" alt="Jewelry startup case study" className="portfolio-card-img" />
             <div className="portfolio-card-overlay">
-              <div className="portfolio-card-tags">
-                <span className="portfolio-tag">Jewelry Boxes</span>
-                <span className="portfolio-tag">Rigid Gift Boxes</span>
-                <span className="portfolio-tag">Embossing</span>
-              </div>
-              <span style={{ display:'inline-block', marginTop:12, background:'rgba(201,162,39,0.16)', border:'1px solid var(--gold)', color:'var(--gold)', fontSize:10, fontWeight:700, letterSpacing:'0.07em', padding:'4px 10px', textTransform:'uppercase' }}>MOQ 100 pcs</span>
-              <h4 style={{ marginTop: 14 }}>Jewelry Startup (UK) — Drawer Box Series</h4>
-              <p>Velvet-lined drawer box with ribbon pull. Custom embossed logo and satin interior. Delivered in 2 weeks.</p>
+              <span className="portfolio-eyebrow">Client Case</span>
+              <h4>Jewelry Startup (UK)</h4>
+              <p>Velvet-lined drawer boxes, custom embossed logo, satin interior.</p>
               <div className="portfolio-result">18-day door-to-door delivery</div>
-              <span className="industry-card-link" style={{ marginTop: 12, display: 'inline-block' }}>View Box Style &rarr;</span>
+              <span className="industry-card-link">View Box Style &rarr;</span>
             </div>
           </Link>
         </div>

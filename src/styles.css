@@ -186,6 +186,15 @@ h4 { font-size: 15px; font-weight: 600; }
   text-shadow: 0 1px 14px rgba(0,0,0,0.6);
 }
 .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+/* CTA 动态效果：主按钮呼吸光晕，副按钮 hover 上浮变金 */
+.hero-actions .btn-gold { animation: ctaPulse 2.6s ease-in-out infinite; }
+.hero-actions .btn-gold:hover { animation: none; }
+.hero-actions .btn-outline-white { transition: all 0.25s ease; }
+.hero-actions .btn-outline-white:hover { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.45), 0 2px 10px rgba(0,0,0,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(201,168,76,0), 0 4px 18px rgba(201,168,76,0.35); }
+}
 /* ── Hero badge row: 4 selling-point stats (top-right aligned with headline, 1×4 column) ── */
 .hero-inner {
   display: flex; align-items: flex-start; justify-content: space-between;
@@ -246,10 +255,13 @@ h4 { font-size: 15px; font-weight: 600; }
   .hero-content { padding: 0 20px; }
   .hero-inner { flex-direction: column; gap: 32px; }
   .hero-left { max-width: 100%; }
-  .hero-content h1 { font-size: 19px; line-height: 1.18; max-width: 100%; margin-bottom: 10px; letter-spacing: 0.01em; }
+  .hero-content h1 { font-size: 20px; line-height: 1.18; max-width: 100%; margin-bottom: 10px; letter-spacing: 0.01em; }
   .hero-content p { font-size: 13px; max-width: 100%; margin-bottom: 14px; line-height: 1.65; }
-  .hero-badges { gap: 8px; justify-content: center; margin-bottom: 14px; }
-  .hero-actions { justify-content: center; }
+  /* 手机端隐藏 FSC/ISO/SGS 认证徽章（信息过载，保留桌面端） */
+  .hero-badges { display: none; }
+  /* 两个 CTA 按钮缩小并排一行，左右各占一半 */
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+  .hero-actions .btn-gold, .hero-actions .btn-outline-white { width: 100%; padding: 12px 6px; font-size: 10.5px; min-height: 44px; justify-content: center; text-align: center; white-space: nowrap; }
   .hero-stats-row { margin-top: 14px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 20px; }
   .hero-badge-row--tiered { position: static; max-width: 100%; padding: 0; }
   .hb-tier3-row { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; }
@@ -392,11 +404,16 @@ h4 { font-size: 15px; font-weight: 600; }
   background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
   display: flex; flex-direction: column; justify-content: flex-end; padding: 32px;
 }
-.industry-card-overlay h4 { font-size: 20px; margin-bottom: 6px; }
+.industry-card-overlay h4 { font-size: 20px; margin-bottom: 4px; }
 .industry-card-overlay p { color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.5; }
 .industry-card-link { color: var(--gold); font-size: 12px; letter-spacing: 0.06em; margin-top: 12px; display: block; }
-.industry-card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.industry-chip { font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(230,230,230,0.9); background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); padding: 3px 8px; }
+/* 行业卡案例化：Featured Project + 案例标题/规模 + 金色结果指标 */
+.industry-card-eyebrow { display: block; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+.industry-case { display: flex; flex-direction: column; gap: 3px; margin-top: 10px; }
+.industry-case-title { color: #fff; font-size: 13.5px; font-weight: 700; line-height: 1.4; }
+.industry-case-scope { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.5; }
+.industry-case-result { margin-top: 10px; color: var(--gold); font-size: 15px; font-weight: 800; font-family: var(--font-display); letter-spacing: 0.02em; }
+.industry-case-result::before { content: '▲'; font-size: 9px; margin-right: 6px; opacity: 0.8; vertical-align: 2px; }
 .industry-card-meta { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 10.5px; letter-spacing: 0.05em; color: rgba(200,200,200,0.75); text-transform: uppercase; }
 .industry-card-cases { color: var(--gold); font-weight: 700; }
 .industry-card-dot { opacity: 0.4; }
@@ -405,11 +422,11 @@ h4 { font-size: 15px; font-weight: 600; }
 
 @media (max-width: 768px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ─── PORTFOLIO ─── */
-.portfolio-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+/* ─── PORTFOLIO (Production & Projects) ─── */
+.portfolio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
 .portfolio-card {
   position: relative; overflow: hidden; text-decoration: none; color: var(--white);
-  background: var(--black-2); aspect-ratio: 4/3;
+  background: var(--black-2); aspect-ratio: 3/4;
 }
 .portfolio-card-img {
   width: 100%; height: 100%; object-fit: cover;
@@ -418,18 +435,15 @@ h4 { font-size: 15px; font-weight: 600; }
 .portfolio-card:hover .portfolio-card-img { transform: scale(1.04); opacity: 0.9; }
 .portfolio-card-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-  padding: 32px; display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.25) 55%, transparent 100%);
+  padding: 24px; display: flex; flex-direction: column; justify-content: flex-end;
 }
-.portfolio-card-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-.portfolio-tag {
-  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--gold); border: 1px solid var(--border); padding: 3px 10px;
-  background: rgba(0,0,0,0.4);
-}
-.portfolio-card-overlay h4 { font-size: 20px; margin-bottom: 6px; }
-.portfolio-card-overlay p { color: rgba(255,255,255,0.6); font-size: 13px; }
+.portfolio-eyebrow { display: block; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+.portfolio-card-overlay h4 { font-size: 17px; margin-bottom: 6px; line-height: 1.3; }
+.portfolio-card-overlay p { color: rgba(255,255,255,0.62); font-size: 12px; line-height: 1.55; }
+.portfolio-card .portfolio-result { font-size: 11.5px; }
 
+@media (max-width: 1100px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) { .portfolio-grid { grid-template-columns: 1fr; } }
 
 /* ─── TESTIMONIALS ─── */
@@ -758,14 +772,14 @@ html, body { overflow-x: hidden; }
 .navbar-dropdown {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
   background: var(--black-2); border: 1px solid var(--border-dim);
-  padding: 4px; display: flex; flex-direction: column;
-  min-width: 208px; z-index: 200;
+  padding: 3px; display: flex; flex-direction: column;
+  min-width: 128px; max-width: 160px; z-index: 200;
   box-shadow: 0 24px 48px rgba(0,0,0,0.55);
 }
 .navbar-dropdown a {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 8px 12px;
-  font-size: 12px; font-weight: 600; color: var(--gray-3); text-decoration: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 6px 10px;
+  font-size: 11px; font-weight: 600; color: var(--gray-3); text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   white-space: nowrap;
 }
