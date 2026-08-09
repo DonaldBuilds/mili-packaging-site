@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Mili Packaging 运营工作台</title>
+<style>
+  :root { --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --gold-dim:rgba(201,162,39,.18); --txt:#e8e8e8; --gray:#9a9a9a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:'Segoe UI', system-ui, -apple-system, sans-serif; line-height:1.6; }
+  .wrap { max-width:1080px; margin:0 auto; padding:28px 20px 60px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:18px; margin-bottom:26px; }
+  header h1 { font-size:22px; letter-spacing:.02em; }
+  header h1 span { color:var(--gold); }
+  header .badge { font-size:11px; color:var(--gold); border:1px solid rgba(201,162,39,.5); padding:3px 10px; border-radius:3px; }
+  h2 { font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin:34px 0 14px; }
+  h3 { font-size:14px; margin-bottom:6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; }
+  .card { background:var(--bg2); border:1px solid var(--border); padding:16px; border-radius:6px; }
+  .card p { font-size:12.5px; color:var(--gray); margin:6px 0 12px; }
+  .card .num { font-size:26px; font-weight:700; color:var(--gold); font-family:Georgia, serif; }
+  a.btn { display:inline-block; background:var(--gold); color:#0a0a0a; font-weight:700; font-size:12px; letter-spacing:.05em; text-decoration:none; padding:9px 16px; border-radius:3px; }
+  a.btn.ghost { background:transparent; color:var(--gold); border:1px solid var(--gold); }
+  .status { font-size:12px; margin-top:10px; color:var(--gray); }
+  .status.ok { color:#4cd964; } .status.bad { color:#ff6b6b; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+  th { color:var(--gold); font-weight:600; white-space:nowrap; }
+  input, select, textarea { width:100%; background:#0e0e10; border:1px solid var(--border); color:var(--txt); padding:10px 12px; border-radius:3px; font-size:13px; margin-bottom:10px; }
+  label { display:block; font-size:12px; color:var(--gray); margin-bottom:4px; }
+  .row { display:flex; gap:12px; } .row > div { flex:1; }
+  .lock { text-align:center; padding:40px 20px; }
+  .hint { font-size:12px; color:var(--gray); margin-top:6px; }
+  .flash { position:fixed; top:16px; right:16px; background:#1d1d20; border:1px solid var(--gold); color:var(--gold); padding:12px 18px; font-size:13px; border-radius:4px; opacity:0; transition:opacity .3s; z-index:99; }
+  .flash.show { opacity:1; }
+  footer { margin-top:40px; border-top:1px solid var(--border); padding-top:16px; font-size:12px; color:var(--gray); }
+  a { color:var(--gold); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Mili Packaging <span>运营工作台</span></h1>
+    <span class="badge">内部使用 · noindex</span>
+  </header>
+
+  <div class="flash" id="flash"></div>
+
+  <h2>① 流量数据 · 在哪看</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>GA4 · 访问与转化</h3>
+      <p>核心看板：用户数 / 浏览量 / 来源渠道 / whatsapp_click 转化。建议每周一看。</p>
+      <a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4</a>
+    </div>
+    <div class="card">
+      <h3>Google Search Console</h3>
+      <p>收录状态 / 关键词排名 / 点击与展示。GSC 是判断"买家能不能搜到你"的第一入口。</p>
+      <a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a>
+    </div>
+    <div class="card">
+      <h3>Bing Webmaster</h3>
+      <p>Bing 索引状态与 sitemap 处理进度（已提交，Processing 中）。</p>
+      <a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a>
+    </div>
+    <div class="card">
+      <h3>实时访问</h3>
+      <p>GA4 → 报告 → 实时。看此刻谁在线上、来自哪个国家。</p>
+      <a class="btn ghost" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">GA4 实时报告</a>
+    </div>
+  </div>
+
+  <h2>② 询盘中心</h2>
+  <div class="card" id="inquiryCard">
+    <p>买家通过询盘表单提交的记录（来自 Supabase inquiries 表，自动同步）。</p>
+    <div id="inquiryArea">
+      <div class="lock">
+        <p>询盘数据含买家联系方式，需密码查看</p>
+        <input type="password" id="pin" placeholder="请输入访问密码" style="max-width:260px;margin:14px auto 6px;display:block;text-align:center" />
+        <button class="btn" id="unlockBtn" style="border:none;cursor:pointer">解锁查看</button>
+        <div class="hint">忘记密码？询问运营负责人（信息存于工作台交付文档）</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>③ 内容修改工单</h2>
+  <div class="card">
+    <p>要改首页/产品/文章的文案或图片？填下表 → 生成工单（邮件发送给运营邮箱），或直接把需求告诉我（AI 运营助手），我会直接改并部署。</p>
+    <form id="ticketForm">
+      <div class="row">
+        <div>
+          <label>要修改的页面 / 位置 *</label>
+          <input id="t-page" required placeholder="如：首页 Hero 标题 / 产品 xxx 详情页 / Blog 文章 5" />
+        </div>
+        <div>
+          <label>优先级</label>
+          <select id="t-pri">
+            <option>正常</option><option>紧急</option><option>计划中</option>
+          </select>
+        </div>
+      </div>
+      <label>要改成什么内容 *</label>
+      <textarea id="t-body" required rows="5" placeholder="描述清楚：当前是什么 → 想改成什么（附上新文案/新图片说明）"></textarea>
+      <button type="button" class="btn" id="ticketBtn" style="border:none;cursor:pointer">生成修改工单（邮件）</button>
+      <button type="button" class="btn ghost" id="copyBtn" style="margin-left:8px;cursor:pointer">复制工单文本</button>
+    </form>
+  </div>
+
+  <h2>④ 后台工具导航</h2>
+  <div class="grid">
+    <div class="card"><h3>Cloudflare</h3><p>域名 DNS / 缓存清理 / Worker 部署日志</p><a class="btn ghost" href="https://dash.cloudflare.com/" target="_blank" rel="noopener">打开</a></div>
+    <div class="card"><h3>GitHub 仓库</h3><p>站点源码 / 自动部署记录（Actions）</p><a class="btn ghost" href="https://github.com/DonaldBuilds/mili-packaging-site" target="_blank" rel="noopener">打开</a></div>
+    <div class="card"><h3>Supabase 数据库</h3><p>询盘表 inquiries / 邮件通知触发器</p><a class="btn ghost" href="https://supabase.com/dashboard" target="_blank" rel="noopener">打开</a></div>
+    <div class="card"><h3>Accio 站点</h3><p>备站 mili-packaging.site.accio.ai（新版本已同步）</p><a class="btn ghost" href="https://mili-packaging.site.accio.ai" target="_blank" rel="noopener">打开</a></div>
+  </div>
+
+  <h2>⑤ SEO 自检</h2>
+  <div class="grid">
+    <div class="card"><h3>sitemap.xml</h3><p>搜索引擎抓取地图（113 个 URL）</p><span class="status" id="st-sitemap">检测中…</span></div>
+    <div class="card"><h3>robots.txt</h3><p>抓取规则</p><span class="status" id="st-robots">检测中…</span></div>
+    <div class="card"><h3>llms.txt</h3><p>AI 引擎（ChatGPT/Perplexity）站点说明</p><span class="status" id="st-llms">检测中…</span></div>
+  </div>
+
+  <footer>Mili Packaging 运营工作台 v1.0 · 数据源：GA4 / GSC / Bing / Supabase · 内容修改由 AI 运营助手执行并自动部署</footer>
+</div>
+
+<script>
+(function () {
+  var FLASH = document.getElementById('flash');
+  function flash(msg) {
+    FLASH.textContent = msg;
+    FLASH.classList.add('show');
+    setTimeout(function () { FLASH.classList.remove('show'); }, 3200);
+  }
+
+  // ── ① SEO self-check ──
+  function check(url, el) {
+    fetch(url, { method: 'HEAD' }).then(function (r) {
+      var s = document.getElementById(el);
+      s.textContent = r.ok ? ('可用 · HTTP ' + r.status) : ('异常 · HTTP ' + r.status);
+      s.className = 'status ' + (r.ok ? 'ok' : 'bad');
+    }).catch(function () {
+      var s = document.getElementById(el);
+      s.textContent = '无法访问（请检查网络）';
+      s.className = 'status bad';
+    });
+  }
+  check('/sitemap.xml', 'st-sitemap');
+  check('/robots.txt', 'st-robots');
+  check('/llms.txt', 'st-llms');
+
+  // ── ② Inquiries (PIN-gated, Supabase REST with anon key) ──
+  var SB_URL = 'https://qfecxuuvgbqqruzfgrpl.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZWN4dXV2Z2JxcXJ1emZncnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODgwMDEsImV4cCI6MjEwMDU2NDAwMX0.l_nwv0I1ZogH34_2EFBcJKyMMkYAzWbOc3cEkkFUMp0';
+  var PIN = 'mili2026';
+  var area = document.getElementById('inquiryArea');
+  document.getElementById('unlockBtn').addEventListener('click', function () {
+    if (document.getElementById('pin').value !== PIN) { flash('密码不正确'); return; }
+    fetch(SB_URL + '/rest/v1/inquiries?select=name,email,product_type,quantity,message,created_at&order=created_at.desc&limit=20', {
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
+    }).then(function (r) { return r.json(); }).then(function (rows) {
+      if (!Array.isArray(rows)) { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; return; }
+      if (!rows.length) { area.innerHTML = '<p>暂无询盘记录。</p>'; return; }
+      var html = '<table><tr><th>时间</th><th>姓名</th><th>邮箱</th><th>产品</th><th>数量</th><th>需求</th></tr>';
+      rows.forEach(function (r) {
+        html += '<tr><td style="white-space:nowrap">' + (r.created_at || '').replace('T', ' ').slice(0, 16) + '</td><td>' + (r.name || '') + '</td><td>' + (r.email || '') + '</td><td>' + (r.product_type || '') + '</td><td>' + (r.quantity || '') + '</td><td style="max-width:220px">' + (r.message || '').slice(0, 80) + '</td></tr>';
+      });
+      area.innerHTML = html + '</table><p class="hint">完整记录与通知设置：Supabase → Table Editor → inquiries</p>';
+    }).catch(function () { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; });
+  });
+
+  // ── ③ Content ticket → email ──
+  function buildTicket() {
+    var page = document.getElementById('t-page').value.trim();
+    var pri = document.getElementById('t-pri').value;
+    var body = document.getElementById('t-body').value.trim();
+    if (!page || !body) { flash('请填写页面位置和修改内容'); return null; }
+    return {
+      subject: '【内容修改·' + pri + '】' + page,
+      text: '页面位置：' + page + '\n优先级：' + pri + '\n\n修改内容：\n' + body
+    };
+  }
+  document.getElementById('ticketBtn').addEventListener('click', function () {
+    var t = buildTicket(); if (!t) return;
+    location.href = 'mailto:info@mili-packaging.com?subject=' + encodeURIComponent(t.subject) + '&body=' + encodeURIComponent(t.text);
+    flash('已打开邮件客户端，发送即生成工单');
+  });
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    var t = buildTicket(); if (!t) return;
+    var full = t.subject + '\n\n' + t.text;
+    (navigator.clipboard ? navigator.clipboard.writeText(full) : Promise.reject()).then(function () { flash('工单已复制，可粘贴发送给运营'); })
+      .catch(function () { flash('复制失败，请手动复制'); });
+  });
+})();
+</script>
+</body>
+</html>
