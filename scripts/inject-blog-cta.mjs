@@ -52,7 +52,7 @@ const SNIPPET = `
 <script>
 (function(){
   var WA_HREF="${WA_HREF}";
-  function fire(){try{if(window.gtag){window.gtag('event','whatsapp_click',{event_category:'engagement',event_label:'floating_button'});}}catch(e){}}
+  function fire(){try{if(window.gtag){window.gtag('event','whatsapp_click',{event_category:'engagement',event_label:'floating_button'});}else{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'whatsapp_click',event_category:'engagement',event_label:'floating_button'});}}catch(e){}}
   var btn=document.querySelector('.blog-wa');
   if(btn){btn.addEventListener('click',fire);}
   var cta=document.querySelector('.blog-cta a.ghost');

@@ -83,6 +83,7 @@ Contact: [Name, Email, WhatsApp]
 <div class="back"><a href="/blog/">Back to Blog</a> | <a href="/">Home</a></div>
 </article></div>
 
+
 <!-- mili-blog-conv -->
 <style>
 .blog-wa{position:fixed;bottom:24px;right:24px;z-index:900;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);animation:blogWaPulse 2s ease-in-out infinite;transition:transform .2s;text-decoration:none}
@@ -120,7 +121,7 @@ Contact: [Name, Email, WhatsApp]
 <script>
 (function(){
   var WA_HREF="https://wa.me/8618296876285?text=Hi%20Mili%20team!%20%F0%9F%91%8B%20I'd%20like%20a%20quote.%0A%E2%80%A2%20Product%3A%20%5Be.g.%20mailer%20box%20%2F%20rigid%20box%5D%0A%E2%80%A2%20Size%3A%20%5BL%C3%97W%C3%97H%5D%0A%E2%80%A2%20Quantity%3A%20%5Be.g.%20500%20pcs%5D%0A%E2%80%A2%20Material%2FPrinting%3A%20%5Be.g.%20kraft%2C%20full-color%20logo%5D%0A%E2%80%A2%20Destination%3A%20%5Bcountry%5D";
-  function fire(){try{if(window.gtag){window.gtag('event','whatsapp_click',{event_category:'engagement',event_label:'floating_button'});}}catch(e){}}
+  function fire(){try{if(window.gtag){window.gtag('event','whatsapp_click',{event_category:'engagement',event_label:'floating_button'});}else{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'whatsapp_click',event_category:'engagement',event_label:'floating_button'});}}catch(e){}}
   var btn=document.querySelector('.blog-wa');
   if(btn){btn.addEventListener('click',fire);}
   var cta=document.querySelector('.blog-cta a.ghost');
