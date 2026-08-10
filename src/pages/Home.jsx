@@ -29,30 +29,36 @@ const industries = [
     case: 'DTC Brand (USA)', scope: 'sample kit + self-seal mailer program', result: '23% trial-to-paid conversion', cases: '160+ Projects', lead: '7–10 Day Lead Time' },
 ];
 
-// ── Trust strip — real, verifiable capabilities (no fabricated live activity) ─
+// ── 卖点消息流 — 全部为真实可支撑的工厂能力/服务承诺，垂直无缝滚动（模拟实时消息），不伪造任何买家行为 ─
 const TRUST_STRIP = [
   'Factory-direct since 2018',
   'Free 3D mockup within 48h',
-  'MOQ from 100 pcs',
+  'MOQ from 100 pcs · watch from 50',
   'FSC-certified materials',
   'AQL 2.5 QC on every order',
+  'Free structural samples in 3–5 days',
+  'Quote reply within 24 hours',
+  'ISO 9001 certified quality system',
+  'SGS audited production',
+  '500+ brands served across 50+ countries',
 ];
 
 function SocialProofTicker() {
+  // 无缝循环：渲染两份相同列表，轨道位移 50% 即回到起点
+  const items = [...TRUST_STRIP, ...TRUST_STRIP];
   return (
-    <div style={{
-      display: 'flex', flexWrap: 'wrap', gap: '8px 22px',
-      marginBottom: 18, maxWidth: '100%',
-    }}>
-      {TRUST_STRIP.map(t => (
-        <span key={t} style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7,
-          fontSize: 12, color: 'rgba(210,210,210,0.78)', letterSpacing: '0.02em',
-        }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
-          {t}
-        </span>
-      ))}
+    <div className="social-ticker" aria-label="Why choose Mili Packaging">
+      <div className="social-ticker-track" aria-hidden="true">
+        {items.map((t, i) => (
+          <span className="social-ticker-item" key={i}>
+            <span className="social-ticker-dot" />
+            {t}
+          </span>
+        ))}
+      </div>
+      <span style={{ position:'absolute', width:1, height:1, overflow:'hidden', clip:'rect(0 0 0 0)', whiteSpace:'nowrap' }}>
+        {TRUST_STRIP.join(' · ')}
+      </span>
     </div>
   );
 }
