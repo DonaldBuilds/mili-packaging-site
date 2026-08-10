@@ -228,8 +228,8 @@
     setTimeout(function () { FLASH.classList.remove('show'); }, 3600);
   }
 
-  // ── Tabs ──
-  document.querySelectorAll('.tab').forEach(function (t) {
+  // ── Tabs（仅匹配带 data-tab 的按钮，避免误伤 v5 范围切换钮） ──
+  document.querySelectorAll('.tab[data-tab]').forEach(function (t) {
     t.addEventListener('click', function () {
       document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
       t.classList.add('active');
