@@ -1,11 +1,14 @@
 // Generates public/sitemap.xml from the data layer (product groups, products, posts).
 // History-mode URLs only — no hash fragments. Run: node scripts/gen-sitemap.mjs
 import fs from 'fs';
-import { productGroups, productCatalog } from '../src/data/products.js';
-import { posts } from '../src/data/posts.js';
+
+// Read the data layer JSON directly (products.js uses JSON import attributes
+// which plain Node < 20.10 cannot evaluate outside Vite).
+const data = JSON.parse(fs.readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
+const { productGroups, productCatalog } = data;
 
 const BASE = 'https://mili-packaging.com';
-const LASTMOD = '2026-08-09';
+const LASTMOD = '2026-08-10';
 const urls = [];
 
 const add = (path, freq, pri) => {
@@ -26,7 +29,7 @@ for (const g of productGroups) {
 
 // Industries
 add('/industries', 'monthly', '0.7');
-for (const slug of ['fashion-apparel', 'food-beverage', 'beauty-skincare', 'electronics-tech', 'subscription-dtc']) {
+for (const slug of ['fashion-apparel', 'food-beverage', 'beauty-skincare', 'electronics-tech', 'subscription-dtc', 'wine-spirits', 'jewelry-watches']) {
   add(`/industries/${slug}`, 'monthly', '0.7');
 }
 

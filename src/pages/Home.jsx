@@ -1,6 +1,8 @@
 ﻿import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { productGroups, getProduct } from '../data/products';
+import { productGroups, getProduct, productCatalog } from '../data/products';
+import { industries } from './Industries';
+import { cases } from './Portfolio';
 // v20260809-update: Best-Selling shows 8 featured products from the newest (competitor-benchmarked)
 // listings — one per group, 4×2 grid, sample & starter kits excluded.
 const featuredProducts = [
@@ -14,20 +16,15 @@ const featuredProducts = [
   { group: 'corrugated-shipping', slug: 'eco-printed-shipping-box' },
 ];
 
-// 5 industry cards — case-first: each card showcases a flagship custom project with a result
-// metric (not a re-list of product types).
-const industries = [
-  { name: 'Beauty & Skincare', img: '/assets/images/product-cosmetic.webp', to: '/industries/beauty-skincare',
-    case: 'Skincare Brand (USA)', scope: '12,000 magnetic gift sets · gold foil logo', result: '+40% social growth from unboxing', cases: '120+ Projects', lead: '10–12 Day Lead Time' },
-  { name: 'Electronics & Tech', img: '/assets/images/product-rigid.webp', to: '/industries/electronics-tech',
-    case: 'Audio Brand (Germany)', scope: '8,000 foam-insert rigid boxes · EVA trays', result: '0% transit damage in 10k units', cases: '95+ Projects', lead: '12–15 Day Lead Time' },
-  { name: 'Fashion & Apparel', img: '/assets/images/product-bag.webp', to: '/industries/fashion-apparel',
-    case: 'Apparel Label (Australia)', scope: '20,000 branded kraft mailers', result: '2.1× repeat order rate', cases: '140+ Projects', lead: '10–12 Day Lead Time' },
-  { name: 'Food & Beverage', img: '/assets/images/product-folding.webp', to: '/industries/food-beverage',
-    case: 'Bakery Chain (Singapore)', scope: 'food-grade folding cartons, full-color print', result: 'MOQ 100 → 80,000 pcs/yr', cases: '110+ Projects', lead: '10–15 Day Lead Time' },
-  { name: 'Subscription & DTC', img: '/assets/images/product-mailer.webp', to: '/industries/subscription-dtc',
-    case: 'DTC Brand (USA)', scope: 'sample kit + self-seal mailer program', result: '23% trial-to-paid conversion', cases: '160+ Projects', lead: '7–10 Day Lead Time' },
-];
+// 行业数据统一从 Industries.jsx 导入（单一数据源）；按 slug 全局查找代表产品
+const findProduct = (slug) => {
+  for (const g of Object.keys(productCatalog)) {
+    const p = (productCatalog[g] || []).find(x => x.slug === slug);
+    if (p) return { ...p, group: g };
+  }
+  return null;
+};
+const WA_PHONE = '8618296876285';
 
 // ── 卖点消息流 — 全部为真实可支撑的工厂能力/服务承诺，垂直无缝滚动（模拟实时消息），不伪造任何买家行为 ─
 const TRUST_STRIP = [
@@ -346,7 +343,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Industries ── */}
+      {/* ── Industries（8 卡 4×2：7 行业 + 询盘引导卡） ── */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container" style={{ marginBottom: 48 }}>
           <div className="gold-line" />
@@ -355,29 +352,40 @@ export default function Home() {
         </div>
         <div className="industry-grid">
           {industries.map((ind) => (
-            <Link to={ind.to} className="industry-card" key={ind.name}>
-              <img src={ind.img} alt={ind.name} className="industry-card-bg" />
+            <Link to={`/industries/${ind.slug}`} className="industry-card" key={ind.slug}>
+              <img src={ind.cardImg} alt={ind.name} className="industry-card-bg" loading="lazy" />
               <div className="industry-card-overlay">
-                <span className="industry-card-eyebrow">Featured Project</span>
                 <h4>{ind.name}</h4>
-                <div className="industry-case">
-                  <span className="industry-case-title">{ind.case}</span>
-                  <span className="industry-case-scope">{ind.scope}</span>
+                <p className="industry-card-pos">{ind.hero}</p>
+                <div className="industry-prods">
+                  {(ind.featuredProducts || []).map(slug => {
+                    const p = findProduct(slug);
+                    return p ? (
+                      <span className="industry-prod" key={slug}>{p.name} · From ${p.price}</span>
+                    ) : null;
+                  })}
                 </div>
-                <div className="industry-case-result">{ind.result}</div>
-                <div className="industry-card-meta">
-                  <span className="industry-card-cases">{ind.cases}</span>
-                  <span className="industry-card-dot" aria-hidden="true">·</span>
-                  <span>{ind.lead}</span>
+                <div className="industry-caps">
+                  {(ind.capabilities || []).map(c => (
+                    <span className="industry-cap" key={c}>{c}</span>
+                  ))}
                 </div>
-                <span className="industry-card-link">View Industry Solutions &rarr;</span>
+                <span className="industry-card-link">View Solutions &rarr;</span>
               </div>
             </Link>
           ))}
+          <Link to="/contact#quote-form" className="industry-card industry-card--cta">
+            <div className="industry-card-cta-inner">
+              <span className="industry-card-cta-icon" aria-hidden="true">?</span>
+              <h4>Your Industry?</h4>
+              <p>Not on the list? Tell us your product — we'll recommend the right structure, material and finish.</p>
+              <span className="industry-card-link">Talk to Us &rarr;</span>
+            </div>
+          </Link>
         </div>
       </section>
 
-      {/* ── Portfolio Preview ── */}
+      {/* ── Production & Projects：生产能力带 + 8 案例 ── */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container" style={{ marginBottom: 48, display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
           <div>
@@ -387,47 +395,47 @@ export default function Home() {
           </div>
           <Link to="/portfolio" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>All Projects &rarr;</Link>
         </div>
-        <div className="portfolio-grid">
-          <Link to="/about" className="portfolio-card">
-            <img src="https://sc02.alicdn.com/kf/Hdddd8231f22a41c39c124e97c5094565r.jpg" alt="Mili in-house factory" className="portfolio-card-img" />
-            <div className="portfolio-card-overlay">
-              <span className="portfolio-eyebrow">Inside The Factory</span>
-              <h4>20,000㎡ In-House Production</h4>
-              <p>5 production lines, 200+ craftsmen — rigid, folding and bags under one roof.</p>
-              <div className="portfolio-result">AQL 2.5 QC at every workstation</div>
-              <span className="industry-card-link">About Mili &rarr;</span>
+
+        {/* Production at Mili — 3 张实拍横卡 */}
+        <div className="production-strip">
+          {[
+            { img: '/assets/images/factory-foil.webp', t: 'In-house printing', s: 'Foil stamping · soft-touch · lamination' },
+            { img: '/assets/images/factory-diecut.webp', t: 'Precision die-cutting', s: 'Structural & insert tooling in-house' },
+            { img: '/assets/images/factory-qc.webp', t: 'AQL 2.5 final QC', s: 'Checked at every workstation' },
+          ].map(x => (
+            <Link to="/about" className="production-card" key={x.t}>
+              <img src={x.img} alt={x.t} loading="lazy" />
+              <div className="production-card-text">
+                <span className="production-card-title">{x.t}</span>
+                <span className="production-card-sub">{x.s}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div style={{ textAlign:'center', margin:'14px 0 40px' }}>
+          <Link to="/about" style={{ color:'var(--gold)', textDecoration:'none', fontSize:12, letterSpacing:'0.06em' }}>About the Factory &rarr;</Link>
+        </div>
+
+        {/* Selected Projects — 8 案例，左图右文横卡 2×4 */}
+        <div className="case-grid">
+          {cases.map(c => (
+            <div className="case-card" key={c.id}>
+              <div className="case-img">
+                <img src={c.img} alt={c.client} loading="lazy" />
+              </div>
+              <div className="case-body">
+                <span className="case-eyebrow">{c.client} · {c.industry}</span>
+                <h4>{c.type}</h4>
+                <p>{c.finish}</p>
+                <div className="case-facts">
+                  <span>Qty <b>{c.qty}</b></span>
+                  <span>Lead <b>{c.leadTime}</b></span>
+                  <span className="case-result">{c.result}</span>
+                </div>
+                <a className="case-cta" href={`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(`Hi Mili team! I'd like a project like ${c.type} for ${c.industry}. Please send a quote.`)}`} target="_blank" rel="noopener noreferrer">Start a Similar Project &rarr;</a>
+              </div>
             </div>
-          </Link>
-          <Link to="/portfolio" className="portfolio-card">
-            <img src="https://sc02.alicdn.com/kf/Hba1838990eb54f6ab9bdf969a7d9f7adP.jpg" alt="Mili packaging showroom" className="portfolio-card-img" />
-            <div className="portfolio-card-overlay">
-              <span className="portfolio-eyebrow">Showroom</span>
-              <h4>500+ Display Samples</h4>
-              <p>Touch and compare real finishes — magnetic, embossed, foil, linen.</p>
-              <div className="portfolio-result">Free 3D mockup within 48h</div>
-              <span className="industry-card-link">View Portfolio &rarr;</span>
-            </div>
-          </Link>
-          <Link to="/products/rigid-gift-boxes" className="portfolio-card">
-            <img src="/assets/images/case-cosmetics-v3.jpg" alt="Skincare brand case study" className="portfolio-card-img" />
-            <div className="portfolio-card-overlay">
-              <span className="portfolio-eyebrow">Client Case</span>
-              <h4>Skincare Brand (USA)</h4>
-              <p>12,000 magnetic gift sets with gold foil logo. FSC-certified materials.</p>
-              <div className="portfolio-result">+40% social growth from unboxing</div>
-              <span className="industry-card-link">View Box Style &rarr;</span>
-            </div>
-          </Link>
-          <Link to="/products/jewelry-boxes" className="portfolio-card">
-            <img src="/assets/images/case-jewelry-v3.jpg" alt="Jewelry startup case study" className="portfolio-card-img" />
-            <div className="portfolio-card-overlay">
-              <span className="portfolio-eyebrow">Client Case</span>
-              <h4>Jewelry Startup (UK)</h4>
-              <p>Velvet-lined drawer boxes, custom embossed logo, satin interior.</p>
-              <div className="portfolio-result">18-day door-to-door delivery</div>
-              <span className="industry-card-link">View Box Style &rarr;</span>
-            </div>
-          </Link>
+          ))}
         </div>
       </section>
 

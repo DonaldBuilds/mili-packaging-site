@@ -5,7 +5,8 @@ export const industries = [
   {
     slug: 'fashion-apparel',
     name: 'Fashion & Apparel',
-    img: '/assets/images/product-mailer.webp',
+    img: '/assets/images/mig-custom-mailer-box-1.webp',
+    cardImg: '/assets/images/mig-custom-mailer-box-2.webp',
     hero: 'E-commerce-first packaging for apparel brands',
     intro: 'From tape-free mailers to boutique paper bags, apparel brands get packaging that arrives beautifully and ships affordably.',
     painPoints: [
@@ -15,6 +16,8 @@ export const industries = [
     ],
     points: ['Tape-free, brand-printed mailers', 'Tissue, stickers & bag inserts', 'Retail & boutique paper bags', 'Seasonal collection packaging'],
     products: ['mailer-boxes', 'paper-bags', 'corrugated-shipping'],
+    featuredProducts: ['custom-logo-mailer-box', 'hard-handle-kraft-bag'],
+    capabilities: ['Tape-free mailers', 'Retail paper bags'],
     testimonial: { quote: 'Our branded mailers cut shipping prep time by 40% and the unboxing photos customers post doubled our organic reach.', name: 'Head of E-commerce', role: 'EU apparel brand, 10,000 units/quarter' },
     faq: [
       ['What is the best box for shipping clothing?', 'Mailer boxes are ideal - they ship flat, self-seal without tape, and print fully in your brand colors. For heavier outerwear use corrugated shipping boxes.'],
@@ -27,7 +30,8 @@ export const industries = [
   {
     slug: 'food-beverage',
     name: 'Food & Beverage',
-    img: '/assets/images/product-folding.webp',
+    img: '/assets/images/mig-marbled-foldable-box-1.webp',
+    cardImg: '/assets/images/mig-cookie-rigid-box-2.webp',
     hero: 'Food-safe folding cartons & gift presentation',
     intro: 'Folding cartons, rigid gift boxes and kraft shippers engineered for confectionery, tea, gourmet food and beverage brands.',
     painPoints: [
@@ -37,6 +41,8 @@ export const industries = [
     ],
     points: ['Food-safe FSC-certified stock', 'Folding cartons with windows', 'Rigid gift sets for gifting', 'Bulk kraft shippers'],
     products: ['folding-cartons', 'rigid-gift-boxes', 'corrugated-shipping'],
+    featuredProducts: ['luxury-cookie-rigid-box', 'marbled-foldable-gift-box'],
+    capabilities: ['Food-safe inks', 'Window cartons'],
     testimonial: { quote: 'The window cartons doubled our retail sell-through - customers can see the product. FSC certification opened two major grocery accounts.', name: 'Founder', role: 'Specialty chocolate brand, UK' },
     faq: [
       ['Are your cartons food-safe?', 'Yes - we use food-safe inks and FSC-certified board, with options for direct food contact and window patching.'],
@@ -49,7 +55,8 @@ export const industries = [
   {
     slug: 'beauty-skincare',
     name: 'Beauty & Skincare',
-    img: '/assets/images/product-cosmetic.webp',
+    img: '/assets/images/mig-valentine-magnetic-box-1.webp',
+    cardImg: '/assets/images/mig-valentine-magnetic-box-2.webp',
     hero: 'Complete sets: outer box + inserts + finishing',
     intro: 'Skincare, fragrance and cosmetics brands get complete packaging sets — outer box, EVA/foam inserts, bottle holders and premium finishing.',
     painPoints: [
@@ -59,6 +66,8 @@ export const industries = [
     ],
     points: ['Complete set solutions', 'EVA & foam bottle cradles', 'Foil stamping & soft-touch', 'Magnetic & drawer structures'],
     products: ['cosmetic-boxes', 'rigid-gift-boxes', 'paper-bags'],
+    featuredProducts: ['valentine-magnetic-folding-box', 'black-magnetic-gift-box'],
+    capabilities: ['FSC board', 'EVA bottle cradles'],
     testimonial: { quote: 'One supplier for box, insert and finishing cut our lead time from 8 weeks to 4. The magnetic sets photograph like a luxury campaign.', name: 'Brand Manager', role: 'Skincare label, USA, 3 SKU gift line' },
     faq: [
       ['What is a complete cosmetic set?', 'Outer box (folding or rigid) + EVA/paper insert + bottle holder + foil stamping or soft-touch finish - everything coordinated by one supplier.'],
@@ -71,7 +80,8 @@ export const industries = [
   {
     slug: 'electronics-tech',
     name: 'Electronics & Tech',
-    img: '/assets/images/product-corrugated.webp',
+    img: '/assets/images/mig-eco-printed-shipping-box-1.webp',
+    cardImg: '/assets/images/mig-black-magnetic-box-2.webp',
     hero: 'Precision inserts & heavy-duty protection',
     intro: 'Protective packaging for electronics — precision foam and EVA inserts, rigid presentation boxes and corrugated shippers for global transit.',
     painPoints: [
@@ -81,6 +91,8 @@ export const industries = [
     ],
     points: ['Anti-static foam options', 'Precision die-cut inserts', 'Rigid unboxing presentation', 'Double-wall export shippers'],
     products: ['rigid-gift-boxes', 'corrugated-shipping', 'mailer-boxes'],
+    featuredProducts: ['black-magnetic-gift-box', 'eco-printed-shipping-box'],
+    capabilities: ['Anti-static foam', 'Precision die-cut inserts'],
     testimonial: { quote: 'The rigid presentation boxes with foam cradles reduced our transit damage to zero and turned unboxing into a brand moment reviewers mention.', name: 'COO', role: 'Consumer electronics startup, DTC' },
     faq: [
       ['Do you offer anti-static packaging?', 'Yes - anti-static EVA and foam inserts are available for sensitive components and PCBs.'],
@@ -93,7 +105,8 @@ export const industries = [
   {
     slug: 'subscription-dtc',
     name: 'Subscription & DTC',
-    img: '/assets/images/product-sample.webp',
+    img: '/assets/images/mig-kraft-mailer-box-1.webp',
+    cardImg: '/assets/images/mig-kraft-mailer-box-2.webp',
     hero: 'Scalable unboxing for subscription brands',
     intro: 'Subscription and DTC brands scale fast with tape-free mailers, multi-SKU cartons and starter kits that test structures before you commit.',
     painPoints: [
@@ -103,6 +116,8 @@ export const industries = [
     ],
     points: ['Tape-free mailer programs', 'Multi-SKU carton systems', 'Sample & starter kits', 'Volume pricing from 3,000 pcs'],
     products: ['mailer-boxes', 'sample-starter-kits', 'corrugated-shipping'],
+    featuredProducts: ['custom-logo-mailer-box', 'ecommerce-mailer-sample-kit'],
+    capabilities: ['Tape-free programs', 'Volume pricing 3,000+'],
     testimonial: { quote: 'The starter kit let us compare five structures in a week. We picked the mailer, scaled to 20k units a month, and churn dropped after the redesign.', name: 'CEO', role: 'Subscription box brand, 40k subscribers' },
     faq: [
       ['Can you handle monthly subscription reorders?', 'Yes - we keep your tooling and artwork on file for fast reordering with consistent pricing and 10-12 day production.'],
@@ -111,6 +126,56 @@ export const industries = [
     ],
     title: 'Subscription & DTC Packaging | Mailer Boxes | Mili Packaging',
     description: 'Custom subscription packaging: self-seal mailer boxes, starter kits and scalable cartons for DTC and subscription box brands.',
+  },
+  {
+    slug: 'wine-spirits',
+    name: 'Wine & Spirits',
+    img: '/assets/images/mig-luxury-magnetic-box-1.webp',
+    cardImg: '/assets/images/mig-luxury-magnetic-box-3.webp',
+    hero: 'Rigid gift sets for premium spirits',
+    intro: 'Luxury rigid gift boxes, magnetic presentation sets and bottle cradles for wine, whisky and premium spirits — built for gifting programs, duty-free retail and festive seasons.',
+    painPoints: [
+      'Premium bottles arrive damaged without precision-fit cradles',
+      'Festive gifting peaks demand fast, reliable reordering at scale',
+      'Duty-free and retail shelves reward premium, light-catching design',
+    ],
+    points: ['Magnetic rigid gift sets', 'Custom foam & velvet cradles', 'Gold foil & deboss finishing', 'Seasonal gifting programs'],
+    products: ['rigid-gift-boxes', 'paper-bags', 'folding-cartons'],
+    featuredProducts: ['bottle-product-rigid-set', 'luxury-magnetic-folding-gift-box'],
+    capabilities: ['Rigid gift sets', 'Custom bottle cradles'],
+    testimonial: { quote: 'The magnetic gift sets with velvet cradles turned our holiday gifting into a brand moment — and the tooling stays on file so reorders ship in under two weeks.', name: 'Marketing Director', role: 'Premium spirits brand, USA' },
+    faq: [
+      ['Can you protect bottles in transit?', 'Yes - precision-cut foam and velvet cradles are die-cut to your exact bottle dimensions and tested for export shipping.'],
+      ['Do you support seasonal gifting programs?', 'Yes - we keep tooling and artwork on file for fast reordering, with production 12-15 days and volume pricing from 3,000 units.'],
+      ['What MOQ applies to wine and spirits boxes?', 'Rigid gift sets start at 100 pcs; magnetic folding boxes at 100 pcs.'],
+    ],
+    title: 'Wine & Spirits Packaging | Custom Gift Boxes | Mili Packaging',
+    description: 'Custom wine and spirits packaging: magnetic rigid gift sets, bottle cradles and luxury finishing for gifting programs and duty-free retail.',
+  },
+  {
+    slug: 'jewelry-watches',
+    name: 'Jewelry & Watches',
+    img: '/assets/images/mig-drawer-sliding-box-1.webp',
+    cardImg: '/assets/images/mig-drawer-sliding-box-2.webp',
+    hero: 'Velvet-lined cases for fine jewelry & timepieces',
+    intro: 'From single ring boxes to multi-drawer collections and watch presentation sets — velvet-lined, embossed and built to protect what matters most.',
+    painPoints: [
+      'Fine jewelry demands scratch-free, tarnish-safe interiors',
+      'Watch packaging must present the product and survive transit',
+      'Boutique-level presentation is hard to scale on a production budget',
+    ],
+    points: ['Velvet & leatherette interiors', 'Embossed logo finishing', 'Multi-drawer collection boxes', 'Watch cradles & pillow sets'],
+    products: ['jewelry-boxes', 'watch-boxes', 'rigid-gift-boxes'],
+    featuredProducts: ['drawer-sliding-jewelry-box', 'modern-luxury-single-watch-box'],
+    capabilities: ['Velvet-lined interiors', 'Embossed logos'],
+    testimonial: { quote: 'The velvet-lined drawer boxes photograph like a boutique counter. Our customers now ask for the box before they ask for the price.', name: 'Founder', role: 'Fine jewelry label, UK' },
+    faq: [
+      ['Are your interiors safe for silver and gold?', 'Yes - we use tarnish-safe, anti-tarnish velvet and leatherette linings with precision-fit cushions.'],
+      ['Can you make watch display boxes?', 'Yes - single and multi-watch rigid boxes with cushioned pillows and foam cradles, embossed with your logo.'],
+      ['What MOQ applies?', 'Ring boxes and watch boxes start at 100 pcs; multi-drawer collection boxes at 100 pcs.'],
+    ],
+    title: 'Jewelry & Watch Packaging | Custom Boxes | Mili Packaging',
+    description: 'Custom jewelry and watch packaging: velvet-lined ring boxes, drawer collections and watch presentation boxes with embossed branding.',
   },
 ];
 

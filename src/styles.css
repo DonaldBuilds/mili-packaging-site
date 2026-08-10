@@ -387,38 +387,66 @@ h4 { font-size: 15px; font-weight: 600; }
 
 @media (max-width: 768px) { .pillars-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ─── INDUSTRY CARDS ─── */
-.industry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+/* ─── INDUSTRY CARDS（8 卡 4×2 行业导航：场景图 + 定位 + 代表产品 + 能力标签） ─── */
+.industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
 .industry-card {
   position: relative; aspect-ratio: 3/4; overflow: hidden;
   text-decoration: none; display: block; background: var(--black-3);
 }
 .industry-card-bg {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: transform 0.4s ease;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.65; transition: transform 0.4s ease, opacity 0.4s ease;
+  filter: brightness(0.92);
 }
-.industry-card:hover .industry-card-bg { transform: scale(1.05); }
+.industry-card:hover .industry-card-bg { transform: scale(1.05); opacity: 0.85; }
 .industry-card-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 32px;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.15) 100%);
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 26px 24px;
 }
-.industry-card-overlay h4 { font-size: 20px; margin-bottom: 4px; }
-.industry-card-overlay p { color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.5; }
+.industry-card-overlay h4 { font-size: 19px; margin-bottom: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+.industry-card-pos { color: rgba(255,255,255,0.75); font-size: 12px; line-height: 1.5; margin-bottom: 14px; text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
+.industry-prods { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.industry-prod {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+  padding: 7px 11px; font-size: 11.5px; color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(3px);
+}
+.industry-prod::after { content: '→'; color: var(--gold); font-size: 11px; flex-shrink: 0; }
+.industry-caps { display: flex; gap: 6px; flex-wrap: wrap; }
+.industry-cap {
+  font-size: 10px; letter-spacing: 0.04em; color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.4); padding: 3px 9px; border-radius: 20px;
+  background: rgba(201,168,76,0.08);
+}
 .industry-card-link { color: var(--gold); font-size: 12px; letter-spacing: 0.06em; margin-top: 12px; display: block; }
-/* 行业卡案例化：Featured Project + 案例标题/规模 + 金色结果指标 */
-.industry-card-eyebrow { display: block; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
-.industry-case { display: flex; flex-direction: column; gap: 3px; margin-top: 10px; }
-.industry-case-title { color: #fff; font-size: 13.5px; font-weight: 700; line-height: 1.4; }
-.industry-case-scope { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.5; }
-.industry-case-result { margin-top: 10px; color: var(--gold); font-size: 15px; font-weight: 800; font-family: var(--font-display); letter-spacing: 0.02em; }
-.industry-case-result::before { content: '▲'; font-size: 9px; margin-right: 6px; opacity: 0.8; vertical-align: 2px; }
-.industry-card-meta { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 10.5px; letter-spacing: 0.05em; color: rgba(200,200,200,0.75); text-transform: uppercase; }
-.industry-card-cases { color: var(--gold); font-weight: 700; }
-.industry-card-dot { opacity: 0.4; }
+/* 第 8 卡：询盘引导卡 */
+.industry-card--cta {
+  background: linear-gradient(160deg, var(--black-2) 0%, #0c0c0e 100%);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+}
+.industry-card-cta-inner { position: relative; z-index: 1; text-align: center; padding: 30px 24px; display: flex; flex-direction: column; align-items: center; }
+.industry-card-cta-icon {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 22px; color: var(--gold);
+  margin-bottom: 14px;
+}
+.industry-card--cta h4 { font-size: 20px; margin-bottom: 8px; }
+.industry-card--cta p { color: var(--gray-3); font-size: 12.5px; line-height: 1.7; max-width: 240px; margin-bottom: 14px; }
+.industry-card--cta .industry-card-link { margin-top: 0; }
+
 .portfolio-result { margin-top: 12px; font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
 .portfolio-result::before { content: '▲'; font-size: 9px; opacity: 0.8; }
 
+@media (max-width: 1100px) { .industry-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) {
+  .industry-grid { grid-template-columns: 1fr; }
+  .industry-card { aspect-ratio: 4/3; }
+}
 
 /* ─── PORTFOLIO (Production & Projects) ─── */
 .portfolio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
@@ -443,6 +471,52 @@ h4 { font-size: 15px; font-weight: 600; }
 
 @media (max-width: 1100px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) { .portfolio-grid { grid-template-columns: 1fr; } }
+
+/* ─── PRODUCTION STRIP（生产能力带 3 横卡） ─── */
+.production-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.production-card {
+  position: relative; overflow: hidden; text-decoration: none; display: block;
+  aspect-ratio: 16/7; background: var(--black-2);
+}
+.production-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: transform 0.4s ease, opacity 0.4s ease; }
+.production-card:hover img { transform: scale(1.04); opacity: 0.85; }
+.production-card-text {
+  position: absolute; inset: auto 0 0 0; padding: 26px 24px;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.15) 100%);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.production-card-title { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+.production-card-sub { color: rgba(255,255,255,0.62); font-size: 11.5px; }
+
+/* ─── CASE GRID（案例左图右文 2×4） ─── */
+.case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+.case-card {
+  display: grid; grid-template-columns: 220px 1fr;
+  background: var(--black-2); border: 1px solid var(--border-dim);
+  overflow: hidden; min-height: 190px;
+}
+.case-img { position: relative; overflow: hidden; }
+.case-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.case-card:hover .case-img img { transform: scale(1.04); }
+.case-body { padding: 22px 24px; display: flex; flex-direction: column; }
+.case-eyebrow { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+.case-body h4 { font-size: 17px; margin-bottom: 5px; }
+.case-body p { color: var(--gray-3); font-size: 12.5px; line-height: 1.55; margin-bottom: 12px; }
+.case-facts { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: auto; font-size: 12px; color: var(--gray-3); }
+.case-facts b { color: var(--white); font-weight: 600; }
+.case-result { color: var(--gold); font-weight: 700; font-size: 12px; font-family: var(--font-display); letter-spacing: 0.02em; }
+.case-result::before { content: '▲'; font-size: 9px; margin-right: 5px; opacity: 0.8; }
+.case-cta { display: inline-flex; margin-top: 14px; color: var(--gold); font-size: 12px; letter-spacing: 0.05em; text-decoration: none; font-weight: 600; }
+.case-cta:hover { text-decoration: underline; }
+
+@media (max-width: 1100px) { .case-card { grid-template-columns: 180px 1fr; } }
+@media (max-width: 900px) { .case-grid { grid-template-columns: 1fr; } .case-card { grid-template-columns: 200px 1fr; } }
+@media (max-width: 768px) {
+  .production-strip { grid-template-columns: 1fr; }
+  .production-card { aspect-ratio: 16/6; }
+  .case-card { grid-template-columns: 1fr; min-height: 0; }
+  .case-img { aspect-ratio: 16/9; }
+}
 
 /* ─── TESTIMONIALS ─── */
 .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
