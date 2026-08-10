@@ -488,6 +488,8 @@
       t.classList.add('active');
       document.querySelectorAll('[id^="tab-"]').forEach(function (p) { p.classList.add('hide'); });
       document.getElementById('tab-' + t.dataset.tab).classList.remove('hide');
+      // V6: sidebar highlight + breadcrumb follow tab switches (from either nav or tabs)
+      if (typeof syncSidebar === 'function') syncSidebar(t.dataset.tab);
     });
   });
 
@@ -1101,6 +1103,7 @@
     var ba = document.getElementById('b-all'); if (ba) ba.onclick = function () { batchProds.forEach(function (p) { p._sel = true; }); batchRender(); };
     var bn = document.getElementById('b-none'); if (bn) bn.onclick = function () { batchProds.forEach(function (p) { p._sel = !p._sel; }); batchRender(); };
     var bp = document.getElementById('b-apply'); if (bp) bp.onclick = batchApply;
+    updateBCount();
   }
   function batchApply() {
     var sel = batchProds.filter(function (p) { return p._sel; });
