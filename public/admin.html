@@ -57,6 +57,7 @@
     <button class="tab" data-tab="tools">后台工具</button>
     <button class="tab" data-tab="ticket">修改工单</button>
     <button class="tab" data-tab="audit">审计日志</button>
+    <button class="tab" data-tab="cron">自动任务</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -172,6 +173,12 @@
       <p class="hint">记录：操作人 / 时间 / 动作 / 对象 / 前后值。持久化：配置 GH_PAT 后自动同步 ops/audit.jsonl 到 GitHub。</p>
       <div id="auditArea">加载中…</div>
     </div>
+  </div>
+
+  <!-- ⑦ 自动任务（v4.5 cron） -->
+  <div id="tab-cron" class="hide">
+    <h2>⑦ 自动化任务（Cloudflare Cron，零持续成本）</h2>
+    <div class="card" id="cronPanel">加载中…</div>
   </div>
 
   <script>
@@ -419,6 +426,23 @@
     }).catch(function () { area.innerHTML = '<p>读取失败</p>'; });
   }
   document.querySelector('.tab[data-tab="audit"]').addEventListener('click', loadAudit);
+
+  // ── v4.5: Cron tasks panel ──
+  function loadCron() {
+    var jobs = [
+      { name: '每日经营简报', cron: '每天 08:00（北京时间）', dep: 'PUSHPLUS_TOKEN / SB_URL+SB_ANON_KEY', desc: '昨日询盘数 · 站点 10 页健康 · 最近部署状态；GA4/GSC 需 Service Account（未配置则占位跳过）' },
+      { name: '死链 & 收录巡检', cron: '每周一 09:00（北京时间）', dep: 'PUSHPLUS_TOKEN（推送）', desc: '解析 sitemap 全部 URL → HEAD 检测 4xx/5xx 死链清单；GSC 收录比对需 Service Account（未配置则跳过）' },
+      { name: 'IndexNow 提交', cron: '每 6 小时', dep: 'INDEXNOW_KEY（Bing 索引加速）', desc: '提交首页 + sitemap 至 api.indexnow.org，加速新内容收录；未配置 key 则自动跳过' },
+      { name: 'sitemap 自动重建', cron: '每次代码/内容变更推送后（Actions）', dep: '无', desc: '构建流程自动重跑 gen-sitemap.mjs，产品/博客增删改后 sitemap 随部署自动更新（约 2 分钟）' },
+    ];
+    var html = '<table><tr><th>任务</th><th>触发</th><th>依赖配置</th><th>说明</th></tr>';
+    jobs.forEach(function (j) {
+      html += '<tr><td style="white-space:nowrap;font-weight:600">' + j.name + '</td><td>' + j.cron + '</td><td style="font-size:11px">' + j.dep + '</td><td style="font-size:11px;max-width:300px">' + j.desc + '</td></tr>';
+    });
+    html += '</table><p class="hint">执行日志：Cloudflare 控制台 → Workers → flat-mud-c136 → 实时日志（搜索 "CRON:"）。任务内置失败自动重试 1 次。配置项在仓库 Secrets 或 .env.local（部署时注入）。</p>';
+    document.getElementById('cronPanel').innerHTML = html;
+  }
+  document.querySelector('.tab[data-tab="cron"]').addEventListener('click', loadCron);
 
   // ── v4: Logout ──
   document.getElementById('logoutBtn').addEventListener('click', function () {

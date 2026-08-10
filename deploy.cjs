@@ -162,6 +162,75 @@ export default{async fetch(r,env){
 
   // Fallback → SPA index
   return new Response(F['index.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
+},
+async scheduled(event,env,ctx){
+  const cron=String((event&&event.cron)||'');
+  const nowIso=new Date().toISOString();
+  const L=function(tag,status,detail){console.log('CRON:'+tag+' '+status+' '+(detail||'')+' @'+nowIso)};
+  // 每个任务失败自动重试 1 次
+  const run=async function(tag,fn){
+    try{const out=await fn();L(tag,'OK',String(out||''));return out}
+    catch(e){L(tag,'FAIL1',String((e&&e.message)||e));try{const out=await fn();L(tag,'OK-RETRY',String(out||''));return out}catch(e2){L(tag,'FAIL2',String((e2&&e2.message)||e2));return null}}
+  };
+  const push=async function(title,content){
+    if(!env.PUSHPLUS_TOKEN){L('push','skipped','PUSHPLUS_TOKEN not set');return}
+    try{const r=await fetch('https://www.pushplus.plus/send',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:env.PUSHPLUS_TOKEN,title:title,content:content,template:'txt'})});L('push',r.ok?'ok':'fail:'+r.status,'')}catch(e){L('push','fail',String((e&&e.message)||e))}
+  };
+  // ── 每日经营简报（08:00 CST = UTC 00:00）：询盘 / 健康 / 部署；GA4+GSC 需 Service Account，未配置则占位 ──
+  if(cron==='0 0 * * *'){
+    await run('daily-brief',async function(){
+      const lines=[];
+      try{
+        const y=new Date(Date.now()-86400000).toISOString();
+        const r=await fetch(String(env.SB_URL||'')+'/rest/v1/inquiries?select=created_at&created_at=gte.'+y,{headers:{apikey:env.SB_ANON_KEY,Authorization:'Bearer '+env.SB_ANON_KEY}});
+        const rows=await r.json();
+        lines.push('昨日新询盘: '+(Array.isArray(rows)?rows.length:'读取失败'));
+      }catch(e){lines.push('昨日新询盘: 未配置（SB_URL/SB_ANON_KEY）')}
+      let ok=0,bad=[];
+      for(const u of ['/','/products','/portfolio','/about','/contact','/blog','/industries','/faq','/privacy-policy','/sitemap.xml']){
+        try{const rr=await fetch('https://mili-packaging.com'+u,{method:'HEAD'});if(rr.ok)ok++;else bad.push(u+':'+rr.status)}catch(e){bad.push(u+':ERR')}
+      }
+      lines.push('站点健康: '+ok+'/10 正常'+(bad.length?' · '+bad.join(' '):''));
+      try{
+        const r=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/actions/runs?per_page=1');
+        const d=await r.json();
+        const ru=d.workflow_runs&&d.workflow_runs[0];
+        lines.push('最近部署: '+(ru?((ru.conclusion||ru.status)+' '+String(ru.created_at||'').slice(0,16)):'N/A'));
+      }catch(e){lines.push('最近部署: 读取失败')}
+      lines.push('GA4/GSC: 未配置 Service Account（流量/关键词跳过）');
+      const text=lines.join('\\n');
+      L('daily-brief','DATA',text.replace(/\\n/g,' | '));
+      await push('Mili 每日经营简报 '+nowIso.slice(0,10),text);
+      return 'brief-done';
+    });
+  }
+  // ── 每周一死链巡检（09:00 CST = UTC 01:00 Mon）：站内 URL 4xx/5xx ──
+  if(cron==='0 1 * * 1'){
+    await run('link-check',async function(){
+      const F2=await getF();
+      const sm=F2['sitemap.xml']||'';
+      const urls=[];const re=new RegExp('<loc>(.*?)</loc>','g');let m;
+      while((m=re.exec(sm))!==null){urls.push(m[1].replace(/&amp;/g,'&'))}
+      if(!urls.length){urls.push('https://mili-packaging.com/')}
+      const base='https://mili-packaging.com';
+      const check=async function(rel){try{const r=await fetch(base+rel,{method:'HEAD',redirect:'manual'});return r.status>=400?(rel+' '+r.status):null}catch(e){return rel+' ERR'}};
+      const results=await Promise.all(urls.map(function(u){return check(u.indexOf(base)===0?u.slice(base.length):u)}));
+      const dead=results.filter(Boolean);const ok=urls.length-dead.length;
+      const text='死链巡检 '+nowIso.slice(0,10)+'\\n总数: '+urls.length+' 正常: '+ok+' 异常: '+dead.length+(dead.length?'\\n'+dead.join('\\n'):'');
+      console.log('LINKCHECK\\n'+text);
+      await push('Mili 死链巡检 '+nowIso.slice(0,10),text);
+      return urls.length+' urls, '+dead.length+' dead';
+    });
+  }
+  // ── IndexNow 提交（每 6 小时） ──
+  if(cron==='0 */6 * * *'){
+    await run('indexnow',async function(){
+      if(!env.INDEXNOW_KEY){L('indexnow','skipped','INDEXNOW_KEY not set');return 'skipped'}
+      const r=await fetch('https://api.indexnow.org/indexnow',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({host:'mili-packaging.com',key:env.INDEXNOW_KEY,keyLocation:'https://mili-packaging.com/'+env.INDEXNOW_KEY+'.txt',urlList:['https://mili-packaging.com/','https://mili-packaging.com/sitemap.xml']})});
+      L('indexnow',r.ok?'ok':'fail:'+r.status,'');
+      return r.ok?'ok':'fail:'+r.status;
+    });
+  }
 }}`;
 
 const wSize = Buffer.byteLength(worker, 'utf8');
@@ -177,8 +246,10 @@ if (SKIP_UPLOAD) {
 // Env vars injected at deploy time (read from process env; absent → worker falls back to dev defaults).
 // Production: set ADMIN_PW_HASH / SESSION_SECRET / PUSHPLUS_TOKEN / LLM_API_KEY in the CI/deploy env.
 const VARS = {};
-['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
-const metadata = JSON.stringify({ main_module: 'worker.js', vars: VARS });
+['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT', 'OPS_GH_PAT', 'SB_URL', 'SB_ANON_KEY', 'INDEXNOW_KEY'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
+// v4.5 cron triggers: daily brief 08:00 CST (UTC 00:00), weekly link check Mon 09:00 CST (UTC 01:00), IndexNow every 6h
+const TRIGGERS = ['0 0 * * *', '0 1 * * 1', '0 */6 * * *'];
+const metadata = JSON.stringify({ main_module: 'worker.js', vars: VARS, triggers: { crons: TRIGGERS } });
 const body = Buffer.from([
   `--${BOUNDARY}${CRLF}Content-Disposition: form-data; name="metadata"${CRLF}${CRLF}${metadata}${CRLF}`,
   `--${BOUNDARY}${CRLF}Content-Disposition: form-data; name="worker.js"; filename="worker.js"${CRLF}Content-Type: application/javascript+module${CRLF}${CRLF}${worker}${CRLF}`,
