@@ -63,7 +63,7 @@ export default{async fetch(r,env){
   const url=new URL(r.url);
   let p=url.pathname;
   if(p==='/')p='/index.html';
-  let k=p.replace(/^\//,'');
+  let k=p.length>1&&p[0]==='/'?p.slice(1):p;
   const OPS_PIN=(env&&env.OPS_PIN)||'mili2026';
   const OPS_GH_PAT=(env&&env.OPS_GH_PAT)||'';
 
