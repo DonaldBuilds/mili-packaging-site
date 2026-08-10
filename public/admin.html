@@ -894,7 +894,7 @@
   }
 
   // ── V6: sidebar nav ↔ tabs sync ──
-  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南', geo: 'AI 可见性' };
+  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南', geo: 'AI 可见性', seo: 'SEO 医生', config: '设置中心' };
   function syncSidebar(name) {
     document.querySelectorAll('.sb-item').forEach(function (x) { x.classList.toggle('active', x.dataset.sb === name); });
     if (SB_NAMES[name]) document.getElementById('crumb').innerHTML = '工作台 / <b>' + SB_NAMES[name] + '</b>';
