@@ -6,9 +6,39 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>Mili Packaging 运营工作台 v4.5</title>
 <style>
-  :root { --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --txt:#e8e8e8; --gray:#9a9a9a; --ok:#4cd964; --bad:#ff6b6b; }
+  /* ── V6 design tokens — dark (default) ── */
+  :root {
+    --color-primary:#c9a227; --color-primary-ink:#0a0a0a;
+    --color-success:#4cd964; --color-warning:#ffb648; --color-danger:#ff6b6b;
+    --color-surface:#141416; --color-surface-2:#0e0e10; --color-surface-3:#1d1d20;
+    --color-bg:#0a0a0a; --color-text:#e8e8e8; --color-text-dim:#9a9a9a; --color-border:#2a2a2e;
+    --fs-h1:2rem; --fs-h2:1.5rem; --fs-h3:1.25rem; --fs-body:1rem; --fs-caption:.875rem;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
+    --radius:6px; --sidebar-w:240px; --topbar-h:56px;
+    /* legacy aliases (existing styles keep working) */
+    --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --txt:#e8e8e8; --gray:#9a9a9a; --ok:#4cd964; --bad:#ff6b6b;
+    --black-2:#141416; --border-dim:#2a2a2e; --gray-3:#9a9a9a; --white:#e8e8e8; --font-display:'Segoe UI',system-ui,sans-serif;
+  }
+  :root[data-theme="light"] {
+    --color-primary:#a9851d; --color-primary-ink:#ffffff;
+    --color-success:#1f9d4d; --color-warning:#d98a00; --color-danger:#d64545;
+    --color-surface:#ffffff; --color-surface-2:#f2f3f5; --color-surface-3:#e8eaee;
+    --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#6b7280; --color-border:#d8dde3;
+    --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#a9851d; --txt:#1c1e22; --gray:#6b7280; --ok:#1f9d4d; --bad:#d64545;
+    --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#6b7280; --white:#1c1e22;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]):not([data-theme="light"]) {
+      --color-primary:#a9851d; --color-primary-ink:#ffffff;
+      --color-success:#1f9d4d; --color-warning:#d98a00; --color-danger:#d64545;
+      --color-surface:#ffffff; --color-surface-2:#f2f3f5; --color-surface-3:#e8eaee;
+      --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#6b7280; --color-border:#d8dde3;
+      --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#a9851d; --txt:#1c1e22; --gray:#6b7280; --ok:#1f9d4d; --bad:#d64545;
+      --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#6b7280; --white:#1c1e22;
+    }
+  }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--bg); color:var(--txt); font-family:'Segoe UI', system-ui, sans-serif; line-height:1.6; }
+  body { background:var(--color-bg); color:var(--color-text); font-family:'Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif; line-height:1.5; }
   .wrap { max-width:1140px; margin:0 auto; padding:28px 20px 60px; }
   header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:18px; margin-bottom:26px; }
   header h1 { font-size:22px; } header h1 span { color:var(--gold); }
@@ -61,12 +91,94 @@
   .tab.active { color:var(--gold); border-color:var(--gold); }
   .hide { display:none; }
   .meta { font-size:11px; color:var(--gray); }
+
+  /* ── V6 components ── */
+  h1 { font-size:var(--fs-h1); } h2 { font-size:var(--fs-h2); } h3 { font-size:var(--fs-h3); }
+  .btn-primary { background:var(--color-primary); color:var(--color-primary-ink); }
+  .btn-secondary { background:transparent; color:var(--color-primary); border:1px solid var(--color-primary); }
+  .btn-danger { background:var(--color-danger); color:#fff; }
+  .btn-ghost { background:transparent; color:var(--color-text-dim); border:1px solid var(--color-border); }
+  .btn-sm { padding:6px 12px; font-size:11px; }
+  .btn.loading, .btn[disabled] { opacity:.55; cursor:not-allowed; }
+  .tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:3px; letter-spacing:.04em; margin-right:4px; }
+  .tag-primary { background:rgba(201,162,39,.12); color:var(--gold); border:1px solid rgba(201,162,39,.4); }
+  .tag-success { background:rgba(76,217,100,.1); color:var(--ok); border:1px solid rgba(76,217,100,.35); }
+  .tag-warning { background:rgba(255,182,72,.1); color:var(--color-warning); border:1px solid rgba(255,182,72,.35); }
+  .tag-danger { background:rgba(255,107,107,.1); color:var(--bad); border:1px solid rgba(255,107,107,.35); }
+  .toast-wrap { position:fixed; top:16px; right:16px; z-index:120; display:flex; flex-direction:column; gap:8px; }
+  .toast { min-width:220px; max-width:340px; background:var(--color-surface-3); border:1px solid var(--color-border); color:var(--color-text); padding:10px 14px; border-radius:6px; font-size:13px; box-shadow:0 4px 16px rgba(0,0,0,.3); display:flex; gap:10px; align-items:center; justify-content:space-between; animation:toastIn .25s ease; transition:opacity .2s; }
+  .toast.ok { border-left:3px solid var(--color-success); } .toast.err { border-left:3px solid var(--color-danger); } .toast.info { border-left:3px solid var(--color-primary); }
+  .toast .t-close { cursor:pointer; color:var(--color-text-dim); font-size:14px; line-height:1; background:none; border:none; padding:2px 4px; }
+  @keyframes toastIn { from { opacity:0; transform:translateX(12px); } to { opacity:1; transform:none; } }
+  .empty { text-align:center; padding:28px 16px; color:var(--color-text-dim); font-size:13px; }
+  .empty .empty-ico { font-size:30px; margin-bottom:8px; opacity:.5; }
+  .skeleton { background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%); background-size:200% 100%; animation:sk 1.2s infinite; border-radius:4px; }
+  @keyframes sk { from { background-position:200% 0; } to { background-position:-200% 0; } }
+  .wrap { max-width:1180px; margin:0 auto; padding:0 0 60px; }
+
+  /* ── V6 three-column SaaS layout ── */
+  .app { display:flex; min-height:100vh; }
+  .sidebar { width:var(--sidebar-w); background:var(--color-surface); border-right:1px solid var(--color-border); padding:16px 12px; position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0; }
+  .sb-logo { font-size:15px; font-weight:700; padding:4px 8px 14px; border-bottom:1px solid var(--color-border); margin-bottom:8px; }
+  .sb-logo span { color:var(--color-primary); }
+  .sb-group { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-text-dim); padding:14px 8px 6px; }
+  .sb-item { display:block; width:100%; text-align:left; background:none; border:none; color:var(--color-text-dim); font-size:13px; padding:8px 10px; border-radius:4px; cursor:pointer; margin-bottom:2px; }
+  .sb-item:hover { background:var(--color-surface-3); color:var(--color-text); }
+  .sb-item.active { background:rgba(201,162,39,.12); color:var(--color-primary); }
+  .main { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .topbar { height:var(--topbar-h); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; gap:12px; position:sticky; top:0; background:var(--color-bg); z-index:20; }
+  .crumb { font-size:13px; color:var(--color-text-dim); } .crumb b { color:var(--color-text); font-weight:600; }
+  .tb-btn { background:none; border:1px solid var(--color-border); color:var(--color-text-dim); border-radius:4px; padding:6px 10px; font-size:12px; cursor:pointer; }
+  .tb-btn:hover { color:var(--color-text); border-color:var(--color-primary); }
+  .hamburger { display:none; background:none; border:none; color:var(--color-text); font-size:20px; cursor:pointer; padding:4px 8px; }
+  .content { flex:1; padding:20px 24px 40px; min-width:0; }
+  .sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:30; }
+  .content header { border-bottom:1px solid var(--color-border); padding-bottom:16px; margin-bottom:20px; }
+  @media (max-width:768px) {
+    .sidebar { position:fixed; left:0; top:0; bottom:0; z-index:40; transform:translateX(-100%); transition:transform .2s ease; box-shadow:2px 0 12px rgba(0,0,0,.3); }
+    .sidebar.open { transform:none; }
+    .sb-overlay.show { display:block; }
+    .hamburger { display:inline-block; }
+    .content { padding:14px 12px 40px; }
+    table { display:block; overflow-x:auto; white-space:nowrap; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
+  <div class="sb-overlay" id="sbOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">Mili Packaging <span>工作台 v6</span></div>
+    <div class="sb-group">概览</div>
+    <button class="sb-item active" data-sb="dash">数据看板</button>
+    <div class="sb-group">产品</div>
+    <button class="sb-item" data-sb="editor">产品/内容编辑</button>
+    <div class="sb-group">线索</div>
+    <button class="sb-item" data-sb="inquiry">询盘中心</button>
+    <div class="sb-group">SEO &amp; 情报</div>
+    <button class="sb-item" data-sb="v5">数据驾驶舱</button>
+    <button class="sb-item" data-sb="cron">自动任务</button>
+    <button class="sb-item" data-sb="tools">后台工具</button>
+    <div class="sb-group">系统</div>
+    <button class="sb-item" data-sb="ticket">修改工单</button>
+    <button class="sb-item" data-sb="audit">审计日志</button>
+    <button class="sb-item" data-sb="guide">风格指南</button>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="hamburger" id="hamburger" aria-label="菜单">☰</button>
+        <span class="crumb" id="crumb">工作台 / <b>数据看板</b></span>
+      </div>
+      <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
+        <button class="tb-btn" id="themeToggle" title="切换亮/暗模式">🌓 主题</button>
+        <button class="tb-btn" id="logoutBtn2">退出登录</button>
+      </div>
+    </header>
+    <div class="content">
+  <div class="wrap">
   <header>
-    <h1>Mili Packaging <span>运营工作台 v4.5</span></h1>
+    <h1>Mili Packaging <span>运营工作台 v6</span></h1>
     <span class="badge">内部使用 · noindex</span>
     <button class="btn ghost" id="logoutBtn" style="margin-left:auto;padding:6px 14px">退出登录</button>
   </header>
@@ -81,6 +193,7 @@
     <button class="tab" data-tab="audit">审计日志</button>
     <button class="tab" data-tab="cron">自动任务</button>
     <button class="tab" data-tab="v5">数据驾驶舱</button>
+    <button class="tab" data-tab="guide">风格指南</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -217,6 +330,71 @@
       </div>
     </div>
     <div id="v5-body">加载中…</div>
+  </div>
+
+  <!-- ⑨ 风格指南（V6 design system 参照） -->
+  <div id="tab-guide" class="hide">
+    <h2>⑨ 风格指南（V6 Design System）</h2>
+    <div class="card" style="margin-bottom:14px">
+      <h3>色彩（当前主题：<span id="guide-theme-name">暗色</span>）</h3>
+      <div class="grid">
+        <div class="card"><b style="color:var(--color-primary)">Primary</b><p class="hint">品牌主色 · 按钮/链接/强调</p><div style="height:28px;background:var(--color-primary);border-radius:3px"></div></div>
+        <div class="card"><b style="color:var(--color-success)">Success</b><p class="hint">成功/增长</p><div style="height:28px;background:var(--color-success);border-radius:3px"></div></div>
+        <div class="card"><b style="color:var(--color-warning)">Warning</b><p class="hint">警告/SLA 提醒</p><div style="height:28px;background:var(--color-warning);border-radius:3px"></div></div>
+        <div class="card"><b style="color:var(--color-danger)">Danger</b><p class="hint">错误/风险</p><div style="height:28px;background:var(--color-danger);border-radius:3px"></div></div>
+        <div class="card"><b>Surface</b><p class="hint">卡片底色</p><div style="height:28px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:3px"></div></div>
+        <div class="card"><b>Background</b><p class="hint">页面底色</p><div style="height:28px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:3px"></div></div>
+        <div class="card"><b>Text</b><p class="hint">正文</p><div style="height:28px;background:var(--color-text);border-radius:3px"></div></div>
+        <div class="card"><b>Text Dim</b><p class="hint">次要文字</p><div style="height:28px;background:var(--color-text-dim);border-radius:3px"></div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>排版</h3>
+      <p style="font-size:var(--fs-h1);font-weight:700">H1 · 2rem — 页面主标题</p>
+      <p style="font-size:var(--fs-h2);font-weight:700;margin-top:4px">H2 · 1.5rem — 区块标题</p>
+      <p style="font-size:var(--fs-h3);font-weight:700;margin-top:4px">H3 · 1.25rem — 卡片标题</p>
+      <p style="font-size:var(--fs-body);margin-top:4px">Body · 1rem — 正文内容</p>
+      <p style="font-size:var(--fs-caption);color:var(--color-text-dim);margin-top:4px">Caption · 0.875rem — 辅助说明</p>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>按钮</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary">主要操作</button>
+        <button class="btn btn-secondary">次要操作</button>
+        <button class="btn btn-danger">危险操作</button>
+        <button class="btn btn-ghost">幽灵按钮</button>
+        <button class="btn btn-primary btn-sm">小按钮</button>
+        <button class="btn btn-primary loading">加载中…</button>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>标签 Tag / Badge / 状态</h3>
+      <span class="tag tag-primary">上架中</span>
+      <span class="tag tag-success">已回复</span>
+      <span class="tag tag-warning">待跟进</span>
+      <span class="tag tag-danger">SLA 超时</span>
+      <span class="status ok">▲ 正常</span>
+      <span class="status bad">▼ 异常</span>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>表单</h3>
+      <div class="row">
+        <div><label>输入框</label><input placeholder="请输入…" /></div>
+        <div><label>下拉选择</label><select><option>选项一</option><option>选项二</option></select></div>
+        <div><label>文本域</label><textarea rows="2" placeholder="多行文本…"></textarea></div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>表格（sortable / sticky header 样式基础）</h3>
+      <table><tr><th>列 A</th><th>列 B</th><th>状态</th></tr>
+        <tr><td>示例 1</td><td>数值</td><td><span class="tag tag-primary">正常</span></td></tr>
+        <tr><td>示例 2</td><td>数值</td><td><span class="tag tag-danger">风险</span></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>空状态</h3>
+      <div class="empty"><div class="empty-ico">🗂️</div>还没有询盘，去检查联系表单配置</div>
+    </div>
   </div>
 
   <script>
@@ -596,10 +774,82 @@
     fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; });
   });
 
+  // ── V6: theme (dark/light, follows system unless overridden) ──
+  function applyTheme(t) {
+    if (t === 'light' || t === 'dark') { document.documentElement.setAttribute('data-theme', t); }
+    else { document.documentElement.removeAttribute('data-theme'); }
+    var g = document.getElementById('guide-theme-name');
+    if (g) g.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '亮色' : '暗色';
+  }
+  var savedTheme = null; try { savedTheme = localStorage.getItem('mili-theme'); } catch (e) {}
+  applyTheme(savedTheme);
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme') || ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('mili-theme', next); } catch (e) {}
+    toast('已切换为' + (next === 'dark' ? '暗色' : '亮色') + '模式', 'info');
+  });
+
+  // ── V6: toast (top-right, 3s, closable) ──
+  function toast(msg, type) {
+    var w = document.getElementById('toastWrap');
+    if (!w) { w = document.createElement('div'); w.id = 'toastWrap'; w.className = 'toast-wrap'; document.body.appendChild(w); }
+    var el = document.createElement('div');
+    el.className = 'toast ' + (type || 'info');
+    el.innerHTML = '<span>' + String(msg).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span><button class="t-close" aria-label="关闭">×</button>';
+    w.appendChild(el);
+    var close = function () { el.style.opacity = '0'; setTimeout(function () { el.remove(); }, 200); };
+    el.querySelector('.t-close').onclick = close;
+    setTimeout(close, 3000);
+  }
+
+  // ── V6: sidebar nav ↔ tabs sync ──
+  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南' };
+  function syncSidebar(name) {
+    document.querySelectorAll('.sb-item').forEach(function (x) { x.classList.toggle('active', x.dataset.sb === name); });
+    if (SB_NAMES[name]) document.getElementById('crumb').innerHTML = '工作台 / <b>' + SB_NAMES[name] + '</b>';
+  }
+  document.querySelectorAll('.sb-item').forEach(function (it) {
+    it.addEventListener('click', function () {
+      var t = it.dataset.sb;
+      var tabBtn = document.querySelector('.tab[data-tab="' + t + '"]');
+      if (tabBtn) tabBtn.click();
+      syncSidebar(t);
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sbOverlay').classList.remove('show');
+    });
+  });
+  var hamburger = document.getElementById('hamburger');
+  if (hamburger) hamburger.addEventListener('click', function () { document.getElementById('sidebar').classList.add('open'); document.getElementById('sbOverlay').classList.add('show'); });
+  document.getElementById('sbOverlay').addEventListener('click', function () { this.classList.remove('show'); document.getElementById('sidebar').classList.remove('open'); });
+  document.getElementById('logoutBtn2').addEventListener('click', function () { fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; }); });
+
+  // V6: 保存按钮 loading 态（防重复提交）
+  var edSave = document.getElementById('ed-save');
+  if (edSave) {
+    var edOrigHandler = edSave.onclick;
+    edSave.addEventListener('click', function () {
+      edSave.disabled = true; edSave.classList.add('loading'); edSave.textContent = '发布中…';
+      setTimeout(function () { if (!edSave.dataset.done) { edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; } }, 1500);
+    });
+  }
+  var gSave = document.getElementById('g-save');
+  if (gSave) {
+    gSave.addEventListener('click', function () {
+      gSave.disabled = true; gSave.classList.add('loading'); gSave.textContent = '保存中…';
+      setTimeout(function () { gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; }, 1500);
+    });
+  }
+
   // Start auto-sync dashboard after all bindings are defined
   refreshDash();
   setInterval(refreshDash, 30000);
+  syncSidebar('dash');
 })();
 </script>
+</div>
+</div>
+</div>
 </body>
 </html>
