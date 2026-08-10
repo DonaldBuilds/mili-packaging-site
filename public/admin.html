@@ -164,6 +164,8 @@
     <button class="sb-item" data-sb="audit">审计日志</button>
     <button class="sb-item" data-sb="guide">风格指南</button>
     <button class="sb-item" data-sb="geo">AI 可见性</button>
+    <button class="sb-item" data-sb="seo">SEO 医生</button>
+    <button class="sb-item" data-sb="config">设置中心</button>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -196,6 +198,8 @@
     <button class="tab" data-tab="v5">数据驾驶舱</button>
     <button class="tab" data-tab="guide">风格指南</button>
     <button class="tab" data-tab="geo">AI 可见性</button>
+    <button class="tab" data-tab="seo">SEO 医生</button>
+    <button class="tab" data-tab="config">设置</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -283,6 +287,11 @@
       <div class="card"><h3>Accio 备站</h3><p>mili-packaging.site.accio.ai</p><a class="btn ghost" href="https://mili-packaging.site.accio.ai" target="_blank" rel="noopener">打开</a></div>
       <div class="card"><h3>GA4 转化设置</h3><p>whatsapp_click 等关键事件管理</p><a class="btn ghost" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开</a></div>
       <div class="card"><h3>GSC 提交</h3><p>sitemap 提交 / 收录检查</p><a class="btn ghost" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开</a></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>批量操作（产品：上下架 / MOQ / 价格）</h3>
+      <p class="hint" style="margin-bottom:10px">勾选产品 → 批量设置 → 提交（自动部署约 2 分钟）。编辑管线未配置时提交会提示。</p>
+      <div id="batchArea"><button class="btn btn-ghost btn-sm" id="batch-load">加载产品列表</button></div>
     </div>
   </div>
 
@@ -431,6 +440,35 @@
       · 付费 API（Perplexity/ChatGPT）将设<b>月度预算上限</b>与<b>用量面板</b>，默认关闭时零费用。<br/>
       · 频率限制：每问题每周 1 次，避免风控。<br/>
       · 一键转博客草稿：博客工作流（v4 模块 2）开通后可联动；当前生成建议文本供复制。</p>
+    </div>
+  </div>
+
+  <!-- ⑪ SEO 医生（产品 SEO 评分 + 优化建议） -->
+  <div id="tab-seo" class="hide">
+    <h2>⑪ SEO 医生 — 产品页评分与优化建议</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <p class="hint" style="margin:0">评分维度：Title 长度 / Meta 描述 / 卖点 / 关键词覆盖 / 图片 alt / FAQ / 阶梯价 / 内容完整性（0-100）</p>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="seo-export">导出 CSV</button>
+        <button class="btn btn-primary btn-sm" id="seo-refresh">刷新评分</button>
+      </div>
+    </div>
+    <div class="card"><div id="seoArea"><div class="skeleton" style="height:200px"></div></div></div>
+  </div>
+
+  <!-- ⑫ 设置中心（配置状态总览） -->
+  <div id="tab-config" class="hide">
+    <h2>⑫ 设置中心 — 依赖配置状态</h2>
+    <div class="card">
+      <div id="configArea">加载中…</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>配置指引</h3>
+      <p class="hint" style="line-height:1.9">
+        所有密钥仅存环境变量（GitHub 仓库 Secrets 或部署时注入），前端零密钥。<br/>
+        配置后重新部署自动生效（约 2 分钟），无需改代码。<br/>
+        <b>修改管理员密码</b>：告知运营协助者新密码，生成哈希后配置 <code>ADMIN_PW_HASH</code>（当前为默认值 1127，建议尽快更换）。
+      </p>
     </div>
   </div>
 
@@ -600,8 +638,11 @@
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
     postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }]).then(function (res) {
-      if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { flash('网络错误，请重试', true); });
+      edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）';
+      if (res.ok) { flash('已发布：' + res.message); }
+      else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
+      else { flash('失败：' + (res.error || '未知'), true); }
+    }).catch(function () { edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; flash('网络错误，请重试', true); });
   });
 
   // ── Group save ──
@@ -613,8 +654,11 @@
     if (!Object.keys(fields).length) { flash('没有要保存的修改', true); return; }
     flash('正在提交…');
     postOps([{ action: 'group', group: gGroupSel.value, fields: fields }]).then(function (res) {
-      if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { flash('网络错误', true); });
+      gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置';
+      if (res.ok) { flash('已发布：' + res.message); }
+      else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
+      else { flash('失败：' + (res.error || '未知'), true); }
+    }).catch(function () { gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; flash('网络错误', true); });
   });
 
   // ── Inquiries (PIN-gated) ──
@@ -629,11 +673,13 @@
     }).then(function (r) { return r.json(); }).then(function (rows) {
       if (!Array.isArray(rows)) { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; return; }
       if (!rows.length) { area.innerHTML = '<p>暂无询盘记录。</p>'; return; }
-      var html = '<table><tr><th>时间</th><th>姓名</th><th>邮箱</th><th>产品</th><th>数量</th><th>需求</th></tr>';
+      var html = '<table><tr><th>时间</th><th>姓名</th><th>邮箱</th><th>产品</th><th>数量</th><th>需求</th><th>跟进</th></tr>';
       rows.forEach(function (r) {
-        html += '<tr><td style="white-space:nowrap">' + (r.created_at || '').replace('T', ' ').slice(0, 16) + '</td><td>' + (r.name || '') + '</td><td>' + (r.email || '') + '</td><td>' + (r.product_type || '') + '</td><td>' + (r.quantity || '') + '</td><td style="max-width:220px">' + (r.message || '').slice(0, 80) + '</td></tr>';
+        var h = (Date.now() - new Date(r.created_at).getTime()) / 36e5;
+        var tag = h > 48 ? '<span class="tag tag-danger">超 48h</span>' : (h > 24 ? '<span class="tag tag-warning">超 24h</span>' : (h > 4 ? '<span class="tag tag-primary">' + Math.round(h) + 'h</span>' : '<span class="tag tag-success">新</span>'));
+        html += '<tr><td style="white-space:nowrap">' + (r.created_at || '').replace('T', ' ').slice(0, 16) + '</td><td>' + (r.name || '') + '</td><td>' + (r.email || '') + '</td><td>' + (r.product_type || '') + '</td><td>' + (r.quantity || '') + '</td><td style="max-width:220px">' + (r.message || '').slice(0, 80) + '</td><td>' + tag + '</td></tr>';
       });
-      area.innerHTML = html + '</table><p class="hint">完整记录：Supabase → Table Editor → inquiries</p>';
+      area.innerHTML = html + '</table><p class="hint">SLA 提示：4h 新 / 24h 提醒 / 48h 红色风险（完整记录：Supabase → inquiries）</p>';
     }).catch(function () { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; });
   });
 
@@ -949,6 +995,143 @@
     toast('已添加，监测列表更新', 'ok');
   });
   document.querySelector('.tab[data-tab="geo"]').addEventListener('click', function () { geoRenderList(); geoRenderGap(); });
+
+  // ── SEO 医生：产品 SEO 评分（基于 GitHub raw 产品数据，零依赖） ──
+  var seoData = null;
+  function seoFetch() { return fetch(RAW).then(function (r) { return r.json(); }).then(function (d) { seoData = d; return d; }); }
+  function seoScore(p) {
+    var s = 0, detail = [];
+    var t = p.title || p.name || '';
+    var tl = t.length;
+    if (tl >= 50 && tl <= 62) { s += 15; } else if (tl >= 40 && tl <= 70) { s += 9; } else { detail.push('Title 长度 ' + tl + '（建议 50-60）'); }
+    var md = p.description || '';
+    if (md.length >= 120 && md.length <= 165) { s += 15; } else if (md.length >= 80) { s += 9; } else { detail.push('Meta 描述 ' + md.length + ' 字符（建议 120-160）'); }
+    if (p.tagline) { s += 10; } else { detail.push('缺一句话卖点 tagline'); }
+    var toks = (p.slug || '').split('-').filter(function (x) { return x.length > 3; });
+    var covered = toks.filter(function (x) { return t.toLowerCase().indexOf(x) >= 0; }).length;
+    if (toks.length && covered / toks.length >= 0.5) { s += 10; } else { detail.push('Title 未覆盖 slug 关键词'); }
+    if (p.img) { s += 10; } else { detail.push('缺主图 img'); }
+    var faqs = p.faq || [];
+    if (faqs.length >= 2) { s += 10; } else if (faqs.length === 1) { s += 5; } else { detail.push('缺 FAQ（≥2 条利于 AI 引用）'); }
+    if (p.tierPrice) { s += 10; } else { detail.push('缺阶梯价 tierPrice'); }
+    if (p.price && p.moq) { s += 10; } else { detail.push('缺价格或 MOQ'); }
+    if (p.copy) { s += 10; } else { detail.push('缺产品描述 copy'); }
+    return { score: s, detail: detail };
+  }
+  function seoRender() {
+    var el = document.getElementById('seoArea');
+    if (!seoData) { seoFetch().then(seoRender); return; }
+    var rows = [];
+    (seoData.productGroups || []).forEach(function (g) {
+      (seoData.productCatalog[g.slug] || []).forEach(function (p) {
+        var r = seoScore(p);
+        rows.push({ g: g.name, slug: p.slug, name: p.name, score: r.score, detail: r.detail });
+      });
+    });
+    rows.sort(function (a, b) { return a.score - b.score; });
+    var avg = Math.round(rows.reduce(function (a, r) { return a + r.score; }, 0) / (rows.length || 1));
+    var low = rows.filter(function (r) { return r.score < 70; }).length;
+    var html = '<p class="hint">共 ' + rows.length + ' 个产品 · 平均 ' + avg + ' 分 · 待优化（<70 分）' + low + ' 个</p><table><tr><th>产品</th><th>分组</th><th>得分</th><th>扣分明细 / 建议</th></tr>';
+    rows.forEach(function (r) {
+      var color = r.score >= 85 ? 'var(--ok)' : (r.score >= 70 ? 'var(--color-warning)' : 'var(--bad)');
+      html += '<tr><td>' + String(r.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + ' <span class="meta">' + r.slug + '</span></td><td>' + r.g + '</td><td><b style="color:' + color + '">' + r.score + '</b></td><td style="font-size:11px;color:var(--gray)">' + (r.detail.length ? r.detail.join('；') : '✔ 无扣分项') + '</td></tr>';
+    });
+    el.innerHTML = html + '</table>';
+    window.__seoRows = rows;
+  }
+  document.getElementById('seo-refresh').addEventListener('click', function () { document.getElementById('seoArea').innerHTML = '<div class="skeleton" style="height:120px"></div>'; seoData = null; seoRender(); });
+  document.getElementById('seo-export').addEventListener('click', function () {
+    if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
+    var esc = function (x) { return String(x).replace(/,/g, ' '); };
+    var csv = '\uFEFF产品,分组,得分,扣分项\n' + window.__seoRows.map(function (r) { return [esc(r.name), r.g, r.score, esc(r.detail.join(';'))].join(','); }).join('\n');
+    var a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'mili-seo-audit.csv'; a.click();
+    toast('CSV 已导出', 'ok');
+  });
+  document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () { if (!seoData) seoRender(); });
+
+  // ── 设置中心：配置状态总览 ──
+  function loadConfig() {
+    var el = document.getElementById('configArea');
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.ok) { el.innerHTML = '<p class="status bad">读取失败</p>'; return; }
+      var items = [
+        ['GitHub 编辑管线（GH_PAT）', 'gh_pat', '产品保存发布 / 审计持久化 / sitemap 自动重建'],
+        ['PushPlus 微信通知', 'pushplus', '每日简报 / 死链巡检 / SLA 告警'],
+        ['GA4 数据源', 'ga4', '驾驶舱：流量 / 来源 / 地域 / 漏斗'],
+        ['GSC 数据源', 'gsc', '驾驶舱：SEO 关键词榜'],
+        ['LLM API', 'llm', 'AI 优化建议（当前规则引擎降级运行）'],
+        ['IndexNow', 'indexnow', 'Bing 新内容收录加速'],
+        ['Supabase', 'supabase', '询盘入库 / 统计'],
+        ['管理员密码哈希', 'admin_pw', '登录认证']
+      ];
+      var html = '<table><tr><th>配置项</th><th>状态</th><th>作用</th></tr>';
+      items.forEach(function (it) {
+        var c = d.configs[it[1]] || { ok: false };
+        html += '<tr><td><b>' + it[0] + '</b></td><td>' + (c.ok ? '<span class="tag tag-success">已配置</span>' : '<span class="tag tag-warning">未配置</span>') + '</td><td class="hint">' + it[2] + '</td></tr>';
+      });
+      var done = items.filter(function (it) { return d.configs[it[1]] && d.configs[it[1]].ok; }).length;
+      el.innerHTML = html + '</table><p class="hint" style="margin-top:10px">已配置 ' + done + ' / ' + items.length + ' 项。配置位置：GitHub 仓库 Secrets（或告知运营协助者填入环境变量重新部署）。</p>';
+    }).catch(function () { el.innerHTML = '<p class="status bad">读取失败</p>'; });
+  }
+  document.querySelector('.tab[data-tab="config"]').addEventListener('click', loadConfig);
+
+  // ── 批量工具（产品上下架 / MOQ / 价格） ──
+  var batchProds = [];
+  function updateBCount() { var n = batchProds.filter(function (p) { return p._sel; }).length; var el = document.getElementById('b-count'); if (el) el.textContent = n; }
+  function batchRender() {
+    var el = document.getElementById('batchArea');
+    var html = '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">' +
+      '<button class="btn btn-ghost btn-sm" id="b-all">全选</button><button class="btn btn-ghost btn-sm" id="b-none">反选</button>' +
+      '<span class="hint">已选 <b id="b-count">0</b> 个</span></div>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">' +
+      '<select id="b-status" style="width:140px"><option value="">— 上架状态 —</option><option value="active">上架</option><option value="hidden">下架</option></select>' +
+      '<input id="b-moq" placeholder="批量 MOQ（留空不改）" style="width:160px" />' +
+      '<input id="b-price" placeholder="价格乘数如 0.95（留空不改）" style="width:180px" />' +
+      '<button class="btn btn-primary btn-sm" id="b-apply">批量提交</button></div>' +
+      '<div style="max-height:320px;overflow:auto;border:1px solid var(--border)"><table><tr><th></th><th>产品</th><th>分组</th><th>价格</th><th>MOQ</th><th>状态</th></tr>';
+    batchProds.forEach(function (p, i) {
+      html += '<tr><td><input type="checkbox" data-bi="' + i + '"' + (p._sel ? ' checked' : '') + '/></td><td>' + String(p.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</td><td>' + p.g + '</td><td>$' + p.price + '</td><td>' + p.moq + '</td><td>' + (p.status === 'hidden' ? '下架' : '上架') + '</td></tr>';
+    });
+    el.innerHTML = html + '</table></div><div id="b-result" class="hint"></div>';
+    el.querySelectorAll('input[data-bi]').forEach(function (c) {
+      c.addEventListener('change', function () { batchProds[parseInt(c.dataset.bi, 10)]._sel = c.checked; updateBCount(); });
+    });
+    var ba = document.getElementById('b-all'); if (ba) ba.onclick = function () { batchProds.forEach(function (p) { p._sel = true; }); batchRender(); };
+    var bn = document.getElementById('b-none'); if (bn) bn.onclick = function () { batchProds.forEach(function (p) { p._sel = !p._sel; }); batchRender(); };
+    var bp = document.getElementById('b-apply'); if (bp) bp.onclick = batchApply;
+  }
+  function batchApply() {
+    var sel = batchProds.filter(function (p) { return p._sel; });
+    if (!sel.length) { toast('请先勾选产品', 'err'); return; }
+    var status = document.getElementById('b-status').value;
+    var moq = document.getElementById('b-moq').value.trim();
+    var mult = parseFloat(document.getElementById('b-price').value);
+    if (!status && !moq && !(mult && !isNaN(mult))) { toast('请设置至少一个批量值', 'err'); return; }
+    var ops = sel.map(function (p) {
+      var f = {};
+      if (status) f.status = status;
+      if (moq) f.moq = moq;
+      if (mult && !isNaN(mult)) f.price = Math.round(p.price * mult * 100) / 100;
+      return { action: 'product', group: p.gslug, slug: p.slug, fields: f };
+    });
+    postOps(ops).then(function (res) {
+      if (res.ok) { toast('已提交 ' + sel.length + ' 个产品，约 2 分钟自动部署', 'ok'); }
+      else if (res.error === 'server-not-configured') { toast('编辑管线未开通：需配置 GitHub PAT（GH_PAT）', 'err'); }
+      else { toast('失败：' + (res.error || '未知'), 'err'); }
+    }).catch(function () { toast('网络错误', 'err'); });
+  }
+  document.getElementById('batch-load').addEventListener('click', function () {
+    fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
+      batchProds = [];
+      (d.productGroups || []).forEach(function (g) {
+        (d.productCatalog[g.slug] || []).forEach(function (p) { batchProds.push({ g: g.name, gslug: g.slug, slug: p.slug, name: p.name, price: p.price, moq: p.moq, status: p.status || 'active', _sel: false }); });
+      });
+      batchRender();
+      toast('已加载 ' + batchProds.length + ' 个产品', 'ok');
+    }).catch(function () { toast('产品数据加载失败', 'err'); });
+  });
 
   // V6: 保存按钮 loading 态（防重复提交）
   var edSave = document.getElementById('ed-save');

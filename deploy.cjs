@@ -176,6 +176,16 @@ export default{async fetch(r,env){
     if(p==='/api/session')return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/config')return new Response(JSON.stringify({ok:true,configs:{
+      gh_pat:{ok:!!env.OPS_GH_PAT,hint:'产品编辑发布、审计持久化、sitemap 自动重建'},
+      pushplus:{ok:!!env.PUSHPLUS_TOKEN,hint:'简报/巡检/告警微信推送'},
+      ga4:{ok:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),hint:'数据驾驶舱流量与转化'},
+      gsc:{ok:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),hint:'数据驾驶舱 SEO 关键词'},
+      llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
+      indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
+      supabase:{ok:!!env.SB_URL,hint:'询盘入库与统计'},
+      admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'}
+    }}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
     if(p==='/api/v5/dashboard'){return handleV5(env,url)}
     if(p==='/api/v5/realtime'){return handleV5Realtime(env)}
