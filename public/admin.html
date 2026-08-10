@@ -34,6 +34,28 @@
   .flash.show { opacity:1; }
   .flash.err { border-color:var(--bad); color:var(--bad); }
   footer { margin-top:40px; border-top:1px solid var(--border); padding-top:16px; font-size:12px; color:var(--gray); }
+  /* v5 dashboard */
+  .v5-card { margin-bottom: 14px; }
+  .v5-src { font-size:10px; color:var(--gray); border:1px solid var(--border); padding:2px 8px; border-radius:3px; letter-spacing:.06em; }
+  .v5-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
+  .v5-metric { background:#0e0e10; border:1px solid var(--border); padding:12px; }
+  .v5-metric b { display:block; font-size:20px; color:var(--gold); font-family:var(--font-display); }
+  .v5-metric span { font-size:11px; color:var(--gray); }
+  .v5-delta { font-size:11px; font-weight:600; }
+  .v5-delta.up { color:var(--ok); } .v5-delta.down { color:var(--bad); }
+  .v5-bar { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:12px; }
+  .v5-bar-l { width:170px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--gray); }
+  .v5-bar-track { flex:1; background:#0e0e10; height:14px; border-radius:2px; overflow:hidden; }
+  .v5-bar-fill { height:100%; background:var(--gold); opacity:.85; }
+  .v5-bar-v { width:70px; text-align:right; color:var(--txt); }
+  .v5-funnel { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+  .v5-fstep { display:flex; align-items:center; gap:12px; }
+  .v5-fstep-name { width:120px; font-size:12px; color:var(--gray); }
+  .v5-fstep-track { flex:1; background:#0e0e10; height:22px; border-radius:2px; overflow:hidden; }
+  .v5-fstep-fill { height:100%; background:var(--gold); display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:11px; color:#0a0a0a; font-weight:700; }
+  .v5-fstep-n { width:110px; font-size:12px; text-align:right; color:var(--txt); }
+  .v5-table td { max-width:260px; }
+  @media (max-width:768px) { .v5-metrics { grid-template-columns:repeat(2,1fr); } .v5-bar-l { width:110px; } .v5-fstep-name { width:90px; } .v5-three { grid-template-columns:1fr !important; } }
   .tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
   .tab { padding:8px 16px; border:1px solid var(--border); background:var(--bg2); color:var(--gray); cursor:pointer; font-size:13px; border-radius:3px; }
   .tab.active { color:var(--gold); border-color:var(--gold); }
@@ -58,6 +80,7 @@
     <button class="tab" data-tab="ticket">修改工单</button>
     <button class="tab" data-tab="audit">审计日志</button>
     <button class="tab" data-tab="cron">自动任务</button>
+    <button class="tab" data-tab="v5">数据驾驶舱</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -179,6 +202,21 @@
   <div id="tab-cron" class="hide">
     <h2>⑦ 自动化任务（Cloudflare Cron，零持续成本）</h2>
     <div class="card" id="cronPanel">加载中…</div>
+  </div>
+
+  <!-- ⑧ 数据驾驶舱（v5 GA4+GSC） -->
+  <div id="tab-v5" class="hide">
+    <h2>⑧ 数据驾驶舱（GA4 + GSC 双源，官方免费 API）</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div id="v5-status" class="status">检测配置中…</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button class="tab v5-range active" data-range="7d">近 7 天</button>
+        <button class="tab v5-range" data-range="30d">近 30 天</button>
+        <button class="tab v5-range" data-range="1d">昨日</button>
+        <button class="btn ghost" id="v5-refresh" style="padding:6px 12px">刷新缓存</button>
+      </div>
+    </div>
+    <div id="v5-body">加载中…</div>
   </div>
 
   <script>
@@ -443,6 +481,115 @@
     document.getElementById('cronPanel').innerHTML = html;
   }
   document.querySelector('.tab[data-tab="cron"]').addEventListener('click', loadCron);
+
+  // ── v5: Data cockpit (GA4 + GSC) ──
+  var V5_RANGE = '7d';
+  function v5Esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function v5Card(title, src, body) { return '<div class="card v5-card"><h3 style="display:flex;align-items:center;gap:8px">' + v5Esc(title) + ' <span class="v5-src">' + v5Esc(src) + '</span></h3>' + body + '</div>'; }
+  function v5Bars(items, li, vi) {
+    if (!items || !items.length) return '<p class="hint">无数据</p>';
+    var max = 1; items.forEach(function (r) { if ((r.m[vi] || 0) > max) max = r.m[vi]; });
+    return items.map(function (r) {
+      var l = r.d[li] || '', v = r.m[vi] || 0;
+      return '<div class="v5-bar"><span class="v5-bar-l" title="' + v5Esc(l) + '">' + v5Esc(l) + '</span><div class="v5-bar-track"><div class="v5-bar-fill" style="width:' + (v / max * 100).toFixed(0) + '%"></div></div><span class="v5-bar-v">' + v + '</span></div>';
+    }).join('');
+  }
+  function v5Trend(rows) {
+    if (!rows || rows.length < 2) return '<p class="hint">趋势数据不足</p>';
+    var w = 600, h = 90;
+    var vals = rows.map(function (r) { return r.m[0] || 0; });
+    var max = Math.max.apply(null, vals.concat([1]));
+    var pts = vals.map(function (v, i) { return (i / (vals.length - 1) * w).toFixed(1) + ',' + (h - 6 - (v / max) * (h - 14)).toFixed(1); }).join(' ');
+    var dots = vals.map(function (v, i) { var x = (i / (vals.length - 1) * w).toFixed(1), y = (h - 6 - (v / max) * (h - 14)).toFixed(1); return '<circle cx="' + x + '" cy="' + y + '" r="2.5" fill="#c9a227"/>'; }).join('');
+    return '<svg width="100%" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="display:block"><polyline points="' + pts + '" fill="none" stroke="#c9a227" stroke-width="2"/>' + dots + '</svg>';
+  }
+  function v5Pct(cur, prev) { if (!prev) return ''; var d = (cur - prev) / prev * 100; return '<span class="v5-delta ' + (d >= 0 ? 'up' : 'down') + '">' + (d >= 0 ? '▲' : '▼') + ' ' + Math.abs(d).toFixed(1) + '%</span>'; }
+  function v5Overview(m) {
+    if (!m) return '<p class="hint">无数据</p>';
+    var cur = m.rows || [], prev = (m.prev && m.prev.length) ? m.prev[0].m : [0, 0, 0, 0];
+    var tot = cur.reduce(function (a, r) { a[0] += r.m[0] || 0; a[1] += r.m[1] || 0; return a; }, [0, 0]);
+    var bounces = cur.reduce(function (a, r) { return a + (r.m[2] || 0); }, 0);
+    var dur = cur.reduce(function (a, r) { return a + (r.m[3] || 0); }, 0);
+    var n = cur.length || 1;
+    var met = [
+      ['活跃用户', tot[0], prev[0]], ['会话', tot[1], prev[1]],
+      ['跳出率', (bounces / n).toFixed(1) + '%', null], ['平均时长', Math.round(dur / n) + 's', null]
+    ].map(function (x) { return '<div class="v5-metric"><b>' + x[1] + '</b><span>' + x[0] + '</span><div>' + v5Pct(x[1], x[2]) + '</div></div>'; }).join('');
+    return '<div class="v5-metrics">' + met + '</div>' + v5Trend(cur);
+  }
+  function v5Table(head, rows) {
+    if (!rows || !rows.length) return '<p class="hint">无数据</p>';
+    return '<table class="v5-table"><tr>' + head.map(function (x) { return '<th>' + x + '</th>'; }).join('') + '</tr>' +
+      rows.slice(0, 15).map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + v5Esc(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>';
+  }
+  function v5Funnel(events) {
+    var map = {}; (events || []).forEach(function (r) { map[r.d[0]] = r.m[0] || 0; });
+    var steps = [['page_view', '页面浏览'], ['whatsapp_click', 'WhatsApp 点击'], ['form_submit', '表单提交']];
+    var max = Math.max(map['page_view'] || 1, 1);
+    var html = '<div class="v5-funnel">', prev = null;
+    steps.forEach(function (s) {
+      var v = map[s[0]] || 0;
+      var conv = prev ? (v / prev * 100).toFixed(1) + '%' : '—';
+      var loss = prev ? ((prev - v) / prev * 100).toFixed(1) + '%' : '—';
+      html += '<div class="v5-fstep"><span class="v5-fstep-name">' + s[1] + '</span><div class="v5-fstep-track"><div class="v5-fstep-fill" style="width:' + (v / max * 100).toFixed(0) + '%"></div></div><span class="v5-fstep-n">' + v + ' · 转 ' + conv + ' · 流失 ' + loss + '</span></div>';
+      prev = v;
+    });
+    return html + '</div><p class="hint">product_view 需电商增强事件，当前以 page_view → whatsapp_click → form_submit 三层为准（GA4 同源独立呈现）</p>';
+  }
+  function v5Render(d) {
+    if (!d.ok) { document.getElementById('v5-body').innerHTML = '<div class="card"><p class="status bad">加载失败：' + v5Esc(d.error || '未知') + '</p></div>'; return; }
+    var body = document.getElementById('v5-body');
+    if (!d.configured) {
+      body.innerHTML = '<div class="card"><h3>数据源未配置（刻意不显示任何伪造数据）</h3><p style="color:var(--gray);font-size:13px;line-height:1.8">驾驶舱需要 Google Service Account 密钥，配置后自动生效（代码已就绪，无需改动）。<br/><br/>需要提供：<br/>1) <b>GA4</b>：<code>GA4_SERVICE_JSON</code>（Service Account JSON）+ <code>GA4_PROPERTY_ID</code>（如 123456789）<br/>2) <b>GSC</b>：<code>GSC_SERVICE_JSON</code> + <code>GSC_SITE_URL</code>（如 sc-domain:mili-packaging.com）<br/><br/>配置位置：GitHub 仓库 Secrets（或直接告诉我，我填入环境变量并重新部署，即可全部点亮）。</p></div>';
+      return;
+    }
+    var m = d.modules;
+    var rangeLabel = { '1d': '昨日', '7d': '近 7 天', '30d': '近 30 天' }[V5_RANGE] || V5_RANGE;
+    var stamp = '数据时段：' + rangeLabel + ' · 生成于 ' + String(d.generatedAt || '').replace('T', ' ').slice(5, 16) + ' · 缓存：' + (d.cache === 'hit' ? '命中（1h 内，未重复消耗配额）' : '新拉取');
+    var html = '<p class="hint" style="margin:0 0 12px">' + v5Esc(stamp) + '</p>';
+    html += v5Card('① 流量总览（活跃用户/会话/跳出率/时长 + 环比 + 趋势）', 'GA4', v5Overview(m.overview));
+    html += v5Card('② 流量来源（自然/直接/社媒/引荐）', 'GA4', v5Bars(m.sources || [], 0, 0));
+    html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" class="v5-three">' +
+      v5Card('③ 设备占比', 'GA4', v5Bars(m.devices || [], 0, 0)) +
+      v5Card('③ 国家 Top10', 'GA4', v5Table(['国家', '活跃用户'], (m.geo || []).slice(0, 10).map(function (r) { return [r.d[0], r.m[0]]; }))) +
+      v5Card('③ 城市 Top10', 'GA4', v5Table(['城市', '活跃用户'], (m.city || []).slice(0, 10).map(function (r) { return [r.d[0], r.m[0]]; }))) +
+      '</div>';
+    if (m.seo && !m.seo.error) {
+      html += v5Card('④ SEO 关键词榜（展示/点击/CTR/排名，独立于 GA4）', 'GSC', v5Table(['关键词', '展示', '点击', 'CTR', '平均排名'], (m.seo || []).map(function (r) { return [r.d[0], r.m[0], r.m[1], (r.m[2] * 100).toFixed(1) + '%', r.m[3].toFixed(1)]; })));
+    } else {
+      html += v5Card('④ SEO 关键词榜', 'GSC', '<p class="hint">GSC 未配置' + (m.seo && m.seo.error ? '（' + v5Esc(m.seo.error) + '）' : '') + '——配置 GSC_SERVICE_JSON + GSC_SITE_URL 后显示。</p>');
+    }
+    html += v5Card('⑤ 页面表现榜（落地页 + whatsapp_click/form_submit 事件）', 'GA4', v5Table(['落地页', '会话'], (m.pages || []).slice(0, 12).map(function (r) { return [r.d[0], r.m[0]]; })));
+    html += v5Card('⑥ 转化漏斗（逐步转化率与流失率）', 'GA4', v5Funnel(m.events));
+    body.innerHTML = html;
+  }
+  function loadV5() {
+    var st = document.getElementById('v5-status');
+    fetch('/api/v5/status').then(function (r) { return r.json(); }).then(function (d) {
+      st.innerHTML = 'GA4: ' + (d.ga4 && d.ga4.configured ? '<span class="ok">已配置（' + v5Esc(d.ga4.propertyId) + '）</span>' : '<span class="bad">未配置</span>') + ' · GSC: ' + (d.gsc && d.gsc.configured ? '<span class="ok">已配置（' + v5Esc(d.gsc.site) + '）</span>' : '<span class="bad">未配置</span>');
+    }).catch(function () { st.innerHTML = '<span class="bad">状态读取失败</span>'; });
+    fetch('/api/v5/dashboard?range=' + V5_RANGE).then(function (r) { return r.json(); }).then(function (d) {
+      v5Render(d);
+      fetch('/api/v5/realtime').then(function (r) { return r.json(); }).then(function (rt) {
+        if (rt && rt.ok) {
+          var extra = rt.configured ? v5Card('⑦ 实时面板（当前在线人数 + 活跃页面）', 'GA4', v5Bars(rt.realtime || [], 0, 0)) : v5Card('⑦ 实时面板', 'GA4', '<p class="hint">GA4 未配置</p>');
+          document.getElementById('v5-body').innerHTML += extra;
+        }
+      }).catch(function () {});
+    }).catch(function () { document.getElementById('v5-body').innerHTML = '<div class="card"><p class="status bad">请求失败</p></div>'; });
+  }
+  document.querySelectorAll('.v5-range').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.v5-range').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      V5_RANGE = b.dataset.range;
+      loadV5();
+    });
+  });
+  document.getElementById('v5-refresh').addEventListener('click', function () {
+    fetch('/api/v5/refresh', { method: 'POST' }).then(function () { flash('缓存已清空，重新拉取'); loadV5(); });
+  });
+  document.querySelector('.tab[data-tab="v5"]').addEventListener('click', loadV5);
 
   // ── v4: Logout ──
   document.getElementById('logoutBtn').addEventListener('click', function () {

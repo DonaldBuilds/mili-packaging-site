@@ -57,6 +57,85 @@ const M=Object.fromEntries(Object.entries({
 }).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
 const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
 const BLOG_PATHS=['/blog','/blog/'];
+
+// ── v5: GA4 + GSC dashboard helpers (Service Account JWT, 1h in-memory cache) ──
+const V5_CACHE=(globalThis.__miliV5=globalThis.__miliV5||{});
+const V5_TTL=3600000;
+const b64url=function(s){let x=btoa(s);x=x.split('+').join('-').split('/').join('_');while(x.length&&x.endsWith('='))x=x.slice(0,-1);return x};
+const b64uJson=function(o){return b64url(btoa(unescape(encodeURIComponent(JSON.stringify(o)))))};
+const u8b64=function(u8){let s='';for(let i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);return b64url(s)};
+const pemToDer=function(pem){const body=pem.split('PRIVATE KEY-----')[1]||pem;const b64=body.split('\\n').join('').split('\\r').join('').trim();const bin=atob(b64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr};
+const jwtAssertion=async function(svc){
+  const now=Math.floor(Date.now()/1000);
+  const header=b64uJson({alg:'RS256',typ:'JWT'});
+  const claims=b64uJson({iss:svc.client_email,scope:'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/webmasters.readonly',aud:'https://oauth2.googleapis.com/token',iat:now,exp:now+3600});
+  const key=await crypto.subtle.importKey('pkcs8',pemToDer(svc.private_key),{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);
+  const sig=await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,new TextEncoder().encode(header+'.'+claims));
+  return header+'.'+claims+'.'+u8b64(new Uint8Array(sig));
+};
+const oauthToken=async function(svcJson){
+  const svc=JSON.parse(svcJson);
+  const assertion=await jwtAssertion(svc);
+  const r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:assertion}).toString()});
+  const d=await r.json();
+  if(!d.access_token)throw new Error('oauth-fail');
+  return d.access_token;
+};
+const ga4Report=async function(token,prop,path,body){
+  const r=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':'+path,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok)throw new Error('ga4:'+r.status);
+  return d;
+};
+const gscQuery=async function(token,site,body){
+  const r=await fetch('https://www.googleapis.com/webmasters/v3/sites/'+encodeURIComponent(site)+'/searchAnalytics/query',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok)throw new Error('gsc:'+r.status);
+  return d;
+};
+const rowsToObj=function(d){
+  const out=[];const rs=d.rows||[];
+  for(const row of rs){out.push({d:row.dimensionValues?row.dimensionValues.map(function(x){return x.value}):[],m:row.metricValues?row.metricValues.map(function(x){return parseFloat(x.value)}):[]})}
+  return out;
+};
+const ga4DateRange=function(days){const end=new Date(Date.now()-86400000);const start=new Date(Date.now()-days*86400000);const f=function(dt){return dt.getUTCFullYear()+'-'+String(dt.getUTCMonth()+1).padStart(2,'0')+'-'+String(dt.getUTCDate()).padStart(2,'0')};return {start:f(start),end:f(end)}};
+const handleV5=async function(env,url){
+  try{
+    if(!env.GA4_SERVICE_JSON||!env.GA4_PROPERTY_ID){return new Response(JSON.stringify({ok:true,configured:false,message:'GA4 未配置'}),{headers:{'content-type':'application/json'}})}
+    const range=url.searchParams.get('range')||'7d';
+    const days=range==='1d'?1:(range==='30d'?30:7);
+    const ck='v5:'+range;
+    const hit=V5_CACHE[ck];
+    if(hit&&(Date.now()-hit.t)<V5_TTL){return new Response(JSON.stringify({ok:true,configured:true,cache:'hit',generatedAt:hit.generatedAt,modules:hit.data}),{headers:{'content-type':'application/json'}})}
+    const token=await oauthToken(env.GA4_SERVICE_JSON);
+    const prop=env.GA4_PROPERTY_ID;
+    const range1=ga4DateRange(days);const range0=ga4DateRange(days*2);
+    const ov=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'date'}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
+    const ov0=await ga4Report(token,prop,'runReport',{dateRanges:[{start:range0.start,end:range1.start}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
+    const src=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'sessionDefaultChannelGroup'}],metrics:[{name:'sessions'}]});
+    const dev=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'deviceCategory'}],metrics:[{name:'sessions'}]});
+    const geo=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'country'}],metrics:[{name:'activeUsers'}]});
+    const city=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'city'}],metrics:[{name:'activeUsers'}]});
+    const pg=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'landingPage'}],metrics:[{name:'sessions'}]});
+    const ev=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'eventName'}],metrics:[{name:'eventCount'}],dimensionFilter:{filter:{fieldName:'eventName',inListFilter:{values:['whatsapp_click','form_submit','page_view','session_start']}}}});
+    const modules={overview:{rows:rowsToObj(ov),prev:rowsToObj(ov0)},sources:rowsToObj(src),devices:rowsToObj(dev),geo:rowsToObj(geo),city:rowsToObj(city),pages:rowsToObj(pg),events:rowsToObj(ev)};
+    let seo=null;
+    if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
+      try{const gt=await oauthToken(env.GSC_SERVICE_JSON);const q=await gscQuery(gt,env.GSC_SITE_URL,{startDate:range1.start,endDate:range1.end,dimensions:['query'],rowLimit:20});seo=rowsToObj(q)}catch(e){seo={error:'gsc:'+String((e&&e.message)||e)}}
+    }
+    modules.seo=seo;
+    V5_CACHE[ck]={t:Date.now(),generatedAt:new Date().toISOString(),data:modules};
+    return new Response(JSON.stringify({ok:true,configured:true,cache:'miss',generatedAt:V5_CACHE[ck].generatedAt,modules:modules}),{headers:{'content-type':'application/json'}});
+  }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+};
+const handleV5Realtime=async function(env){
+  try{
+    if(!env.GA4_SERVICE_JSON||!env.GA4_PROPERTY_ID)return new Response(JSON.stringify({ok:true,configured:false}),{headers:{'content-type':'application/json'}});
+    const token=await oauthToken(env.GA4_SERVICE_JSON);
+    const rt=await ga4Report(token,env.GA4_PROPERTY_ID,'runRealtimeReport',{dimensions:[{name:'unifiedScreenName'}],metrics:[{name:'activeUsers'}]});
+    return new Response(JSON.stringify({ok:true,configured:true,realtime:rowsToObj(rt)}),{headers:{'content-type':'application/json'}});
+  }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+};
 const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili 运营工作台 · 登录</title><style>body{background:#0a0a0a;color:#e8e8e8;font-family:"Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.box{background:#141416;border:1px solid #2a2a2e;padding:44px 40px;border-radius:8px;width:340px;max-width:90vw}.box h1{font-size:18px;margin:0 0 6px}.box h1 span{color:#c9a227}.sub{color:#9a9a9a;font-size:12px;margin:0 0 24px}input{width:100%;background:#0e0e10;border:1px solid #2a2a2e;color:#e8e8e8;padding:12px;border-radius:4px;font-size:14px;box-sizing:border-box}button{width:100%;background:#c9a227;color:#0a0a0a;border:none;padding:12px;border-radius:4px;font-size:14px;font-weight:700;margin-top:14px;cursor:pointer}#msg{color:#ff6b6b;font-size:12px;margin-top:12px;min-height:16px}.hint{color:#555;font-size:11px;margin-top:16px;text-align:center}</style></head><body><div class="box"><h1>Mili Packaging <span>运营工作台</span></h1><p class="sub">内部系统 · 请先登录（会话 24h）</p><input id="pw" type="password" placeholder="管理员密码" autocomplete="current-password"/><button id="btn">登 录</button><p id="msg"></p><div class="hint">登录后自动进入工作台</div></div><script>var b=document.getElementById("btn"),i=document.getElementById("pw"),m=document.getElementById("msg");function go(){m.textContent="";fetch("/api/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:i.value})}).then(function(r){if(r.ok){location.href="/admin.html"}else{return r.json().then(function(j){m.textContent=j.error==="bad-credentials"?"密码错误":"登录失败 ("+j.error+")"})}}).catch(function(){m.textContent="网络错误，请重试"})}b.onclick=go;i.addEventListener("keydown",function(e){if(e.key==="Enter")go()});</script></body></html>';
 
 export default{async fetch(r,env){
@@ -96,6 +175,10 @@ export default{async fetch(r,env){
     if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
     if(p==='/api/session')return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
+    if(p==='/api/v5/dashboard'){return handleV5(env,url)}
+    if(p==='/api/v5/realtime'){return handleV5Realtime(env)}
   }
 
   // admin.html 鉴权：未登录返回登录页
@@ -246,7 +329,7 @@ if (SKIP_UPLOAD) {
 // Env vars injected at deploy time (read from process env; absent → worker falls back to dev defaults).
 // Production: set ADMIN_PW_HASH / SESSION_SECRET / PUSHPLUS_TOKEN / LLM_API_KEY in the CI/deploy env.
 const VARS = {};
-['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT', 'OPS_GH_PAT', 'SB_URL', 'SB_ANON_KEY', 'INDEXNOW_KEY'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
+['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT', 'OPS_GH_PAT', 'SB_URL', 'SB_ANON_KEY', 'INDEXNOW_KEY', 'GA4_SERVICE_JSON', 'GA4_PROPERTY_ID', 'GSC_SERVICE_JSON', 'GSC_SITE_URL'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
 // v4.5 cron triggers: daily brief 08:00 CST (UTC 00:00), weekly link check Mon 09:00 CST (UTC 01:00), IndexNow every 6h
 const TRIGGERS = ['0 0 * * *', '0 1 * * 1', '0 */6 * * *'];
 const metadata = JSON.stringify({ main_module: 'worker.js', vars: VARS, triggers: { crons: TRIGGERS } });
