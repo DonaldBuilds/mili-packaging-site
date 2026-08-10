@@ -164,7 +164,7 @@ export default function Products() {
 
               {/* 6 independent products — each links to its own detail page */}
               {g.products.length > 0 ? (
-                <div className="product-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                <div className="product-grid product-grid--4">
                   {g.products.map(p => productCard(g, p))}
                 </div>
               ) : (

@@ -170,7 +170,7 @@ export default function Home() {
       <section className="section-sm">
         <div className="container" style={{ textAlign: 'center' }}>
           <span className="eyebrow" style={{ margin: '0 auto 28px', display: 'block' }}>Trusted By 500+ Brands Worldwide</span>
-          <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:'12px' }}>
+          <div className="trust-badges">
             {[
               ['FSC Certified', 'Materials'],
               ['ISO 9001', 'Quality System'],
@@ -180,10 +180,7 @@ export default function Home() {
               ['500+', 'Brands Served'],
               ['50+', 'Countries Shipped'],
             ].map(([v, l]) => (
-              <div key={v} style={{
-                border: '1px solid var(--border-dim)', background: 'var(--black-2)',
-                padding: '10px 18px', textAlign: 'center', minWidth: 120,
-              }}>
+              <div className="trust-badge" key={v}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--gold)', letterSpacing: '0.03em' }}>{v}</div>
                 <div style={{ fontSize: 10, color: 'var(--gray-3)', marginTop: 3, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{l}</div>
               </div>
