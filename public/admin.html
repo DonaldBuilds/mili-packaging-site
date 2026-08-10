@@ -163,6 +163,7 @@
     <button class="sb-item" data-sb="ticket">修改工单</button>
     <button class="sb-item" data-sb="audit">审计日志</button>
     <button class="sb-item" data-sb="guide">风格指南</button>
+    <button class="sb-item" data-sb="geo">AI 可见性</button>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -194,6 +195,7 @@
     <button class="tab" data-tab="cron">自动任务</button>
     <button class="tab" data-tab="v5">数据驾驶舱</button>
     <button class="tab" data-tab="guide">风格指南</button>
+    <button class="tab" data-tab="geo">AI 可见性</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -394,6 +396,41 @@
     <div class="card">
       <h3>空状态</h3>
       <div class="empty"><div class="empty-ico">🗂️</div>还没有询盘，去检查联系表单配置</div>
+    </div>
+  </div>
+
+  <!-- ⑩ AI 可见性（GEO 监测） -->
+  <div id="tab-geo" class="hide">
+    <h2>⑩ AI 可见性（GEO）— 买家采购意图问题监测</h2>
+    <div class="card" style="margin-bottom:14px">
+      <h3>监测状态</h3>
+      <p class="hint" style="line-height:1.8">
+        AI 问答平台（ChatGPT / Perplexity / Google AI Overview）正在成为采购商找供应商的主要入口。<br/>
+        <b>当前数据源状态</b>：Perplexity API — <span class="tag tag-warning">未配置</span>（需 <code>PERPLEXITY_API_KEY</code>）· ChatGPT — <span class="tag tag-warning">未配置</span>（需 <code>LLM_API_KEY</code>）· Google AI Overview — <span class="tag tag-danger">不可用</span>（无公开 API 且强反爬，按合规原则不抓取）。<br/>
+        配置后每周自动查询并检测品牌词 <b>mili / mili-packaging / Mili Packaging</b> 是否被推荐。
+      </p>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h3>买家问题清单（可增删，本地保存）</h3>
+        <div class="row" style="flex:1;min-width:260px;max-width:480px;display:flex">
+          <input id="geo-new-q" placeholder="新增采购意图问题（英文）" style="margin-bottom:0" />
+          <button class="btn btn-primary btn-sm" id="geo-add" style="margin-left:8px;white-space:nowrap">添加</button>
+        </div>
+      </div>
+      <div id="geo-list">加载中…</div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>内容覆盖缺口分析（基于站点 sitemap 静态匹配，不依赖 AI）</h3>
+      <p class="hint" style="margin-bottom:10px">对每个问题提取关键词，与全站 URL 匹配，判断站点是否已有相关内容覆盖；缺口即「更可能被 AI 引用所需补充的主题」。</p>
+      <div id="geo-gap">分析中…</div>
+    </div>
+    <div class="card">
+      <h3>合规与成本</h3>
+      <p class="hint" style="line-height:1.8">· 仅监测公开可访问的 AI 回答，不绕过任何限制；Google AI Overview 因反爬与 ToS 风险<b>明确不抓取</b>。<br/>
+      · 付费 API（Perplexity/ChatGPT）将设<b>月度预算上限</b>与<b>用量面板</b>，默认关闭时零费用。<br/>
+      · 频率限制：每问题每周 1 次，避免风控。<br/>
+      · 一键转博客草稿：博客工作流（v4 模块 2）开通后可联动；当前生成建议文本供复制。</p>
     </div>
   </div>
 
@@ -809,7 +846,7 @@
   }
 
   // ── V6: sidebar nav ↔ tabs sync ──
-  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南' };
+  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南', geo: 'AI 可见性' };
   function syncSidebar(name) {
     document.querySelectorAll('.sb-item').forEach(function (x) { x.classList.toggle('active', x.dataset.sb === name); });
     if (SB_NAMES[name]) document.getElementById('crumb').innerHTML = '工作台 / <b>' + SB_NAMES[name] + '</b>';
@@ -828,6 +865,90 @@
   if (hamburger) hamburger.addEventListener('click', function () { document.getElementById('sidebar').classList.add('open'); document.getElementById('sbOverlay').classList.add('show'); });
   document.getElementById('sbOverlay').addEventListener('click', function () { this.classList.remove('show'); document.getElementById('sidebar').classList.remove('open'); });
   document.getElementById('logoutBtn2').addEventListener('click', function () { fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; }); });
+
+  // ── v7: GEO visibility (buyer-intent questions + sitemap coverage gap) ──
+  var GEO_DEFAULT = [
+    'best custom packaging box supplier low MOQ China',
+    'custom rigid gift box manufacturer',
+    'magnetic gift box factory',
+    'luxury packaging supplier for skincare brand',
+    'custom jewelry box manufacturer',
+    'watch box supplier china',
+    'custom mailer box printing company',
+    'eco friendly packaging boxes manufacturer',
+    'custom paper bag manufacturer china',
+    'packaging supplier with free samples'
+  ];
+  var geoQ = [];
+  try { geoQ = JSON.parse(localStorage.getItem('mili-geo-q') || 'null') || GEO_DEFAULT.slice(); } catch (e) { geoQ = GEO_DEFAULT.slice(); }
+  var geoUrls = null;
+  function geoFetchUrls() {
+    if (geoUrls) return Promise.resolve(geoUrls);
+    return fetch('/sitemap.xml').then(function (r) { return r.text(); }).then(function (txt) {
+      var urls = [], re = /<loc>(.*?)<\/loc>/g, m;
+      while ((m = re.exec(txt)) !== null) urls.push(m[1].replace(/&amp;/g, '&'));
+      geoUrls = urls; return urls;
+    }).catch(function () { return []; });
+  }
+  function geoTokens(q) { return q.toLowerCase().split(/[^a-z0-9]+/).filter(function (t) { return t.length > 3; }); }
+  function saveGeo() { try { localStorage.setItem('mili-geo-q', JSON.stringify(geoQ)); } catch (e) {} }
+  function geoRenderList() {
+    var el = document.getElementById('geo-list');
+    if (!geoQ.length) { el.innerHTML = '<div class="empty"><div class="empty-ico">📋</div>暂无问题，请在上方添加</div>'; return; }
+    var html = '<table><tr><th>问题（采购意图）</th><th style="width:70px">操作</th></tr>';
+    geoQ.forEach(function (q, i) {
+      html += '<tr><td>' + String(q).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</td><td><button class="btn btn-danger btn-sm" data-del="' + i + '">删除</button></td></tr>';
+    });
+    el.innerHTML = html + '</table>';
+    el.querySelectorAll('[data-del]').forEach(function (b) {
+      b.addEventListener('click', function () { geoQ.splice(parseInt(b.dataset.del, 10), 1); saveGeo(); geoRenderList(); geoRenderGap(); });
+    });
+  }
+  function geoRenderGap() {
+    var el = document.getElementById('geo-gap');
+    geoFetchUrls().then(function (urls) {
+      if (!geoQ.length) { el.innerHTML = '<p class="hint">无问题</p>'; return; }
+      var html = '';
+      geoQ.forEach(function (q) {
+        var toks = geoTokens(q);
+        var hits = [];
+        urls.forEach(function (u) {
+          var lu = u.toLowerCase();
+          var score = toks.filter(function (t) { return lu.indexOf(t) >= 0; }).length;
+          if (score >= 2) hits.push(u);
+        });
+        var covered = hits.length > 0;
+        html += '<div style="border-bottom:1px solid var(--color-border);padding:10px 0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+          '<span class="tag ' + (covered ? 'tag-success' : 'tag-danger') + '">' + (covered ? '已覆盖' : '内容缺口') + '</span>' +
+          '<b style="font-size:13px">' + String(q).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</b></div>';
+        if (covered) {
+          html += '<p class="hint" style="margin-top:6px">相关页面：' + hits.slice(0, 3).map(function (u) { return '<a href="' + u + '" target="_blank" rel="noopener" style="color:var(--gold)">' + u.split('/').slice(-1)[0] + '</a>'; }).join(' · ') + (hits.length > 3 ? ' 等 ' + hits.length + ' 页' : '') + '</p>';
+        } else {
+          var sugg = toks.slice(0, 3).join(' ');
+          html += '<p class="hint" style="margin-top:6px">建议补充主题：围绕「' + sugg + '」写文章或产品页，补充结构化事实（规格/MOQ/交期/认证）。<button class="btn btn-ghost btn-sm" data-copy="' + String(q).replace(/"/g, '&quot;') + '" style="margin-left:8px">复制草稿建议</button></p>';
+        }
+        html += '</div>';
+      });
+      el.innerHTML = html;
+      el.querySelectorAll('[data-copy]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var q = b.dataset.copy;
+          var title = q.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+          var draft = 'Title: ' + title + ' — Mili Packaging Guide\n\nMeta: Learn how Mili Packaging manufactures ' + q + ' — factory-direct MOQ from 100 pcs, free 3D mockups in 48h, FSC-certified materials, AQL 2.5 QC, 7-15 day lead time.\n\nH1: ' + title + '\n\nKey facts: factory since 2018 (Nanchang, 20,000sqm), ISO 9001, SGS audited, MOQ 100 pcs (watch 50), lead 7-15 days, free samples 3-5 days, FSC materials, AQL 2.5 QC, 500+ brands in 50+ countries.\n\nFAQ: MOQ? Lead time? Samples? Shipping (FOB/CIF/DDP)? Certifications?';
+          try { navigator.clipboard.writeText(draft); toast('草稿建议已复制（博客工作流开通后可一键转草稿）', 'ok'); } catch (e) { toast('复制失败，请手动选择', 'err'); }
+        });
+      });
+    });
+  }
+  document.getElementById('geo-add').addEventListener('click', function () {
+    var v = document.getElementById('geo-new-q').value.trim();
+    if (!v) { toast('请输入问题', 'err'); return; }
+    geoQ.push(v);
+    document.getElementById('geo-new-q').value = '';
+    saveGeo(); geoRenderList(); geoRenderGap();
+    toast('已添加，监测列表更新', 'ok');
+  });
+  document.querySelector('.tab[data-tab="geo"]').addEventListener('click', function () { geoRenderList(); geoRenderGap(); });
 
   // V6: 保存按钮 loading 态（防重复提交）
   var edSave = document.getElementById('ed-save');
