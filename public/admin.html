@@ -44,8 +44,9 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>Mili Packaging <span>运营工作台 v2</span></h1>
+    <h1>Mili Packaging <span>运营工作台 v4</span></h1>
     <span class="badge">内部使用 · noindex</span>
+    <button class="btn ghost" id="logoutBtn" style="margin-left:auto;padding:6px 14px">退出登录</button>
   </header>
   <div class="flash" id="flash"></div>
 
@@ -55,6 +56,7 @@
     <button class="tab" data-tab="inquiry">询盘中心</button>
     <button class="tab" data-tab="tools">后台工具</button>
     <button class="tab" data-tab="ticket">修改工单</button>
+    <button class="tab" data-tab="audit">审计日志</button>
   </div>
 
   <!-- ① 数据看板 -->
@@ -163,7 +165,16 @@
   <footer>Mili Packaging 运营工作台 v2 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Bing / Supabase / GitHub</footer>
 </div>
 
-<script>
+  <!-- ⑥ 审计日志 -->
+  <div id="tab-audit" class="hide">
+    <h2>⑥ 操作审计日志（最近 500 条，内存环形存储）</h2>
+    <div class="card">
+      <p class="hint">记录：操作人 / 时间 / 动作 / 对象 / 前后值。持久化：配置 GH_PAT 后自动同步 ops/audit.jsonl 到 GitHub。</p>
+      <div id="auditArea">加载中…</div>
+    </div>
+  </div>
+
+  <script>
 (function () {
   var FLASH = document.getElementById('flash');
   function flash(msg, err) {
@@ -302,18 +313,16 @@
     document.getElementById('ed-fields').classList.remove('hide');
   });
 
-  // ── Save product (POST /api/content) ──
-  function postOps(ops, pin) {
+  // ── Save product (POST /api/content，v4 会话 Cookie 鉴权) ──
+  function postOps(ops) {
     return fetch('/api/content', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-ops-pin': pin },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ ops: ops })
     }).then(function (r) { return r.json(); });
   }
   document.getElementById('ed-save').addEventListener('click', function () {
     if (!groupSel.value || !prodSel.value) { flash('请选择分组与产品', true); return; }
-    var pin = prompt('请输入工作台操作密码：');
-    if (!pin) return;
     var fields = {
       name: document.getElementById('f-name').value.trim(),
       price: document.getElementById('f-price').value.trim(),
@@ -330,7 +339,7 @@
     if (order !== '') fields.order = order;
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
-    postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }], pin).then(function (res) {
+    postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }]).then(function (res) {
       if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
     }).catch(function () { flash('网络错误，请重试', true); });
   });
@@ -338,14 +347,12 @@
   // ── Group save ──
   document.getElementById('g-save').addEventListener('click', function () {
     if (!gGroupSel.value) { flash('请选择分组', true); return; }
-    var pin = prompt('请输入工作台操作密码：');
-    if (!pin) return;
     var fields = {};
     var nm = document.getElementById('g-name').value.trim(); if (nm) fields.name = nm;
     var moq = document.getElementById('g-moq').value.trim(); if (moq) fields.moq = moq;
     if (!Object.keys(fields).length) { flash('没有要保存的修改', true); return; }
     flash('正在提交…');
-    postOps([{ action: 'group', group: gGroupSel.value, fields: fields }], pin).then(function (res) {
+    postOps([{ action: 'group', group: gGroupSel.value, fields: fields }]).then(function (res) {
       if (res.ok) { flash('已发布：' + res.message); } else { flash('失败：' + (res.error || '未知'), true); }
     }).catch(function () { flash('网络错误', true); });
   });
@@ -386,6 +393,36 @@
   document.getElementById('copyBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
     (navigator.clipboard ? navigator.clipboard.writeText(t.subject + '\n\n' + t.text) : Promise.reject()).then(function () { flash('工单已复制'); }).catch(function () { flash('复制失败，请手动复制', true); });
+  });
+
+  // ── v4: Audit log panel ──
+  function loadAudit() {
+    var area = document.getElementById('auditArea');
+    fetch('/api/audit').then(function (r) {
+      if (r.status === 401) { area.innerHTML = '<p class="status bad">会话已过期，请刷新页面重新登录</p>'; return null; }
+      return r.json();
+    }).then(function (d) {
+      if (!d || !d.ok) { area.innerHTML = '<p>读取失败</p>'; return; }
+      var logs = d.logs || [];
+      if (!logs.length) { area.innerHTML = '<p class="hint">暂无操作记录（写操作发生后这里会显示）。</p>'; return; }
+      var html = '<table><tr><th>时间</th><th>操作人</th><th>动作</th><th>对象</th><th>变更摘要</th></tr>';
+      logs.slice(0, 50).forEach(function (L) {
+        var summ = '';
+        if (L.action === 'product.update' || L.action === 'group.update') {
+          var b = L.before || {}, a = L.after || {};
+          var keys = Object.keys(a).filter(function (x) { return JSON.stringify(b[x]) !== JSON.stringify(a[x]); });
+          summ = keys.slice(0, 4).map(function (x) { return x + ': ' + JSON.stringify(b[x]) + ' → ' + JSON.stringify(a[x]); }).join('; ') || '(字段更新)';
+        } else { summ = JSON.stringify(L.after || L.before || ''); }
+        html += '<tr><td style="white-space:nowrap">' + (L.t || '').replace('T', ' ').slice(0, 19) + '</td><td>' + (L.actor || '') + '</td><td>' + (L.action || '') + '</td><td>' + (L.obj || '') + '</td><td style="max-width:380px;font-size:11px">' + summ + '</td></tr>';
+      });
+      area.innerHTML = html + '</table><p class="hint">最多显示最近 50 条，完整 500 条循环。审计随 worker 冷启动重置，持久化需配置 GH_PAT。</p>';
+    }).catch(function () { area.innerHTML = '<p>读取失败</p>'; });
+  }
+  document.querySelector('.tab[data-tab="audit"]').addEventListener('click', loadAudit);
+
+  // ── v4: Logout ──
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; });
   });
 
   // Start auto-sync dashboard after all bindings are defined
