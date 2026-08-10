@@ -779,7 +779,11 @@
     if (t === 'light' || t === 'dark') { document.documentElement.setAttribute('data-theme', t); }
     else { document.documentElement.removeAttribute('data-theme'); }
     var g = document.getElementById('guide-theme-name');
-    if (g) g.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '亮色' : '暗色';
+    if (g) {
+      var actual = document.documentElement.getAttribute('data-theme');
+      if (!actual) actual = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+      g.textContent = actual === 'light' ? '亮色' : '暗色';
+    }
   }
   var savedTheme = null; try { savedTheme = localStorage.getItem('mili-theme'); } catch (e) {}
   applyTheme(savedTheme);
