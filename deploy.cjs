@@ -78,7 +78,7 @@ const oauthToken=async function(svcJson){
   const assertion=await jwtAssertion(svc);
   const r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:assertion}).toString()});
   const d=await r.json();
-  if(!d.access_token)throw new Error('oauth-fail');
+  if(!d.access_token)throw new Error('oauth-fail:'+((d&&d.error)||'')+':'+((d&&d.error_description)||''));
   return d.access_token;
 };
 const ga4Report=async function(token,prop,path,body){
