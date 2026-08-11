@@ -830,7 +830,8 @@
       <div style="display:flex;gap:8px">
         <button class="btn btn-ghost btn-sm" id="seo-export">导出 CSV</button>
         <button class="btn btn-ghost btn-sm" id="seo-ai">✨ AI 优化建议</button>
-        <button class="btn btn-primary btn-sm" id="seo-refresh">刷新评分</button>
+        <button class="btn btn-primary btn-sm" id="seo-ai-batch">⚡ 批量 AI 优化</button>
+        <button class="btn btn-ghost btn-sm" id="seo-refresh">刷新评分</button>
       </div>
     </div>
     <div class="card"><div id="seoArea"><div class="skeleton" style="height:200px"></div></div></div>
@@ -1926,6 +1927,21 @@
     toast('CSV 已导出', 'ok');
   });
   document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () { if (!seoData) seoRender(); });
+  document.getElementById('seo-ai-batch').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true; btn.textContent = '⚡ 批量优化中…（约 30 秒）';
+    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ batch: true }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) { toast('批量优化失败：' + (d.error || '未知错误'), 'bad'); return; }
+        toast('⚡ 已优化 ' + d.applied + ' 个，剩余 ' + d.remaining + ' 个', 'ok');
+        var box = document.getElementById('aiAdviceBox');
+        box.style.display = 'block';
+        box.innerHTML = '<div class="alert-card" style="margin:0"><h3>⚡ 批量 AI 优化完成</h3><p>已为 ' + d.applied + ' 个产品生成 SEO 标题 + Meta 描述并写入，自动部署启动中。</p><p style="color:var(--color-text-secondary)">剩余 ' + d.remaining + ' 个产品可再次点击「批量 AI 优化」。部署完成后点「刷新评分」查看提升。</p></div>';
+      })
+      .catch(function (e) { toast('批量优化失败：' + e.message, 'bad'); })
+      .then(function () { btn.disabled = false; btn.textContent = '⚡ 批量 AI 优化'; });
+  });
   document.getElementById('seo-ai').addEventListener('click', function () {
     var btn = this; var box = document.getElementById('aiAdviceBox');
     btn.disabled = true; btn.textContent = 'AI 生成中…';
