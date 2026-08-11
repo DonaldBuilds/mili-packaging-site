@@ -810,10 +810,12 @@
       <p class="hint" style="margin:0">评分维度：Title 长度 / Meta 描述 / 卖点 / 关键词覆盖 / 图片 alt / FAQ / 阶梯价 / 内容完整性（0-100）</p>
       <div style="display:flex;gap:8px">
         <button class="btn btn-ghost btn-sm" id="seo-export">导出 CSV</button>
+        <button class="btn btn-ghost btn-sm" id="seo-ai">✨ AI 优化建议</button>
         <button class="btn btn-primary btn-sm" id="seo-refresh">刷新评分</button>
       </div>
     </div>
     <div class="card"><div id="seoArea"><div class="skeleton" style="height:200px"></div></div></div>
+    <div id="aiAdviceBox" class="card" style="display:none;margin-top:12px"></div>
   </div>
 
   <!-- ⑫ 设置中心（配置状态 + 连通性测试） -->
@@ -1851,6 +1853,19 @@
     toast('CSV 已导出', 'ok');
   });
   document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () { if (!seoData) seoRender(); });
+  document.getElementById('seo-ai').addEventListener('click', function () {
+    var btn = this; var box = document.getElementById('aiAdviceBox');
+    btn.disabled = true; btn.textContent = 'AI 生成中…';
+    box.style.display = 'block'; box.innerHTML = '<div class="skeleton" style="height:140px"></div>';
+    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({}) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) { box.innerHTML = '<div class="alert-card"><h3>AI 建议不可用</h3><p>' + (d.error || '未知错误') + '</p></div>'; return; }
+        box.innerHTML = '<h3 style="margin-bottom:6px">AI 优化建议 · ' + d.group + ' / ' + d.slug + '</h3><div style="font-size:12px;line-height:1.8;white-space:pre-wrap">' + d.advice.replace(/</g, '&lt;') + '</div>';
+      })
+      .catch(function (e) { box.innerHTML = '<div class="alert-card"><p>请求失败：' + e.message + '</p></div>'; })
+      .then(function () { btn.disabled = false; btn.textContent = '✨ AI 优化建议'; });
+  });
 
   // ── v8: 设置中心 + 配置进度环 + 今日任务 ──
   var CFG_GROUPS = [

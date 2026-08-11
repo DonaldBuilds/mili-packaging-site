@@ -81,6 +81,14 @@ const oauthToken=async function(svcJson){
   if(!d.access_token)throw new Error('oauth-fail:'+((d&&d.error)||'')+':'+((d&&d.error_description)||''));
   return d.access_token;
 };
+const llmChat=async function(env,messages){
+  let ep=(env.LLM_ENDPOINT||'https://api.openai.com/v1');
+  if(ep.endsWith('/'))ep=ep.slice(0,-1);
+  const r=await fetch(ep+'/chat/completions',{method:'POST',headers:{authorization:'Bearer '+env.LLM_API_KEY,'content-type':'application/json'},body:JSON.stringify({model:'qwen-plus',messages:messages,max_tokens:1200})});
+  const d=await r.json();
+  if(!r.ok)throw new Error('llm:'+r.status+':'+JSON.stringify(d).slice(0,140));
+  return (d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||'';
+};
 const ga4Report=async function(token,prop,path,body){
   const r=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':'+path,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
@@ -148,7 +156,7 @@ const handleConfigTest=async function(env){
     try{const t=await oauthToken(env.GSC_SERVICE_JSON);const dr=ga4DateRange(7);await gscQuery(t,env.GSC_SITE_URL,{startDate:dr.start,endDate:dr.end,rowLimit:1});out.gsc='ok'}catch(e){out.gsc='fail:'+String((e&&e.message)||e)}
   }else{out.gsc='not-configured'}
   try{const r=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});out.supabase=r.ok?'ok':'fail:'+r.status}catch(e){out.supabase='fail'}
-  out.llm=env.LLM_API_KEY?'ok':'not-configured';
+  if(env.LLM_API_KEY){try{const c=await llmChat(env,[{role:'user',content:'只回复两个字：正常'}]);out.llm=c?'ok':'ok-empty'}catch(e){out.llm='fail:'+String((e&&e.message)||e)}}else{out.llm='not-configured'}
   out.indexnow=env.INDEXNOW_KEY?'ok':'not-configured';
   out.admin_pw=env.ADMIN_PW_HASH?'ok':'ok-default';
   return new Response(JSON.stringify({ok:true,results:out}),{headers:{'content-type':'application/json'}});
@@ -257,6 +265,29 @@ export default{async fetch(r,env){
       if(!put.ok)return new Response(JSON.stringify({ok:false,error:'github-write:'+put.status}),{status:502,headers:{'content-type':'application/json'}});
       return new Response(JSON.stringify({ok:true,message:'updated & pushed — auto-deploy started'}),{headers:{'content-type':'application/json'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:String(e&&e.message||e)}),{status:500,headers:{'content-type':'application/json'}})}
+  }
+
+  // ── AI advice: LLM-powered SEO suggestions ──
+  if(p==='/api/ai/advice'&&r.method==='POST'){
+    try{
+      if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+      if(!env.LLM_API_KEY)return new Response(JSON.stringify({ok:false,error:'llm-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
+      const body=await r.json();
+      const raw=await fetch('https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/src/data/products.json');
+      if(!raw.ok)return new Response(JSON.stringify({ok:false,error:'products-fetch:'+raw.status}),{status:502,headers:{'content-type':'application/json'}});
+      const data=await raw.json();
+      const cat=data.productCatalog||{};
+      const slugs=Object.keys(cat);
+      let group=(body&&body.group)||'';
+      let prod=null;
+      if(group&&cat[group]&&cat[group].length){const list=cat[group];prod=list.find(function(x){return x.slug===(body&&body.slug)})||list[0]}
+      if(!prod&&slugs.length){group=slugs[0];const list=cat[group]||[];prod=list[0]}
+      if(!prod)return new Response(JSON.stringify({ok:false,error:'no-products'}),{status:404,headers:{'content-type':'application/json'}});
+      const sample=JSON.stringify({name:prod.name,tagline:prod.tagline,spec:prod.spec,price:prod.price,tierPrice:prod.tierPrice,moq:prod.moq,copy:prod.copy,chips:prod.chips,faq:prod.faq}).slice(0,3000);
+      const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\n'+sample+'\n\n请输出中文 SEO 优化建议（markdown 格式）：\n1. 产品标题（英文，<=80 字符）\n2. Meta Description（英文，<=150 字符）\n3. 3 个推荐长尾关键词（英文）\n4. 3 条具体可操作的文案改进要点\n5. 2 条潜在买家顾虑与对策';
+      const advice=await llmChat(env,[{role:'system',content:'你是资深 B2B 跨境电商 SEO 顾问，输出简洁专业。'},{role:'user',content:prompt}]);
+      return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,advice:advice}),{headers:{'content-type':'application/json'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
   }
 
   // Blog routes
