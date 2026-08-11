@@ -84,7 +84,7 @@ const oauthToken=async function(svcJson){
 const ga4Report=async function(token,prop,path,body){
   const r=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':'+path,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
-  if(!r.ok)throw new Error('ga4:'+r.status);
+  if(!r.ok)throw new Error('ga4:'+r.status+':'+JSON.stringify(d.error||{}).slice(0,220));
   return d;
 };
 const gscQuery=async function(token,site,body){
