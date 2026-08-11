@@ -273,9 +273,11 @@ export default{async fetch(r,env){
       if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
       if(!env.LLM_API_KEY)return new Response(JSON.stringify({ok:false,error:'llm-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
       const body=await r.json();
-      const raw=await fetch('https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/src/data/products.json');
-      if(!raw.ok)return new Response(JSON.stringify({ok:false,error:'products-fetch:'+raw.status}),{status:502,headers:{'content-type':'application/json'}});
-      const data=await raw.json();
+      if(!env.OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'gh-pat-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
+      const ghH0={authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'};
+      const m0=await (await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json?ref=main',{headers:ghH0})).json();
+      if(!m0.content)throw new Error('github-read-fail');
+      const data=JSON.parse(decodeURIComponent(escape(atob(m0.content))));
       const cat=data.productCatalog||{};
       const slugs=Object.keys(cat);
       let group=(body&&body.group)||'';
