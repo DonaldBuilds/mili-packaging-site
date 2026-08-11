@@ -1861,7 +1861,23 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.ok) { box.innerHTML = '<div class="alert-card"><h3>AI 建议不可用</h3><p>' + (d.error || '未知错误') + '</p></div>'; return; }
-        box.innerHTML = '<h3 style="margin-bottom:6px">AI 优化建议 · ' + d.group + ' / ' + d.slug + '</h3><div style="font-size:12px;line-height:1.8;white-space:pre-wrap">' + d.advice.replace(/</g, '&lt;') + '</div>';
+        box.innerHTML = '<h3 style="margin-bottom:6px">AI 优化建议 · ' + d.group + ' / ' + d.slug + '</h3>' +
+          '<div style="font-size:12px;line-height:1.8;white-space:pre-wrap">' + d.advice.replace(/</g, '&lt;') + '</div>' +
+          '<div id="ai-apply-wrap" style="margin-top:12px"><button class="btn btn-primary btn-sm" id="ai-apply">✅ 一键应用到产品</button> <span class="hint">写入产品标题与 Meta 描述，自动部署上线</span></div>';
+        var ap = document.getElementById('ai-apply');
+        if (ap) ap.addEventListener('click', function () {
+          ap.disabled = true; ap.textContent = 'AI 应用中…';
+          fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ apply: true, group: d.group, slug: d.slug }) })
+            .then(function (r2) { return r2.json(); })
+            .then(function (r2) {
+              if (!r2.ok) { toast('应用失败：' + (r2.error || '未知错误'), 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; return; }
+              toast('✅ 已应用，自动部署中', 'ok');
+              var wrap = document.getElementById('ai-apply-wrap');
+              if (wrap) wrap.innerHTML = '<span class="tag" style="background:rgba(76,217,100,.15);color:var(--ok)">✓ 已应用到 ' + r2.applied.slug + '</span>';
+              box.innerHTML = box.innerHTML + '<div class="alert-card" style="margin-top:10px"><h3 style="color:var(--ok)">已应用</h3><p><b>标题：</b>' + r2.applied.title.replace(/</g, '&lt;') + '</p><p><b>Meta：</b>' + r2.applied.description.replace(/</g, '&lt;') + '</p><p style="color:var(--color-text-secondary)">部署完成后点「刷新评分」验证分数提升。</p></div>';
+            })
+            .catch(function (e) { toast('应用失败：' + e.message, 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; });
+        });
       })
       .catch(function (e) { box.innerHTML = '<div class="alert-card"><p>请求失败：' + e.message + '</p></div>'; })
       .then(function () { btn.disabled = false; btn.textContent = '✨ AI 优化建议'; });

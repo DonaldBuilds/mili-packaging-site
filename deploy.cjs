@@ -284,6 +284,24 @@ export default{async fetch(r,env){
       if(!prod&&slugs.length){group=slugs[0];const list=cat[group]||[];prod=list[0]}
       if(!prod)return new Response(JSON.stringify({ok:false,error:'no-products'}),{status:404,headers:{'content-type':'application/json'}});
       const sample=JSON.stringify({name:prod.name,tagline:prod.tagline,spec:prod.spec,price:prod.price,tierPrice:prod.tierPrice,moq:prod.moq,copy:prod.copy,chips:prod.chips,faq:prod.faq}).slice(0,3000);
+      if(body&&body.apply){
+        const jprompt='你是 B2B 定制包装制造商的 SEO 文案专家。以下是产品数据 JSON：\\n'+sample+'\\n\\n请基于产品真实信息生成 SEO 标题和 Meta 描述。只输出一个 JSON 对象（不要 markdown 代码块、不要多余文字），格式：{"title":"英文标题，50-62 字符，突出产品类型+目标用途","description":"英文 Meta 描述，120-160 字符，包含核心卖点、MOQ、定制能力"}。严禁编造规格与价格，只能使用提供的数据。';
+        const rawJson=await llmChat(env,[{role:'system',content:'你是 B2B 包装产品 SEO 文案专家，只输出合法 JSON。'},{role:'user',content:jprompt}]);
+        let jt=rawJson.trim();const ai=jt.indexOf('{');const bi=jt.lastIndexOf('}');if(ai>=0&&bi>ai)jt=jt.slice(ai,bi+1);
+        const j=JSON.parse(jt);
+        const title=String(j.title||'').trim();
+        const description=String(j.description||'').trim();
+        if(!title||!description||title.length<30||title.length>90||description.length<60||description.length>280)throw new Error('bad-llm-output:title='+title.length+',desc='+description.length);
+        prod.title=title;prod.description=description;
+        if(!env.OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'gh-pat-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
+        const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json';
+        const ghH={authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'};
+        const meta=await (await fetch(gh+'?ref=main',{headers:ghH})).json();
+        if(!meta.sha)throw new Error('github-read-fail');
+        const put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify({message:'ops: AI optimize '+group+'/'+prod.slug+' '+new Date().toISOString().slice(0,16)+'Z',content:btoa(unescape(encodeURIComponent(JSON.stringify(data)))),sha:meta.sha})});
+        if(!put.ok)throw new Error('github-write:'+put.status);
+        return new Response(JSON.stringify({ok:true,applied:{group:group,slug:prod.slug,title:title,description:description},message:'AI 已优化并写入 GitHub，自动部署启动中'}),{headers:{'content-type':'application/json'}});
+      }
       const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\\n'+sample+'\\n\\n请输出中文 SEO 优化建议（markdown 格式）：\\n1. 产品标题（英文，<=80 字符）\\n2. Meta Description（英文，<=150 字符）\\n3. 3 个推荐长尾关键词（英文）\\n4. 3 条具体可操作的文案改进要点\\n5. 2 条潜在买家顾虑与对策';
       const advice=await llmChat(env,[{role:'system',content:'你是资深 B2B 跨境电商 SEO 顾问，输出简洁专业。'},{role:'user',content:prompt}]);
       return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,advice:advice}),{headers:{'content-type':'application/json'}});
