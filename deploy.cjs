@@ -110,14 +110,14 @@ const handleV5=async function(env,url){
     const token=await oauthToken(env.GA4_SERVICE_JSON);
     const prop=env.GA4_PROPERTY_ID;
     const range1=ga4DateRange(days);const range0=ga4DateRange(days*2);
-    const ov=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'date'}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
+    const ov=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'date'}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
     const ov0=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range0.start,endDate:range1.start}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
-    const src=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'sessionDefaultChannelGroup'}],metrics:[{name:'sessions'}]});
-    const dev=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'deviceCategory'}],metrics:[{name:'sessions'}]});
-    const geo=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'country'}],metrics:[{name:'activeUsers'}]});
-    const city=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'city'}],metrics:[{name:'activeUsers'}]});
-    const pg=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'landingPage'}],metrics:[{name:'sessions'}]});
-    const ev=await ga4Report(token,prop,'runReport',{dateRanges:[range1],dimensions:[{name:'eventName'}],metrics:[{name:'eventCount'}],dimensionFilter:{filter:{fieldName:'eventName',inListFilter:{values:['whatsapp_click','form_submit','page_view','session_start']}}}});
+    const src=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'sessionDefaultChannelGroup'}],metrics:[{name:'sessions'}]});
+    const dev=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'deviceCategory'}],metrics:[{name:'sessions'}]});
+    const geo=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'country'}],metrics:[{name:'activeUsers'}]});
+    const city=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'city'}],metrics:[{name:'activeUsers'}]});
+    const pg=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'landingPage'}],metrics:[{name:'sessions'}]});
+    const ev=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'eventName'}],metrics:[{name:'eventCount'}],dimensionFilter:{filter:{fieldName:'eventName',inListFilter:{values:['whatsapp_click','form_submit','page_view','session_start']}}}});
     const modules={overview:{rows:rowsToObj(ov),prev:rowsToObj(ov0)},sources:rowsToObj(src),devices:rowsToObj(dev),geo:rowsToObj(geo),city:rowsToObj(city),pages:rowsToObj(pg),events:rowsToObj(ev)};
     let seo=null;
     if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
