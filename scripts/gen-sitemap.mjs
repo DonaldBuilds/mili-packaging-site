@@ -8,7 +8,7 @@ const data = JSON.parse(fs.readFileSync(new URL('../src/data/products.json', imp
 const { productGroups, productCatalog } = data;
 
 const BASE = 'https://mili-packaging.com';
-const LASTMOD = '2026-08-10';
+const LASTMOD = '2026-08-11';
 const urls = [];
 
 const add = (path, freq, pri) => {
@@ -39,8 +39,8 @@ for (let i = 1; i <= 10; i++) add(`/blog/${i}/`, 'monthly', '0.7');
 
 // Static pages
 const staticPages = [
-  ['/about', 'monthly', '0.6'],
-  ['/portfolio', 'monthly', '0.6'],
+  ['/about', 'weekly', '0.7'],
+  ['/portfolio', 'weekly', '0.7'],
   ['/faq', 'monthly', '0.5'],
   ['/contact', 'monthly', '0.9'],
   ['/support', 'monthly', '0.5'],
