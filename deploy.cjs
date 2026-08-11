@@ -412,22 +412,20 @@ export default{async fetch(r,env){
 
   // SPA routes → fall through to index.html (History-mode routing, no hash redirects)
 
-  // Image proxy: Accio CDN first, fallback to GitHub raw (new/backfill images)
+  // Image proxy: Accio CDN first, fallback to GitHub Contents API (new/backfill images)
   if(/\\.(jpg|png|webp|jpeg)\$/i.test(k)){
-    const tries=[
-      'https://mili-packaging.site.accio.ai/'+k,
-      'https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/public'+k
-    ];
-    for(const u of tries){
-      const r=await fetch(u,{cf:{cacheEverything:true,cacheTtl:86400}});
-      if(r&&r.ok){
-        const ext=k.split('.').pop().toLowerCase();
-        const ct=({webp:'image/webp',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png'})[ext]||'application/octet-stream';
-        const h=new Headers(r.headers);
-        h.set('content-type',ct);
-        h.set('cache-control','public,max-age=86400');
-        h.set('x-img-src',u.indexOf('accio')>=0?'accio':'github');
-        return new Response(r.body,{status:200,headers:h});
+    const r0=await fetch('https://mili-packaging.site.accio.ai/'+k,{cf:{cacheEverything:true}});
+    if(r0&&r0.ok)return r0;
+    const ext=k.split('.').pop().toLowerCase();
+    const ct=({webp:'image/webp',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png'})[ext]||'application/octet-stream';
+    if(env.OPS_GH_PAT){
+      const gh=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public'+k+'?ref=main',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'}});
+      const j=await gh.json();
+      if(j&&j.content){
+        const bin=atob(j.content);
+        const u8=new Uint8Array(bin.length);
+        for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+        return new Response(u8,{headers:{'content-type':ct,'cache-control':'public,max-age=86400','x-img-src':'github'}});
       }
     }
     return new Response('Not Found',{status:404});
