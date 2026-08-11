@@ -419,14 +419,19 @@ export default{async fetch(r,env){
     const ext=k.split('.').pop().toLowerCase();
     const ct=({webp:'image/webp',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png'})[ext]||'application/octet-stream';
     if(env.OPS_GH_PAT){
-      const gh=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public'+k+'?ref=main',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'}});
-      const j=await gh.json();
-      if(j&&j.content){
-        const bin=atob(j.content);
-        const u8=new Uint8Array(bin.length);
-        for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
-        return new Response(u8,{headers:{'content-type':ct,'cache-control':'public,max-age=86400','x-img-src':'github'}});
-      }
+      let ghErr='';
+      try{
+        const gh=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public'+k+'?ref=main',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'}});
+        const j=await gh.json();
+        if(j&&j.content){
+          const bin=atob(j.content);
+          const u8=new Uint8Array(bin.length);
+          for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+          return new Response(u8,{headers:{'content-type':ct,'cache-control':'public,max-age=86400','x-img-src':'github'}});
+        }
+        ghErr='no-content:'+gh.status+':'+JSON.stringify(j).slice(0,80);
+      }catch(e){ghErr='ex:'+String((e&&e.message)||e)}
+      return new Response('Not Found',{status:404,headers:{'x-img-err':ghErr}});
     }
     return new Response('Not Found',{status:404});
   }
