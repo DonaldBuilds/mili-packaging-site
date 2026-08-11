@@ -314,6 +314,10 @@
     .prod-list-head, .prod-list-row { grid-template-columns:36px 1fr 70px; }
     .prod-list-head > :nth-child(3), .prod-list-row > :nth-child(3), .prod-list-head > :nth-child(4), .prod-list-row > :nth-child(4) { display:none; }
   }
+
+  /* ── v10: 顶部冗余导航隐藏（左侧功能栏已覆盖全部入口） ── */
+  .tabs { display:none !important; }
+  #logoutBtn { display:none !important; }
 </style>
 </head>
 <body>
@@ -461,6 +465,7 @@
         <option value="">全部分组</option>
       </select>
       <button class="btn btn-ghost btn-sm" id="ed-reload" title="重新加载产品数据">⟳ 刷新</button>
+      <button class="btn btn-primary btn-sm" id="ed-new" title="手动新增产品">＋ 新建产品</button>
     </div>
 
     <!-- 双栏布局：产品列表 + 右侧抽屉编辑器 -->
@@ -530,6 +535,14 @@
             <!-- ① 基本信息 -->
             <div class="ed-section" id="sec-basic">
               <div class="ed-section-title">基本信息</div>
+              <div class="ed-field-wrap" id="ed-new-fields" style="display:none">
+                <label>所属分组 <span style="color:var(--color-danger)">*</span></label>
+                <select id="ed-group-sel" style="margin:0"></select>
+              </div>
+              <div class="ed-field-wrap" id="ed-new-slug-wrap" style="display:none">
+                <label>产品 slug（英文小写，URL 用，创建后不可改） <span style="color:var(--color-danger)">*</span></label>
+                <input id="f-new-slug" placeholder="custom-luxury-box" />
+              </div>
               <div class="ed-field-wrap">
                 <label>产品名称 <span style="color:var(--color-danger)">*</span></label>
                 <input id="f-name" placeholder="Custom Luxury Gift Box with Magnetic Closure" style="padding-right:52px" />
@@ -561,6 +574,12 @@
                   </div>
                   <p class="hint" style="margin-top:6px">支持 mig-*.webp 格式，填写后自动预览 · <a href="https://mili-packaging.com/assets/images/" target="_blank" rel="noopener" style="color:var(--color-primary)">查看已有图片</a></p>
                 </div>
+              </div>
+              <!-- v10: 附图管理（任意数量，展示在详情页图库） -->
+              <div style="margin-top:14px">
+                <label style="display:block;font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px">附图（详情页图库，可多张，不固定数量）</label>
+                <div id="ed-extra-imgs"></div>
+                <button type="button" class="btn btn-ghost btn-sm" id="ed-add-img" style="margin-top:6px">＋ 添加图片</button>
               </div>
             </div>
             <!-- ③ 价格规格 -->
@@ -1109,6 +1128,42 @@
     if (!DATA) edReloadData();
   });
 
+  // ── v10: 手动新建产品 ──
+  function edNewProduct() {
+    if (!DATA) { toast('产品数据未加载，请稍候', 'err'); return; }
+    edNewMode = true;
+    edCurrentGroup = ''; edCurrentSlug = '';
+    ['f-name', 'f-tagline', 'f-spec', 'f-img', 'f-price', 'f-moq', 'f-order', 'f-copy', 'f-new-slug'].forEach(function (id) { var x = el(id); if (x) x.value = ''; });
+    var st = el('f-status'); if (st) st.value = 'active';
+    el('ed-drawer-title').textContent = '新建产品';
+    el('ed-drawer-slug').textContent = '填写信息后保存发布';
+    var nf = el('ed-new-fields'), ns = el('ed-new-slug-wrap');
+    if (nf) { nf.style.display = ''; var gs = el('ed-group-sel'); if (gs) { gs.innerHTML = ''; DATA.productGroups.forEach(function (g) { var o = document.createElement('option'); o.value = g.slug; o.textContent = g.name; gs.appendChild(o); }); } }
+    if (ns) ns.style.display = '';
+    edRenderExtraImgs([]);
+    el('ed-drawer').classList.remove('closed');
+    edDrawerOpen = true;
+    edUpdateCounters(); edUpdateImgPreview(); edUpdateScore();
+  }
+  var edNewBtn = el('ed-new'); if (edNewBtn) edNewBtn.addEventListener('click', edNewProduct);
+
+  // ── v10: 附图管理（多图，不固定数量） ──
+  function edRenderExtraImgs(list) {
+    var wrap = el('ed-extra-imgs'); if (!wrap) return;
+    wrap.innerHTML = '';
+    (list || []).forEach(function (path) { edAddImgRow(path); });
+  }
+  function edAddImgRow(path) {
+    var wrap = el('ed-extra-imgs'); if (!wrap) return;
+    var row = document.createElement('div');
+    row.className = 'ed-img-row';
+    row.style.cssText = 'margin-bottom:6px;align-items:center';
+    row.innerHTML = '<div style="flex:1"><input class="ed-extra-img-input" placeholder="mig-box-2.webp" style="font-size:12px;margin:0" value="' + String(path || '').replace(/"/g, '&quot;') + '" /></div><button type="button" class="btn btn-ghost btn-sm" style="margin-left:6px" title="删除此图">✕</button>';
+    row.querySelector('button').onclick = function () { row.remove(); };
+    wrap.appendChild(row);
+  }
+  var edAddImgBtn = el('ed-add-img'); if (edAddImgBtn) edAddImgBtn.addEventListener('click', function () { edAddImgRow(''); });
+
   // ── Save product (POST /api/content，v4 会话 Cookie 鉴权) ──
   function postOps(ops) {
     return fetch('/api/content', {
@@ -1121,6 +1176,7 @@
   var edCurrentGroup = '', edCurrentSlug = '';
   var edFilterStatus = '', edSearchQ = '';
   var edDrawerOpen = false;
+  var edNewMode = false;
 
   // ── v9: build product list (called after DATA loaded or filter change) ──
   function edBuildList() {
@@ -1199,6 +1255,10 @@
     if (!DATA) { toast('产品数据未加载，请稍候', 'err'); return; }
     var p = (DATA.productCatalog[gslug] || []).find(function (x) { return x.slug === pslug; });
     if (!p) return;
+    edNewMode = false;
+    var nf0 = el('ed-new-fields'), ns0 = el('ed-new-slug-wrap');
+    if (nf0) nf0.style.display = 'none';
+    if (ns0) ns0.style.display = 'none';
     var g = DATA.productGroups.find(function (x) { return x.slug === gslug; });
     edCurrentGroup = gslug; edCurrentSlug = pslug;
     // fill fields
@@ -1211,6 +1271,7 @@
     el('f-order').value = p.order !== undefined ? p.order : '';
     el('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
     el('f-status').value = (p.status === 'hidden') ? 'hidden' : 'active';
+    edRenderExtraImgs(p.extraImgs || []);
     // drawer meta
     el('ed-drawer-title').textContent = '编辑产品';
     el('ed-drawer-slug').textContent = (g ? g.name : gslug) + ' / ' + pslug;
@@ -1309,6 +1370,15 @@
 
   // ── v9: new ed-save (reads from drawer state) ──
   document.getElementById('ed-save').addEventListener('click', function () {
+    if (edNewMode) {
+      var slug = el('f-new-slug').value.trim();
+      var group = el('ed-group-sel').value;
+      if (!group) { toast('请选择所属分组', 'err'); return; }
+      if (!/^[a-z0-9-]{3,60}$/.test(slug)) { toast('slug 需为 3-60 位小写英文/数字/连字符（如 custom-luxury-box）', 'err'); return; }
+      var dup = (DATA.productCatalog[group] || []).some(function (x) { return x.slug === slug; });
+      if (dup) { toast('该分组下已存在同名 slug', 'err'); return; }
+      edCurrentGroup = group; edCurrentSlug = slug;
+    }
     if (!edCurrentGroup || !edCurrentSlug) { toast('请先在列表中点击「编辑」选择产品', 'err'); return; }
     var fields = {
       name: el('f-name').value.trim(),
@@ -1321,8 +1391,11 @@
     var img = el('f-img').value.trim();
     var order = el('f-order').value.trim();
     var status = el('f-status').value;
+    var extra = [];
+    document.querySelectorAll('.ed-extra-img-input').forEach(function (inp) { var v = inp.value.trim(); if (v) extra.push(v); });
     if (copy) fields.copy = [copy];
     if (img) fields.img = img;
+    if (extra.length) fields.extraImgs = extra;
     if (order !== '') fields.order = order;
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');

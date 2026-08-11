@@ -247,7 +247,7 @@ export default{async fetch(r,env){
           const list=data.productCatalog[op.group];
           if(!Array.isArray(list))return new Response(JSON.stringify({ok:false,error:'group-not-found:'+op.group}),{status:400,headers:{'content-type':'application/json'}});
           const prod=list.find(x=>x.slug===op.slug);
-          if(!prod)return new Response(JSON.stringify({ok:false,error:'product-not-found:'+op.slug}),{status:400,headers:{'content-type':'application/json'}});
+          if(!prod){prod={slug:op.slug,name:op.slug};list.push(prod);}
           const before=JSON.parse(JSON.stringify(prod));
           Object.assign(prod,op.fields);
           audit('product.update',op.group+'/'+op.slug,before,JSON.parse(JSON.stringify(prod)));
