@@ -69,7 +69,7 @@ export default function Support() {
 
       <section className="section">
         <div className="container" style={{ maxWidth: 860 }}>
-          <img src="/assets/images/support-design.jpg" alt="Mili Packaging design support" style={{ width:'100%', aspectRatio:'16/6', objectFit:'cover', marginBottom:64 }} />
+          <img src="/assets/images/support-design.webp" alt="Mili Packaging design support" style={{ width:'100%', aspectRatio:'16/6', objectFit:'cover', marginBottom:64 }} />
 
           {sections.map((sec, i) => (
             <div key={sec.title} style={{ marginBottom: i < sections.length - 1 ? 64 : 0 }}>
