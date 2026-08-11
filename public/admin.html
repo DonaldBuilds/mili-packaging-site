@@ -456,19 +456,39 @@
     <div class="card"><div id="seoArea"><div class="skeleton" style="height:200px"></div></div></div>
   </div>
 
-  <!-- ⑫ 设置中心（配置状态总览） -->
+  <!-- ⑫ 设置中心（配置状态 + 连通性测试） -->
   <div id="tab-config" class="hide">
-    <h2>⑫ 设置中心 — 依赖配置状态</h2>
+    <h2>⑫ 设置中心 — 配置状态与连通性测试</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <p class="hint" style="margin:0">所有密钥仅存环境变量（GitHub 仓库 Secrets 或部署时注入），前端零密钥；配置后重新部署自动生效（约 2 分钟）。</p>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="config-export">复制状态</button>
+        <button class="btn btn-primary btn-sm" id="config-test">一键测试连通性</button>
+      </div>
+    </div>
     <div class="card">
       <div id="configArea">加载中…</div>
     </div>
     <div class="card" style="margin-top:12px">
-      <h3>配置指引</h3>
-      <p class="hint" style="line-height:1.9">
-        所有密钥仅存环境变量（GitHub 仓库 Secrets 或部署时注入），前端零密钥。<br/>
-        配置后重新部署自动生效（约 2 分钟），无需改代码。<br/>
-        <b>修改管理员密码</b>：告知运营协助者新密码，生成哈希后配置 <code>ADMIN_PW_HASH</code>（当前为默认值 1127，建议尽快更换）。
-      </p>
+      <h3>连通性测试结果</h3>
+      <div id="configTestArea"><p class="hint">点击「一键测试连通性」验证各已配置项是否真实可用（GA4/GSC 会实际调用 API，PushPlus 会发送一条测试消息到微信）。</p></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px" class="config-two">
+      <div class="card">
+        <h3>会话信息</h3>
+        <p class="hint" style="line-height:1.8">当前登录会话：<b>admin</b>（密码登录）<br/>有效期：<b>24 小时</b>自动过期（HttpOnly + SameSite=Strict Cookie）<br/>登出后立即吊销当前会话。</p>
+        <button class="btn btn-ghost btn-sm" id="config-logout">立即退出登录</button>
+      </div>
+      <div class="card">
+        <h3>修改管理员密码</h3>
+        <p class="hint" style="line-height:1.9">当前密码为 <b>1127</b>（默认值），建议尽快更换。<br/>流程：把<b>新密码</b>告知运营协助者（Accio 助手）→ 生成 SHA-256 哈希 → 配置 <code>ADMIN_PW_HASH</code> 环境变量 → 重新部署。<br/>更换后旧密码立即失效。</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>SLA 与自动化参数（只读）</h3>
+      <p class="hint" style="line-height:1.8">询盘跟进阈值：4h 新 / 24h 提醒 / 48h 红色风险（询盘中心已生效）。<br/>
+      自动化任务：每日简报 08:00 / 死链巡检 周一 09:00 / IndexNow 每 6 小时（自动任务 tab）。<br/>
+      归因阈值（模块 D）：核心指标环比 ±20% 触发归因（GA4/GSC 配置后启用）。</p>
     </div>
   </div>
 
@@ -1078,6 +1098,46 @@
     }).catch(function () { el.innerHTML = '<p class="status bad">读取失败</p>'; });
   }
   document.querySelector('.tab[data-tab="config"]').addEventListener('click', loadConfig);
+
+  // ── 设置中心：连通性一键测试 + 导出 + 登出 ──
+  var CONFIG_ITEMS = [
+    ['GitHub 编辑管线（GH_PAT）', 'gh_pat', '产品保存发布 / 审计持久化'],
+    ['PushPlus 微信通知', 'pushplus', '简报 / 巡检 / 告警推送'],
+    ['GA4 数据源', 'ga4', '驾驶舱流量与转化'],
+    ['GSC 数据源', 'gsc', '驾驶舱 SEO 关键词'],
+    ['LLM API', 'llm', 'AI 优化建议'],
+    ['IndexNow', 'indexnow', 'Bing 收录加速'],
+    ['Supabase', 'supabase', '询盘入库'],
+    ['管理员密码', 'admin_pw', '登录认证']
+  ];
+  function configTest() {
+    var el = document.getElementById('configTestArea');
+    el.innerHTML = '<div class="skeleton" style="height:80px"></div>';
+    fetch('/api/config/test').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.ok) { el.innerHTML = '<p class="status bad">测试失败</p>'; return; }
+      var html = '<table><tr><th>配置项</th><th>结果</th><th>说明</th></tr>';
+      CONFIG_ITEMS.forEach(function (it) {
+        var v = d.results[it[1]] || 'not-configured';
+        var badge, note;
+        if (v === 'ok') { badge = '<span class="tag tag-success">通过</span>'; note = '连接正常'; }
+        else if (v === 'not-configured') { badge = '<span class="tag tag-warning">未配置</span>'; note = '配置后自动生效'; }
+        else if (v === 'ok-default') { badge = '<span class="tag tag-warning">默认值</span>'; note = '建议更换为独立哈希'; }
+        else { badge = '<span class="tag tag-danger">失败</span>'; note = String(v).slice(0, 120); }
+        html += '<tr><td><b>' + it[0] + '</b></td><td>' + badge + '</td><td class="hint">' + note + '</td></tr>';
+      });
+      el.innerHTML = html + '</table>';
+      var failed = Object.keys(d.results).filter(function (k) { return String(d.results[k]).indexOf('fail') === 0; });
+      if (failed.length) el.innerHTML += '<p class="status bad">有 ' + failed.length + ' 项测试失败，请检查密钥/权限配置</p>';
+    }).catch(function () { el.innerHTML = '<p class="status bad">请求失败</p>'; });
+  }
+  document.getElementById('config-test').addEventListener('click', configTest);
+  document.getElementById('config-export').addEventListener('click', function () {
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      var txt = JSON.stringify(d.configs, null, 1);
+      try { navigator.clipboard.writeText(txt); toast('配置状态已复制', 'ok'); } catch (e) { prompt('配置状态（复制）', txt); }
+    });
+  });
+  document.getElementById('config-logout').addEventListener('click', function () { fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; }); });
 
   // ── 批量工具（产品上下架 / MOQ / 价格） ──
   var batchProds = [];

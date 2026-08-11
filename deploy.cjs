@@ -128,6 +128,28 @@ const handleV5=async function(env,url){
     return new Response(JSON.stringify({ok:true,configured:true,cache:'miss',generatedAt:V5_CACHE[ck].generatedAt,modules:modules}),{headers:{'content-type':'application/json'}});
   }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
 };
+const handleConfigTest=async function(env){
+  const out={};
+  if(env.OPS_GH_PAT){
+    try{const r=await fetch('https://api.github.com/user',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops'}});out.gh_pat=r.ok?'ok':'fail:'+r.status}catch(e){out.gh_pat='fail'}
+  }else{out.gh_pat='not-configured'}
+  if(env.PUSHPLUS_TOKEN){
+    try{const r=await fetch('https://www.pushplus.plus/send',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token:env.PUSHPLUS_TOKEN,title:'Mili 工作台连通性测试',content:'✅ PushPlus 微信通知通道正常',template:'txt'})});out.pushplus=r.ok?'ok':'fail:'+r.status}catch(e){out.pushplus='fail'}
+  }else{out.pushplus='not-configured'}
+  if(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID){
+    try{const t=await oauthToken(env.GA4_SERVICE_JSON);await ga4Report(t,env.GA4_PROPERTY_ID,'runReport',{dateRanges:[ga4DateRange(1)],metrics:[{name:'activeUsers'}]});out.ga4='ok'}catch(e){out.ga4='fail:'+String((e&&e.message)||e)}
+  }else{out.ga4='not-configured'}
+  if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
+    try{const t=await oauthToken(env.GSC_SERVICE_JSON);const dr=ga4DateRange(7);await gscQuery(t,env.GSC_SITE_URL,{startDate:dr.start,endDate:dr.end,rowLimit:1});out.gsc='ok'}catch(e){out.gsc='fail:'+String((e&&e.message)||e)}
+  }else{out.gsc='not-configured'}
+  if(env.SB_URL){
+    try{const r=await fetch(String(env.SB_URL)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:env.SB_ANON_KEY,Authorization:'Bearer '+env.SB_ANON_KEY}});out.supabase=r.ok?'ok':'fail:'+r.status}catch(e){out.supabase='fail'}
+  }else{out.supabase='not-configured'}
+  out.llm=env.LLM_API_KEY?'ok':'not-configured';
+  out.indexnow=env.INDEXNOW_KEY?'ok':'not-configured';
+  out.admin_pw=env.ADMIN_PW_HASH?'ok':'ok-default';
+  return new Response(JSON.stringify({ok:true,results:out}),{headers:{'content-type':'application/json'}});
+};
 const handleV5Realtime=async function(env){
   try{
     if(!env.GA4_SERVICE_JSON||!env.GA4_PROPERTY_ID)return new Response(JSON.stringify({ok:true,configured:false}),{headers:{'content-type':'application/json'}});
@@ -186,6 +208,7 @@ export default{async fetch(r,env){
       supabase:{ok:!!env.SB_URL,hint:'询盘入库与统计'},
       admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'}
     }}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/config/test'){return handleConfigTest(env)}
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
     if(p==='/api/v5/dashboard'){return handleV5(env,url)}
     if(p==='/api/v5/realtime'){return handleV5Realtime(env)}
