@@ -18,7 +18,7 @@ export default function ShippingPolicy() {
   return (
     <div className="page-scaffold">
       <div className="page-hero" style={{ position:'relative', overflow:'hidden', padding:'80px 0 200px' }}>
-        <img src="/assets/images/shipping-warehouse.jpg" alt="Shipping" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:0.25 }} />
+        <img src="/assets/images/shipping-warehouse.webp" alt="Shipping" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:0.25 }} />
         <div className="page-hero-inner" style={{ position:'relative', zIndex:1 }}>
           <div className="gold-line" />
           <span className="eyebrow">Shipping Policy</span>
