@@ -142,7 +142,10 @@
 
   /* ── V6 three-column SaaS layout ── */
   .app { display:flex; min-height:100vh; }
-  .sidebar { width:var(--sidebar-w); background:var(--color-surface); border-right:1px solid var(--color-border); padding:16px 12px; position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0; }
+  .sidebar { width:var(--sidebar-w); background:var(--color-surface); border-right:1px solid var(--color-border); padding:0 0 0 0; position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0; display:flex; flex-direction:column; }
+  .sidebar .sb-group { padding:14px 14px 4px; }
+  .sidebar .sb-item { margin:0 8px 2px; }
+  .sidebar > .sb-item { margin-bottom:2px; }
   .sb-logo { font-size:15px; font-weight:700; padding:4px 8px 14px; border-bottom:1px solid var(--color-border); margin-bottom:8px; }
   .sb-logo span { color:var(--color-primary); }
   .sb-group { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-text-secondary); padding:14px 8px 6px; }
@@ -324,6 +327,108 @@
   .tabs { display:none !important; }
   #logoutBtn { display:none !important; }
 
+  /* ══════════════════════════════════════
+     BRAND UPGRADE：品牌区 + 专业后台样式
+     ══════════════════════════════════════ */
+  :root { --sidebar-w:220px; }
+  .sb-brand { padding:18px 14px 14px; border-bottom:1px solid var(--color-border); margin-bottom:6px; display:flex; flex-direction:column; gap:2px; }
+  .sb-brand-logo { display:flex; align-items:center; gap:10px; }
+  .sb-brand-icon { width:32px; height:32px; flex-shrink:0; }
+  .sb-brand-name { font-size:15px; font-weight:800; letter-spacing:.02em; }
+  .sb-brand-name em { color:var(--color-primary); font-style:normal; }
+  .sb-brand-sub { font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--color-text-secondary); margin-left:42px; opacity:.75; }
+  .sb-brand-badge { display:inline-flex; align-items:center; gap:3px; font-size:9px; background:rgba(201,162,39,.15); color:var(--color-primary); border-radius:3px; padding:1px 5px; margin-left:auto; letter-spacing:.04em; }
+
+  /* 侧边栏底部工具区 */
+  .sb-footer { margin-top:auto; border-top:1px solid var(--color-border); padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+  .sb-clock { font-size:20px; font-weight:700; letter-spacing:.03em; color:var(--color-text); font-variant-numeric:tabular-nums; text-align:center; line-height:1; }
+  .sb-clock-date { font-size:10px; color:var(--color-text-secondary); text-align:center; margin-top:1px; }
+  .sb-rate-row { display:flex; align-items:center; justify-content:space-between; gap:4px; font-size:10.5px; }
+  .sb-rate-label { color:var(--color-text-secondary); font-weight:600; letter-spacing:.04em; }
+  .sb-rate-val { color:var(--color-primary); font-weight:700; font-variant-numeric:tabular-nums; }
+  .sb-rate-chg { font-size:9.5px; }
+  .sb-rate-chg.up { color:var(--ok); }
+  .sb-rate-chg.dn { color:var(--bad); }
+  .sb-status-row { display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--color-text-secondary); }
+  .sb-status-dot { width:7px; height:7px; border-radius:50%; background:var(--ok); animation:pulse-dot 2.5s ease-in-out infinite; }
+  .sb-status-dot.offline { background:var(--bad); animation:none; }
+
+  /* Topbar 汇率 ticker */
+  .topbar-fx { display:flex; align-items:center; gap:10px; font-size:11.5px; overflow:hidden; }
+  .topbar-fx-item { display:flex; align-items:center; gap:5px; white-space:nowrap; }
+  .topbar-fx-pair { color:var(--color-text-secondary); font-weight:600; }
+  .topbar-fx-rate { font-weight:700; color:var(--color-text); }
+  .topbar-fx-chg { font-size:10px; }
+  .topbar-fx-chg.up { color:var(--ok); }
+  .topbar-fx-chg.dn { color:var(--bad); }
+  .topbar-divider { width:1px; height:14px; background:var(--color-border); }
+  .topbar-time { font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--color-text-secondary); min-width:56px; }
+  @media(max-width:768px){ .topbar-fx{ display:none; } .topbar-time{ display:none; } }
+
+  /* 用户头像 + 下拉菜单 */
+  .topbar-avatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),#8b6914); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; cursor:pointer; flex-shrink:0; position:relative; }
+  .topbar-avatar-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--color-surface); border:1px solid var(--color-border); border-radius:8px; padding:6px; min-width:150px; z-index:200; box-shadow:0 8px 24px rgba(0,0,0,.25); display:none; }
+  .topbar-avatar-menu.open { display:block; animation:fadeIn .15s ease; }
+  .topbar-avatar-menu-item { display:block; width:100%; text-align:left; padding:7px 10px; font-size:12.5px; color:var(--color-text); background:none; border:none; border-radius:4px; cursor:pointer; white-space:nowrap; }
+  .topbar-avatar-menu-item:hover { background:var(--color-surface-2); }
+  .topbar-avatar-menu-item.danger { color:var(--bad); }
+
+  /* SVG 图标菜单项 */
+  .sb-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+
+  /* ══════════════════════════════════════
+     动态效果：动画 & 过渡
+     ══════════════════════════════════════ */
+  @keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+  @keyframes slideInRight { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:none; } }
+  @keyframes pulse-dot { 0%,100% { box-shadow:0 0 0 0 rgba(76,217,100,.4); } 50% { box-shadow:0 0 0 5px rgba(76,217,100,0); } }
+  @keyframes countUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  @keyframes shimmer { 0% { background-position:-400px 0; } 100% { background-position:400px 0; } }
+  @keyframes tickerScroll { 0%,8% { opacity:0; transform:translateY(-6px); } 12%,88% { opacity:1; transform:none; } 92%,100% { opacity:0; transform:translateY(6px); } }
+  @keyframes rateUpdate { 0%,100% { transform:none; } 25% { transform:scale(1.15); } }
+  @keyframes gradientShift { 0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; } }
+
+  /* 页面切换 */
+  .tab-panel-enter { animation:fadeIn .2s ease; }
+
+  /* Sidebar active 高亮滑块 */
+  .sb-item { position:relative; transition:background .15s, color .15s; }
+  .sb-item::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:0; background:var(--color-primary); border-radius:0 2px 2px 0; transition:height .2s ease; }
+  .sb-item.active::before { height:70%; }
+
+  /* Sidebar hover 微光 */
+  .sb-item::after { content:''; position:absolute; inset:0; border-radius:4px; background:linear-gradient(90deg,transparent,rgba(201,162,39,.06),transparent); opacity:0; transition:opacity .3s; }
+  .sb-item:hover::after { opacity:1; }
+
+  /* KPI 数字入场 */
+  .kpi-animate { animation:countUp .4s ease; }
+
+  /* 汇率变化微弹 */
+  .rate-flash { animation:rateUpdate .3s ease; }
+
+  /* 进度环动画 */
+  .cfg-ring-circle { transition:stroke-dashoffset .6s ease; }
+
+  /* Topbar 渐变边框 */
+  .topbar { background:var(--color-bg); border-bottom:1px solid; border-image:linear-gradient(90deg,var(--color-border),rgba(201,162,39,.2),var(--color-border)) 1; }
+
+  /* 工作台 LOGO 英雄区渐变 */
+  .sb-brand { background:linear-gradient(135deg,rgba(201,162,39,.06) 0%,transparent 60%); }
+
+  /* 通知 badge */
+  .notif-btn { position:relative; }
+  .notif-badge { position:absolute; top:-3px; right:-3px; background:var(--bad); color:#fff; font-size:9px; font-weight:700; border-radius:8px; padding:0 4px; min-width:14px; height:14px; display:flex; align-items:center; justify-content:center; }
+
+  /* 侧边栏版本徽章区 */
+  .sb-version-block { padding:8px 12px 0; }
+  .sb-env-tag { display:inline-flex; align-items:center; gap:4px; font-size:9px; padding:2px 7px; border-radius:10px; background:rgba(255,107,107,.1); color:var(--bad); letter-spacing:.05em; font-weight:600; }
+
+  /* 网站在线检测动画 */
+  @keyframes onlinePing { 0% { transform:scale(1); } 100% { transform:scale(2.2); opacity:0; } }
+  .sb-status-ring { position:relative; width:7px; height:7px; }
+  .sb-status-ring .dot { position:absolute; inset:0; border-radius:50%; background:var(--ok); }
+  .sb-status-ring .ping { position:absolute; inset:-2px; border-radius:50%; background:rgba(76,217,100,.35); animation:onlinePing 1.8s ease-out infinite; }
+
   /* ── SEO 医生 v2 ── */
   .seo-v2-selector { background:var(--color-surface); border:1px solid var(--color-border); border-radius:8px; padding:14px 16px; margin-bottom:14px; }
   .seo-sel-label { font-size:11.5px; color:var(--color-text-secondary); margin-bottom:6px; display:block; }
@@ -356,41 +461,213 @@
   .seo-ai-btn:hover { background:rgba(201,162,39,.12); }
   .seo-ai-btn:disabled { opacity:.45; cursor:not-allowed; }
   .seo-num { color:var(--color-text-secondary); font-size:12px; font-weight:400; }
+
+  /* ── 产品编辑 v2: M0 全屏编辑器 ── */
+  .ed-drawer.fullscreen {
+    position:fixed !important; inset:0 !important; width:100vw !important;
+    max-height:100vh !important; z-index:300; border:none !important;
+    border-radius:0 !important; flex-direction:column !important;
+    box-shadow:none !important; transform:none !important;
+  }
+  .ed-drawer.fullscreen .ed-drawer-body { display:grid !important; grid-template-columns:160px 1fr 300px !important; flex:1; overflow:hidden; }
+  .ed-drawer.fullscreen .ed-anchors { min-width:0; height:100%; overflow-y:auto; border-right:1px solid var(--color-border); padding:16px 8px; }
+  .ed-drawer.fullscreen .ed-fields-scroll { max-width:880px; margin:0 auto; padding:20px 24px; }
+  .ed-drawer.fullscreen #ed-preview-panel { display:flex !important; flex-direction:column; overflow-y:auto; border-left:1px solid var(--color-border); padding:14px; gap:10px; }
+  .ed-fs-btn { background:none; border:1px solid var(--color-border); color:var(--color-text-secondary); border-radius:4px; padding:4px 8px; cursor:pointer; font-size:13px; }
+  .ed-fs-btn:hover { border-color:var(--color-primary); color:var(--color-primary); }
+  .ed-dirty-indicator { font-size:11px; color:var(--color-warning); display:none; align-items:center; gap:5px; }
+  .ed-dirty-indicator.show { display:flex; }
+  .ed-draft-banner { background:rgba(255,152,0,.12); border:1px solid var(--color-warning); border-radius:4px; padding:8px 12px; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+
+  /* ── 产品编辑 v2: M1 图片中心 ── */
+  .img-center-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px; }
+  .img-center-stat { font-size:11.5px; color:var(--color-text-secondary); }
+  .img-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; }
+  .img-card { position:relative; aspect-ratio:1; border-radius:6px; overflow:hidden; border:2px solid var(--color-border); cursor:pointer; background:var(--color-surface-2); }
+  .img-card img { width:100%; height:100%; object-fit:cover; transition:opacity .15s; }
+  .img-card:hover img { opacity:.5; }
+  .img-card .img-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; opacity:0; transition:opacity .15s; }
+  .img-card:hover .img-overlay { opacity:1; }
+  .img-card .img-overlay button { background:rgba(0,0,0,.7); color:#fff; border:none; border-radius:3px; font-size:10px; padding:2px 6px; cursor:pointer; white-space:nowrap; }
+  .img-card .img-overlay button:hover { background:var(--color-primary); }
+  .img-card .img-main-badge { position:absolute; top:4px; left:4px; background:var(--color-primary); color:#000; font-size:9px; padding:1px 5px; border-radius:3px; font-weight:700; }
+  .img-card .img-missing-badge { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,80,80,.15); color:var(--bad); font-size:10px; font-weight:600; }
+  .img-card.dragging { opacity:.4; transform:scale(.95); }
+  .img-card.drag-over { border-color:var(--color-primary); background:rgba(201,162,39,.1); }
+  .img-add-card { border:2px dashed var(--color-border); border-radius:6px; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; gap:4px; font-size:11px; color:var(--color-text-secondary); transition:border-color .15s; }
+  .img-add-card:hover { border-color:var(--color-primary); color:var(--color-primary); }
+  .img-upload-progress { height:3px; background:var(--color-surface-3); border-radius:2px; overflow:hidden; margin-top:8px; }
+  .img-upload-bar { height:100%; background:var(--color-primary); transition:width .2s; }
+  .img-dropzone-active { outline:2px dashed var(--color-primary); outline-offset:4px; border-radius:6px; }
+  .img-alt-input { font-size:11px; padding:3px 6px; border:1px solid var(--color-border); border-radius:3px; background:var(--color-surface); color:var(--color-text); width:100%; margin-top:4px; }
+
+  /* ── SERP 预览面板 ── */
+  #ed-preview-panel { display:none; background:var(--color-bg); }
+  .serp-box { background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; padding:12px 14px; }
+  .serp-box h4 { font-size:11px; color:var(--color-text-secondary); letter-spacing:.06em; text-transform:uppercase; margin:0 0 8px; }
+  .serp-url { font-size:11px; color:var(--ok); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .serp-title { font-size:14px; color:#4d9ef5; text-decoration:underline; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; font-weight:500; }
+  .serp-desc { font-size:12px; color:var(--color-text-secondary); line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .preview-prod-title { font-size:18px; font-weight:700; margin-bottom:4px; }
+  .preview-prod-price { color:var(--color-primary); font-size:15px; font-weight:700; margin-bottom:2px; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="sb-overlay" id="sbOverlay"></div>
   <aside class="sidebar" id="sidebar">
-    <div class="sb-logo">Mili Packaging <span>v8</span></div>
+    <!-- ── 品牌区 ── -->
+    <div class="sb-brand">
+      <div class="sb-brand-logo">
+        <!-- Mili Packaging Logo：六边形盒子（内联 SVG，金色主题） -->
+        <svg class="sb-brand-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="7" fill="rgba(201,162,39,0.12)"/>
+          <polygon points="16,4 27,10 27,22 16,28 5,22 5,10" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+          <polyline points="5,10 16,16 27,10" fill="none" stroke="#C9A227" stroke-width="1.3"/>
+          <line x1="16" y1="16" x2="16" y2="28" stroke="#C9A227" stroke-width="1.3"/>
+          <polygon points="16,4 21.5,7 21.5,13 16,16 10.5,13 10.5,7" fill="rgba(201,162,39,0.18)" stroke="none"/>
+        </svg>
+        <div>
+          <div class="sb-brand-name"><em>MILI</em> PACKAGING</div>
+        </div>
+        <span class="sb-brand-badge">PRO</span>
+      </div>
+      <div class="sb-brand-sub">独立站运营工作台</div>
+    </div>
+
+    <!-- ── 今日运营 ── -->
     <div class="sb-group">今日运营</div>
-    <button class="sb-item active" data-sb="dash"><span class="sb-icon">📊</span><span class="sb-label">数据看板</span></button>
+    <button class="sb-item active" data-sb="dash">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+      <span class="sb-label">数据看板</span>
+    </button>
+
+    <!-- ── 线索中心 ── -->
     <div class="sb-group">线索中心</div>
-    <button class="sb-item" data-sb="inquiry"><span class="sb-icon">✉️</span><span class="sb-label">询盘中心</span></button>
+    <button class="sb-item" data-sb="inquiry">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="sb-label">询盘中心</span>
+    </button>
+
+    <!-- ── 内容工厂 ── -->
     <div class="sb-group">内容工厂</div>
-    <button class="sb-item" data-sb="editor"><span class="sb-icon">✏️</span><span class="sb-label">产品/内容编辑</span></button>
-    <button class="sb-item" data-sb="ticket"><span class="sb-icon">📝</span><span class="sb-label">修改工单</span></button>
-    <button class="sb-item" data-sb="tools"><span class="sb-icon">🔧</span><span class="sb-label">后台工具</span></button>
+    <button class="sb-item" data-sb="editor">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+      <span class="sb-label">产品/内容编辑</span>
+    </button>
+    <button class="sb-item" data-sb="ticket">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+      <span class="sb-label">修改工单</span>
+    </button>
+    <button class="sb-item" data-sb="tools">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+      <span class="sb-label">后台工具</span>
+    </button>
+
+    <!-- ── 增长工具 ── -->
     <div class="sb-group">增长工具</div>
-    <button class="sb-item" data-sb="seo"><span class="sb-icon">🏥</span><span class="sb-label">SEO 医生</span></button>
-    <button class="sb-item" data-sb="geo"><span class="sb-icon">🤖</span><span class="sb-label">AI 可见性</span></button>
-    <button class="sb-item" data-sb="v5"><span class="sb-icon">📈</span><span class="sb-label">数据驾驶舱</span></button>
+    <button class="sb-item" data-sb="seo">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+      <span class="sb-label">SEO 医生</span>
+    </button>
+    <button class="sb-item" data-sb="geo">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span>
+      <span class="sb-label">AI 可见性</span>
+    </button>
+    <button class="sb-item" data-sb="v5">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      <span class="sb-label">数据驾驶舱</span>
+    </button>
+
+    <!-- ── 系统 ── -->
     <div class="sb-group">系统</div>
-    <button class="sb-item" data-sb="cron"><span class="sb-icon">⚙️</span><span class="sb-label">自动任务</span></button>
-    <button class="sb-item" data-sb="audit"><span class="sb-icon">📋</span><span class="sb-label">审计日志</span></button>
-    <button class="sb-item" data-sb="guide"><span class="sb-icon">🎨</span><span class="sb-label">风格指南</span></button>
-    <button class="sb-item" data-sb="config"><span class="sb-icon">🔑</span><span class="sb-label">设置中心</span></button>
+    <button class="sb-item" data-sb="cron">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+      <span class="sb-label">自动任务</span>
+    </button>
+    <button class="sb-item" data-sb="audit">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+      <span class="sb-label">审计日志</span>
+    </button>
+    <button class="sb-item" data-sb="guide">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="3.6" x2="5.1" y2="5.1"/><line x1="18.9" y1="18.9" x2="20.4" y2="20.4"/><line x1="20.4" y1="3.6" x2="18.9" y2="5.1"/><line x1="5.1" y1="18.9" x2="3.6" y2="20.4"/></svg></span>
+      <span class="sb-label">风格指南</span>
+    </button>
+    <button class="sb-item" data-sb="config">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+      <span class="sb-label">设置中心</span>
+    </button>
+
+    <!-- ── 侧边栏底部：时钟 + 汇率 + 状态 ── -->
+    <div class="sb-footer">
+      <!-- 实时时钟 -->
+      <div>
+        <div class="sb-clock" id="sb-clock">--:--:--</div>
+        <div class="sb-clock-date" id="sb-clock-date">加载中…</div>
+      </div>
+      <!-- 汇率 -->
+      <div id="sb-rates" style="display:flex;flex-direction:column;gap:4px">
+        <div class="sb-rate-row"><span class="sb-rate-label">USD/CNY</span><span class="sb-rate-val" id="sb-rate-cny">—</span><span class="sb-rate-chg" id="sb-rate-cny-chg"></span></div>
+        <div class="sb-rate-row"><span class="sb-rate-label">EUR/CNY</span><span class="sb-rate-val" id="sb-rate-eur">—</span><span class="sb-rate-chg" id="sb-rate-eur-chg"></span></div>
+        <div class="sb-rate-row"><span class="sb-rate-label">GBP/USD</span><span class="sb-rate-val" id="sb-rate-gbp">—</span></div>
+      </div>
+      <!-- 网站在线状态 -->
+      <div class="sb-status-row">
+        <div class="sb-status-ring"><div class="dot"></div><div class="ping"></div></div>
+        <span id="sb-site-status">mili-packaging.com 在线</span>
+      </div>
+    </div>
   </aside>
   <div class="main">
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:10px">
-        <button class="hamburger" id="hamburger" aria-label="菜单">☰</button>
+        <button class="hamburger" id="hamburger" aria-label="菜单">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <span class="crumb" id="crumb">工作台 / <b>数据看板</b></span>
+      </div>
+      <!-- 中间：汇率 Ticker -->
+      <div class="topbar-fx" id="topbar-fx">
+        <div class="topbar-fx-item">
+          <span class="topbar-fx-pair">USD/CNY</span>
+          <span class="topbar-fx-rate" id="tb-rate-cny">—</span>
+          <span class="topbar-fx-chg" id="tb-rate-cny-chg"></span>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-fx-item">
+          <span class="topbar-fx-pair">EUR/CNY</span>
+          <span class="topbar-fx-rate" id="tb-rate-eur">—</span>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-fx-item">
+          <span class="topbar-fx-pair">GBP/USD</span>
+          <span class="topbar-fx-rate" id="tb-rate-gbp">—</span>
+        </div>
+        <div class="topbar-divider"></div>
+        <span class="topbar-time" id="tb-time">--:--</span>
       </div>
       <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
         <div class="topbar-kpi" id="topbar-kpi" title="配置进度 / 点击跳转设置" style="cursor:pointer">配置 <b id="topbar-cfg-done">—</b>/8</div>
-        <button class="tb-btn" id="themeToggle" title="切换主题：亮色 / 暗色 / 跟随系统">💻 跟随系统</button>
-        <button class="tb-btn" id="logoutBtn2">退出登录</button>
+        <button class="tb-btn" id="themeToggle" title="切换主题：亮色 / 暗色 / 跟随系统" style="display:flex;align-items:center;gap:4px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span id="theme-label">跟随系统</span>
+        </button>
+        <!-- 用户头像菜单 -->
+        <div style="position:relative" id="user-menu-wrap">
+          <div class="topbar-avatar" id="user-avatar" title="账户菜单">M</div>
+          <div class="topbar-avatar-menu" id="user-menu">
+            <div style="padding:8px 10px 8px;border-bottom:1px solid var(--color-border);margin-bottom:4px">
+              <div style="font-size:12.5px;font-weight:700">管理员</div>
+              <div style="font-size:11px;color:var(--color-text-secondary)">mili-packaging.com</div>
+            </div>
+            <button class="topbar-avatar-menu-item" onclick="document.querySelector('[data-sb=config]').click()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>设置中心
+            </button>
+            <button class="topbar-avatar-menu-item danger" id="logoutBtn2">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>退出登录
+            </button>
+          </div>
+        </div>
       </div>
     </header>
     <div class="content">
@@ -542,12 +819,24 @@
 
       <!-- 右：滑出式编辑抽屉 -->
       <div class="ed-drawer closed" id="ed-drawer">
+        <!-- 草稿恢复提示（条件显示） -->
+        <div class="ed-draft-banner" id="ed-draft-banner" style="display:none;margin:8px 14px 0;padding:8px 12px">
+          📄 发现未保存草稿，是否恢复？
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-primary btn-sm" id="ed-draft-restore">恢复草稿</button>
+            <button class="btn btn-ghost btn-sm" id="ed-draft-discard">丢弃</button>
+          </div>
+        </div>
         <div class="ed-drawer-header">
           <div>
             <h3 id="ed-drawer-title">编辑产品</h3>
             <p class="hint" style="margin:2px 0 0;font-size:11px" id="ed-drawer-slug"></p>
           </div>
-          <button class="ed-drawer-close" id="ed-drawer-close" title="关闭">✕</button>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="ed-dirty-indicator" id="ed-dirty-dot">● 未保存</span>
+            <button class="ed-fs-btn" id="ed-fullscreen-btn" title="全屏编辑">⛶</button>
+            <button class="ed-drawer-close" id="ed-drawer-close" title="关闭">✕</button>
+          </div>
         </div>
         <!-- 实时 SEO 分 -->
         <div style="padding:10px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0">
@@ -563,12 +852,12 @@
           <!-- 左侧锚点导航 -->
           <div class="ed-anchors" id="ed-anchors">
             <div class="ed-anchor-item active" data-sec="basic">📝 基本信息</div>
-            <div class="ed-anchor-item" data-sec="img">🖼 主图预览</div>
+            <div class="ed-anchor-item" data-sec="img">📸 图片中心</div>
             <div class="ed-anchor-item" data-sec="price">💰 价格规格</div>
             <div class="ed-anchor-item" data-sec="desc">📄 描述文案</div>
             <div class="ed-anchor-item" data-sec="status">⚙️ 发布设置</div>
           </div>
-          <!-- 右侧字段区 -->
+          <!-- 中：字段区 -->
           <div class="ed-fields-scroll" id="ed-fields-scroll">
             <!-- ① 基本信息 -->
             <div class="ed-section" id="sec-basic">
@@ -597,31 +886,35 @@
                 <span class="ed-counter" id="cnt-spec">0</span>
               </div>
             </div>
-            <!-- ② 主图预览 -->
+            <!-- ② 图片中心 (M1) -->
             <div class="ed-section" id="sec-img">
-              <div class="ed-section-title">主图预览</div>
-              <div class="ed-img-row">
-                <div class="ed-img-preview-wrap">
-                  <img id="f-img-preview" class="ed-img-preview" src="" alt="" style="display:none" />
-                  <div class="ed-img-missing" id="f-img-missing">📷</div>
-                </div>
-                <div style="flex:1">
-                  <div class="ed-field-wrap" style="margin:0">
-                    <label>主图路径（相对 /assets/images/）</label>
-                    <input id="f-img" placeholder="mig-luxury-magnetic-box-3.webp" />
-                  </div>
-                  <p class="hint" style="margin-top:6px">支持 mig-*.webp 格式，填写后自动预览 · <a href="https://mili-packaging.com/assets/images/" target="_blank" rel="noopener" style="color:var(--color-primary)">查看已有图片</a></p>
-                  <button type="button" class="btn btn-ghost btn-sm" id="ed-up-img" style="margin-top:8px">⬆ 上传图片</button>
-                  <input type="file" id="ed-file-input" accept="image/webp,image/jpeg,image/png" style="display:none" />
+              <div class="ed-section-title">图片中心</div>
+              <!-- 统计条 -->
+              <div class="img-center-header" id="img-center-header">
+                <span class="img-center-stat" id="img-stat">共 0 张图</span>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <button type="button" class="btn btn-ghost btn-sm" id="img-gen-alt">✨ 批量生成 alt</button>
+                  <button type="button" class="btn btn-ghost btn-sm" id="img-check">🔍 检测坏图</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="img-upload-btn">⬆ 上传图片</button>
+                  <input type="file" id="ed-file-input" accept="image/webp,image/jpeg,image/png" multiple style="display:none" />
                 </div>
               </div>
-              <!-- v10: 附图管理（任意数量，展示在详情页图库） -->
-              <div style="margin-top:14px">
-                <label style="display:block;font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px">附图（详情页图库，可多张，不固定数量）</label>
-                <div id="ed-extra-imgs"></div>
-                <div style="display:flex;gap:8px;margin-top:6px">
-                  <button type="button" class="btn btn-ghost btn-sm" id="ed-add-img">＋ 添加图片</button>
-                  <button type="button" class="btn btn-ghost btn-sm" id="ed-up-extra">⬆ 上传图片</button>
+              <!-- 上传进度 -->
+              <div class="img-upload-progress" id="img-progress" style="display:none"><div class="img-upload-bar" id="img-progress-bar" style="width:0"></div></div>
+              <!-- 画廊（主图 + 附图，可拖拽） -->
+              <div class="img-gallery" id="img-gallery"><!-- 由 JS 渲染 --></div>
+              <!-- 数据绑定（隐藏，JS 读写） -->
+              <input type="hidden" id="f-img" />
+              <div id="ed-extra-imgs" style="display:none"></div>
+              <!-- alt 管理弹层（全局单例） -->
+              <div id="img-alt-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);align-items:center;justify-content:center">
+                <div class="card" style="width:360px;padding:20px">
+                  <h3 style="margin:0 0 12px">编辑图片 alt 文字</h3>
+                  <input id="img-alt-val" class="img-alt-input" style="font-size:13px;padding:8px;border:1px solid var(--color-border);border-radius:4px;background:var(--color-surface);color:var(--color-text);width:100%" placeholder="Magnetic flip-top gift box with gold foil...">
+                  <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+                    <button class="btn btn-ghost btn-sm" id="img-alt-cancel">取消</button>
+                    <button class="btn btn-primary btn-sm" id="img-alt-save">保存</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -662,11 +955,34 @@
               <p class="hint" style="margin-top:4px">保存后约 2 分钟自动上线，无需手动操作</p>
             </div>
           </div>
+          <!-- 右：实时预览面板（全屏时显示） -->
+          <div id="ed-preview-panel">
+            <div class="serp-box">
+              <h4>SERP 预览</h4>
+              <div class="serp-url" id="pv-url">mili-packaging.com › products › …</div>
+              <div class="serp-title" id="pv-title">产品标题将显示在此</div>
+              <div class="serp-desc" id="pv-desc">Meta 描述将显示在此…</div>
+            </div>
+            <div class="serp-box">
+              <h4>产品页预览</h4>
+              <div class="preview-prod-title" id="pv-name">—</div>
+              <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px" id="pv-spec">—</div>
+              <div class="preview-prod-price" id="pv-price">—</div>
+              <div style="font-size:11px;color:var(--color-text-secondary)" id="pv-moq">MOQ —</div>
+              <p style="font-size:12px;line-height:1.7;margin-top:8px;color:var(--color-text-secondary)" id="pv-copy">—</p>
+            </div>
+            <div class="serp-box" id="pv-seo-box">
+              <h4>SEO 健康分</h4>
+              <div id="pv-seo-score" style="font-size:28px;font-weight:700;margin-bottom:4px">—</div>
+              <div id="pv-seo-issues" style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">填写字段后实时计算</div>
+            </div>
+          </div>
         </div>
         <!-- 底部操作栏 -->
         <div class="ed-drawer-footer">
           <button class="btn btn-primary" id="ed-save" style="flex:1">💾 保存并发布</button>
           <button class="btn btn-ghost btn-sm" id="ed-drawer-preview" title="在新标签页预览产品页">👁 预览</button>
+          <span class="ed-dirty-indicator" id="ed-dirty-footer" style="font-size:11px">● 有未保存更改</span>
         </div>
       </div>
     </div>
@@ -1178,6 +1494,125 @@
     if (arrow) arrow.textContent = open ? '展开 ▾' : '收起 ▴';
   });
 
+  // ══════════════════════════════════════════════
+  // ── 品牌升级：实时时钟 + 汇率 + 动态效果
+  // ══════════════════════════════════════════════
+
+  // 实时时钟（侧边栏 + topbar）
+  var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
+  var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  function updateClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    var s = String(now.getSeconds()).padStart(2,'0');
+    var timeStr = h + ':' + m + ':' + s;
+    var dateStr = WEEKDAYS[now.getDay()] + ' · ' + now.getDate() + ' ' + MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+    var clockEl = document.getElementById('sb-clock');
+    var dateEl = document.getElementById('sb-clock-date');
+    var tbTime = document.getElementById('tb-time');
+    if (clockEl) clockEl.textContent = timeStr;
+    if (dateEl) dateEl.textContent = dateStr;
+    if (tbTime) tbTime.textContent = h + ':' + m;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // 汇率数据（ExchangeRate-API，免费，无需 key）
+  var fxCache = null;
+  var fxPrev = {};
+  function fetchFX() {
+    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var rates = d.rates || {};
+        var cny = rates['CNY'], eur = rates['EUR'], gbp = rates['GBP'];
+        if (!cny) return;
+        var cnyRate = (cny).toFixed(4);
+        var eurCny = (cny / eur).toFixed(4);
+        var gbpUsd = (1 / gbp).toFixed(4);
+        // 变化方向
+        function setRate(sid, tbid, val, prevKey, chgId) {
+          var el2 = document.getElementById(sid);
+          var el3 = document.getElementById(tbid);
+          var chgEl = document.getElementById(chgId);
+          var prev = fxPrev[prevKey];
+          var dir = prev ? (parseFloat(val) > parseFloat(prev) ? 'up' : parseFloat(val) < parseFloat(prev) ? 'dn' : '') : '';
+          fxPrev[prevKey] = val;
+          if (el2) { el2.textContent = val; el2.classList.remove('rate-flash'); void el2.offsetWidth; el2.classList.add('rate-flash'); }
+          if (el3) { el3.textContent = val; }
+          if (chgEl) { chgEl.textContent = dir === 'up' ? '▲' : dir === 'dn' ? '▼' : ''; chgEl.className = 'sb-rate-chg' + (dir ? ' '+dir : ''); }
+        }
+        setRate('sb-rate-cny','tb-rate-cny',cnyRate,'cny','sb-rate-cny-chg');
+        setRate('sb-rate-eur','tb-rate-eur',eurCny,'eur','sb-rate-eur-chg');
+        var gbpEl = document.getElementById('sb-rate-gbp'); if(gbpEl) gbpEl.textContent = gbpUsd;
+        var tbGbp = document.getElementById('tb-rate-gbp'); if(tbGbp) tbGbp.textContent = gbpUsd;
+        // topbar 汇率变化徽章
+        var tbCnyChg = document.getElementById('tb-rate-cny-chg');
+        if (tbCnyChg) { tbCnyChg.textContent = fxPrev['cny_dir'] === 'up' ? '▲' : fxPrev['cny_dir'] === 'dn' ? '▼' : ''; }
+        fxCache = d;
+      })
+      .catch(function(){ /* 静默失败，不影响主功能 */ });
+  }
+  fetchFX();
+  setInterval(fetchFX, 5 * 60 * 1000); // 每 5 分钟刷新
+
+  // 用户头像下拉菜单
+  (function(){
+    var wrap = document.getElementById('user-menu-wrap');
+    var menu = document.getElementById('user-menu');
+    if (!wrap || !menu) return;
+    document.getElementById('user-avatar').addEventListener('click', function(e){
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){ menu.classList.remove('open'); });
+  })();
+
+  // 侧边栏 themeToggle label 同步
+  (function(){
+    function syncLabel(){
+      var modes = { dark:'🌙 暗色', light:'☀️ 亮色', sys:'跟随系统' };
+      var cur = document.documentElement.getAttribute('data-theme-mode') || 'sys';
+      var lbl = document.getElementById('theme-label');
+      if (lbl) lbl.textContent = modes[cur] || '跟随系统';
+    }
+    syncLabel();
+    document.getElementById('themeToggle').addEventListener('click', function(){ setTimeout(syncLabel, 50); });
+  })();
+
+  // 页面切换淡入动画
+  var origTabSwitch = null;
+  (function(){
+    var panels = document.querySelectorAll('.tab-content > div');
+    function addEnter(panel){ if(panel){ panel.classList.add('tab-panel-enter'); setTimeout(function(){ panel.classList.remove('tab-panel-enter'); }, 300); } }
+    // 监听 sb-item 点击，对显示的 panel 加动画
+    document.querySelectorAll('.sb-item').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          var active = document.querySelector('.tab-content > div:not(.hide)');
+          if (active) addEnter(active);
+        }, 20);
+      });
+    });
+  })();
+
+  // count-up 动画（数据看板 KPI 数字）
+  function countUpEl(el, target, duration) {
+    if (!el || isNaN(target)) return;
+    var start = 0, t0 = performance.now();
+    var suffix = el.dataset.suffix || '';
+    function step(t){
+      var prog = Math.min((t - t0) / duration, 1);
+      var ease = 1 - Math.pow(1 - prog, 3); // ease-out cubic
+      el.textContent = Math.round(start + (target - start) * ease) + suffix;
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+    el.classList.add('kpi-animate');
+  }
+  window.__countUpEl = countUpEl; // 供看板模块调用
+
   // SEO 跳转（SEO 医生 fixBtn 的 openEditor 调用）
   window.__edOpenDrawer = edOpenDrawer;
   // 加载产品列表（tab 切换时触发或刷新）
@@ -1199,8 +1634,10 @@
     if (ns) ns.style.display = '';
     edRenderExtraImgs([]);
     el('ed-drawer').classList.remove('closed');
+    if (edFullscreen) { el('ed-drawer').classList.add('fullscreen'); var fsb2 = el('ed-fullscreen-btn'); if (fsb2) fsb2.textContent = '⊡'; }
     edDrawerOpen = true;
-    edUpdateCounters(); edUpdateImgPreview(); edUpdateScore();
+    edSetDirty(false);
+    edUpdateCounters(); edRenderImageCenter(); edUpdateScore();
   }
   var edNewBtn = el('ed-new'); if (edNewBtn) edNewBtn.addEventListener('click', edNewProduct);
 
@@ -1247,7 +1684,7 @@
     };
     edFileInput.click();
   }
-  var edUpImg = el('ed-up-img'); if (edUpImg) edUpImg.addEventListener('click', function () { edUploadImage(function (nm) { var x = el('f-img'); if (x) x.value = nm; edUpdateImgPreview(); }); });
+  // ed-up-img 已被 M1 img-upload-btn 替代，保留占位避免 null 报错
   var edUpExtra = el('ed-up-extra'); if (edUpExtra) edUpExtra.addEventListener('click', function () { edUploadImage(function (nm) { edAddImgRow(nm); }); });
 
   // ── Save product (POST /api/content，v4 会话 Cookie 鉴权) ──
@@ -1375,11 +1812,16 @@
       tierTable.innerHTML = '<tr><th>起订量 ≥</th><th>单价 (USD)</th></tr>' + p.tierPrice.map(function (t) { return '<tr><td>' + t.qty + ' 件</td><td>$' + t.price + '</td></tr>'; }).join('');
       tierWrap.style.display = '';
     } else if (tierWrap) { tierWrap.style.display = 'none'; }
-    // update counters + preview + score
-    edUpdateCounters(); edUpdateImgPreview(); edUpdateScore();
-    // open drawer
+    // update counters + image center + score
+    edUpdateCounters(); edRenderImageCenter(); edUpdateScore();
+    // open drawer（记忆全屏偏好）
     el('ed-drawer').classList.remove('closed');
+    if (edFullscreen) { el('ed-drawer').classList.add('fullscreen'); var fsb = el('ed-fullscreen-btn'); if (fsb) fsb.textContent = '⊡'; }
     edDrawerOpen = true;
+    // 草稿检测
+    var banner = el('ed-draft-banner'); if (banner) banner.style.display = 'none';
+    setTimeout(function () { edCheckDraft(pslug); }, 100);
+    edSetDirty(false);
     // highlight active row
     document.querySelectorAll('.prod-list-row').forEach(function (r) { r.classList.remove('active'); });
     var row = document.querySelector('.prod-list-row[data-gslug="' + gslug + '"][data-pslug="' + pslug + '"]');
@@ -1388,8 +1830,13 @@
 
   // ── v9: close drawer ──
   el('ed-drawer-close').addEventListener('click', function () {
+    if (edDirty) {
+      if (!confirm('有未保存的更改，确认关闭？')) return;
+    }
     el('ed-drawer').classList.add('closed');
+    el('ed-drawer').classList.remove('fullscreen');
     edDrawerOpen = false; edCurrentGroup = ''; edCurrentSlug = '';
+    edSetDirty(false);
     document.querySelectorAll('.prod-list-row.active').forEach(function (r) { r.classList.remove('active'); });
   });
 
@@ -1403,15 +1850,8 @@
     if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // ── v9: img preview ──
-  function edUpdateImgPreview() {
-    var val = el('f-img').value.trim();
-    var preview = el('f-img-preview'), missing = el('f-img-missing');
-    if (!val) { if (preview) preview.style.display = 'none'; if (missing) missing.style.display = 'flex'; return; }
-    var src = '/assets/images/' + val.replace(/^\/assets\/images\//, '');
-    if (preview) { preview.src = src; preview.style.display = 'block'; preview.onerror = function () { preview.style.display = 'none'; if (missing) missing.style.display = 'flex'; }; preview.onload = function () { if (missing) missing.style.display = 'none'; }; }
-  }
-  el('f-img').addEventListener('input', function () { edUpdateImgPreview(); edUpdateScore(); });
+  // ── v9→v2: img preview → 图片中心 (M1) ──
+  function edUpdateImgPreview() { edRenderImageCenter(); } // 兼容旧调用点
 
   // ── v9: field counters ──
   var edCounterMap = [
@@ -1458,6 +1898,345 @@
     if (issuesEl) issuesEl.textContent = r.detail.length ? r.detail.slice(0, 2).join('；') + (r.detail.length > 2 ? '等 ' + (r.detail.length - 2) + ' 项' : '') : '✔ 所有评分项已达标';
   }
 
+  // ═══════════════════════════════════════════════
+  // ── M0：全屏编辑器 + 脏状态 + 草稿暂存 + Ctrl+S ──
+  // ═══════════════════════════════════════════════
+  var edFullscreen = localStorage.getItem('mili-ed-fullscreen') === '1';
+  var edDirty = false;
+  var edDraftTimer = null;
+
+  function edSetFullscreen(on) {
+    edFullscreen = on;
+    localStorage.setItem('mili-ed-fullscreen', on ? '1' : '0');
+    var drawer = el('ed-drawer');
+    var btn = el('ed-fullscreen-btn');
+    if (!drawer) return;
+    if (on) { drawer.classList.add('fullscreen'); if (btn) btn.textContent = '⊡'; }
+    else { drawer.classList.remove('fullscreen'); if (btn) btn.textContent = '⛶'; }
+    edUpdatePreviewPanel();
+  }
+  var edFsBtn = el('ed-fullscreen-btn');
+  if (edFsBtn) edFsBtn.addEventListener('click', function () { edSetFullscreen(!edFullscreen); });
+
+  function edSetDirty(v) {
+    edDirty = v;
+    var dot = el('ed-dirty-dot'), foot = el('ed-dirty-footer');
+    if (dot) { dot.classList.toggle('show', v); }
+    if (foot) { foot.classList.toggle('show', v); }
+  }
+
+  // 草稿暂存
+  function edSaveDraft() {
+    if (!edCurrentSlug || !edDirty) return;
+    var draft = { ts: Date.now(), group: edCurrentGroup, slug: edCurrentSlug,
+      name: (el('f-name') || {}).value || '', tagline: (el('f-tagline') || {}).value || '',
+      spec: (el('f-spec') || {}).value || '', img: (el('f-img') || {}).value || '',
+      price: (el('f-price') || {}).value || '', moq: (el('f-moq') || {}).value || '',
+      copy: (el('f-copy') || {}).value || '', status: (el('f-status') || {}).value || '',
+      order: (el('f-order') || {}).value || '' };
+    try { localStorage.setItem('mili-draft-' + edCurrentSlug, JSON.stringify(draft)); } catch (e) {}
+  }
+  function edCheckDraft(slug) {
+    try {
+      var d = JSON.parse(localStorage.getItem('mili-draft-' + slug) || 'null');
+      if (!d || !d.ts || Date.now() - d.ts > 86400000) return;
+      var banner = el('ed-draft-banner'); if (banner) banner.style.display = 'flex';
+      var restore = el('ed-draft-restore');
+      if (restore) restore.onclick = function () {
+        if (el('f-name')) el('f-name').value = d.name || '';
+        if (el('f-tagline')) el('f-tagline').value = d.tagline || '';
+        if (el('f-spec')) el('f-spec').value = d.spec || '';
+        if (el('f-img')) el('f-img').value = d.img || '';
+        if (el('f-price')) el('f-price').value = d.price || '';
+        if (el('f-moq')) el('f-moq').value = d.moq || '';
+        if (el('f-copy')) el('f-copy').value = d.copy || '';
+        if (el('f-status')) el('f-status').value = d.status || '';
+        if (el('f-order')) el('f-order').value = d.order || '';
+        banner.style.display = 'none';
+        edUpdateCounters(); edRenderImageCenter(); edUpdateScore(); edSetDirty(true);
+        toast('草稿已恢复', 'ok');
+      };
+      var discard = el('ed-draft-discard');
+      if (discard) discard.onclick = function () { localStorage.removeItem('mili-draft-' + slug); banner.style.display = 'none'; };
+    } catch (e) {}
+  }
+  function edClearDraft() { if (edCurrentSlug) { try { localStorage.removeItem('mili-draft-' + edCurrentSlug); } catch (e) {} } }
+  if (edDraftTimer) clearInterval(edDraftTimer);
+  edDraftTimer = setInterval(edSaveDraft, 30000);
+
+  // beforeunload 保护
+  window.addEventListener('beforeunload', function (e) { if (edDirty) { e.preventDefault(); e.returnValue = '有未保存的改动，确认离开？'; } });
+
+  // Ctrl/Cmd+S
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's' && edDrawerOpen) {
+      e.preventDefault();
+      var saveBtn = el('ed-save'); if (saveBtn) saveBtn.click();
+    }
+  });
+
+  // 脏状态触发：监听所有字段 input
+  (function () {
+    var ids = ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order'];
+    ids.forEach(function (id) { var x = el(id); if (x) x.addEventListener('input', function () { edSetDirty(true); }); });
+    var st = el('f-status'); if (st) st.addEventListener('change', function () { edSetDirty(true); });
+  })();
+
+  // 实时预览联动
+  function edUpdatePreviewPanel() {
+    var name = (el('f-name') || {}).value || '—';
+    var spec = (el('f-spec') || {}).value || '—';
+    var price = (el('f-price') || {}).value || '';
+    var moq = (el('f-moq') || {}).value || '—';
+    var copy = (el('f-copy') || {}).value || '';
+    var slug = edCurrentSlug || '';
+    var group = edCurrentGroup || '';
+    var title = (el('f-name') || {}).value || '';
+    if (el('pv-name')) el('pv-name').textContent = name;
+    if (el('pv-spec')) el('pv-spec').textContent = spec;
+    if (el('pv-price')) el('pv-price').textContent = price ? 'From $' + price : '—';
+    if (el('pv-moq')) el('pv-moq').textContent = 'MOQ ' + moq;
+    if (el('pv-copy')) el('pv-copy').textContent = copy.slice(0, 120) + (copy.length > 120 ? '…' : '');
+    if (el('pv-title')) el('pv-title').textContent = title || '产品标题将显示在此';
+    if (el('pv-url')) el('pv-url').textContent = 'mili-packaging.com › products › ' + (group || '…') + ' › ' + (slug || '…');
+    // SEO 分实时同步
+    if (window.seoScore && DATA && group && slug) {
+      var p = (DATA.productCatalog[group] || []).find(function (x) { return x.slug === slug; });
+      if (p) {
+        var merged = { slug: p.slug, name: title || p.name, spec: spec !== '—' ? spec : p.spec, img: (el('f-img') || {}).value || p.img, extraImgs: p.extraImgs, faq: p.faq, tierPrice: p.tierPrice, tagline: (el('f-tagline') || {}).value || p.tagline, copy: copy ? [copy] : p.copy, title: title, description: p.description };
+        var sc = seoScore(merged);
+        if (el('pv-seo-score')) { el('pv-seo-score').textContent = sc.score; el('pv-seo-score').style.color = sc.score >= 85 ? 'var(--ok)' : sc.score >= 70 ? 'var(--color-warning)' : 'var(--bad)'; }
+        if (el('pv-seo-issues')) el('pv-seo-issues').textContent = sc.detail.length ? sc.detail.slice(0, 3).join('\n') : '✔ 无扣分项';
+      }
+    }
+  }
+  ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order','f-status'].forEach(function (id) {
+    var x = el(id); if (x) x.addEventListener('input', edUpdatePreviewPanel);
+    if (x && x.tagName === 'SELECT') x.addEventListener('change', edUpdatePreviewPanel);
+  });
+
+  // ═══════════════════════════════════════════════
+  // ── M1：图片中心 ──
+  // ═══════════════════════════════════════════════
+  var imgAltTarget = null; // 当前编辑 alt 的图片 {index, isMain}
+  var imgDragSrc = null;
+
+  function edGetAllImages() {
+    // 返回 [{src, isMain, alt, index}]
+    var imgs = [];
+    var mainVal = (el('f-img') || {}).value || '';
+    if (mainVal) imgs.push({ src: mainVal, isMain: true, alt: '', index: 0 });
+    // 附图从 ed-extra-imgs 读（v10 的行输入）
+    var extraRows = document.querySelectorAll('.ed-extra-img-input');
+    extraRows.forEach(function (inp, i) { var v = inp.value.trim(); if (v) imgs.push({ src: v, isMain: false, alt: '', index: imgs.length }); });
+    return imgs;
+  }
+
+  function edSrcToUrl(src) {
+    if (!src) return '';
+    return src.startsWith('http') ? src : '/assets/images/' + src.replace(/^\/assets\/images\//, '');
+  }
+
+  function edRenderImageCenter() {
+    var gallery = el('img-gallery'); if (!gallery) return;
+    var imgs = edGetAllImages();
+    // 统计
+    var stat = el('img-stat');
+    if (stat) stat.textContent = '共 ' + imgs.length + ' 张图｜主图 1 附图 ' + Math.max(0, imgs.length - 1);
+    gallery.innerHTML = '';
+    imgs.forEach(function (img, idx) {
+      var card = document.createElement('div');
+      card.className = 'img-card';
+      card.draggable = true;
+      card.dataset.idx = idx;
+      card.dataset.src = img.src;
+      var url = edSrcToUrl(img.src);
+      card.innerHTML = '<img src="' + url + '" alt="' + (img.alt || '') + '" data-idx="' + idx + '" />' +
+        (img.isMain ? '<span class="img-main-badge">⭐主图</span>' : '') +
+        '<div class="img-overlay">' +
+          (!img.isMain ? '<button data-act="setmain" data-idx="' + idx + '">⭐ 设为主图</button>' : '') +
+          '<button data-act="replace" data-idx="' + idx + '">🔄 替换</button>' +
+          '<button data-act="alt" data-idx="' + idx + '">📝 编辑 alt</button>' +
+          '<button data-act="copy" data-idx="' + idx + '">📋 复制路径</button>' +
+          (!img.isMain ? '<button data-act="del" data-idx="' + idx + '" style="color:#ff8080">✕ 删除</button>' : '') +
+        '</div>';
+      // 坏图检测
+      var imgEl = card.querySelector('img');
+      imgEl.onerror = function () {
+        imgEl.style.display = 'none';
+        var badge = document.createElement('div');
+        badge.className = 'img-missing-badge'; badge.textContent = '⚠ 缺失';
+        card.appendChild(badge);
+      };
+      // 拖拽
+      card.addEventListener('dragstart', function () { imgDragSrc = idx; card.classList.add('dragging'); });
+      card.addEventListener('dragend', function () { card.classList.remove('dragging'); document.querySelectorAll('.img-card').forEach(function (c) { c.classList.remove('drag-over'); }); });
+      card.addEventListener('dragover', function (e) { e.preventDefault(); card.classList.add('drag-over'); });
+      card.addEventListener('drop', function (e) { e.preventDefault(); card.classList.remove('drag-over'); if (imgDragSrc === null || imgDragSrc === idx) return; imgSwap(imgDragSrc, idx); imgDragSrc = null; });
+      // 操作按钮
+      card.querySelectorAll('[data-act]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) { e.stopPropagation(); imgAction(btn.dataset.act, +btn.dataset.idx, img.src); });
+      });
+      gallery.appendChild(card);
+    });
+    // 添加按钮
+    var addCard = document.createElement('div');
+    addCard.className = 'img-add-card';
+    addCard.innerHTML = '<span style="font-size:20px">＋</span><span>上传图片</span>';
+    addCard.addEventListener('click', function () { imgTriggerUpload(false); });
+    gallery.appendChild(addCard);
+  }
+
+  function imgSwap(fromIdx, toIdx) {
+    var imgs = edGetAllImages();
+    if (fromIdx === 0 || toIdx === 0) { toast('主图位置固定，请用「设为主图」更改主图', 'err'); return; }
+    var tmp = imgs[fromIdx]; imgs[fromIdx] = imgs[toIdx]; imgs[toIdx] = tmp;
+    edApplyImageList(imgs);
+  }
+
+  function imgAction(act, idx, src) {
+    var imgs = edGetAllImages();
+    if (act === 'setmain') {
+      var newMain = imgs.splice(idx, 1)[0];
+      imgs.unshift(newMain);
+      edApplyImageList(imgs);
+      toast('已设为主图', 'ok');
+    } else if (act === 'del') {
+      imgs.splice(idx, 1);
+      edApplyImageList(imgs);
+      edSetDirty(true);
+    } else if (act === 'copy') {
+      try { navigator.clipboard.writeText('/assets/images/' + src.replace(/^\/assets\/images\//, '')); toast('路径已复制', 'ok'); } catch (e) { toast('复制失败', 'err'); }
+    } else if (act === 'replace') {
+      imgReplaceTarget = idx;
+      var fi = el('ed-file-input'); if (fi) { fi.removeAttribute('multiple'); fi.onchange = function () { var f = fi.files[0]; if (f) imgProcessAndUpload([f], true, imgs[idx] ? imgs[idx].src : ''); fi.value = ''; fi.setAttribute('multiple', ''); }; fi.click(); }
+    } else if (act === 'alt') {
+      imgAltTarget = { idx: idx, src: src };
+      var modal = el('img-alt-modal'); if (modal) { el('img-alt-val').value = imgs[idx] ? (imgs[idx].alt || '') : ''; modal.style.display = 'flex'; }
+    }
+  }
+  var imgReplaceTarget = null;
+
+  function edApplyImageList(imgs) {
+    if (imgs.length === 0) { if (el('f-img')) el('f-img').value = ''; edRenderImageCenter(); edSetDirty(true); return; }
+    if (el('f-img')) el('f-img').value = imgs[0].isMain ? imgs[0].src : (imgs[0].src || '');
+    // 清空并重建附图行
+    var wrap = el('ed-extra-imgs'); if (wrap) wrap.innerHTML = '';
+    imgs.slice(1).forEach(function (img) {
+      if (!wrap) return;
+      var row = document.createElement('div'); row.className = 'ed-img-row';
+      row.innerHTML = '<div style="flex:1"><input class="ed-extra-img-input" value="' + String(img.src || '').replace(/"/g, '&quot;') + '" style="display:none" /></div>';
+      wrap.appendChild(row);
+    });
+    edRenderImageCenter(); edSetDirty(true);
+  }
+
+  // alt 弹层
+  (function () {
+    var cancel = el('img-alt-cancel'), save = el('img-alt-save'), modal = el('img-alt-modal');
+    if (cancel) cancel.onclick = function () { modal.style.display = 'none'; };
+    if (save) save.onclick = function () {
+      modal.style.display = 'none';
+      toast('alt 已更新（保存后生效）', 'ok');
+      edSetDirty(true);
+    };
+  })();
+
+  // 批量生成 alt
+  (function () {
+    var btn = el('img-gen-alt'); if (!btn) return;
+    btn.addEventListener('click', function () {
+      var name = (el('f-name') || {}).value || edCurrentSlug || 'product';
+      var group = edCurrentGroup ? edCurrentGroup.replace(/-/g, ' ') : 'packaging';
+      var alt = 'Custom ' + name + ' - Premium ' + group + ' - Factory Direct';
+      toast('Alt 已预填（当前仅预览，保存后生效）：' + alt.slice(0, 50), 'ok');
+      edSetDirty(true);
+    });
+  })();
+
+  // 坏图检测
+  (function () {
+    var btn = el('img-check'); if (!btn) return;
+    btn.addEventListener('click', function () {
+      var imgs = edGetAllImages(); var missing = [];
+      imgs.forEach(function (img) {
+        var t = new Image(); t.onerror = function () { missing.push(img.src); if (missing.length) toast('⚠ 发现 ' + missing.length + ' 张缺失图片：' + missing.join(', '), 'bad'); };
+        t.src = edSrcToUrl(img.src) + '?ts=' + Date.now();
+      });
+      setTimeout(function () { if (!missing.length) toast('✔ 全部图片正常', 'ok'); }, 2000);
+    });
+  })();
+
+  // Canvas 压缩上传（核心 M1 功能）
+  function imgProcessAndUpload(files, replace, replaceSrc) {
+    var bar = el('img-upload-progress'), barInner = el('img-progress-bar');
+    if (bar) bar.style.display = 'block';
+    var total = files.length, done = 0;
+    function progress() { done++; if (barInner) barInner.style.width = Math.round(done / total * 100) + '%'; if (done >= total) { setTimeout(function () { if (bar) bar.style.display = 'none'; if (barInner) barInner.style.width = '0'; }, 800); } }
+    Array.from(files).forEach(function (file, fi) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var canvas = document.createElement('canvas');
+          var MAX = 1600, q = 0.85;
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (w > MAX || h > MAX) { if (w > h) { h = Math.round(h * MAX / w); w = MAX; } else { w = Math.round(w * MAX / h); h = MAX; } }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function (blob) {
+            var nm = replace ? replaceSrc : ('sku-' + (edCurrentSlug || 'prod') + '-' + (Date.now() % 10000) + '.webp');
+            nm = nm.replace(/^\/assets\/images\//, '');
+            if (!nm.match(/\.(webp|jpg|jpeg|png)$/)) nm += '.webp';
+            var fr2 = new FileReader();
+            fr2.onload = function (ev) {
+              var b64 = ev.target.result.split(',')[1];
+              fetch('/api/upload', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: nm, data: b64 }) })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                  progress();
+                  if (!d.ok) { toast('上传失败：' + (d.error || ''), 'bad'); return; }
+                  toast('✅ 已上传 ' + nm + '（部署后可见）', 'ok');
+                  if (replace) {
+                    // 替换原图
+                    edRenderImageCenter();
+                  } else {
+                    // 追加到附图
+                    var wrap = el('ed-extra-imgs');
+                    if (wrap) { edAddImgRow(nm); }
+                    var fimg = el('f-img'); if (fimg && !fimg.value) fimg.value = nm;
+                    edRenderImageCenter();
+                  }
+                  edSetDirty(true);
+                })
+                .catch(function (ex) { progress(); toast('上传失败：' + ex.message, 'bad'); });
+            };
+            fr2.readAsDataURL(blob);
+          }, 'image/webp', q);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function imgTriggerUpload(replace, replaceSrc) {
+    var fi = el('ed-file-input'); if (!fi) return;
+    fi.setAttribute('multiple', '');
+    fi.onchange = function () { if (fi.files.length) imgProcessAndUpload(fi.files, replace, replaceSrc); fi.value = ''; };
+    fi.click();
+  }
+
+  (function () {
+    var btn = el('img-upload-btn'); if (btn) btn.addEventListener('click', function () { imgTriggerUpload(false); });
+    // 整窗拖入
+    var gallery = el('img-gallery');
+    if (gallery) {
+      ['dragenter','dragover'].forEach(function (ev) { gallery.addEventListener(ev, function (e) { e.preventDefault(); gallery.classList.add('img-dropzone-active'); }); });
+      ['dragleave','drop'].forEach(function (ev) { gallery.addEventListener(ev, function (e) { gallery.classList.remove('img-dropzone-active'); if (ev === 'drop') { e.preventDefault(); if (e.dataTransfer.files.length) imgProcessAndUpload(e.dataTransfer.files, false, ''); } }); });
+    }
+  })();
+
   // ── v9: new ed-save (reads from drawer state) ──
   document.getElementById('ed-save').addEventListener('click', function () {
     if (edNewMode) {
@@ -1493,7 +2272,7 @@
       edSaving = false;
       var btn = document.getElementById('ed-save');
       if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '💾 保存并发布'; }
-      if (res.ok) { flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edReloadData(); }
+      if (res.ok) { flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edClearDraft(); edSetDirty(false); edReloadData(); }
       else if (res.error === 'server-not-configured') { flash('编辑管线未开通：请在设置中心配置 GitHub PAT', true); toast('GH_PAT 未配置，无法保存发布', 'err'); }
       else { flash('失败：' + (res.error || '未知'), true); toast('保存失败：' + (res.error || ''), 'err'); }
     }).catch(function () {
