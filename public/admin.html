@@ -220,6 +220,100 @@
   .topbar-kpi { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--color-text-secondary); padding:0 8px; }
   .topbar-kpi b { color:var(--color-primary); }
   @media (max-width:768px) { .topbar-kpi { display:none; } .priority-grid { grid-template-columns:1fr; } }
+
+  /* ── v9: Professional Product Editor ── */
+  /* Status filter tabs */
+  .ed-status-bar { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--color-border); margin-bottom:16px; flex-wrap:wrap; }
+  .ed-stab { padding:9px 18px; font-size:13px; font-weight:500; color:var(--color-text-secondary); cursor:pointer; border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; }
+  .ed-stab.active { color:var(--color-primary); border-bottom-color:var(--color-primary); font-weight:600; }
+  .ed-stab:hover:not(.active) { color:var(--color-text); background:var(--color-surface-2); }
+  .ed-stab .ed-stab-cnt { display:inline-block; background:var(--color-surface-2); color:var(--color-text-secondary); font-size:10px; padding:1px 6px; border-radius:10px; margin-left:5px; }
+  .ed-stab.active .ed-stab-cnt { background:rgba(201,162,39,.15); color:var(--color-primary); }
+  /* Search + action row */
+  .ed-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .ed-search { flex:1; min-width:200px; position:relative; }
+  .ed-search input { margin:0; padding:8px 12px 8px 34px; font-size:13px; }
+  .ed-search-ico { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; pointer-events:none; opacity:.5; }
+  /* Product list table */
+  .prod-list-wrap { background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; overflow:hidden; }
+  .prod-list-head { display:grid; grid-template-columns:48px 1fr 110px 90px 70px 110px; gap:0; padding:8px 14px; background:var(--color-surface-2); font-size:11.5px; font-weight:600; color:var(--color-text-secondary); letter-spacing:.04em; border-bottom:1px solid var(--color-border); }
+  .prod-list-row { display:grid; grid-template-columns:48px 1fr 110px 90px 70px 110px; gap:0; padding:10px 14px; border-bottom:1px solid var(--color-border); align-items:center; transition:background .1s; cursor:default; }
+  .prod-list-row:last-child { border-bottom:none; }
+  .prod-list-row:hover { background:var(--color-surface-2); }
+  .prod-thumb-wrap { width:40px; height:40px; border-radius:4px; overflow:hidden; border:1px solid var(--color-border); background:var(--color-surface-2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .prod-thumb-wrap img { width:100%; height:100%; object-fit:cover; }
+  .prod-thumb-placeholder { font-size:18px; opacity:.3; }
+  .prod-name-cell { padding:0 10px; }
+  .prod-name-cell b { display:block; font-size:13px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
+  .prod-name-cell span { font-size:11px; color:var(--color-text-secondary); }
+  .prod-price-cell { font-size:13px; }
+  .prod-price-cell .prod-moq { font-size:10.5px; color:var(--color-text-secondary); }
+  .prod-status-badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; padding:3px 8px; border-radius:3px; font-weight:500; }
+  .prod-status-badge.active { background:rgba(76,217,100,.12); color:var(--ok); }
+  .prod-status-badge.hidden { background:rgba(255,107,107,.1); color:var(--bad); }
+  .prod-seo-col { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .prod-seo-ring { width:28px; height:28px; flex-shrink:0; }
+  .prod-actions { display:flex; gap:6px; }
+  .ed-act-btn { font-size:11px; padding:4px 10px; border-radius:3px; border:1px solid var(--color-border); background:var(--color-surface); color:var(--color-text-secondary); cursor:pointer; white-space:nowrap; }
+  .ed-act-btn:hover { border-color:var(--color-primary); color:var(--color-primary); }
+  .ed-act-btn.danger:hover { border-color:var(--color-danger); color:var(--color-danger); }
+  /* Empty / loading state */
+  .prod-list-empty { padding:40px 20px; text-align:center; color:var(--color-text-secondary); font-size:13px; }
+  .prod-list-row.active { background:rgba(201,162,39,.07); border-left:3px solid var(--color-primary); }
+  /* Right-side Drawer Editor */
+  .ed-layout { display:flex; gap:0; position:relative; }
+  .ed-list-col { flex:1; min-width:0; transition:flex .25s ease; }
+  .ed-drawer { width:420px; flex-shrink:0; border-left:1px solid var(--color-border); background:var(--color-surface); display:flex; flex-direction:column; position:sticky; top:var(--topbar-h); max-height:calc(100vh - var(--topbar-h)); overflow:hidden; transform:translateX(0); transition:width .25s ease, transform .25s ease; }
+  .ed-drawer.closed { width:0; border:none; overflow:hidden; }
+  .ed-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--color-border); flex-shrink:0; }
+  .ed-drawer-header h3 { font-size:14px; margin:0; }
+  .ed-drawer-close { background:none; border:none; font-size:18px; cursor:pointer; color:var(--color-text-secondary); padding:2px 6px; border-radius:3px; }
+  .ed-drawer-close:hover { color:var(--color-text); background:var(--color-surface-2); }
+  /* Left anchors */
+  .ed-anchors { display:flex; flex-direction:column; gap:2px; padding:12px 10px; border-right:1px solid var(--color-border); background:var(--color-surface-2); min-width:100px; font-size:12px; }
+  .ed-anchor-item { padding:6px 10px; border-radius:4px; cursor:pointer; color:var(--color-text-secondary); border-left:2px solid transparent; }
+  .ed-anchor-item.active { color:var(--color-primary); border-left-color:var(--color-primary); background:rgba(201,162,39,.08); }
+  .ed-anchor-item:hover:not(.active) { background:var(--color-surface-3); color:var(--color-text); }
+  /* Drawer body: anchors + fields side by side */
+  .ed-drawer-body { display:flex; flex:1; overflow:hidden; }
+  .ed-fields-scroll { flex:1; overflow-y:auto; padding:14px; }
+  /* Field sections */
+  .ed-section { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--color-border); }
+  .ed-section:last-child { border-bottom:none; }
+  .ed-section-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--color-text-secondary); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .ed-section-title::after { content:''; flex:1; height:1px; background:var(--color-border); }
+  /* Image preview */
+  .ed-img-preview { width:80px; height:80px; border-radius:6px; border:2px solid var(--color-border); object-fit:cover; display:block; background:var(--color-surface-2); flex-shrink:0; }
+  .ed-img-row { display:flex; gap:12px; align-items:flex-start; }
+  .ed-img-row .ed-img-preview-wrap { position:relative; }
+  .ed-img-missing { width:80px; height:80px; border-radius:6px; border:2px dashed var(--color-border); display:flex; align-items:center; justify-content:center; font-size:24px; opacity:.3; background:var(--color-surface-2); flex-shrink:0; }
+  /* Field with counter */
+  .ed-field-wrap { position:relative; margin-bottom:10px; }
+  .ed-field-wrap label { display:block; font-size:11.5px; color:var(--color-text-secondary); margin-bottom:4px; }
+  .ed-counter { position:absolute; right:8px; bottom:8px; font-size:10px; color:var(--color-text-secondary); pointer-events:none; }
+  .ed-counter.warn { color:var(--color-warning); }
+  .ed-counter.over { color:var(--color-danger); }
+  /* SEO score in drawer */
+  .ed-seo-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--color-surface-2); border-radius:4px; margin-bottom:12px; }
+  .ed-seo-score { font-size:22px; font-weight:700; min-width:36px; text-align:center; }
+  .ed-seo-issues { font-size:11px; color:var(--color-text-secondary); line-height:1.6; }
+  /* Drawer footer actions */
+  .ed-drawer-footer { padding:12px 14px; border-top:1px solid var(--color-border); display:flex; gap:8px; flex-shrink:0; background:var(--color-surface); }
+  /* Tier price table */
+  .tier-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+  .tier-table th, .tier-table td { padding:6px 10px; border:1px solid var(--color-border); text-align:left; }
+  .tier-table th { background:var(--color-surface-2); font-weight:600; color:var(--color-text-secondary); }
+  /* Responsive: collapse drawer on small screens */
+  @media (max-width:900px) {
+    .ed-drawer { position:fixed; right:0; top:var(--topbar-h); bottom:0; z-index:50; width:360px; box-shadow:-4px 0 20px rgba(0,0,0,.2); transform:translateX(0); }
+    .ed-drawer.closed { transform:translateX(100%); width:360px; }
+    .prod-list-head, .prod-list-row { grid-template-columns:40px 1fr 80px 70px; }
+    .prod-list-head > :nth-child(5), .prod-list-row > :nth-child(5), .prod-list-head > :nth-child(6), .prod-list-row > :nth-child(6) { display:none; }
+  }
+  @media (max-width:600px) {
+    .prod-list-head, .prod-list-row { grid-template-columns:36px 1fr 70px; }
+    .prod-list-head > :nth-child(3), .prod-list-row > :nth-child(3), .prod-list-head > :nth-child(4), .prod-list-row > :nth-child(4) { display:none; }
+  }
 </style>
 </head>
 <body>
@@ -342,42 +436,184 @@
     </div>
   </div>
 
-  <!-- ② 产品/内容编辑 -->
+  <!-- ② 产品/内容编辑 v9 — 阿里国际站风格专业编辑器 -->
   <div id="tab-editor" class="hide">
-    <h2>② 产品/内容编辑（保存后约 2 分钟自动上线）</h2>
-    <div class="card">
-      <div class="row">
-        <div><label>产品分组</label><select id="ed-group"><option value="">— 加载中… —</option></select></div>
-        <div><label>产品</label><select id="ed-product"><option value="">— 先选分组 —</option></select></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+      <h2 style="margin:0">产品/内容编辑</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="hint" style="margin:0" id="ed-save-hint">GH_PAT 已配置后可直接保存发布</span>
+        <span class="tag tag-warning" id="ed-pat-badge" style="display:none">编辑管线未配置</span>
       </div>
-      <div id="ed-fields" class="hide">
-        <div class="row">
-          <div><label>产品名称</label><input id="f-name" /></div>
-          <div><label>参考价 (USD)</label><input id="f-price" /></div>
-          <div><label>MOQ</label><input id="f-moq" /></div>
+    </div>
+
+    <!-- 状态筛选 tabs + 搜索工具栏 -->
+    <div class="ed-status-bar" id="ed-status-bar">
+      <button class="ed-stab active" data-st="">全部 <span class="ed-stab-cnt" id="ed-cnt-all">—</span></button>
+      <button class="ed-stab" data-st="active">上架 <span class="ed-stab-cnt" id="ed-cnt-active">—</span></button>
+      <button class="ed-stab" data-st="hidden">下架 <span class="ed-stab-cnt" id="ed-cnt-hidden">—</span></button>
+    </div>
+    <div class="ed-toolbar">
+      <div class="ed-search">
+        <span class="ed-search-ico">🔍</span>
+        <input id="ed-search" placeholder="搜索产品名称、分组…" style="width:100%" />
+      </div>
+      <select id="ed-filter-group" style="width:auto;margin:0;padding:8px 12px;font-size:13px">
+        <option value="">全部分组</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" id="ed-reload" title="重新加载产品数据">⟳ 刷新</button>
+    </div>
+
+    <!-- 双栏布局：产品列表 + 右侧抽屉编辑器 -->
+    <div class="ed-layout" id="ed-layout">
+      <!-- 左：产品列表 -->
+      <div class="ed-list-col">
+        <div class="prod-list-wrap">
+          <div class="prod-list-head">
+            <div>图片</div>
+            <div>产品名称 / 分组</div>
+            <div>价格 / MOQ</div>
+            <div>状态</div>
+            <div>SEO分</div>
+            <div>操作</div>
+          </div>
+          <div id="ed-prod-list">
+            <div class="prod-list-empty"><div style="font-size:28px;margin-bottom:10px">📦</div>点击「⟳ 刷新」加载产品列表</div>
+          </div>
         </div>
-        <label>一句话卖点 (tagline)</label><input id="f-tagline" />
-        <label>规格简述 (spec)</label><input id="f-spec" />
-        <label>产品描述 (copy 第 1 段)</label><textarea id="f-copy" rows="3"></textarea>
-        <div class="row">
-          <div><label>主图路径</label><input id="f-img" /></div>
-          <div><label>排序位置</label><input id="f-order" type="number" /></div>
-          <div><label>上架状态</label><select id="f-status"><option value="">— 保持当前 —</option><option value="active">上架（展示）</option><option value="hidden">下架（从列表/首页隐藏，直链仍可访问）</option></select></div>
+        <!-- 分组级设置（折叠区） -->
+        <div class="card" style="margin-top:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" id="g-section-toggle">
+            <h3 style="margin:0">📁 分组级设置（批量影响该组产品展示）</h3>
+            <span style="font-size:12px;color:var(--color-text-secondary)" id="g-section-arrow">展开 ▾</span>
+          </div>
+          <div id="g-section-body" style="display:none;margin-top:12px">
+            <div class="row">
+              <div><label>分组</label><select id="g-group"><option value="">— 选择分组 —</option></select></div>
+              <div><label>组名（显示名称）</label><input id="g-name" /></div>
+              <div><label>MOQ 默认值</label><input id="g-moq" /></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="g-save">保存分组设置</button>
+          </div>
         </div>
-        <div style="display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">
-          <button class="btn" id="ed-save">保存并发布（自动部署）</button>
-          <span class="meta">保存 = 提交 GitHub → 自动构建部署，约 2 分钟生效</span>
+      </div>
+
+      <!-- 右：滑出式编辑抽屉 -->
+      <div class="ed-drawer closed" id="ed-drawer">
+        <div class="ed-drawer-header">
+          <div>
+            <h3 id="ed-drawer-title">编辑产品</h3>
+            <p class="hint" style="margin:2px 0 0;font-size:11px" id="ed-drawer-slug"></p>
+          </div>
+          <button class="ed-drawer-close" id="ed-drawer-close" title="关闭">✕</button>
+        </div>
+        <!-- 实时 SEO 分 -->
+        <div style="padding:10px 14px;border-bottom:1px solid var(--color-border);flex-shrink:0">
+          <div class="ed-seo-bar">
+            <div class="ed-seo-score" id="dr-seo-score" style="color:var(--ok)">—</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;margin-bottom:3px">SEO 健康分 <span class="hint" style="font-weight:normal">（实时更新）</span></div>
+              <div class="ed-seo-issues" id="dr-seo-issues">填写字段后自动评分</div>
+            </div>
+          </div>
+        </div>
+        <div class="ed-drawer-body">
+          <!-- 左侧锚点导航 -->
+          <div class="ed-anchors" id="ed-anchors">
+            <div class="ed-anchor-item active" data-sec="basic">📝 基本信息</div>
+            <div class="ed-anchor-item" data-sec="img">🖼 主图预览</div>
+            <div class="ed-anchor-item" data-sec="price">💰 价格规格</div>
+            <div class="ed-anchor-item" data-sec="desc">📄 描述文案</div>
+            <div class="ed-anchor-item" data-sec="status">⚙️ 发布设置</div>
+          </div>
+          <!-- 右侧字段区 -->
+          <div class="ed-fields-scroll" id="ed-fields-scroll">
+            <!-- ① 基本信息 -->
+            <div class="ed-section" id="sec-basic">
+              <div class="ed-section-title">基本信息</div>
+              <div class="ed-field-wrap">
+                <label>产品名称 <span style="color:var(--color-danger)">*</span></label>
+                <input id="f-name" placeholder="Custom Luxury Gift Box with Magnetic Closure" style="padding-right:52px" />
+                <span class="ed-counter" id="cnt-name">0</span>
+              </div>
+              <div class="ed-field-wrap">
+                <label>一句话卖点 (tagline)</label>
+                <input id="f-tagline" placeholder="Premium unboxing experience, factory-direct pricing" style="padding-right:52px" />
+                <span class="ed-counter" id="cnt-tagline">0</span>
+              </div>
+              <div class="ed-field-wrap">
+                <label>规格简述 (spec)</label>
+                <input id="f-spec" placeholder="Multiple sizes available | FSC-certified materials" style="padding-right:52px" />
+                <span class="ed-counter" id="cnt-spec">0</span>
+              </div>
+            </div>
+            <!-- ② 主图预览 -->
+            <div class="ed-section" id="sec-img">
+              <div class="ed-section-title">主图预览</div>
+              <div class="ed-img-row">
+                <div class="ed-img-preview-wrap">
+                  <img id="f-img-preview" class="ed-img-preview" src="" alt="" style="display:none" />
+                  <div class="ed-img-missing" id="f-img-missing">📷</div>
+                </div>
+                <div style="flex:1">
+                  <div class="ed-field-wrap" style="margin:0">
+                    <label>主图路径（相对 /assets/images/）</label>
+                    <input id="f-img" placeholder="mig-luxury-magnetic-box-3.webp" />
+                  </div>
+                  <p class="hint" style="margin-top:6px">支持 mig-*.webp 格式，填写后自动预览 · <a href="https://mili-packaging.com/assets/images/" target="_blank" rel="noopener" style="color:var(--color-primary)">查看已有图片</a></p>
+                </div>
+              </div>
+            </div>
+            <!-- ③ 价格规格 -->
+            <div class="ed-section" id="sec-price">
+              <div class="ed-section-title">价格规格</div>
+              <div class="row">
+                <div><label>参考价 (USD)</label><input id="f-price" type="number" step="0.01" placeholder="5.99" /></div>
+                <div><label>MOQ（最小起订量）</label><input id="f-moq" placeholder="100" /></div>
+              </div>
+              <!-- 阶梯价预览 -->
+              <div id="f-tier-wrap" style="display:none">
+                <label style="font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px;display:block">阶梯价格（来自产品数据）</label>
+                <table class="tier-table" id="f-tier-table"></table>
+              </div>
+              <div style="margin-top:10px">
+                <label>排序位置</label><input id="f-order" type="number" placeholder="1（数字越小越靠前）" />
+              </div>
+            </div>
+            <!-- ④ 描述文案 -->
+            <div class="ed-section" id="sec-desc">
+              <div class="ed-section-title">描述文案</div>
+              <div class="ed-field-wrap">
+                <label>产品描述 / 核心卖点（第 1 段）</label>
+                <textarea id="f-copy" rows="5" placeholder="写给海外买家的核心价值主张：工厂直供、免费设计、7天样品…" style="padding-bottom:24px"></textarea>
+                <span class="ed-counter" id="cnt-copy">0/500</span>
+              </div>
+            </div>
+            <!-- ⑤ 发布设置 -->
+            <div class="ed-section" id="sec-status">
+              <div class="ed-section-title">发布设置</div>
+              <label>上架状态</label>
+              <select id="f-status">
+                <option value="">— 保持当前 —</option>
+                <option value="active">✅ 上架（展示在网站）</option>
+                <option value="hidden">🚫 下架（隐藏，直链仍可访问）</option>
+              </select>
+              <p class="hint" style="margin-top:4px">保存后约 2 分钟自动上线，无需手动操作</p>
+            </div>
+          </div>
+        </div>
+        <!-- 底部操作栏 -->
+        <div class="ed-drawer-footer">
+          <button class="btn btn-primary" id="ed-save" style="flex:1">💾 保存并发布</button>
+          <button class="btn btn-ghost btn-sm" id="ed-drawer-preview" title="在新标签页预览产品页">👁 预览</button>
         </div>
       </div>
     </div>
-    <div class="card" style="margin-top:12px">
-      <h3>分组级设置（批量影响该组产品展示）</h3>
-      <div class="row">
-        <div><label>分组</label><select id="g-group"><option value="">— 选择分组 —</option></select></div>
-        <div><label>组名（显示名称）</label><input id="g-name" /></div>
-        <div><label>MOQ 默认值</label><input id="g-moq" /></div>
-      </div>
-      <button class="btn ghost" id="g-save">保存分组设置</button>
+
+    <!-- 兼容旧版 JS 需要的隐藏容器 -->
+    <div style="display:none">
+      <select id="ed-group"><option value="">—</option></select>
+      <select id="ed-product"><option value="">—</option></select>
+      <div id="ed-fields"></div>
     </div>
   </div>
 
@@ -790,45 +1026,85 @@
   var prodSel = document.getElementById('ed-product');
   var gGroupSel = document.getElementById('g-group');
 
-  fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
-    DATA = d;
-    var total = 0;
-    d.productGroups.forEach(function (g) {
-      var list = d.productCatalog[g.slug] || [];
-      total += list.length;
-      var opt = document.createElement('option');
-      opt.value = g.slug; opt.textContent = g.name + ' (' + list.length + ' 个)';
-      groupSel.appendChild(opt);
-      var opt2 = document.createElement('option');
-      opt2.value = g.slug; opt2.textContent = g.name;
-      gGroupSel.appendChild(opt2);
+  function edReloadData() {
+    var listEl = el('ed-prod-list');
+    if (listEl) listEl.innerHTML = '<div class="prod-list-empty">⏳ 加载产品数据…</div>';
+    fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
+      DATA = d;
+      var total = 0;
+      // 更新分组筛选 select
+      var gfSel = el('ed-filter-group');
+      if (gfSel) { gfSel.innerHTML = '<option value="">全部分组</option>'; }
+      d.productGroups.forEach(function (g) {
+        var list = d.productCatalog[g.slug] || [];
+        total += list.length;
+        // 新版分组 select（用于筛选）
+        if (gfSel) {
+          var opt0 = document.createElement('option');
+          opt0.value = g.slug; opt0.textContent = g.name + ' (' + list.length + ')';
+          gfSel.appendChild(opt0);
+        }
+        // 兼容旧版 hidden groupSel
+        if (groupSel) {
+          var opt = document.createElement('option');
+          opt.value = g.slug; opt.textContent = g.name + ' (' + list.length + ' 个)';
+          groupSel.appendChild(opt);
+        }
+        // g-group 分组设置 select
+        if (gGroupSel) {
+          var opt2 = document.createElement('option');
+          opt2.value = g.slug; opt2.textContent = g.name;
+          gGroupSel.appendChild(opt2);
+        }
+      });
+      toast('已加载 ' + d.productGroups.length + ' 组 / ' + total + ' 个产品', 'ok');
+      edBuildList();
+    }).catch(function () {
+      if (listEl) listEl.innerHTML = '<div class="prod-list-empty">⚠ 产品数据加载失败，请检查网络后重试</div>';
+      toast('产品数据加载失败', 'err');
     });
-    flash('产品数据已加载（' + d.productGroups.length + ' 组 / ' + total + ' 个产品）');
-  }).catch(function () { flash('产品数据加载失败，请检查网络', true); });
+  }
 
-  groupSel.addEventListener('change', function () {
-    prodSel.innerHTML = '<option value="">— 选择产品 —</option>';
-    var list = (DATA.productCatalog[groupSel.value] || []);
-    list.forEach(function (p) {
-      var opt = document.createElement('option');
-      opt.value = p.slug; opt.textContent = p.name + '  ($' + p.price + ')';
-      prodSel.appendChild(opt);
-    });
+  // 初次加载
+  (function () { if (DATA) edBuildList(); })(); // 如果已有缓存
+
+  // 状态筛选 tabs
+  el('ed-status-bar').addEventListener('click', function (e) {
+    var tab = e.target.closest('.ed-stab');
+    if (!tab) return;
+    el('ed-status-bar').querySelectorAll('.ed-stab').forEach(function (t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    edFilterStatus = tab.dataset.st;
+    edBuildList();
   });
 
-  prodSel.addEventListener('change', function () {
-    var p = (DATA.productCatalog[groupSel.value] || []).find(function (x) { return x.slug === prodSel.value; });
-    if (!p) return;
-    document.getElementById('f-name').value = p.name || '';
-    document.getElementById('f-price').value = p.price || '';
-    document.getElementById('f-moq').value = p.moq || '';
-    document.getElementById('f-tagline').value = p.tagline || '';
-    document.getElementById('f-spec').value = p.spec || '';
-    document.getElementById('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
-    document.getElementById('f-img').value = p.img || '';
-    document.getElementById('f-order').value = p.order || '';
-    document.getElementById('f-status').value = (p.status === 'hidden') ? 'hidden' : 'active';
-    document.getElementById('ed-fields').classList.remove('hide');
+  // 搜索框
+  el('ed-search').addEventListener('input', function () { edSearchQ = this.value; edBuildList(); });
+
+  // 分组筛选
+  el('ed-filter-group').addEventListener('change', function () { edBuildList(); });
+
+  // 刷新按钮
+  el('ed-reload').addEventListener('click', function () {
+    DATA = null;
+    if (groupSel) groupSel.innerHTML = '';
+    if (gGroupSel) gGroupSel.innerHTML = '';
+    edReloadData();
+  });
+
+  // 分组折叠展开
+  el('g-section-toggle').addEventListener('click', function () {
+    var body = el('g-section-body'), arrow = el('g-section-arrow');
+    var open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : '';
+    if (arrow) arrow.textContent = open ? '展开 ▾' : '收起 ▴';
+  });
+
+  // SEO 跳转（SEO 医生 fixBtn 的 openEditor 调用）
+  window.__edOpenDrawer = edOpenDrawer;
+  // 加载产品列表（tab 切换时触发或刷新）
+  document.querySelector('.tab[data-tab="editor"]').addEventListener('click', function () {
+    if (!DATA) edReloadData();
   });
 
   // ── Save product (POST /api/content，v4 会话 Cookie 鉴权) ──
@@ -839,30 +1115,228 @@
       body: JSON.stringify({ ops: ops })
     }).then(function (r) { return r.json(); });
   }
-  document.getElementById('ed-save').addEventListener('click', function () {
-    if (!groupSel.value || !prodSel.value) { flash('请选择分组与产品', true); return; }
-    var fields = {
-      name: document.getElementById('f-name').value.trim(),
-      price: document.getElementById('f-price').value.trim(),
-      moq: document.getElementById('f-moq').value.trim(),
-      tagline: document.getElementById('f-tagline').value.trim(),
-      spec: document.getElementById('f-spec').value.trim()
+  // ── v9 Product Editor: state ──
+  var edCurrentGroup = '', edCurrentSlug = '';
+  var edFilterStatus = '', edSearchQ = '';
+  var edDrawerOpen = false;
+
+  // ── v9: build product list (called after DATA loaded or filter change) ──
+  function edBuildList() {
+    var list = el('ed-prod-list');
+    if (!DATA || !list) return;
+    var allProds = [];
+    DATA.productGroups.forEach(function (g) {
+      (DATA.productCatalog[g.slug] || []).forEach(function (p) { allProds.push({ g: g, p: p }); });
+    });
+    // counts
+    var cntAll = allProds.length;
+    var cntActive = allProds.filter(function (x) { return x.p.status !== 'hidden'; }).length;
+    var cntHidden = allProds.filter(function (x) { return x.p.status === 'hidden'; }).length;
+    el('ed-cnt-all').textContent = cntAll;
+    el('ed-cnt-active').textContent = cntActive;
+    el('ed-cnt-hidden').textContent = cntHidden;
+    // filter by status
+    var filtered = allProds.filter(function (x) {
+      if (edFilterStatus === 'active') return x.p.status !== 'hidden';
+      if (edFilterStatus === 'hidden') return x.p.status === 'hidden';
+      return true;
+    });
+    // filter by group
+    var gf = el('ed-filter-group').value;
+    if (gf) filtered = filtered.filter(function (x) { return x.g.slug === gf; });
+    // filter by search
+    var q = edSearchQ.toLowerCase().trim();
+    if (q) filtered = filtered.filter(function (x) { return String(x.p.name || '').toLowerCase().includes(q) || String(x.g.name || '').toLowerCase().includes(q) || String(x.p.slug || '').toLowerCase().includes(q); });
+    if (!filtered.length) { list.innerHTML = '<div class="prod-list-empty"><div style="font-size:28px;margin-bottom:8px">🔍</div>没有符合条件的产品</div>'; return; }
+    list.innerHTML = filtered.map(function (x) {
+      var p = x.p, g = x.g;
+      var sc = seoScore ? seoScore(p) : null;
+      var score = sc ? sc.score : '—';
+      var scoreColor = sc ? (sc.score >= 85 ? 'var(--ok)' : (sc.score >= 70 ? 'var(--color-warning)' : 'var(--bad)')) : 'var(--gray)';
+      var isActive = p.status !== 'hidden';
+      var imgPath = p.img ? ('/assets/images/' + p.img) : '';
+      var thumbHtml = imgPath
+        ? '<img src="' + imgPath + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="prod-thumb-placeholder" style="display:none">📦</div>'
+        : '<div class="prod-thumb-placeholder">📦</div>';
+      var tierHtml = '';
+      if (p.tierPrice && p.tierPrice.length) {
+        var t = p.tierPrice[0]; tierHtml = '<div class="prod-moq">阶梯：≥' + t.qty + ' $' + t.price + '</div>';
+      }
+      return '<div class="prod-list-row" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">' +
+        '<div><div class="prod-thumb-wrap">' + thumbHtml + '</div></div>' +
+        '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '">' + String(p.name || '').slice(0, 48) + '</b><span>' + g.name + ' · ' + p.slug + '</span></div>' +
+        '<div class="prod-price-cell"><div>$' + (p.price || '—') + '</div><div class="prod-moq">MOQ ' + (p.moq || '—') + '' + tierHtml + '</div></div>' +
+        '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span></div>' +
+        '<div class="prod-seo-col"><b style="color:' + scoreColor + ';font-size:13px">' + score + '</b></div>' +
+        '<div class="prod-actions"><button class="ed-act-btn" data-action="edit" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">编辑</button>' +
+        '<button class="ed-act-btn ' + (isActive ? 'danger' : '') + '" data-action="toggle" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '" data-status="' + (isActive ? 'hidden' : 'active') + '">' + (isActive ? '下架' : '上架') + '</button></div>' +
+        '</div>';
+    }).join('');
+    // bind row actions
+    list.querySelectorAll('.ed-act-btn').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (b.dataset.action === 'edit') { edOpenDrawer(b.dataset.gslug, b.dataset.pslug); }
+        else if (b.dataset.action === 'toggle') { edQuickStatus(b.dataset.gslug, b.dataset.pslug, b.dataset.status, b); }
+      });
+    });
+  }
+
+  // ── v9: quick toggle status ──
+  function edQuickStatus(gslug, pslug, newStatus, btn) {
+    btn.disabled = true; btn.textContent = '…';
+    postOps([{ action: 'product', group: gslug, slug: pslug, fields: { status: newStatus } }]).then(function (res) {
+      if (res.ok) { toast(pslug + ' 已' + (newStatus === 'active' ? '上架' : '下架') + '，约 2 分钟生效', 'ok'); edReloadData(); }
+      else if (res.error === 'server-not-configured') { toast('编辑管线未配置，请先设置 OPS_GH_PAT', 'err'); btn.disabled = false; btn.textContent = newStatus === 'active' ? '上架' : '下架'; }
+      else { toast('操作失败：' + (res.error || ''), 'err'); btn.disabled = false; btn.textContent = newStatus === 'active' ? '上架' : '下架'; }
+    }).catch(function () { toast('网络错误', 'err'); btn.disabled = false; });
+  }
+
+  // ── v9: open drawer with product data ──
+  function edOpenDrawer(gslug, pslug) {
+    if (!DATA) { toast('产品数据未加载，请稍候', 'err'); return; }
+    var p = (DATA.productCatalog[gslug] || []).find(function (x) { return x.slug === pslug; });
+    if (!p) return;
+    var g = DATA.productGroups.find(function (x) { return x.slug === gslug; });
+    edCurrentGroup = gslug; edCurrentSlug = pslug;
+    // fill fields
+    el('f-name').value = p.name || '';
+    el('f-tagline').value = p.tagline || '';
+    el('f-spec').value = p.spec || '';
+    el('f-img').value = p.img || '';
+    el('f-price').value = p.price || '';
+    el('f-moq').value = p.moq || '';
+    el('f-order').value = p.order !== undefined ? p.order : '';
+    el('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
+    el('f-status').value = (p.status === 'hidden') ? 'hidden' : 'active';
+    // drawer meta
+    el('ed-drawer-title').textContent = '编辑产品';
+    el('ed-drawer-slug').textContent = (g ? g.name : gslug) + ' / ' + pslug;
+    // preview button
+    var prevBtn = el('ed-drawer-preview');
+    if (prevBtn) prevBtn.onclick = function () { window.open('/products/' + gslug + '/' + pslug, '_blank'); };
+    // tier price
+    var tierWrap = el('f-tier-wrap');
+    var tierTable = el('f-tier-table');
+    if (p.tierPrice && p.tierPrice.length && tierWrap && tierTable) {
+      tierTable.innerHTML = '<tr><th>起订量 ≥</th><th>单价 (USD)</th></tr>' + p.tierPrice.map(function (t) { return '<tr><td>' + t.qty + ' 件</td><td>$' + t.price + '</td></tr>'; }).join('');
+      tierWrap.style.display = '';
+    } else if (tierWrap) { tierWrap.style.display = 'none'; }
+    // update counters + preview + score
+    edUpdateCounters(); edUpdateImgPreview(); edUpdateScore();
+    // open drawer
+    el('ed-drawer').classList.remove('closed');
+    edDrawerOpen = true;
+    // highlight active row
+    document.querySelectorAll('.prod-list-row').forEach(function (r) { r.classList.remove('active'); });
+    var row = document.querySelector('.prod-list-row[data-gslug="' + gslug + '"][data-pslug="' + pslug + '"]');
+    if (row) { row.classList.add('active'); row.scrollIntoView({ block: 'nearest' }); }
+  }
+
+  // ── v9: close drawer ──
+  el('ed-drawer-close').addEventListener('click', function () {
+    el('ed-drawer').classList.add('closed');
+    edDrawerOpen = false; edCurrentGroup = ''; edCurrentSlug = '';
+    document.querySelectorAll('.prod-list-row.active').forEach(function (r) { r.classList.remove('active'); });
+  });
+
+  // ── v9: anchor nav ──
+  el('ed-anchors').addEventListener('click', function (e) {
+    var item = e.target.closest('.ed-anchor-item');
+    if (!item) return;
+    el('ed-anchors').querySelectorAll('.ed-anchor-item').forEach(function (a) { a.classList.remove('active'); });
+    item.classList.add('active');
+    var sec = document.getElementById('sec-' + item.dataset.sec);
+    if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ── v9: img preview ──
+  function edUpdateImgPreview() {
+    var val = el('f-img').value.trim();
+    var preview = el('f-img-preview'), missing = el('f-img-missing');
+    if (!val) { if (preview) preview.style.display = 'none'; if (missing) missing.style.display = 'flex'; return; }
+    var src = '/assets/images/' + val.replace(/^\/assets\/images\//, '');
+    if (preview) { preview.src = src; preview.style.display = 'block'; preview.onerror = function () { preview.style.display = 'none'; if (missing) missing.style.display = 'flex'; }; preview.onload = function () { if (missing) missing.style.display = 'none'; }; }
+  }
+  el('f-img').addEventListener('input', function () { edUpdateImgPreview(); edUpdateScore(); });
+
+  // ── v9: field counters ──
+  var edCounterMap = [
+    { id: 'f-name', cnt: 'cnt-name', max: 80 },
+    { id: 'f-tagline', cnt: 'cnt-tagline', max: 120 },
+    { id: 'f-spec', cnt: 'cnt-spec', max: 100 },
+    { id: 'f-copy', cnt: 'cnt-copy', max: 500 }
+  ];
+  function edUpdateCounters() {
+    edCounterMap.forEach(function (m) {
+      var inp = el(m.id), cntEl = el(m.cnt);
+      if (!inp || !cntEl) return;
+      var len = inp.value.length;
+      cntEl.textContent = m.max ? (len + '/' + m.max) : len;
+      cntEl.className = 'ed-counter' + (len > m.max ? ' over' : (len > m.max * 0.9 ? ' warn' : ''));
+    });
+  }
+  ['f-name', 'f-tagline', 'f-spec', 'f-copy'].forEach(function (id) {
+    var inp = el(id);
+    if (inp) inp.addEventListener('input', function () { edUpdateCounters(); edUpdateScore(); });
+  });
+
+  // ── v9: real-time SEO score in drawer ──
+  function edUpdateScore() {
+    if (!window.seoScore) return;
+    var pseudo = {
+      name: el('f-name').value,
+      tagline: el('f-tagline').value,
+      spec: el('f-spec').value,
+      img: el('f-img').value,
+      moq: el('f-moq').value,
+      price: el('f-price').value,
+      copy: [el('f-copy').value],
+      tierPrice: null,
+      faq: []
     };
-    var copy = document.getElementById('f-copy').value.trim();
-    var img = document.getElementById('f-img').value.trim();
-    var order = document.getElementById('f-order').value.trim();
-    var status = document.getElementById('f-status').value;
+    var r = seoScore(pseudo);
+    var scoreEl = el('dr-seo-score');
+    var issuesEl = el('dr-seo-issues');
+    if (scoreEl) {
+      scoreEl.textContent = r.score;
+      scoreEl.style.color = r.score >= 85 ? 'var(--ok)' : (r.score >= 70 ? 'var(--color-warning)' : 'var(--bad)');
+    }
+    if (issuesEl) issuesEl.textContent = r.detail.length ? r.detail.slice(0, 2).join('；') + (r.detail.length > 2 ? '等 ' + (r.detail.length - 2) + ' 项' : '') : '✔ 所有评分项已达标';
+  }
+
+  // ── v9: new ed-save (reads from drawer state) ──
+  document.getElementById('ed-save').addEventListener('click', function () {
+    if (!edCurrentGroup || !edCurrentSlug) { toast('请先在列表中点击「编辑」选择产品', 'err'); return; }
+    var fields = {
+      name: el('f-name').value.trim(),
+      price: el('f-price').value.trim(),
+      moq: el('f-moq').value.trim(),
+      tagline: el('f-tagline').value.trim(),
+      spec: el('f-spec').value.trim()
+    };
+    var copy = el('f-copy').value.trim();
+    var img = el('f-img').value.trim();
+    var order = el('f-order').value.trim();
+    var status = el('f-status').value;
     if (copy) fields.copy = [copy];
     if (img) fields.img = img;
     if (order !== '') fields.order = order;
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
-    postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }]).then(function (res) {
-      edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）';
-      if (res.ok) { flash('已发布：' + res.message); }
-      else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
-      else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; flash('网络错误，请重试', true); });
+    postOps([{ action: 'product', group: edCurrentGroup, slug: edCurrentSlug, fields: fields }]).then(function (res) {
+      edSaving = false;
+      var btn = document.getElementById('ed-save');
+      if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '💾 保存并发布'; }
+      if (res.ok) { flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edReloadData(); }
+      else if (res.error === 'server-not-configured') { flash('编辑管线未开通：请在设置中心配置 GitHub PAT', true); toast('GH_PAT 未配置，无法保存发布', 'err'); }
+      else { flash('失败：' + (res.error || '未知'), true); toast('保存失败：' + (res.error || ''), 'err'); }
+    }).catch(function () {
+      edSaving = false;
+      var btn = document.getElementById('ed-save');
+      if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '💾 保存并发布'; }
+      flash('网络错误，请重试', true);
+    });
   });
 
   // ── Group save ──
@@ -1342,20 +1816,19 @@
     });
     seoEl.innerHTML = summaryHtml + tableHtml + '</table>';
     window.__seoRows = rows;
-    // 修复跳转：点击 → 切到编辑tab + 预选分组产品
+    // 修复跳转：点击 → 切到编辑tab + 打开抽屉直接编辑对应产品
     seoEl.querySelectorAll('.seo-fix-btn').forEach(function (b) {
       b.addEventListener('click', function () {
         var gslug = b.dataset.gslug, slug = b.dataset.slug;
         document.querySelector('.tab[data-tab="editor"]').click();
-        var trySelect = function () {
-          var gs = document.getElementById('ed-group');
-          var ps = document.getElementById('ed-product');
-          if (gs && gs.options.length > 1) {
-            gs.value = gslug; gs.dispatchEvent(new Event('change'));
-            setTimeout(function () { if (ps) { ps.value = slug; ps.dispatchEvent(new Event('change')); } }, 300);
-          } else { setTimeout(trySelect, 200); }
+        var tryOpen = function () {
+          if (DATA && window.__edOpenDrawer) {
+            window.__edOpenDrawer(gslug, slug);
+          } else if (!DATA) {
+            setTimeout(tryOpen, 300);
+          }
         };
-        setTimeout(trySelect, 100);
+        setTimeout(tryOpen, 150);
         toast('已跳转到产品编辑，请修复标注的问题', 'info');
       });
     });
@@ -1635,10 +2108,10 @@
   if (edSave) {
     edSave.addEventListener('click', function () {
       if (edSaving) return;
-      if (!groupSel.value || !prodSel.value) return; // 校验失败由提交 listener 提示，不进入 loading
+      if (!edCurrentGroup || !edCurrentSlug) return; // 未选产品，由提交 listener 提示
       edSaving = true;
       edSave.disabled = true; edSave.classList.add('loading'); edSave.textContent = '发布中…';
-      setTimeout(function () { if (edSaving) { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; } }, 8000);
+      setTimeout(function () { if (edSaving) { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '💾 保存并发布'; } }, 8000);
     });
   }
   var gSave = document.getElementById('g-save');
