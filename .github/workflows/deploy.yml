@@ -19,6 +19,8 @@ jobs:
         run: |
           echo "VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+      - name: Regenerate sitemap
+        run: node scripts/gen-sitemap.mjs
       - name: Build site
         run: npm run build
       - name: Prepare dist-seo (exclude images)
@@ -31,3 +33,16 @@ jobs:
         run: node deploy.cjs
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          ADMIN_PW_HASH: ${{ secrets.ADMIN_PW_HASH }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_ENDPOINT: ${{ secrets.LLM_ENDPOINT }}
+          OPS_GH_PAT: ${{ secrets.OPS_GH_PAT }}
+          SB_URL: ${{ secrets.SUPABASE_URL }}
+          SB_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          GA4_SERVICE_JSON: ${{ secrets.GA4_SERVICE_JSON }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GSC_SERVICE_JSON: ${{ secrets.GSC_SERVICE_JSON }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
