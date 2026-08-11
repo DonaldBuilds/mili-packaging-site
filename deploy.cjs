@@ -284,7 +284,7 @@ export default{async fetch(r,env){
       if(!prod&&slugs.length){group=slugs[0];const list=cat[group]||[];prod=list[0]}
       if(!prod)return new Response(JSON.stringify({ok:false,error:'no-products'}),{status:404,headers:{'content-type':'application/json'}});
       const sample=JSON.stringify({name:prod.name,tagline:prod.tagline,spec:prod.spec,price:prod.price,tierPrice:prod.tierPrice,moq:prod.moq,copy:prod.copy,chips:prod.chips,faq:prod.faq}).slice(0,3000);
-      const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\n'+sample+'\n\n请输出中文 SEO 优化建议（markdown 格式）：\n1. 产品标题（英文，<=80 字符）\n2. Meta Description（英文，<=150 字符）\n3. 3 个推荐长尾关键词（英文）\n4. 3 条具体可操作的文案改进要点\n5. 2 条潜在买家顾虑与对策';
+      const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\\n'+sample+'\\n\\n请输出中文 SEO 优化建议（markdown 格式）：\\n1. 产品标题（英文，<=80 字符）\\n2. Meta Description（英文，<=150 字符）\\n3. 3 个推荐长尾关键词（英文）\\n4. 3 条具体可操作的文案改进要点\\n5. 2 条潜在买家顾虑与对策';
       const advice=await llmChat(env,[{role:'system',content:'你是资深 B2B 跨境电商 SEO 顾问，输出简洁专业。'},{role:'user',content:prompt}]);
       return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,advice:advice}),{headers:{'content-type':'application/json'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
