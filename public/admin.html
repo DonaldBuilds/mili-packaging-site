@@ -323,6 +323,39 @@
   /* ── v10: 顶部冗余导航隐藏（左侧功能栏已覆盖全部入口） ── */
   .tabs { display:none !important; }
   #logoutBtn { display:none !important; }
+
+  /* ── SEO 医生 v2 ── */
+  .seo-v2-selector { background:var(--color-surface); border:1px solid var(--color-border); border-radius:8px; padding:14px 16px; margin-bottom:14px; }
+  .seo-sel-label { font-size:11.5px; color:var(--color-text-secondary); margin-bottom:6px; display:block; }
+  .seo-sel-wrap { position:relative; }
+  .seo-sel-wrap input { font-size:13px; padding-right:32px; }
+  .seo-sel-clear { position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:none; cursor:pointer; font-size:15px; color:var(--color-text-secondary); line-height:1; padding:2px; }
+  .seo-sel-clear:hover { color:var(--color-danger); }
+  .seo-sel-drop { position:absolute; top:calc(100% + 2px); left:0; right:0; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; max-height:200px; overflow-y:auto; z-index:200; box-shadow:0 6px 20px rgba(0,0,0,.25); display:none; }
+  .seo-sel-drop.open { display:block; }
+  .seo-sel-item { padding:8px 12px; cursor:pointer; font-size:13px; border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; }
+  .seo-sel-item:last-child { border:none; }
+  .seo-sel-item:hover, .seo-sel-item.focused { background:var(--color-surface-2); }
+  .seo-sel-item .seo-si-score { font-size:11px; font-weight:700; padding:2px 7px; border-radius:10px; }
+  .seo-product-card { background:var(--color-surface-2); border-radius:6px; padding:12px 14px; margin-top:10px; border-left:3px solid var(--color-primary); display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .seo-pc-main { flex:1; min-width:0; }
+  .seo-pc-name { font-size:15px; font-weight:700; margin:0 0 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .seo-pc-meta { font-size:12px; color:var(--color-text-secondary); display:flex; gap:10px; flex-wrap:wrap; }
+  .seo-pc-score { font-size:24px; font-weight:700; flex-shrink:0; }
+  .seo-pc-hint { font-size:11px; color:var(--color-text-secondary); margin-top:6px; }
+  .seo-row-hl { background:rgba(201,162,39,.08) !important; box-shadow:inset 2px 0 0 var(--color-primary); }
+  .seo-status-badge { display:inline-block; font-size:10px; padding:1px 7px; border-radius:10px; margin-left:5px; vertical-align:middle; }
+  .seo-status-badge.unopt { background:rgba(128,128,128,.12); color:var(--gray); }
+  .seo-status-badge.opt { background:rgba(255,152,0,.15); color:var(--color-warning); }
+  .seo-status-badge.verified { background:rgba(76,217,100,.12); color:var(--ok); }
+  .seo-name-link { color:inherit; text-decoration:none; font-weight:600; }
+  .seo-name-link:hover { color:var(--color-primary); text-decoration:underline; }
+  .seo-icon-btn { background:none; border:none; cursor:pointer; font-size:12px; padding:2px 5px; color:var(--color-text-secondary); border-radius:3px; line-height:1; }
+  .seo-icon-btn:hover { color:var(--color-primary); background:rgba(201,162,39,.1); }
+  .seo-ai-btn { font-size:11px; padding:3px 9px; border-radius:3px; border:1px solid var(--color-primary); background:transparent; color:var(--color-primary); cursor:pointer; white-space:nowrap; }
+  .seo-ai-btn:hover { background:rgba(201,162,39,.12); }
+  .seo-ai-btn:disabled { opacity:.45; cursor:not-allowed; }
+  .seo-num { color:var(--color-text-secondary); font-size:12px; font-weight:400; }
 </style>
 </head>
 <body>
@@ -834,7 +867,7 @@
 
   <!-- ⑪ SEO 医生（产品 SEO 评分 + 优化建议） -->
   <div id="tab-seo" class="hide">
-    <h2>⑪ SEO 医生 — 产品页评分与优化建议</h2>
+    <h2>⑪ SEO 医生 v2 — 产品页评分与优化建议</h2>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
       <p class="hint" style="margin:0">评分维度：Title 长度 / Meta 描述 / 卖点 / 关键词覆盖 / 图片 alt / FAQ / 阶梯价 / 内容完整性（0-100）</p>
       <div style="display:flex;gap:8px">
@@ -845,6 +878,19 @@
       </div>
     </div>
     <div class="card"><div id="seoArea"><div class="skeleton" style="height:200px"></div></div></div>
+    <!-- v2: 产品选择器 + AI 建议区 -->
+    <div class="seo-v2-selector card" id="seo-selector-panel" style="margin-top:14px;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:13px;font-weight:600">🎯 选择优化目标</span>
+        <span id="seo-sel-hint" class="hint"></span>
+      </div>
+      <div class="seo-sel-wrap">
+        <input id="seo-sel-input" placeholder="搜索产品名称或 slug…" autocomplete="off" />
+        <button class="seo-sel-clear" id="seo-sel-clear" title="清除搜索" style="display:none">✕</button>
+        <div class="seo-sel-drop" id="seo-sel-drop"></div>
+      </div>
+      <div id="seo-product-card" style="display:none"><!-- 选中后填充 --></div>
+    </div>
     <div id="aiAdviceBox" class="card" style="display:none;margin-top:12px"></div>
   </div>
 
@@ -1899,6 +1945,96 @@
     if (p.copy) { s += 10; } else { detail.push('缺产品描述 copy'); }
     return { score: s, detail: detail };
   }
+  // ── SEO 医生 v2：选择器状态 ──
+  var seoSelected = null; // {gslug, pslug, name, score, gname}
+  var seoOptStatus = {}; // {pslug: 'opt'|'verified'}
+  try { seoOptStatus = JSON.parse(localStorage.getItem('mili-seo-opt-status') || '{}'); } catch (e) {}
+  function saveSeoOptStatus() { try { localStorage.setItem('mili-seo-opt-status', JSON.stringify(seoOptStatus)); } catch (e) {} }
+
+  function seoScoreColor(s) { return s >= 85 ? 'var(--ok)' : (s >= 70 ? 'var(--color-warning)' : 'var(--bad)'); }
+
+  // 更新「当前优化」卡片 + 高亮表格行
+  function seoUpdateSelectedCard() {
+    var panel = el('seo-selector-panel');
+    var card = el('seo-product-card');
+    if (!panel || !card) return;
+    panel.style.display = '';
+    if (!seoSelected) { card.style.display = 'none'; return; }
+    var s = seoSelected;
+    var sc = seoScoreColor(s.score);
+    card.style.display = '';
+    card.innerHTML = '<div class="seo-pc-main"><div class="seo-pc-name">🎯 ' + String(s.name).replace(/</g, '&lt;') + '</div>' +
+      '<div class="seo-pc-meta"><span>' + s.gname + '</span><span class="meta">' + s.pslug + '</span></div>' +
+      '<p class="seo-pc-hint">已选中此产品，「AI 优化建议」将为此产品生成 · 可在上方搜索更换</p></div>' +
+      '<div class="seo-pc-score" style="color:' + sc + '">' + s.score + '<div class="hint" style="font-size:11px;text-align:center">当前得分</div></div>';
+    // 高亮表格行（清除旧高亮）
+    var seoEl = el('seoArea');
+    if (seoEl) {
+      seoEl.querySelectorAll('.seo-row-hl').forEach(function (r) { r.classList.remove('seo-row-hl'); });
+      var hl = seoEl.querySelector('tr[data-pslug="' + s.pslug + '"]');
+      if (hl) { hl.classList.add('seo-row-hl'); hl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
+  }
+
+  function seoSelectProduct(gslug, pslug, name, score, gname, fromBtn) {
+    seoSelected = { gslug: gslug, pslug: pslug, name: name, score: score, gname: gname };
+    try { localStorage.setItem('mili-seo-last', JSON.stringify(seoSelected)); } catch (e) {}
+    var hint = el('seo-sel-hint');
+    if (hint) hint.textContent = fromBtn ? '已从列表选中，可在上方更换' : '';
+    el('seo-sel-input').value = name;
+    var clearBtn = el('seo-sel-clear');
+    if (clearBtn) clearBtn.style.display = '';
+    el('seo-sel-drop').classList.remove('open');
+    seoUpdateSelectedCard();
+    if (fromBtn) { var box = el('aiAdviceBox'); if (box) box.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+
+  // 恢复 localStorage 上次选中
+  function seoRestoreSelected() {
+    try {
+      var saved = JSON.parse(localStorage.getItem('mili-seo-last') || 'null');
+      if (saved && saved.pslug) {
+        seoSelected = saved;
+        el('seo-sel-input').value = saved.name;
+        var cb = el('seo-sel-clear'); if (cb) cb.style.display = '';
+        seoUpdateSelectedCard();
+      }
+    } catch (e) {}
+  }
+
+  // 搜索下拉
+  function seoSelSearch(q) {
+    var drop = el('seo-sel-drop');
+    if (!window.__seoRows || !q) { drop.classList.remove('open'); return; }
+    q = q.toLowerCase();
+    var hits = window.__seoRows.filter(function (r) {
+      return r.name.toLowerCase().indexOf(q) >= 0 || r.slug.toLowerCase().indexOf(q) >= 0 || r.gslug.toLowerCase().indexOf(q) >= 0;
+    }).slice(0, 10);
+    if (!hits.length) { drop.innerHTML = '<div class="seo-sel-item" style="color:var(--gray);cursor:default">无匹配产品</div>'; drop.classList.add('open'); return; }
+    drop.innerHTML = hits.map(function (r) {
+      var sc = seoScoreColor(r.score);
+      return '<div class="seo-sel-item" data-gslug="' + r.gslug + '" data-pslug="' + r.slug + '" data-name="' + String(r.name).replace(/"/g, '') + '" data-score="' + r.score + '" data-gname="' + r.g + '">' +
+        '<span>' + String(r.name).replace(/</g, '&lt;') + '<span class="hint" style="margin-left:6px">' + r.slug + '</span></span>' +
+        '<span class="seo-si-score" style="color:' + sc + '">' + r.score + '</span></div>';
+    }).join('');
+    drop.classList.add('open');
+    drop.querySelectorAll('.seo-sel-item[data-pslug]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        seoSelectProduct(item.dataset.gslug, item.dataset.pslug, item.dataset.name, +item.dataset.score, item.dataset.gname, false);
+        var hint = el('seo-sel-hint'); if (hint) hint.textContent = '';
+      });
+    });
+  }
+  (function () {
+    var inp = el('seo-sel-input'), cb = el('seo-sel-clear'), drop = el('seo-sel-drop');
+    if (inp) {
+      inp.addEventListener('input', function () { seoSelSearch(inp.value.trim()); cb.style.display = inp.value ? '' : 'none'; });
+      inp.addEventListener('focus', function () { if (inp.value) seoSelSearch(inp.value.trim()); });
+    }
+    if (cb) cb.addEventListener('click', function () { inp.value = ''; cb.style.display = 'none'; drop.classList.remove('open'); seoSelected = null; seoUpdateSelectedCard(); localStorage.removeItem('mili-seo-last'); });
+    document.addEventListener('click', function (e) { if (!e.target.closest('#seo-selector-panel')) { if (drop) drop.classList.remove('open'); } });
+  })();
+
   function seoRender() {
     var seoEl = document.getElementById('seoArea');
     if (!seoData) { seoFetch().then(seoRender); return; }
@@ -1914,7 +2050,6 @@
     var low = rows.filter(function (r) { return r.score < 70; }).length;
     var mid = rows.filter(function (r) { return r.score >= 70 && r.score < 85; }).length;
     var good = rows.filter(function (r) { return r.score >= 85; }).length;
-    // 共性缺失摘要
     var issueCnt = {};
     rows.forEach(function (r) { r.detail.forEach(function (d) { var k = d.split('（')[0].split(' ')[0]; issueCnt[k] = (issueCnt[k] || 0) + 1; }); });
     var topIssues = Object.keys(issueCnt).sort(function (a, b) { return issueCnt[b] - issueCnt[a]; }).slice(0, 5);
@@ -1926,70 +2061,101 @@
       '<div class="card" style="flex:2;min-width:200px;padding:12px"><b style="display:block;margin-bottom:6px;font-size:12px">最常见问题</b>' +
       topIssues.map(function (k) { return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div class="seo-bar-track"><div class="seo-bar-fill" style="width:' + Math.round(issueCnt[k] / rows.length * 100) + '%;background:var(--bad)"></div></div><span class="hint" style="min-width:90px;white-space:nowrap">' + k + '（' + issueCnt[k] + '个）</span></div>'; }).join('') +
       '</div></div>';
-    var tableHtml = '<table><tr><th>产品</th><th>分组</th><th>得分</th><th>扣分明细</th><th>操作</th></tr>';
-    rows.forEach(function (r) {
-      var barColor = r.score >= 85 ? 'var(--ok)' : (r.score >= 70 ? 'var(--color-warning)' : 'var(--bad)');
+    // v2 表格：# 序号 / 产品名链接+✏️+🔗 / 分组 / 得分 / 扣分 / 操作(去修复+✨一键优化) / 状态徽章
+    var tableHtml = '<table class="seo-table" style="width:100%"><tr>' +
+      '<th style="width:32px">#</th>' +
+      '<th>产品</th><th style="width:120px">分组</th><th style="width:110px">得分</th>' +
+      '<th>扣分明细</th><th style="width:150px">操作</th></tr>';
+    rows.forEach(function (r, i) {
+      var barColor = seoScoreColor(r.score);
       var scoreBar = '<div class="seo-bar-wrap"><div class="seo-bar-track"><div class="seo-bar-fill" style="width:' + r.score + '%;background:' + barColor + '"></div></div><b style="color:' + barColor + ';min-width:28px">' + r.score + '</b></div>';
+      var prodUrl = 'https://mili-packaging.com/products/' + r.gslug + '/' + r.slug;
+      var st = seoOptStatus[r.slug] || 'unopt';
+      var stLabel = { unopt: '未优化', opt: '已优化', verified: '✅已验证' }[st] || '未优化';
+      var stBadge = '<span class="seo-status-badge ' + st + '">' + stLabel + '</span>';
+      var nameCell = '<a class="seo-name-link" href="' + prodUrl + '" target="_blank" rel="noopener">' + String(r.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</a>' +
+        stBadge +
+        '<button class="seo-icon-btn" data-edit-gslug="' + r.gslug + '" data-edit-slug="' + r.slug + '" title="在编辑器中修改">✏️</button>' +
+        '<br/><span class="meta" style="font-size:10.5px">' + r.slug +
+        '<button class="seo-icon-btn" data-copy-url="' + prodUrl + '" title="复制前台链接">🔗</button></span>';
       var fixBtn = r.detail.length ? '<button class="seo-fix-btn" data-gslug="' + r.gslug + '" data-slug="' + r.slug + '">去修复 →</button>' : '';
-      tableHtml += '<tr><td>' + String(r.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '<br/><span class="meta">' + r.slug + '</span></td><td>' + r.g + '</td><td>' + scoreBar + '</td><td style="font-size:11px;color:var(--gray)">' + (r.detail.length ? r.detail.join('；') : '<span class="status ok">✔ 无扣分</span>') + '</td><td>' + fixBtn + '</td></tr>';
+      var aiBtn = '<button class="seo-ai-btn seo-row-ai" data-gslug="' + r.gslug + '" data-slug="' + r.slug + '" data-name="' + String(r.name).replace(/"/g, '') + '" data-score="' + r.score + '" data-gname="' + r.g + '">✨优化</button>';
+      tableHtml += '<tr data-pslug="' + r.slug + '">' +
+        '<td class="seo-num">' + (i + 1) + '</td>' +
+        '<td style="min-width:200px">' + nameCell + '</td>' +
+        '<td style="font-size:12px">' + r.g + '</td>' +
+        '<td>' + scoreBar + '</td>' +
+        '<td style="font-size:11px;color:var(--gray)">' + (r.detail.length ? r.detail.join('；') : '<span class="status ok">✔ 无扣分</span>') + '</td>' +
+        '<td style="white-space:nowrap">' + fixBtn + ' ' + aiBtn + '</td></tr>';
     });
     seoEl.innerHTML = summaryHtml + tableHtml + '</table>';
     window.__seoRows = rows;
-    // 修复跳转：点击 → 切到编辑tab + 打开抽屉直接编辑对应产品
+    // 显示选择器面板
+    var panel = el('seo-selector-panel'); if (panel) panel.style.display = '';
+    // 默认选最低分（若无历史选中）
+    if (!seoSelected && rows.length) {
+      var lowest = rows[0];
+      var hint = el('seo-sel-hint'); if (hint) hint.textContent = '已默认选中最低分产品，可在上方更换';
+      seoSelectProduct(lowest.gslug, lowest.slug, lowest.name, lowest.score, lowest.g, false);
+    } else if (seoSelected) {
+      // 恢复高亮 + 更新分数（可能刷新后分变了）
+      var cur = rows.find(function (r) { return r.slug === seoSelected.pslug; });
+      if (cur) { seoSelected.score = cur.score; seoSelected.gname = cur.g; }
+      seoUpdateSelectedCard();
+    }
+    // 去修复跳转
     seoEl.querySelectorAll('.seo-fix-btn').forEach(function (b) {
       b.addEventListener('click', function () {
         var gslug = b.dataset.gslug, slug = b.dataset.slug;
         document.querySelector('.tab[data-tab="editor"]').click();
-        var tryOpen = function () {
-          if (DATA && window.__edOpenDrawer) {
-            window.__edOpenDrawer(gslug, slug);
-          } else if (!DATA) {
-            setTimeout(tryOpen, 300);
-          }
-        };
+        var tryOpen = function () { if (DATA && window.__edOpenDrawer) { window.__edOpenDrawer(gslug, slug); } else if (!DATA) { setTimeout(tryOpen, 300); } };
         setTimeout(tryOpen, 150);
         toast('已跳转到产品编辑，请修复标注的问题', 'info');
       });
     });
+    // ✏️ 编辑器跳转
+    seoEl.querySelectorAll('[data-edit-slug]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var gslug = b.dataset.editGslug || b.getAttribute('data-edit-gslug');
+        var slug = b.dataset.editSlug || b.getAttribute('data-edit-slug');
+        document.querySelector('.tab[data-tab="editor"]').click();
+        var tryOpen = function () { if (DATA && window.__edOpenDrawer) { window.__edOpenDrawer(gslug, slug); } else { setTimeout(tryOpen, 300); } };
+        setTimeout(tryOpen, 150);
+      });
+    });
+    // 🔗 复制链接
+    seoEl.querySelectorAll('[data-copy-url]').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var url = b.dataset.copyUrl || b.getAttribute('data-copy-url');
+        try { navigator.clipboard.writeText(url); toast('链接已复制：' + url, 'ok'); } catch (ex) { toast('复制失败，请手动复制：' + url, 'err'); }
+      });
+    });
+    // ✨ 行内一键优化
+    var aiRowBtns = seoEl.querySelectorAll('.seo-row-ai');
+    aiRowBtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var gslug = b.getAttribute('data-gslug'), slug = b.getAttribute('data-slug');
+        var name = b.getAttribute('data-name'), score = +b.getAttribute('data-score'), gname = b.getAttribute('data-gname');
+        seoSelectProduct(gslug, slug, name, score, gname, true);
+        // 禁用所有行按钮
+        aiRowBtns.forEach(function (x) { x.disabled = true; });
+        b.textContent = '生成中…';
+        seoTriggerAIAdvice(gslug, slug, function () {
+          aiRowBtns.forEach(function (x) { x.disabled = false; x.textContent = '✨优化'; });
+        });
+      });
+    });
   }
-  document.getElementById('seo-refresh').addEventListener('click', function () {
-    var b = this; if (b.disabled) return;
-    b.disabled = true; b.classList.add('loading'); b.textContent = '评分中…';
-    document.getElementById('seoArea').innerHTML = '<div class="skeleton" style="height:120px"></div>';
-    seoData = null;
-    seoRender();
-    setTimeout(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '刷新评分'; }, 1500);
-  });
-  document.getElementById('seo-export').addEventListener('click', function () {
-    if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
-    var esc = function (x) { return String(x).replace(/,/g, ' '); };
-    var csv = '\uFEFF产品,分组,得分,扣分项\n' + window.__seoRows.map(function (r) { return [esc(r.name), r.g, r.score, esc(r.detail.join(';'))].join(','); }).join('\n');
-    var a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'mili-seo-audit.csv'; a.click();
-    toast('CSV 已导出', 'ok');
-  });
-  document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () { if (!seoData) seoRender(); });
-  document.getElementById('seo-ai-batch').addEventListener('click', function () {
-    var btn = this;
-    btn.disabled = true; btn.textContent = '⚡ 批量优化中…（约 30 秒）';
-    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ batch: true }) })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d.ok) { toast('批量优化失败：' + (d.error || '未知错误'), 'bad'); return; }
-        toast('⚡ 已优化 ' + d.applied + ' 个，剩余 ' + d.remaining + ' 个', 'ok');
-        var box = document.getElementById('aiAdviceBox');
-        box.style.display = 'block';
-        box.innerHTML = '<div class="alert-card" style="margin:0"><h3>⚡ 批量 AI 优化完成</h3><p>已为 ' + d.applied + ' 个产品生成 SEO 标题 + Meta 描述并写入，自动部署启动中。</p><p style="color:var(--color-text-secondary)">剩余 ' + d.remaining + ' 个产品可再次点击「批量 AI 优化」。部署完成后点「刷新评分」查看提升。</p></div>';
-      })
-      .catch(function (e) { toast('批量优化失败：' + e.message, 'bad'); })
-      .then(function () { btn.disabled = false; btn.textContent = '⚡ 批量 AI 优化'; });
-  });
-  document.getElementById('seo-ai').addEventListener('click', function () {
-    var btn = this; var box = document.getElementById('aiAdviceBox');
-    btn.disabled = true; btn.textContent = 'AI 生成中…';
-    box.style.display = 'block'; box.innerHTML = '<div class="skeleton" style="height:140px"></div>';
-    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({}) })
+
+  // 核心 AI 建议请求（供按钮和行按钮共用）
+  function seoTriggerAIAdvice(gslug, pslug, onDone) {
+    var box = el('aiAdviceBox');
+    box.style.display = 'block';
+    box.innerHTML = '<div class="skeleton" style="height:140px"></div>';
+    var payload = gslug && pslug ? { group: gslug, slug: pslug } : {};
+    if (seoSelected && !gslug) { payload.group = seoSelected.gslug; payload.slug = seoSelected.pslug; }
+    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.ok) { box.innerHTML = '<div class="alert-card"><h3>AI 建议不可用</h3><p>' + (d.error || '未知错误') + '</p></div>'; return; }
@@ -2012,7 +2178,58 @@
         });
       })
       .catch(function (e) { box.innerHTML = '<div class="alert-card"><p>请求失败：' + e.message + '</p></div>'; })
-      .then(function () { btn.disabled = false; btn.textContent = '✨ AI 优化建议'; });
+      .then(function () { if (onDone) onDone(); });
+  }
+
+  // 顶部「AI 优化建议」按钮：用已选产品（或默认最低分）
+  document.getElementById('seo-ai').addEventListener('click', function () {
+    var btn = this;
+    if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
+    // 若未选，默认最低分
+    if (!seoSelected && window.__seoRows.length) {
+      var lowest = window.__seoRows[0];
+      var hint = el('seo-sel-hint'); if (hint) hint.textContent = '已默认选中最低分产品，可在上方更换';
+      seoSelectProduct(lowest.gslug, lowest.slug, lowest.name, lowest.score, lowest.g, false);
+    }
+    btn.disabled = true; btn.textContent = 'AI 生成中…';
+    seoTriggerAIAdvice(null, null, function () { btn.disabled = false; btn.textContent = '✨ AI 优化建议'; });
+  });
+
+  document.getElementById('seo-refresh').addEventListener('click', function () {
+    var b = this; if (b.disabled) return;
+    b.disabled = true; b.classList.add('loading'); b.textContent = '评分中…';
+    document.getElementById('seoArea').innerHTML = '<div class="skeleton" style="height:120px"></div>';
+    seoData = null; seoRender();
+    setTimeout(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '刷新评分'; }, 1500);
+  });
+
+  document.getElementById('seo-export').addEventListener('click', function () {
+    if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
+    var esc = function (x) { return String(x).replace(/,/g, ' '); };
+    var csv = '\uFEFF#,产品,分组,得分,扣分项\n' + window.__seoRows.map(function (r, i) { return [i + 1, esc(r.name), r.g, r.score, esc(r.detail.join(';'))].join(','); }).join('\n');
+    var a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv); a.download = 'mili-seo-audit.csv'; a.click();
+    toast('CSV 已导出（含序号）', 'ok');
+  });
+
+  document.getElementById('seo-ai-batch').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true; btn.textContent = '⚡ 批量优化中…（约 30 秒）';
+    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ batch: true }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) { toast('批量优化失败：' + (d.error || '未知错误'), 'bad'); return; }
+        toast('⚡ 已优化 ' + d.applied + ' 个，剩余 ' + d.remaining + ' 个', 'ok');
+        var box = document.getElementById('aiAdviceBox');
+        box.style.display = 'block';
+        box.innerHTML = '<div class="alert-card" style="margin:0"><h3>⚡ 批量 AI 优化完成</h3><p>已为 ' + d.applied + ' 个产品生成 SEO 标题 + Meta 描述并写入，自动部署启动中。</p><p style="color:var(--color-text-secondary)">剩余 ' + d.remaining + ' 个可再次点击。部署完成后刷新评分查看提升。</p></div>';
+      })
+      .catch(function (e) { toast('批量优化失败：' + e.message, 'bad'); })
+      .then(function () { btn.disabled = false; btn.textContent = '⚡ 批量 AI 优化'; });
+  });
+
+  document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () {
+    if (!seoData) { seoRender(); }
+    else { seoRestoreSelected(); }
   });
 
   // ── v8: 设置中心 + 配置进度环 + 今日任务 ──
