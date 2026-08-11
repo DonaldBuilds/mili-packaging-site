@@ -2,6 +2,18 @@ import { Link } from 'react-router-dom';
 
 const stats = [['Since 2018','Established'],['500+','Brands Served'],['50+','Countries Shipped'],['98%','On-Time Rate']];
 const factory = [['20,000 m²','Production Area'],['2M+ pcs/mo','Capacity'],['200+','Workers'],['ISO 9001','Certified']];
+const milestones = [
+  ['2018', 'Founded in Jiangxi', 'Launched as a local workshop focused on rigid gift boxes, serving regional export traders.'],
+  ['2020', 'Full In-House Production', 'Added die-cutting, foil stamping, insert cutting and hand-assembly under one roof — 20,000 m² facility.'],
+  ['2022', 'FSC & ISO 9001 Certified', 'Achieved FSC chain-of-custody and ISO 9001 quality management; expanded to 500+ brands across 50+ countries.'],
+  ['2024', 'Global Partner Platform', 'Full-service design, sampling and door-to-door logistics — serving e-commerce, retail and gifting programs worldwide.'],
+];
+const certifications = [
+  ['ISO 9001', 'Quality Management System'],
+  ['FSC Certified', 'Sustainable Forestry'],
+  ['AQL 2.5', 'Inspection Standard'],
+  ['SGS Tested', 'Material Safety'],
+];
 const values = [
   ['Precision','Every box meets AQL 2.5 inspection standards. We do not ship until it is right.'],
   ['Sustainability','FSC-certified board, soy-based inks, water-based adhesives. Biodegradable options available.'],
@@ -19,13 +31,21 @@ const services = [
 export default function About() {
   return (
     <div className="page-scaffold">
-      {/* Hero */}
-      <div className="page-hero" style={{ padding:'80px 0 80px' }}>
-        <div className="page-hero-inner">
+      {/* Hero — 大图 + 渐变遮罩 */}
+      <div style={{ position: 'relative', minHeight: 520, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+        <img src="/assets/images/factory-gate.webp" alt="Mili Packaging factory" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.2) 100%)' }} />
+        <div className="container" style={{ position: 'relative', padding: '100px 0' }}>
           <div className="gold-line" />
           <span className="eyebrow">About Mili Packaging</span>
-          <h1>We Don't Just Make Boxes.<br />We Make Brands Memorable.</h1>
-          <p>Jiangxi Mili Packaging Materials Co., Ltd. — a premium B2B custom packaging manufacturer founded in 2018, serving global brands.</p>
+          <h1 style={{ fontSize: 'clamp(30px, 3.6vw, 52px)', margin: '12px 0 18px', fontFamily: 'var(--font-display)', color: '#fff', maxWidth: 720, textShadow: '0 2px 16px rgba(0,0,0,.5)' }}>We Don't Just Make Boxes.<br />We Make Brands Memorable.</h1>
+          <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 15, lineHeight: 1.8, maxWidth: 620, marginBottom: 28 }}>
+            Jiangxi Mili Packaging Materials Co., Ltd. — a premium B2B custom packaging manufacturer founded in 2018, serving global brands with factory-direct quality.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get a Quote</Link>
+            <Link to="/portfolio" className="btn-outline-gold" style={{ textDecoration: 'none' }}>View Our Work</Link>
+          </div>
         </div>
       </div>
 
@@ -68,6 +88,43 @@ export default function About() {
         </div>
       </section>
 
+      {/* 发展历程时间线 */}
+      <section className="section">
+        <div className="container" style={{ maxWidth: 860 }}>
+          <div style={{ textAlign:'center', marginBottom: 56 }}>
+            <div className="gold-line gold-line-center" />
+            <span className="eyebrow">Our Journey</span>
+            <h2>From Workshop to Global Partner</h2>
+          </div>
+          <div style={{ position:'relative', paddingLeft: 28 }}>
+            <div style={{ position:'absolute', left: 7, top: 4, bottom: 4, width: 1, background: 'var(--border-dim)' }} />
+            {milestones.map(([year, title, desc]) => (
+              <div key={year} style={{ position:'relative', marginBottom: 36 }}>
+                <div style={{ position:'absolute', left: -28, top: 6, width: 15, height: 15, borderRadius: '50%', border: '2px solid var(--gold)', background: 'var(--black)', boxSizing: 'border-box' }} />
+                <div style={{ fontSize: 12, letterSpacing: '0.1em', color: 'var(--gold)', fontWeight: 700, marginBottom: 4 }}>{year}</div>
+                <h4 style={{ marginBottom: 6, fontSize: 16 }}>{title}</h4>
+                <p style={{ color:'var(--gray-3)', fontSize: 13.5, lineHeight: 1.7, margin: 0, maxWidth: 640 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 证书墙 */}
+      <section className="section-sm">
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+            {certifications.map(([n, l]) => (
+              <div key={n} style={{ background: 'var(--black-2)', padding: '24px 20px', textAlign: 'center' }}>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.6" style={{ margin: '0 auto 10px', display: 'block' }} aria-hidden="true"><path d="M9 12l2 2 4-4" /><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z" /></svg>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>{n}</div>
+                <div style={{ fontSize: 11, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gray-3)', marginTop: 4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Factory */}
       <section className="section">
         <div className="container">
@@ -76,7 +133,6 @@ export default function About() {
             <span className="eyebrow">Factory Strength</span>
             <h2>Precision at Scale</h2>
           </div>
-          {/* Factory entrance */}
           <img src="/assets/images/factory-gate.webp" alt="Mili Packaging factory entrance, Jiangxi Mili Packaging Materials Co., Ltd." style={{ width:'100%', aspectRatio:'16/8', objectFit:'cover', marginBottom: 2 }} />
           <div className="stat-row" style={{ marginTop: 2 }}>
             {factory.map(([n,l]) => (
@@ -84,7 +140,6 @@ export default function About() {
             ))}
           </div>
 
-          {/* Production floor & craft process */}
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:12, margin:'72px 0 36px' }}>
             <div>
               <div className="gold-line" />
@@ -113,7 +168,6 @@ export default function About() {
             ))}
           </div>
 
-          {/* Sample room */}
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:12, marginBottom: 36 }}>
             <div>
               <div className="gold-line" />
