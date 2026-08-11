@@ -300,14 +300,27 @@ export default{async fetch(r,env){
       if(!prod)return new Response(JSON.stringify({ok:false,error:'no-products'}),{status:404,headers:{'content-type':'application/json'}});
       const sample=JSON.stringify({name:prod.name,tagline:prod.tagline,spec:prod.spec,price:prod.price,tierPrice:prod.tierPrice,moq:prod.moq,copy:prod.copy,chips:prod.chips,faq:prod.faq}).slice(0,3000);
       if(body&&body.apply){
-        const jprompt='你是 B2B 定制包装制造商的 SEO 文案专家。以下是产品数据 JSON：\\n'+sample+'\\n\\n请基于产品真实信息生成 SEO 标题和 Meta 描述。只输出一个 JSON 对象（不要 markdown 代码块、不要多余文字），格式：{"title":"英文标题，50-62 字符，突出产品类型+目标用途","description":"英文 Meta 描述，120-160 字符，包含核心卖点、MOQ、定制能力"}。严禁编造规格与价格，只能使用提供的数据。';
-        const rawJson=await llmChat(env,[{role:'system',content:'你是 B2B 包装产品 SEO 文案专家，只输出合法 JSON。'},{role:'user',content:jprompt}]);
-        let jt=rawJson.trim();const ai=jt.indexOf('{');const bi=jt.lastIndexOf('}');if(ai>=0&&bi>ai)jt=jt.slice(ai,bi+1);
-        const j=JSON.parse(jt);
-        const title=String(j.title||'').trim();
-        const description=String(j.description||'').trim();
-        if(!title||!description||title.length<30||title.length>90||description.length<60||description.length>280)throw new Error('bad-llm-output:title='+title.length+',desc='+description.length);
-        prod.title=title;prod.description=description;
+        // v2: 字段级应用（body.field + body.value 直写单字段）；无 field 时回退 LLM 全量生成
+        let title='',description='';
+        if(body.field&&body.value!==undefined){
+          const field=String(body.field).trim();
+          const value=String(body.value).trim();
+          if(field==='title'){if(value.length<30||value.length>90)throw new Error('bad-value:title-len='+value.length);title=value;}
+          else if(field==='description'){if(value.length<60||value.length>280)throw new Error('bad-value:desc-len='+value.length);description=value;}
+          else if(field==='tagline'){if(!value||value.length>120)throw new Error('bad-value:tagline-len='+value.length);prod.tagline=value;}
+          else throw new Error('bad-field:'+field);
+          if(title)prod.title=title;
+          if(description)prod.description=description;
+        }else{
+          const jprompt='你是 B2B 定制包装制造商的 SEO 文案专家。以下是产品数据 JSON：\\n'+sample+'\\n\\n请基于产品真实信息生成 SEO 标题和 Meta 描述。只输出一个 JSON 对象（不要 markdown 代码块、不要多余文字），格式：{"title":"英文标题，50-62 字符，突出产品类型+目标用途","description":"英文 Meta 描述，120-160 字符，包含核心卖点、MOQ、定制能力"}。严禁编造规格与价格，只能使用提供的数据。';
+          const rawJson=await llmChat(env,[{role:'system',content:'你是 B2B 包装产品 SEO 文案专家，只输出合法 JSON。'},{role:'user',content:jprompt}]);
+          let jt=rawJson.trim();const ai=jt.indexOf('{');const bi=jt.lastIndexOf('}');if(ai>=0&&bi>ai)jt=jt.slice(ai,bi+1);
+          const j=JSON.parse(jt);
+          title=String(j.title||'').trim();
+          description=String(j.description||'').trim();
+          if(!title||!description||title.length<30||title.length>90||description.length<60||description.length>280)throw new Error('bad-llm-output:title='+title.length+',desc='+description.length);
+          prod.title=title;prod.description=description;
+        }
         if(!env.OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'gh-pat-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
         const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json';
         const ghH={authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'};
@@ -315,7 +328,7 @@ export default{async fetch(r,env){
         if(!meta.sha)throw new Error('github-read-fail');
         const put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify({message:'ops: AI optimize '+group+'/'+prod.slug+' '+new Date().toISOString().slice(0,16)+'Z',content:btoa(unescape(encodeURIComponent(JSON.stringify(data)))),sha:meta.sha})});
         if(!put.ok)throw new Error('github-write:'+put.status);
-        return new Response(JSON.stringify({ok:true,applied:{group:group,slug:prod.slug,title:title,description:description},message:'AI 已优化并写入 GitHub，自动部署启动中'}),{headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,applied:{group:group,slug:prod.slug,field:(body&&body.field)||'title+description',title:title||prod.title,description:description||prod.description,tagline:prod.tagline||''},message:'AI 已优化并写入 GitHub，自动部署启动中'}),{headers:{'content-type':'application/json'}});
       }
       if(body&&body.batch){
         const todo=[];
@@ -348,9 +361,15 @@ export default{async fetch(r,env){
         for(const g of Object.keys(cat)){for(const p of (cat[g]||[])){if(!p.title||!p.description)remaining++}}
         return new Response(JSON.stringify({ok:true,applied:applied,remaining:remaining,message:'已批量优化 '+applied+' 个，剩余 '+remaining+' 个'}),{headers:{'content-type':'application/json'}});
       }
-      const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\\n'+sample+'\\n\\n请输出中文 SEO 优化建议（markdown 格式）：\\n1. 产品标题（英文，<=80 字符）\\n2. Meta Description（英文，<=150 字符）\\n3. 3 个推荐长尾关键词（英文）\\n4. 3 条具体可操作的文案改进要点\\n5. 2 条潜在买家顾虑与对策';
-      const advice=await llmChat(env,[{role:'system',content:'你是资深 B2B 跨境电商 SEO 顾问，输出简洁专业。'},{role:'user',content:prompt}]);
-      return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,advice:advice}),{headers:{'content-type':'application/json'}});
+      const prompt='你是资深跨境电商 SEO 顾问，服务 B2B 定制包装制造商 Mili Packaging（mili-packaging.com）。以下是产品数据 JSON：\\n'+sample+'\\n\\n请基于产品真实数据输出结构化 SEO 优化建议。只输出一个 JSON 对象（不要 markdown 代码块、不要多余文字），格式：{"title":{"current":"当前标题（如为空填空字符串）","suggested":"优化后的英文标题，50-62 字符，突出产品类型+用途","note":"改进说明（中文，30字内）"},"description":{"current":"当前 Meta 描述（如为空填空字符串）","suggested":"英文 Meta 描述，120-160 字符，含核心卖点、MOQ、定制能力","note":"改进说明（中文，30字内）"},"tagline":{"current":"当前卖点","suggested":"一句英文卖点（<=120 字符）","note":"改进说明"},"keywords":["3 个英文长尾关键词"],"tips":["2-3 条具体可操作改进要点"]}。严禁编造规格与价格，只能基于提供的数据。';
+      const raw=await llmChat(env,[{role:'system',content:'你是资深 B2B 跨境电商 SEO 顾问，只输出合法 JSON。'},{role:'user',content:prompt}]);
+      let jt=raw.trim();const ai3=jt.indexOf('{');const bi3=jt.lastIndexOf('}');if(ai3>=0&&bi3>ai3)jt=jt.slice(ai3,bi3+1);
+      let fields=null;try{fields=JSON.parse(jt)}catch(e){fields=null}
+      if(!fields||typeof fields!=='object'){
+        // 解析失败：回退旧格式，前端仍可用
+        return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,advice:raw,fields:null}),{headers:{'content-type':'application/json'}});
+      }
+      return new Response(JSON.stringify({ok:true,group:group,slug:prod.slug,fields:fields,current:{title:prod.title||'',description:prod.description||'',tagline:prod.tagline||''}}),{headers:{'content-type':'application/json'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
   }
 
