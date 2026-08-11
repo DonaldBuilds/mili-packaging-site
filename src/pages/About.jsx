@@ -79,7 +79,7 @@ export default function About() {
               </p>
             </div>
             <div style={{ textAlign:'center' }}>
-              <img src="/assets/images/logo-horizontal-clear.png" alt="Mili Packaging" style={{ width: 280, opacity: 0.9, margin: '0 auto 24px', display: 'block' }} />
+              <img src="/assets/images/logo-horizontal-clear.webp" alt="Mili Packaging" style={{ width: 280, opacity: 0.9, margin: '0 auto 24px', display: 'block' }} />
               <blockquote style={{ fontFamily:'Georgia, serif', fontStyle:'italic', fontSize:18, color:'var(--gold)', lineHeight:1.5 }}>
                 "Crafting premium packaging<br />that speaks for your brand."
               </blockquote>
