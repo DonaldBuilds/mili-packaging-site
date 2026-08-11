@@ -64,7 +64,7 @@ const V5_TTL=3600000;
 const b64url=function(s){let x=btoa(s);x=x.split('+').join('-').split('/').join('_');while(x.length&&x.endsWith('='))x=x.slice(0,-1);return x};
 const b64uJson=function(o){return b64url(btoa(unescape(encodeURIComponent(JSON.stringify(o)))))};
 const u8b64=function(u8){let s='';for(let i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);return b64url(s)};
-const pemToDer=function(pem){const body=pem.split('PRIVATE KEY-----')[1]||pem;const b64=body.split('\\n').join('').split('\\r').join('').trim();const bin=atob(b64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr};
+const pemToDer=function(pem){const body=pem.replace(/-----BEGIN [A-Z ]*KEY-----/g,'').replace(/-----END [A-Z ]*KEY-----/g,'').replace(/\\n/g,'').replace(/\s/g,'');const bin=atob(body);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr};
 const jwtAssertion=async function(svc){
   const now=Math.floor(Date.now()/1000);
   const header=b64uJson({alg:'RS256',typ:'JWT'});
