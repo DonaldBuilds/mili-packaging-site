@@ -254,6 +254,11 @@
   .prod-seo-col { display:flex; align-items:center; gap:6px; font-size:12px; }
   .prod-seo-ring { width:28px; height:28px; flex-shrink:0; }
   .prod-actions { display:flex; gap:6px; }
+  /* v10+: 产品短板标签 */
+  .ed-gap { display:inline-block; font-size:10px; padding:1px 6px; border-radius:3px; margin:3px 4px 0 0; line-height:1.5; }
+  .ed-gap[data-t="meta"] { background:rgba(255,107,107,.13); color:var(--bad); }
+  .ed-gap[data-t="tier"] { background:rgba(255,152,0,.15); color:var(--color-warning); }
+  .ed-gap[data-t="img"] { background:rgba(201,162,39,.13); color:var(--color-primary); }
   .ed-act-btn { font-size:11px; padding:4px 10px; border-radius:3px; border:1px solid var(--color-border); background:var(--color-surface); color:var(--color-text-secondary); cursor:pointer; white-space:nowrap; }
   .ed-act-btn:hover { border-color:var(--color-primary); color:var(--color-primary); }
   .ed-act-btn.danger:hover { border-color:var(--color-danger); color:var(--color-danger); }
@@ -799,7 +804,7 @@
       <h3>监测状态</h3>
       <p class="hint" style="line-height:1.8">
         AI 问答平台（ChatGPT / Perplexity / Google AI Overview）正在成为采购商找供应商的主要入口。<br/>
-        <b>当前数据源状态</b>：Perplexity API — <span class="tag tag-warning">未配置</span>（需 <code>PERPLEXITY_API_KEY</code>）· ChatGPT — <span class="tag tag-warning">未配置</span>（需 <code>LLM_API_KEY</code>）· Google AI Overview — <span class="tag tag-danger">不可用</span>（无公开 API 且强反爬，按合规原则不抓取）。<br/>
+        <b>当前数据源状态</b>：Perplexity API — <span class="tag tag-warning">未配置</span>（需 <code>PERPLEXITY_API_KEY</code>）· ChatGPT — <span class="tag tag-success">已配置</span>（AI 优化建议已启用）· Google AI Overview — <span class="tag tag-danger">不可用</span>（无公开 API 且强反爬，按合规原则不抓取）。<br/>
         配置后每周自动查询并检测品牌词 <b>mili / mili-packaging / Mili Packaging</b> 是否被推荐。
       </p>
     </div>
@@ -1252,12 +1257,16 @@
         ? '<img src="' + imgPath + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="prod-thumb-placeholder" style="display:none">📦</div>'
         : '<div class="prod-thumb-placeholder">📦</div>';
       var tierHtml = '';
-      if (p.tierPrice && p.tierPrice.length) {
-        var t = p.tierPrice[0]; tierHtml = '<div class="prod-moq">阶梯：≥' + t.qty + ' $' + t.price + '</div>';
+      if (p.tierPrice && typeof p.tierPrice === 'object' && p.tierPrice['1000']) {
+        tierHtml = '<div class="prod-moq">阶梯 1000：$' + p.tierPrice['1000'] + '</div>';
       }
+      var gaps = '';
+      if (!p.title || !p.description) gaps += '<span class="ed-gap" data-t="meta">缺 Meta</span>';
+      if (!p.tierPrice) gaps += '<span class="ed-gap" data-t="tier">缺阶梯价</span>';
+      if (!p.extraImgs || !p.extraImgs.length) gaps += '<span class="ed-gap" data-t="img">缺附图</span>';
       return '<div class="prod-list-row" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">' +
         '<div><div class="prod-thumb-wrap">' + thumbHtml + '</div></div>' +
-        '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '">' + String(p.name || '').slice(0, 48) + '</b><span>' + g.name + ' · ' + p.slug + '</span></div>' +
+        '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '">' + String(p.name || '').slice(0, 48) + '</b><span>' + g.name + ' · ' + p.slug + '</span>' + gaps + '</div>' +
         '<div class="prod-price-cell"><div>$' + (p.price || '—') + '</div><div class="prod-moq">MOQ ' + (p.moq || '—') + '' + tierHtml + '</div></div>' +
         '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span></div>' +
         '<div class="prod-seo-col"><b style="color:' + scoreColor + ';font-size:13px">' + score + '</b></div>' +
@@ -1558,8 +1567,8 @@
   // ── v4.5: Cron tasks panel（v8 升级：密钥状态实时标注）──
   function loadCron() {
     var jobs = [
-      { name: '每日经营简报', cron: '每天 08:00（北京时间）', deps: ['pushplus','supabase'], desc: '昨日询盘数 · 站点 10 页健康 · 最近部署状态；GA4/GSC 需 Service Account（未配置则占位跳过）', enabled: true },
-      { name: '死链 & 收录巡检', cron: '每周一 09:00（北京时间）', deps: ['pushplus'], desc: '解析 sitemap 全部 URL → HEAD 检测 4xx/5xx 死链清单；GSC 收录比对需 Service Account（未配置则跳过）', enabled: true },
+      { name: '每日经营简报', cron: '每天 08:00（北京时间）', deps: ['pushplus','supabase'], desc: '昨日询盘数 · 站点 10 页健康 · 最近部署状态；GA4/GSC 已启用（流量与关键词数据）', enabled: true },
+      { name: '死链 & 收录巡检', cron: '每周一 09:00（北京时间）', deps: ['pushplus'], desc: '解析 sitemap 全部 URL → HEAD 检测 4xx/5xx 死链清单；GSC 收录比对已启用', enabled: true },
       { name: 'IndexNow 提交', cron: '每 6 小时', deps: ['indexnow'], desc: '提交首页 + sitemap 至 api.indexnow.org，加速新内容收录；未配置 key 则自动跳过', enabled: true },
       { name: 'sitemap 自动重建', cron: '每次 git push（Actions）', deps: [], desc: '构建流程自动重跑 gen-sitemap.mjs，产品/博客增删改后 sitemap 随部署自动更新（约 2 分钟）', enabled: true },
     ];
