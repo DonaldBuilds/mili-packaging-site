@@ -445,11 +445,39 @@ function purgeCache() {
   });
 }
 
+// Sync env vars as Cloudflare Worker secrets — metadata.vars on script PUT is unreliable,
+// but secrets are injected into the worker env deterministically.
+async function syncSecrets() {
+  async function cfFetch(method, p, body) {
+    const res = await fetch('https://api.cloudflare.com/client/v4' + p, {
+      method,
+      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    return res.json();
+  }
+  const base = `/accounts/${ACCT}/workers/scripts/${NAME}/secrets`;
+  const list = await cfFetch('GET', base);
+  const existing = (list.result || []).map(s => s.name);
+  for (const [k, v] of Object.entries(VARS)) {
+    if (!v) continue;
+    const r = await cfFetch('PUT', base, { name: k, text: v, type: 'secret_text' });
+    console.log(`${r.success ? 'OK' : 'FAIL'} secret ${k}${r.success ? '' : ': ' + JSON.stringify(r.errors)}`);
+  }
+  for (const n of existing) {
+    if (!VARS[n]) {
+      const r = await cfFetch('DELETE', base + '/' + n);
+      console.log(`${r.success ? 'OK' : 'FAIL'} secret ${n}${r.success ? ' deleted' : ' delete: ' + JSON.stringify(r.errors)}`);
+    }
+  }
+}
+
 (async () => {
   const MAX = 4;
   for (let i = 1; i <= MAX; i++) {
     try {
       await deploy(i);
+      await syncSecrets();
       await purgeCache();
       process.exit(0);
     } catch (e) {
