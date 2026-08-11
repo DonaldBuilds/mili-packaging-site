@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 export const cases = [
@@ -14,6 +14,13 @@ export const cases = [
 
 const filters = ['All', 'Cosmetics', 'Jewelry', 'Watches', 'Fashion', 'Beauty', 'Retail', 'Lifestyle', 'Wine & Spirits'];
 
+const portfolioStats = [
+  ['500+', 'Brands Served'],
+  ['50+', 'Export Countries'],
+  ['98%', 'On-Time Rate'],
+  ['48 h', 'Free 3D Mockup'],
+];
+
 export default function Portfolio() {
   const [active, setActive] = useState('All');
   const filtered = active === 'All' ? cases : cases.filter(c => c.industry === active);
@@ -25,11 +32,23 @@ export default function Portfolio() {
           <div className="gold-line" />
           <span className="eyebrow">Our Work</span>
           <h1>Selected Projects</h1>
-          <p>Real packaging solutions for real brands. Each project tailored to the client's identity, product, and audience.</p>
+          <p>Real packaging solutions for real brands — from single-SKU launches to multi-market gift programs. Every project tailored to the client's identity, product, and audience.</p>
         </div>
       </div>
 
-      {/* Filter bar */}
+      <section style={{ padding: '0 0 40px' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+            {portfolioStats.map(([n, l]) => (
+              <div key={l} style={{ background: 'var(--black-2)', padding: '26px 20px', textAlign: 'center' }}>
+                <div style={{ fontSize: 30, fontWeight: 700, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>{n}</div>
+                <div style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gray-3)', marginTop: 4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div style={{ borderBottom:'1px solid var(--border-dim)', padding:'20px 0' }}>
         <div className="container" style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
           {filters.map(f => (
@@ -41,31 +60,38 @@ export default function Portfolio() {
               cursor:'pointer', transition:'all 0.2s',
             }}>{f}</button>
           ))}
+          <span style={{ marginLeft:'auto', fontSize:12, color:'var(--gray-3)', alignSelf:'center' }}>
+            {filtered.length} project{filtered.length !== 1 ? 's' : ''} shown
+          </span>
         </div>
       </div>
 
-      {/* Grid */}
       <section className="section">
         <div className="container">
           <div style={{ display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap: 2 }}>
             {filtered.map(c => (
-              <div key={c.id} style={{ background:'var(--black-2)', border:'1px solid var(--border-dim)', overflow:'hidden' }}>
+              <div key={c.id} style={{ background:'var(--black-2)', border:'1px solid var(--border-dim)', overflow:'hidden', display:'flex', flexDirection:'column' }}>
                 <div style={{ overflow:'hidden', aspectRatio:'16/9' }}>
                   <img src={c.img} alt={c.client} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.4s ease' }}
                     onMouseEnter={e => e.target.style.transform='scale(1.04)'}
                     onMouseLeave={e => e.target.style.transform='scale(1)'} />
                 </div>
-                <div style={{ padding:'32px 28px' }}>
+                <div style={{ padding:'32px 28px', flex:1, display:'flex', flexDirection:'column' }}>
                   <div style={{ display:'flex', gap: 8, flexWrap:'wrap', marginBottom: 16 }}>
-                    {[c.industry, c.type, c.finish].map(t => (
+                    {[c.industry, c.type].map(t => (
                       <span key={t} style={{ fontSize:10, letterSpacing:'0.06em', textTransform:'uppercase', color:'var(--gold)', border:'1px solid var(--border)', padding:'3px 10px' }}>{t}</span>
                     ))}
+                    <span style={{ fontSize:10, letterSpacing:'0.06em', textTransform:'uppercase', color:'var(--gray-3)', border:'1px dashed var(--border)', padding:'3px 10px' }}>{c.finish}</span>
                   </div>
                   <h3 style={{ marginBottom: 8, fontSize: 20 }}>{c.client}</h3>
-                  <p style={{ color:'var(--gray-3)', fontSize:13, lineHeight:1.7, marginBottom: 16 }}>{c.desc}</p>
-                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap: 16, fontSize:12, color:'var(--gray-2)', flexWrap:'wrap' }}>
+                  <p style={{ color:'var(--gray-3)', fontSize:13, lineHeight:1.7, marginBottom: 20, flex:1 }}>{c.desc}</p>
+                  <div style={{ borderLeft:'3px solid var(--gold)', background:'rgba(201,162,39,.06)', padding:'12px 16px', marginBottom: 16 }}>
+                    <div style={{ fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--gray-3)', marginBottom:4 }}>Result</div>
+                    <div style={{ color:'var(--gold)', fontSize:16, fontWeight:700, fontFamily:'var(--font-display)', letterSpacing:'0.02em' }}>{c.result}</div>
+                  </div>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap: 16, fontSize:12, color:'var(--gray-2)', flexWrap:'wrap', borderTop:'1px solid var(--border-dim)', paddingTop:16 }}>
                     <span>Qty: <strong style={{ color:'var(--gray-3)' }}>{c.qty}</strong></span>
-                    <span style={{ color:'var(--gold)', fontSize:13, fontWeight:700, fontFamily:'var(--font-display)', letterSpacing:'0.02em' }}>{c.result}</span>
+                    <span>Lead time: <strong style={{ color:'var(--gray-3)' }}>{c.leadTime}</strong></span>
                   </div>
                 </div>
               </div>
@@ -77,7 +103,7 @@ export default function Portfolio() {
       <section className="cta-band">
         <div className="gold-line gold-line-center" />
         <h2>Ready to Create Your Project?</h2>
-        <p>Tell us what you need. Our team will design something just as impressive for your brand.</p>
+        <p>Tell us what you need. Our team will design something just as impressive for your brand — free 3D mockup within 48 hours.</p>
         <div className="cta-band-actions">
           <Link to="/contact" className="btn-gold">Start a Project</Link>
           <Link to="/products" className="btn-outline-gold">Browse Products</Link>
