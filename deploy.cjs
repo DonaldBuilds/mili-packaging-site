@@ -412,8 +412,26 @@ export default{async fetch(r,env){
 
   // SPA routes → fall through to index.html (History-mode routing, no hash redirects)
 
-  // Image proxy from Accio CDN
-  if(/\\.(jpg|png|webp|jpeg)\$/i.test(k))return fetch('https://mili-packaging.site.accio.ai/'+k,{cf:{cacheEverything:true}});
+  // Image proxy: Accio CDN first, fallback to GitHub raw (new/backfill images)
+  if(/\\.(jpg|png|webp|jpeg)\$/i.test(k)){
+    const tries=[
+      'https://mili-packaging.site.accio.ai/'+k,
+      'https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/public'+k
+    ];
+    for(const u of tries){
+      const r=await fetch(u,{cf:{cacheEverything:true,cacheTtl:86400}});
+      if(r&&r.ok){
+        const ext=k.split('.').pop().toLowerCase();
+        const ct=({webp:'image/webp',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png'})[ext]||'application/octet-stream';
+        const h=new Headers(r.headers);
+        h.set('content-type',ct);
+        h.set('cache-control','public,max-age=86400');
+        h.set('x-img-src',u.indexOf('accio')>=0?'accio':'github');
+        return new Response(r.body,{status:200,headers:h});
+      }
+    }
+    return new Response('Not Found',{status:404});
+  }
 
   // Fallback → SPA index
   return new Response(F['index.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
