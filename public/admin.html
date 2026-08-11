@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Mili Packaging 运营工作台 v6</title>
+<title>Mili Packaging 独立站运营工作台</title>
 <script>(function(){try{var t=localStorage.getItem('mili-theme');var d=document.documentElement;if(t==='light'||t==='dark'){d.setAttribute('data-theme',t)}else{d.removeAttribute('data-theme')}}catch(e){}})();</script>
 <style>
   /* ── V6 design tokens — dark (default) ── */
@@ -399,10 +399,35 @@
   /* 页面切换 */
   .tab-panel-enter { animation:fadeIn .2s ease; }
 
-  /* Sidebar active 高亮滑块（细、淡化） */
+  /* Sidebar active 高亮滑块 */
   .sb-item { position:relative; transition:background .15s, color .15s; }
-  .sb-item::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:2px; height:0; background:rgba(201,162,39,.55); border-radius:0 2px 2px 0; transition:height .2s ease; }
-  .sb-item.active::before { height:60%; }
+  .sb-item::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:0; background:var(--color-primary); border-radius:0 3px 3px 0; transition:height .2s ease; }
+  .sb-item.active::before { height:70%; }
+  /* 自定义滚动条（侧边栏/内容区） */
+  ::-webkit-scrollbar { width:4px; height:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(201,162,39,.25); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:rgba(201,162,39,.55); }
+  * { scrollbar-width:thin; scrollbar-color:rgba(201,162,39,.25) transparent; }
+  /* 价格模式编辑器 */
+  .price-mode-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .price-mode-tab { padding:6px 14px; border-radius:4px; border:1px solid var(--color-border); background:none; color:var(--color-text-secondary); font-size:12px; cursor:pointer; transition:all .15s; }
+  .price-mode-tab.active { border-color:var(--color-primary); color:var(--color-primary); background:rgba(201,162,39,.1); font-weight:600; }
+  .tier-editor-row { display:grid; grid-template-columns:1fr 1fr 32px; gap:6px; align-items:center; margin-bottom:6px; }
+  .tier-editor-row input { margin:0; font-size:13px; }
+  .tier-del-btn { background:none; border:none; color:var(--bad); cursor:pointer; font-size:16px; padding:0; text-align:center; }
+  .tier-del-btn:hover { color:var(--color-danger); }
+  /* 多账号体系 */
+  .user-list-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; margin-bottom:6px; }
+  .user-avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),#8b6914); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; flex-shrink:0; }
+  .user-role-badge { font-size:10px; padding:2px 7px; border-radius:10px; }
+  .user-role-badge.admin { background:rgba(201,162,39,.15); color:var(--color-primary); }
+  .user-role-badge.operator { background:rgba(76,217,100,.1); color:var(--ok); }
+  .user-role-badge.viewer { background:rgba(128,128,128,.12); color:var(--gray); }
+  /* 店铺装修 */
+  .decor-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:8px; padding:16px; margin-bottom:12px; }
+  .decor-card h4 { font-size:13px; font-weight:700; margin:0 0 10px; display:flex; align-items:center; gap:8px; }
+  .decor-preview-frame { width:100%; height:320px; border:none; border-radius:6px; background:var(--color-surface-2); }
 
   /* Sidebar hover 微光 */
   .sb-item::after { content:''; position:absolute; inset:0; border-radius:4px; background:linear-gradient(90deg,transparent,rgba(201,162,39,.06),transparent); opacity:0; transition:opacity .3s; }
@@ -574,7 +599,7 @@
     <div class="sb-group">内容工厂</div>
     <button class="sb-item" data-sb="editor">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-      <span class="sb-label">产品/内容编辑</span>
+      <span class="sb-label">商品运营优化</span>
     </button>
     <button class="sb-item" data-sb="ticket">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
@@ -609,6 +634,14 @@
     <button class="sb-item" data-sb="audit">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
       <span class="sb-label">审计日志</span>
+    </button>
+    <button class="sb-item" data-sb="decor">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
+      <span class="sb-label">店铺装修</span>
+    </button>
+    <button class="sb-item" data-sb="accounts">
+      <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span class="sb-label">账号管理</span>
     </button>
     <button class="sb-item" data-sb="guide">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="3.6" x2="5.1" y2="5.1"/><line x1="18.9" y1="18.9" x2="20.4" y2="20.4"/><line x1="20.4" y1="3.6" x2="18.9" y2="5.1"/><line x1="5.1" y1="18.9" x2="3.6" y2="20.4"/></svg></span>
@@ -694,7 +727,7 @@
     <div class="content">
   <div class="wrap">
   <header>
-    <h1>Mili Packaging <span>运营工作台 v8</span></h1>
+    <h1>Mili Packaging <span>独立站运营工作台</span></h1>
     <span class="badge">内部使用 · noindex</span>
     <button class="btn ghost" id="logoutBtn" style="margin-left:auto;padding:6px 14px">退出登录</button>
   </header>
@@ -702,7 +735,7 @@
 
   <div class="tabs">
     <button class="tab active" data-tab="dash">数据看板</button>
-    <button class="tab" data-tab="editor">产品/内容编辑</button>
+    <button class="tab" data-tab="editor">商品运营优化</button>
     <button class="tab" data-tab="inquiry">询盘中心</button>
     <button class="tab" data-tab="tools">后台工具</button>
     <button class="tab" data-tab="ticket">修改工单</button>
@@ -712,6 +745,8 @@
     <button class="tab" data-tab="guide">风格指南</button>
     <button class="tab" data-tab="geo">AI 可见性</button>
     <button class="tab" data-tab="seo">SEO 医生</button>
+    <button class="tab" data-tab="decor">店铺装修</button>
+    <button class="tab" data-tab="accounts">账号管理</button>
     <button class="tab" data-tab="config">设置</button>
   </div>
 
@@ -779,7 +814,7 @@
   <!-- ② 产品/内容编辑 v9 — 阿里国际站风格专业编辑器 -->
   <div id="tab-editor" class="hide">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-      <h2 style="margin:0">产品/内容编辑</h2>
+      <h2 style="margin:0">商品运营优化</h2>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="hint" style="margin:0" id="ed-save-hint">GH_PAT 已配置后可直接保存发布</span>
         <span class="tag tag-warning" id="ed-pat-badge" style="display:none">编辑管线未配置</span>
@@ -942,17 +977,62 @@
             <!-- ③ 价格规格 -->
             <div class="ed-section" id="sec-price">
               <div class="ed-section-title">价格规格</div>
-              <div class="row">
-                <div><label>参考价 (USD)</label><input id="f-price" type="number" step="0.01" placeholder="5.99" /></div>
-                <div><label>MOQ（最小起订量）</label><input id="f-moq" placeholder="100" /></div>
+              <!-- 价格模式选择 -->
+              <div style="margin-bottom:12px">
+                <label style="font-size:11.5px;color:var(--color-text-secondary);margin-bottom:8px;display:block">定价模式</label>
+                <div class="price-mode-tabs">
+                  <button class="price-mode-tab active" data-mode="single">单一参考价</button>
+                  <button class="price-mode-tab" data-mode="tier">阶梯价格</button>
+                  <button class="price-mode-tab" data-mode="range">区间价格</button>
+                </div>
               </div>
-              <!-- 阶梯价预览 -->
-              <div id="f-tier-wrap" style="display:none">
-                <label style="font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px;display:block">阶梯价格（来自产品数据）</label>
-                <table class="tier-table" id="f-tier-table"></table>
+              <!-- 通用：MOQ -->
+              <div style="margin-bottom:10px">
+                <label>MOQ（最小起订量）</label>
+                <input id="f-moq" placeholder="100 pcs" />
               </div>
-              <div style="margin-top:10px">
-                <label>排序位置</label><input id="f-order" type="number" placeholder="1（数字越小越靠前）" />
+              <!-- 单一参考价（默认） -->
+              <div id="price-panel-single">
+                <label>参考价 (USD)</label>
+                <input id="f-price" type="number" step="0.01" placeholder="5.99" />
+                <p class="hint" style="margin-top:4px">前台显示 From $X，适合单一规格产品</p>
+              </div>
+              <!-- 阶梯价格 -->
+              <div id="price-panel-tier" style="display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr 32px;gap:6px;margin-bottom:4px">
+                  <span style="font-size:11px;color:var(--color-text-secondary)">起订量（件）</span>
+                  <span style="font-size:11px;color:var(--color-text-secondary)">单价 (USD)</span>
+                  <span></span>
+                </div>
+                <div id="tier-editor-rows"></div>
+                <button type="button" class="btn btn-ghost btn-sm" id="tier-add-row" style="margin-top:6px">＋ 添加阶梯</button>
+                <p class="hint" style="margin-top:6px">数量越大单价越低；保存后前台显示完整阶梯价表</p>
+                <!-- 隐藏旧 f-price 用于兼容 -->
+                <input id="f-price" type="hidden" />
+              </div>
+              <!-- 区间价格 -->
+              <div id="price-panel-range" style="display:none">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+                  <div><label>最低价 (USD)</label><input id="f-price-min" type="number" step="0.01" placeholder="0.49" /></div>
+                  <div><label>最高价 (USD)</label><input id="f-price-max" type="number" step="0.01" placeholder="5.99" /></div>
+                </div>
+                <div style="margin-bottom:10px">
+                  <label>贸易条款</label>
+                  <select id="f-price-term">
+                    <option value="FOB">FOB（离岸价）</option>
+                    <option value="CIF">CIF（成本+保险+运费）</option>
+                    <option value="EXW">EXW（工厂交货）</option>
+                    <option value="DDP">DDP（完税后交货）</option>
+                  </select>
+                </div>
+                <div><label>港口/备注（可选）</label><input id="f-price-port" placeholder="Shenzhen Port" /></div>
+                <p class="hint" style="margin-top:6px">前台显示 $0.49–$5.99 / FOB，适合规格差异大的产品</p>
+                <input id="f-price" type="hidden" />
+              </div>
+              <!-- 排序 -->
+              <div style="margin-top:12px">
+                <label>排序位置</label>
+                <input id="f-order" type="number" placeholder="1（数字越小越靠前）" />
               </div>
             </div>
             <!-- ④ 描述文案 -->
@@ -1069,7 +1149,7 @@
     </div>
   </div>
 
-  <footer>Mili Packaging 运营工作台 v8 · 专业后台 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Supabase / GitHub</footer>
+  <footer>Mili Packaging 独立站运营工作台 · 专业后台 · 商品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Supabase / GitHub</footer>
 </div>
 
   <!-- ⑥ 审计日志 -->
@@ -1229,6 +1309,82 @@
       <div id="seo-product-card" style="display:none"><!-- 选中后填充 --></div>
     </div>
     <div id="aiAdviceBox" class="card" style="display:none;margin-top:12px"></div>
+  </div>
+
+  <!-- 店铺装修 -->
+  <div id="tab-decor" class="hide">
+    <h2>🎨 店铺装修</h2>
+    <p class="hint" style="margin-bottom:16px">编辑网站外观、信息、模块展示；保存后约 2 分钟自动部署生效。</p>
+    <div class="decor-card">
+      <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>网站基本信息</h4>
+      <div class="row" style="gap:12px;margin-bottom:10px">
+        <div style="flex:1"><label>网站标题（SEO Title）</label><input id="decor-site-title" placeholder="Mili Packaging – Custom Boxes Factory" /></div>
+        <div style="flex:1"><label>网站描述（Meta Description）</label><input id="decor-site-desc" placeholder="Premium custom packaging from $0.49/pc..." /></div>
+      </div>
+      <div class="row" style="gap:12px;margin-bottom:10px">
+        <div style="flex:1"><label>WhatsApp 号码</label><input id="decor-whatsapp" placeholder="+86 138 xxxx xxxx" /></div>
+        <div style="flex:1"><label>联系邮箱</label><input id="decor-email" placeholder="sales@mili-packaging.com" /></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="alert('装修保存功能即将上线，配合 M6 版本完整交付')">💾 保存装修信息</button>
+    </div>
+    <div class="decor-card">
+      <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>网站实时预览</h4>
+      <div style="position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--color-border)">
+        <div style="background:var(--color-surface-2);padding:8px 12px;font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:8px">
+          <div style="display:flex;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div><div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div><div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div></div>
+          <span>mili-packaging.com</span>
+          <a href="https://mili-packaging.com" target="_blank" rel="noopener" style="margin-left:auto;color:var(--color-primary);font-size:10px">在新标签页打开 ↗</a>
+        </div>
+        <iframe src="https://mili-packaging.com" class="decor-preview-frame" title="网站预览" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div class="decor-card">
+      <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>版本与部署</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+        <div class="cfg-row"><div class="cfg-row-name">当前版本</div><div class="cfg-row-hint">独立站运营工作台</div></div>
+        <div class="cfg-row"><div class="cfg-row-name">部署平台</div><div class="cfg-row-hint">Cloudflare Workers</div></div>
+        <div class="cfg-row"><div class="cfg-row-name">CI/CD</div><div class="cfg-row-hint">GitHub Actions（push 自动触发）</div></div>
+        <div class="cfg-row"><div class="cfg-row-name">部署时间</div><div class="cfg-row-hint">约 2 分钟</div></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://github.com/DonaldBuilds/mili-packaging-site/actions" target="_blank" class="btn btn-ghost btn-sm" rel="noopener">查看部署日志 ↗</a>
+        <a href="https://mili-packaging.com" target="_blank" class="btn btn-ghost btn-sm" rel="noopener">访问网站 ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 账号管理（多账号体系） -->
+  <div id="tab-accounts" class="hide">
+    <h2>👥 账号管理</h2>
+    <p class="hint" style="margin-bottom:16px">管理工作台访问账号与权限分级；普通运营不可进入设置中心。</p>
+    <!-- 权限说明 -->
+    <div class="card" style="margin-bottom:16px">
+      <h3 style="margin-bottom:10px;font-size:14px">权限说明</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px">
+        <div style="padding:10px;background:rgba(201,162,39,.07);border-radius:6px;border:1px solid rgba(201,162,39,.2)"><b style="color:var(--color-primary)">🔑 管理员</b><br/>所有功能，含设置中心、账号管理、密钥配置</div>
+        <div style="padding:10px;background:rgba(76,217,100,.06);border-radius:6px;border:1px solid rgba(76,217,100,.2)"><b style="color:var(--ok)">✏️ 运营</b><br/>数据看板/产品编辑/询盘/SEO，不可进设置中心</div>
+        <div style="padding:10px;background:rgba(128,128,128,.06);border-radius:6px;border:1px solid rgba(128,128,128,.15)"><b style="color:var(--gray)">👁 观察员</b><br/>只读：看板/询盘/SEO，不可编辑任何内容</div>
+      </div>
+    </div>
+    <!-- 当前账号列表 -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h3 style="margin:0;font-size:14px">当前账号</h3>
+        <button class="btn btn-primary btn-sm" id="account-add-btn">＋ 添加账号</button>
+      </div>
+      <div id="account-list">
+        <div class="user-list-row">
+          <div class="user-avatar-sm">M</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">管理员</div><div style="font-size:11px;color:var(--color-text-secondary)">默认管理员账号 · 登录密码 mili2026</div></div>
+          <span class="user-role-badge admin">管理员</span>
+          <span class="tag" style="font-size:10px;background:rgba(76,217,100,.1);color:var(--ok)">当前登录</span>
+        </div>
+      </div>
+      <div class="alert-card" style="margin-top:12px">
+        <h3>多账号功能说明</h3>
+        <p style="font-size:12px;margin-top:4px;color:var(--color-text-secondary)">完整多账号体系（独立密码+权限分级）需要数据库支持。当前使用单密码模式，如需为团队成员开通独立账号，请告知，我可以帮你完整实现基于 Supabase 的多账号管理系统（每人独立密码 + 角色权限 + 登录日志）。</p>
+      </div>
+    </div>
   </div>
 
   <!-- ⑫ 设置中心（配置状态 + 连通性测试） -->
@@ -1520,6 +1676,72 @@
   // ══════════════════════════════════════════════
 
   // 实时时钟（侧边栏 + topbar）
+  // ── 价格模式切换 + 阶梯价编辑器 ──
+  var curPriceMode = 'single';
+  function setPriceMode(mode) {
+    curPriceMode = mode;
+    ['single','tier','range'].forEach(function(m){
+      var p = document.getElementById('price-panel-' + m);
+      if (p) p.style.display = m === mode ? '' : 'none';
+    });
+    document.querySelectorAll('.price-mode-tab').forEach(function(t){
+      t.classList.toggle('active', t.dataset.mode === mode);
+    });
+  }
+  document.querySelectorAll('.price-mode-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){ setPriceMode(tab.dataset.mode); });
+  });
+  // 阶梯价添加行
+  var tierAddBtn = document.getElementById('tier-add-row');
+  if (tierAddBtn) tierAddBtn.addEventListener('click', function(){
+    var rows = document.getElementById('tier-editor-rows');
+    if (!rows) return;
+    var row = document.createElement('div');
+    row.className = 'tier-editor-row';
+    row.innerHTML = '<input type="number" placeholder="起订量（件）" min="1" class="tier-qty" /><input type="number" step="0.01" placeholder="单价 (USD)" class="tier-price-val" /><button type="button" class="tier-del-btn" title="删除此行">✕</button>';
+    row.querySelector('.tier-del-btn').addEventListener('click', function(){ row.remove(); });
+    rows.appendChild(row);
+  });
+  // 从产品数据填充阶梯价编辑器
+  function fillTierEditor(tierPrice) {
+    var rows = document.getElementById('tier-editor-rows');
+    if (!rows) return;
+    rows.innerHTML = '';
+    var tiers = [];
+    if (tierPrice && typeof tierPrice === 'object' && !Array.isArray(tierPrice)) {
+      // 对象格式 {100:'1.20', 1000:'0.96', 5000:'0.72'}
+      tiers = Object.keys(tierPrice).sort(function(a,b){return +a-+b;}).map(function(k){ return {qty:k, price:tierPrice[k]}; });
+    } else if (Array.isArray(tierPrice)) {
+      tiers = tierPrice;
+    }
+    tiers.forEach(function(t){
+      var row = document.createElement('div');
+      row.className = 'tier-editor-row';
+      row.innerHTML = '<input type="number" placeholder="起订量（件）" min="1" class="tier-qty" value="' + (t.qty||'') + '" /><input type="number" step="0.01" placeholder="单价 (USD)" class="tier-price-val" value="' + (t.price||'') + '" /><button type="button" class="tier-del-btn" title="删除此行">✕</button>';
+      row.querySelector('.tier-del-btn').addEventListener('click', function(){ row.remove(); });
+      rows.appendChild(row);
+    });
+    if (!tiers.length) tierAddBtn && tierAddBtn.click(); // 默认加一行
+  }
+  // 收集阶梯价数据
+  function collectTierPrice() {
+    var result = {};
+    document.querySelectorAll('.tier-editor-row').forEach(function(row){
+      var qty = row.querySelector('.tier-qty').value.trim();
+      var price = row.querySelector('.tier-price-val').value.trim();
+      if (qty && price) result[qty] = price;
+    });
+    return Object.keys(result).length ? result : null;
+  }
+  // 区间价数据
+  function collectRangePrice() {
+    var min = (document.getElementById('f-price-min')||{}).value || '';
+    var max = (document.getElementById('f-price-max')||{}).value || '';
+    var term = (document.getElementById('f-price-term')||{}).value || 'FOB';
+    var port = (document.getElementById('f-price-port')||{}).value || '';
+    return min ? (min + (max ? '-' + max : '') + ' ' + term + (port ? ' ' + port : '')) : '';
+  }
+
   var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
   var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   function updateClock() {
@@ -1771,9 +1993,13 @@
       var scoreColor = sc ? (sc.score >= 85 ? 'var(--ok)' : (sc.score >= 70 ? 'var(--color-warning)' : 'var(--bad)')) : 'var(--gray)';
       var isActive = p.status !== 'hidden';
       var imgPath = p.img ? ('/assets/images/' + p.img) : '';
-      var thumbHtml = imgPath
-        ? '<img src="' + imgPath + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" /><div class="prod-thumb-placeholder" style="display:none">📦</div>'
+      // 规范化图片路径（确保含 /assets/images/ 前缀）
+      var thumbSrc = imgPath ? (imgPath.startsWith('http') ? imgPath : ('/assets/images/' + imgPath.replace(/^\/assets\/images\//, ''))) : '';
+      var thumbHtml = thumbSrc
+        ? '<img src="' + thumbSrc + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=prod-thumb-placeholder>📦</div>\'" />'
         : '<div class="prod-thumb-placeholder">📦</div>';
+      // 产品前台链接
+      var prodFrontUrl = 'https://mili-packaging.com/products/' + r.gslug + '/' + r.slug;
       var tierHtml = '';
       if (p.tierPrice && typeof p.tierPrice === 'object' && p.tierPrice['1000']) {
         tierHtml = '<div class="prod-moq">阶梯 1000：$' + p.tierPrice['1000'] + '</div>';
@@ -1784,7 +2010,7 @@
       if (!p.extraImgs || !p.extraImgs.length) gaps += '<span class="ed-gap" data-t="img">缺附图</span>';
       return '<div class="prod-list-row" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">' +
         '<div><div class="prod-thumb-wrap">' + thumbHtml + '</div></div>' +
-        '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '">' + String(p.name || '').slice(0, 48) + '</b><span>' + g.name + ' · ' + p.slug + '</span>' + gaps + '</div>' +
+        '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '"><a href="' + prodFrontUrl + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" onmouseover="this.style.color=\'var(--color-primary)\'" onmouseout="this.style.color=\'inherit\'">' + String(p.name || '').slice(0, 48) + '</a></b><span>' + g.name + ' · ' + p.slug + '</span>' + gaps + '</div>' +
         '<div class="prod-price-cell"><div>$' + (p.price || '—') + '</div><div class="prod-moq">MOQ ' + (p.moq || '—') + '' + tierHtml + '</div></div>' +
         '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span></div>' +
         '<div class="prod-seo-col"><b style="color:' + scoreColor + ';font-size:13px">' + score + '</b></div>' +
@@ -1829,6 +2055,10 @@
     el('f-spec').value = p.spec || '';
     el('f-img').value = p.img || '';
     el('f-price').value = p.price || '';
+    // 价格模式：有 tierPrice 对象则切阶梯模式
+    if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) {
+      setPriceMode('tier'); fillTierEditor(p.tierPrice);
+    } else { setPriceMode('single'); }
     el('f-moq').value = p.moq || '';
     el('f-order').value = p.order !== undefined ? p.order : '';
     el('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
@@ -2284,13 +2514,24 @@
       edCurrentGroup = group; edCurrentSlug = slug;
     }
     if (!edCurrentGroup || !edCurrentSlug) { toast('请先在列表中点击「编辑」选择产品', 'err'); return; }
+    // 价格：根据当前模式收集
+    var priceVal = el('f-price') ? el('f-price').value.trim() : '';
+    var tierVal = null;
+    if (curPriceMode === 'tier') {
+      tierVal = collectTierPrice();
+      if (tierVal) { var tkeys = Object.keys(tierVal).sort(function(a,b){return +a-+b;}); priceVal = tierVal[tkeys[tkeys.length-1]] || priceVal; }
+    } else if (curPriceMode === 'range') {
+      var rStr = collectRangePrice();
+      if (rStr) priceVal = rStr;
+    }
     var fields = {
       name: el('f-name').value.trim(),
-      price: el('f-price').value.trim(),
+      price: priceVal,
       moq: el('f-moq').value.trim(),
       tagline: el('f-tagline').value.trim(),
       spec: el('f-spec').value.trim()
     };
+    if (tierVal) fields.tierPrice = tierVal;
     var copy = el('f-copy').value.trim();
     var img = el('f-img').value.trim();
     var order = el('f-order').value.trim();
@@ -2622,7 +2863,7 @@
   }
 
   // ── V6: sidebar nav ↔ tabs sync ──
-  var SB_NAMES = { dash: '今日运营 / 数据看板', editor: '内容工厂 / 产品编辑', inquiry: '线索中心 / 询盘', tools: '内容工厂 / 后台工具', ticket: '内容工厂 / 修改工单', audit: '系统 / 审计日志', cron: '系统 / 自动任务', v5: '增长工具 / 数据驾驶舱', guide: '系统 / 风格指南', geo: '增长工具 / AI 可见性', seo: '增长工具 / SEO 医生', config: '系统 / 设置中心' };
+  var SB_NAMES = { dash: '今日运营 / 数据看板', editor: '内容工厂 / 商品运营优化', decor: '系统 / 店铺装修', accounts: '系统 / 账号管理', inquiry: '线索中心 / 询盘', tools: '内容工厂 / 后台工具', ticket: '内容工厂 / 修改工单', audit: '系统 / 审计日志', cron: '系统 / 自动任务', v5: '增长工具 / 数据驾驶舱', guide: '系统 / 风格指南', geo: '增长工具 / AI 可见性', seo: '增长工具 / SEO 医生', config: '系统 / 设置中心' };
   // topbar KPI 进入设置
   var topKpi = document.getElementById('topbar-kpi');
   if (topKpi) topKpi.addEventListener('click', function () { document.querySelector('.tab[data-tab="config"]').click(); });
