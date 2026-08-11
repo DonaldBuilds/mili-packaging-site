@@ -239,8 +239,11 @@
   .ed-search-ico { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px; pointer-events:none; opacity:.5; }
   /* Product list table */
   .prod-list-wrap { background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; overflow:hidden; }
-  .prod-list-head { display:grid; grid-template-columns:48px 1fr 110px 90px 70px 110px; gap:0; padding:8px 14px; background:var(--color-surface-2); font-size:11.5px; font-weight:600; color:var(--color-text-secondary); letter-spacing:.04em; border-bottom:1px solid var(--color-border); }
-  .prod-list-row { display:grid; grid-template-columns:48px 1fr 110px 90px 70px 110px; gap:0; padding:10px 14px; border-bottom:1px solid var(--color-border); align-items:center; transition:background .1s; cursor:default; }
+  .prod-list-head { display:grid; grid-template-columns:30px 48px 1fr 110px 90px 70px 118px; gap:0; padding:8px 14px; background:var(--color-surface-2); font-size:11.5px; font-weight:600; color:var(--color-text-secondary); letter-spacing:.04em; border-bottom:1px solid var(--color-border); }
+  .prod-list-row { display:grid; grid-template-columns:30px 48px 1fr 110px 90px 70px 118px; gap:0; padding:10px 14px; border-bottom:1px solid var(--color-border); align-items:center; transition:background .1s; cursor:default; }
+  /* v2-M4: 批量操作条 */
+  .ed-batch-bar { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(201,162,39,.06); border-top:1px solid var(--color-border); flex-wrap:wrap; }
+  .ed-batch-bar > span { font-size:12px; font-weight:600; color:var(--color-text); margin-right:auto; }
   .prod-list-row:last-child { border-bottom:none; }
   .prod-list-row:hover { background:var(--color-surface-2); }
   .prod-thumb-wrap { width:40px; height:40px; border-radius:4px; overflow:hidden; border:1px solid var(--color-border); background:var(--color-surface-2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -315,12 +318,12 @@
   @media (max-width:900px) {
     .ed-drawer { position:fixed; right:0; top:var(--topbar-h); bottom:0; z-index:50; width:360px; box-shadow:-4px 0 20px rgba(0,0,0,.2); transform:translateX(0); }
     .ed-drawer.closed { transform:translateX(100%); width:360px; }
-    .prod-list-head, .prod-list-row { grid-template-columns:40px 1fr 80px 70px; }
-    .prod-list-head > :nth-child(5), .prod-list-row > :nth-child(5), .prod-list-head > :nth-child(6), .prod-list-row > :nth-child(6) { display:none; }
+    .prod-list-head, .prod-list-row { grid-template-columns:30px 1fr 80px 70px; }
+    .prod-list-head > :nth-child(2), .prod-list-row > :nth-child(2), .prod-list-head > :nth-child(6), .prod-list-row > :nth-child(6), .prod-list-head > :nth-child(7), .prod-list-row > :nth-child(7) { display:none; }
   }
   @media (max-width:600px) {
-    .prod-list-head, .prod-list-row { grid-template-columns:36px 1fr 70px; }
-    .prod-list-head > :nth-child(3), .prod-list-row > :nth-child(3), .prod-list-head > :nth-child(4), .prod-list-row > :nth-child(4) { display:none; }
+    .prod-list-head, .prod-list-row { grid-template-columns:28px 1fr 70px; }
+    .prod-list-head > :nth-child(3), .prod-list-row > :nth-child(3), .prod-list-head > :nth-child(4), .prod-list-row > :nth-child(4), .prod-list-head > :nth-child(5), .prod-list-row > :nth-child(5) { display:none; }
   }
 
   /* ── v10: 顶部冗余导航隐藏（左侧功能栏已覆盖全部入口） ── */
@@ -494,6 +497,11 @@
   .seo-ai-btn:hover { background:rgba(201,162,39,.12); }
   .seo-ai-btn:disabled { opacity:.45; cursor:not-allowed; }
   .seo-num { color:var(--color-text-secondary); font-size:12px; font-weight:400; }
+  /* v2-第二批: 字段级建议卡片 */
+  .seo-field-card { border:1px solid var(--color-border); border-radius:6px; padding:10px 12px; margin-bottom:10px; background:var(--color-surface-2); }
+  .seo-field-card .seo-old-val { color:var(--gray); font-size:11.5px; word-break:break-all; }
+  .seo-field-card .seo-new-val { color:var(--ok); font-size:12px; word-break:break-all; }
+  .seo-apply-btn:disabled { opacity:.55; cursor:not-allowed; }
 
   /* ── 产品编辑 v2: M0 全屏编辑器 ── */
   .ed-drawer.fullscreen {
@@ -845,6 +853,7 @@
       <div class="ed-list-col">
         <div class="prod-list-wrap">
           <div class="prod-list-head">
+            <div title="全选/批量"><input type="checkbox" id="ed-batch-all" title="全选当前列表" /></div>
             <div>图片</div>
             <div>产品名称 / 分组</div>
             <div>价格 / MOQ</div>
@@ -854,6 +863,13 @@
           </div>
           <div id="ed-prod-list">
             <div class="prod-list-empty"><div style="font-size:28px;margin-bottom:10px">📦</div>点击「⟳ 刷新」加载产品列表</div>
+          </div>
+          <!-- v2-M4: 批量操作条 -->
+          <div class="ed-batch-bar" id="ed-batch-bar" style="display:none">
+            <span id="ed-batch-cnt">已选 0 个产品</span>
+            <button class="ed-act-btn" id="ed-batch-apply-active" style="color:var(--ok)">✅ 批量上架</button>
+            <button class="ed-act-btn" id="ed-batch-apply-hidden" style="color:var(--bad)">⏸ 批量下架</button>
+            <button class="ed-act-btn" id="ed-batch-clear">清除选择</button>
           </div>
         </div>
         <!-- 分组级设置（折叠区） -->
@@ -1663,6 +1679,18 @@
     edReloadData();
   });
 
+  // v2-M4: 批量操作条事件
+  (function () {
+    var all = el('ed-batch-all');
+    if (all) all.addEventListener('change', function () { edBatchToggleAll(all); });
+    var b1 = el('ed-batch-apply-active');
+    if (b1) b1.addEventListener('click', function () { edBatchSetStatus('active'); });
+    var b2 = el('ed-batch-apply-hidden');
+    if (b2) b2.addEventListener('click', function () { edBatchSetStatus('hidden'); });
+    var b3 = el('ed-batch-clear');
+    if (b3) b3.addEventListener('click', function () { edBatchSel = {}; document.querySelectorAll('.ed-batch-check').forEach(function (c) { c.checked = false; }); edBatchRenderBar(); });
+  })();
+
   // 分组折叠展开
   el('g-section-toggle').addEventListener('click', function () {
     var body = el('g-section-body'), arrow = el('g-section-arrow');
@@ -1687,6 +1715,7 @@
     document.querySelectorAll('.price-mode-tab').forEach(function(t){
       t.classList.toggle('active', t.dataset.mode === mode);
     });
+    if (typeof edUpdatePreviewPanel === 'function') edUpdatePreviewPanel();
   }
   document.querySelectorAll('.price-mode-tab').forEach(function(tab){
     tab.addEventListener('click', function(){ setPriceMode(tab.dataset.mode); });
@@ -1740,6 +1769,36 @@
     var term = (document.getElementById('f-price-term')||{}).value || 'FOB';
     var port = (document.getElementById('f-price-port')||{}).value || '';
     return min ? (min + (max ? '-' + max : '') + ' ' + term + (port ? ' ' + port : '')) : '';
+  }
+  // v2-M2: 阶梯价校验（数量递增 / 单价递减 / 无重复 / 完整性）
+  function validateTierPrice() {
+    var rows = document.querySelectorAll('.tier-editor-row');
+    var seen = {};
+    var prevQty = -1, prevPrice = Infinity;
+    for (var i = 0; i < rows.length; i++) {
+      var qty = (rows[i].querySelector('.tier-qty')||{}).value ? rows[i].querySelector('.tier-qty').value.trim() : '';
+      var price = (rows[i].querySelector('.tier-price-val')||{}).value ? rows[i].querySelector('.tier-price-val').value.trim() : '';
+      if (!qty && !price) continue;
+      if (!qty || !price) return '第 ' + (i + 1) + ' 行阶梯不完整：起订量与单价都必须填写';
+      if (+qty <= 0 || +price <= 0) return '第 ' + (i + 1) + ' 行阶梯必须是正数';
+      if (seen[qty]) return '起订量 ' + qty + ' 重复，请合并或删除';
+      seen[qty] = true;
+      if (+qty <= prevQty) return '起订量需递增：第 ' + (i + 1) + ' 行 ' + qty + ' 应大于上一档 ' + prevQty;
+      if (+price >= prevPrice) return '单价需随数量递减：第 ' + (i + 1) + ' 行 $' + price + ' 应低于上一档 $' + prevPrice;
+      prevQty = +qty; prevPrice = +price;
+    }
+    return null;
+  }
+  // 从区间价格字符串回填面板（如 "0.49-5.99 FOB Shenzhen Port"）
+  function fillRangeEditor(str) {
+    if (!str) return;
+    var m = String(str).match(/^([\d.]+)\s*(?:-|–)\s*([\d.]+)\s*([A-Z]{3})?\s*(.*)$/);
+    if (!m) return;
+    var min = el('f-price-min'), max = el('f-price-max'), term = el('f-price-term'), port = el('f-price-port');
+    if (min) min.value = m[1];
+    if (max) max.value = m[2];
+    if (term && m[3]) term.value = m[3];
+    if (port) port.value = m[4] || '';
   }
 
   var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -1959,12 +2018,97 @@
   var edNewMode = false;
 
   // ── v9: build product list (called after DATA loaded or filter change) ──
+  // v2-M4: 批量选择状态
+  var edBatchSel = {};
+  function edBatchCount() { return Object.keys(edBatchSel).length; }
+  function edBatchRenderBar() {
+    var bar = el('ed-batch-bar');
+    if (!bar) return;
+    var n = edBatchCount();
+    bar.style.display = n ? 'flex' : 'none';
+    var cnt = el('ed-batch-cnt'); if (cnt) cnt.textContent = '已选 ' + n + ' 个产品';
+    var all = el('ed-batch-all');
+    if (all) { all.checked = n > 0 && n === document.querySelectorAll('.ed-batch-check').length; }
+  }
+  function edBatchToggleAll(chk) {
+    document.querySelectorAll('.ed-batch-check').forEach(function (c) {
+      c.checked = chk.checked;
+      var g = c.dataset.gslug, s = c.dataset.pslug;
+      if (chk.checked) edBatchSel[g + '/' + s] = true; else delete edBatchSel[g + '/' + s];
+    });
+    edBatchRenderBar();
+  }
+  // v2-M4: 批量上下架
+  function edBatchSetStatus(newStatus) {
+    var keys = Object.keys(edBatchSel);
+    if (!keys.length) return;
+    var ops = keys.map(function (k) {
+      var sp = k.split('/');
+      return { action: 'product', group: sp[0], slug: sp[1], fields: { status: newStatus } };
+    });
+    var btn = el('ed-batch-apply'); if (btn) { btn.disabled = true; btn.textContent = '处理中…'; }
+    postOps(ops).then(function (res) {
+      if (btn) { btn.disabled = false; btn.textContent = newStatus === 'active' ? '✅ 批量上架' : '⏸ 批量下架'; }
+      if (res && res.ok) {
+        toast('已批量' + (newStatus === 'active' ? '上架' : '下架') + ' ' + keys.length + ' 个产品，约 2 分钟生效', 'ok');
+        edBatchSel = {}; edBatchRenderBar(); edReloadData();
+      } else if (res && res.error === 'server-not-configured') { toast('编辑管线未配置，请先设置 OPS_GH_PAT', 'err'); }
+      else { toast('批量操作失败：' + ((res && res.error) || '未知'), 'err'); }
+    }).catch(function () { if (btn) { btn.disabled = false; btn.textContent = newStatus === 'active' ? '✅ 批量上架' : '⏸ 批量下架'; } toast('网络错误，请重试', 'err'); });
+  }
+  // v2-M4: 复制产品 → 打开抽屉进入新建模式（slug 追加 -copy）
+  function edDuplicateProduct(gslug, pslug) {
+    if (!DATA) return;
+    var p = (DATA.productCatalog[gslug] || []).find(function (x) { return x.slug === pslug; });
+    if (!p) return;
+    var newSlug = pslug + '-copy';
+    // 冲突时追加序号
+    var n = 1;
+    while ((DATA.productCatalog[gslug] || []).some(function (x) { return x.slug === newSlug; })) { n++; newSlug = pslug + '-copy' + n; }
+    edNewMode = true;
+    edCurrentGroup = gslug; edCurrentSlug = newSlug;
+    var nf0 = el('ed-new-fields'), ns0 = el('ed-new-slug-wrap');
+    if (nf0) nf0.style.display = '';
+    if (ns0) ns0.style.display = '';
+    var slugInp = el('f-new-slug');
+    if (slugInp) slugInp.value = newSlug;
+    var gSel = el('ed-group-sel'); if (gSel) gSel.value = gslug;
+    el('f-name').value = (p.name || '') + ' (Copy)';
+    el('f-tagline').value = p.tagline || '';
+    el('f-spec').value = p.spec || '';
+    el('f-img').value = p.img || '';
+    el('f-price').value = p.price || '';
+    if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) { setPriceMode('tier'); fillTierEditor(p.tierPrice); }
+    else if (p.price && /^[\d.]+\s*[-–]\s*[\d.]+\s*[A-Z]{3}/.test(String(p.price))) { setPriceMode('range'); fillRangeEditor(p.price); }
+    else { setPriceMode('single'); }
+    el('f-moq').value = p.moq || '';
+    el('f-order').value = p.order !== undefined ? p.order : '';
+    el('f-copy').value = (p.copy && p.copy[0]) ? p.copy[0] : '';
+    el('f-status').value = 'hidden'; // 复制品默认下架，编辑确认后再上架
+    edRenderExtraImgs(p.extraImgs || []);
+    el('ed-drawer-title').textContent = '复制产品（新）';
+    el('ed-drawer-slug').textContent = (DATA.productGroups.find(function (x) { return x.slug === gslug; }) || {}).name + ' / ' + newSlug;
+    edUpdateCounters(); edRenderImageCenter(); edUpdateScore();
+    el('ed-drawer').classList.remove('closed');
+    if (edFullscreen) { el('ed-drawer').classList.add('fullscreen'); var fsb = el('ed-fullscreen-btn'); if (fsb) fsb.textContent = '⊡'; }
+    edDrawerOpen = true;
+    edSetDirty(false);
+    toast('已复制为 ' + newSlug + '，默认下架，检查后保存发布', 'info');
+  }
+
   function edBuildList() {
     var list = el('ed-prod-list');
     if (!DATA || !list) return;
     var allProds = [];
     DATA.productGroups.forEach(function (g) {
       (DATA.productCatalog[g.slug] || []).forEach(function (p) { allProds.push({ g: g, p: p }); });
+    });
+    // v2-M4: 按 order 排序（缺省排最后）
+    allProds.sort(function (a, b) {
+      var oa = a.p.order !== undefined ? +a.p.order : 99999;
+      var ob = b.p.order !== undefined ? +b.p.order : 99999;
+      if (oa !== ob) return oa - ob;
+      return String(a.p.name || '').localeCompare(String(b.p.name || ''));
     });
     // counts
     var cntAll = allProds.length;
@@ -2008,13 +2152,17 @@
       if (!p.title || !p.description) gaps += '<span class="ed-gap" data-t="meta">缺 Meta</span>';
       if (!p.tierPrice) gaps += '<span class="ed-gap" data-t="tier">缺阶梯价</span>';
       if (!p.extraImgs || !p.extraImgs.length) gaps += '<span class="ed-gap" data-t="img">缺附图</span>';
+      var batchKey = g.slug + '/' + p.slug;
+      var checked = edBatchSel[batchKey] ? ' checked' : '';
       return '<div class="prod-list-row" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">' +
+        '<div><input type="checkbox" class="ed-batch-check" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '"' + checked + ' title="勾选后可在底部批量操作" /></div>' +
         '<div><div class="prod-thumb-wrap">' + thumbHtml + '</div></div>' +
         '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '"><a href="' + prodFrontUrl + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" onmouseover="this.style.color=\'var(--color-primary)\'" onmouseout="this.style.color=\'inherit\'">' + String(p.name || '').slice(0, 48) + '</a></b><span>' + g.name + ' · ' + p.slug + '</span>' + gaps + '</div>' +
         '<div class="prod-price-cell"><div>$' + (p.price || '—') + '</div><div class="prod-moq">MOQ ' + (p.moq || '—') + '' + tierHtml + '</div></div>' +
         '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span></div>' +
         '<div class="prod-seo-col"><b style="color:' + scoreColor + ';font-size:13px">' + score + '</b></div>' +
         '<div class="prod-actions"><button class="ed-act-btn" data-action="edit" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">编辑</button>' +
+        '<button class="ed-act-btn" data-action="dup" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '" title="复制为新产品（默认下架）">复制</button>' +
         '<button class="ed-act-btn ' + (isActive ? 'danger' : '') + '" data-action="toggle" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '" data-status="' + (isActive ? 'hidden' : 'active') + '">' + (isActive ? '下架' : '上架') + '</button></div>' +
         '</div>';
     }).join('');
@@ -2023,9 +2171,19 @@
       b.addEventListener('click', function (e) {
         e.stopPropagation();
         if (b.dataset.action === 'edit') { edOpenDrawer(b.dataset.gslug, b.dataset.pslug); }
+        else if (b.dataset.action === 'dup') { edDuplicateProduct(b.dataset.gslug, b.dataset.pslug); }
         else if (b.dataset.action === 'toggle') { edQuickStatus(b.dataset.gslug, b.dataset.pslug, b.dataset.status, b); }
       });
     });
+    // v2-M4: 批量选择
+    list.querySelectorAll('.ed-batch-check').forEach(function (c) {
+      c.addEventListener('change', function () {
+        var k = c.dataset.gslug + '/' + c.dataset.pslug;
+        if (c.checked) edBatchSel[k] = true; else delete edBatchSel[k];
+        edBatchRenderBar();
+      });
+    });
+    edBatchRenderBar();
   }
 
   // ── v9: quick toggle status ──
@@ -2055,9 +2213,11 @@
     el('f-spec').value = p.spec || '';
     el('f-img').value = p.img || '';
     el('f-price').value = p.price || '';
-    // 价格模式：有 tierPrice 对象则切阶梯模式
+    // 价格模式：tierPrice 对象 → 阶梯；"x-y TERM" 字符串 → 区间；否则单一
     if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) {
       setPriceMode('tier'); fillTierEditor(p.tierPrice);
+    } else if (p.price && /^[\d.]+\s*[-–]\s*[\d.]+\s*[A-Z]{3}/.test(String(p.price))) {
+      setPriceMode('range'); fillRangeEditor(p.price);
     } else { setPriceMode('single'); }
     el('f-moq').value = p.moq || '';
     el('f-order').value = p.order !== undefined ? p.order : '';
@@ -2242,9 +2402,17 @@
 
   // 脏状态触发：监听所有字段 input
   (function () {
-    var ids = ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order'];
+    var ids = ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order','f-price-min','f-price-max','f-price-port'];
     ids.forEach(function (id) { var x = el(id); if (x) x.addEventListener('input', function () { edSetDirty(true); }); });
     var st = el('f-status'); if (st) st.addEventListener('change', function () { edSetDirty(true); });
+    var term = el('f-price-term'); if (term) term.addEventListener('change', function () { edSetDirty(true); edUpdatePreviewPanel(); });
+    // 动态行（阶梯/区间/附图）输入事件委托
+    document.addEventListener('input', function (e) {
+      var t = e.target;
+      if (t && t.classList && (t.classList.contains('tier-qty') || t.classList.contains('tier-price-val') || t.classList.contains('ed-extra-img-input'))) {
+        edSetDirty(true); edUpdatePreviewPanel();
+      }
+    });
   })();
 
   // 实时预览联动
@@ -2259,7 +2427,21 @@
     var title = (el('f-name') || {}).value || '';
     if (el('pv-name')) el('pv-name').textContent = name;
     if (el('pv-spec')) el('pv-spec').textContent = spec;
-    if (el('pv-price')) el('pv-price').textContent = price ? 'From $' + price : '—';
+    // v2-M2: 按当前价格模式联动预览
+    var priceDisp = '';
+    if (curPriceMode === 'tier') {
+      var tiers = collectTierPrice();
+      if (tiers) {
+        var tkeys = Object.keys(tiers).sort(function(a,b){return +a-+b;});
+        priceDisp = 'From $' + tiers[tkeys[0]] + ' · ' + tkeys.length + ' 档';
+      }
+    } else if (curPriceMode === 'range') {
+      var rStr = collectRangePrice();
+      if (rStr) priceDisp = rStr;
+    } else {
+      priceDisp = price ? 'From $' + price : '';
+    }
+    if (el('pv-price')) el('pv-price').textContent = priceDisp || '—';
     if (el('pv-moq')) el('pv-moq').textContent = 'MOQ ' + moq;
     if (el('pv-copy')) el('pv-copy').textContent = copy.slice(0, 120) + (copy.length > 120 ? '…' : '');
     if (el('pv-title')) el('pv-title').textContent = title || '产品标题将显示在此';
@@ -2518,6 +2700,8 @@
     var priceVal = el('f-price') ? el('f-price').value.trim() : '';
     var tierVal = null;
     if (curPriceMode === 'tier') {
+      var vErr = validateTierPrice();
+      if (vErr) { edSaving = false; var vb = el('ed-save'); if (vb) { vb.disabled = false; vb.classList.remove('loading'); vb.textContent = '💾 保存并发布'; } toast(vErr, 'err'); return; }
       tierVal = collectTierPrice();
       if (tierVal) { var tkeys = Object.keys(tierVal).sort(function(a,b){return +a-+b;}); priceVal = tierVal[tkeys[tkeys.length-1]] || priceVal; }
     } else if (curPriceMode === 'range') {
@@ -3203,6 +3387,95 @@
     });
   }
 
+  // v2-第二批: 字段级应用（4-A 前后对比 + 4-B 应用后自动重评分）
+  var seoAppliedFields = {}; // {pslug: {title:true,description:true,tagline:true}}
+  function seoMarkApplied(gslug, pslug, field) {
+    var key = pslug;
+    if (!seoAppliedFields[key]) seoAppliedFields[key] = {};
+    seoAppliedFields[key][field] = true;
+    // 4-B: 本地乐观更新 → 立即重评分
+    if (seoData && seoData.productCatalog && seoData.productCatalog[gslug]) {
+      var p = seoData.productCatalog[gslug].find(function (x) { return x.slug === pslug; });
+      if (p && seoPendingVals[pslug] && seoPendingVals[pslug][field] !== undefined) {
+        p[field] = seoPendingVals[pslug][field];
+      }
+    }
+    seoOptStatus[pslug] = 'opt';
+    saveSeoOptStatus();
+    seoRender();
+  }
+  var seoPendingVals = {}; // {pslug: {field: value}} 待写入本地副本（应用成功后生效）
+  function seoApplyField(gslug, pslug, field, value, btn, cardKey) {
+    btn.disabled = true; btn.textContent = '应用中…';
+    fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ apply: true, group: gslug, slug: pslug, field: field, value: value }) })
+      .then(function (r) { return r.json(); })
+      .then(function (r2) {
+        if (!r2.ok) { toast('应用失败：' + (r2.error || '未知错误'), 'bad'); btn.disabled = false; btn.textContent = '✅ 应用'; return; }
+        if (!seoPendingVals[pslug]) seoPendingVals[pslug] = {};
+        seoPendingVals[pslug][field] = value;
+        seoMarkApplied(gslug, pslug, field);
+        toast('✓ ' + field + ' 已应用，自动部署中（评分已刷新）', 'ok');
+        // 卡片标记已应用
+        var card = document.getElementById('seo-field-card-' + cardKey);
+        if (card) {
+          var applyBtn = card.querySelector('.seo-apply-btn');
+          if (applyBtn) { applyBtn.disabled = true; applyBtn.textContent = '✓ 已应用'; }
+          var oldEl = card.querySelector('.seo-old-val');
+          if (oldEl) { oldEl.style.textDecoration = 'line-through'; oldEl.style.color = 'var(--ok)'; }
+          var tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.style.cssText = 'background:rgba(76,217,100,.15);color:var(--ok);margin-left:6px';
+          tag.textContent = '✓ 已应用';
+          var hd = card.querySelector('.seo-fc-head');
+          if (hd) hd.appendChild(tag);
+        }
+      })
+      .catch(function (e) { toast('应用失败：' + e.message, 'bad'); btn.disabled = false; btn.textContent = '✅ 应用'; });
+  }
+  function seoRenderFieldCards(d) {
+    var box = el('aiAdviceBox');
+    var f = d.fields || {};
+    var cur = d.current || {};
+    var esc = function (x) { return String(x || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+    var html = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">' +
+      '<h3 style="margin:0">AI 优化建议 · ' + esc(d.group) + ' / ' + esc(d.slug) + '</h3>' +
+      '<span class="hint">逐字段应用，应用后自动重评分</span></div>';
+    // 字段卡：title / description / tagline
+    var fields = [
+      { key: 'title', label: 'SEO 标题（Title）', cur: cur.title || '', sug: (f.title || {}).suggested || '', note: (f.title || {}).note || '' },
+      { key: 'description', label: 'Meta 描述（Description）', cur: cur.description || '', sug: (f.description || {}).suggested || '', note: (f.description || {}).note || '' },
+      { key: 'tagline', label: '一句话卖点（Tagline）', cur: cur.tagline || '', sug: (f.tagline || {}).suggested || '', note: (f.tagline || {}).note || '' },
+    ];
+    fields.forEach(function (fd) {
+      var applied = seoAppliedFields[d.slug] && seoAppliedFields[d.slug][fd.key];
+      var appliedTag = applied ? '<span class="tag" style="background:rgba(76,217,100,.15);color:var(--ok);margin-left:6px">✓ 已应用</span>' : '';
+      html += '<div class="seo-field-card" id="seo-field-card-' + d.slug + '-' + fd.key + '" style="border:1px solid var(--color-border);border-radius:6px;padding:10px 12px;margin-bottom:10px;background:var(--color-surface-2)">' +
+        '<div class="seo-fc-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">' +
+        '<b style="font-size:12px">' + fd.label + appliedTag + '</b>' +
+        (fd.note ? '<span class="hint" style="font-size:11px">' + esc(fd.note) + '</span>' : '') + '</div>' +
+        '<div style="font-size:12px;line-height:1.7">' +
+        '<div style="color:var(--gray);margin-bottom:2px">旧值：<span class="seo-old-val">' + (fd.cur ? esc(fd.cur.length > 90 ? fd.cur.slice(0, 90) + '…' : fd.cur) : '<em style="opacity:.6">（无）</em>') + '</span></div>' +
+        '<div style="color:var(--ok);margin-bottom:6px">新值：<b>' + esc(fd.sug.length > 160 ? fd.sug.slice(0, 160) + '…' : fd.sug) + '</b></div>' +
+        '</div>' +
+        (fd.sug ? '<button class="btn btn-primary btn-sm seo-apply-btn" data-field="' + fd.key + '" data-val="' + esc(fd.sug).replace(/"/g, '&quot;') + '" ' + (applied ? 'disabled' : '') + '>' + (applied ? '✓ 已应用' : '✅ 应用此字段') + '</button>' : '') +
+        '</div>';
+    });
+    // 关键词 + 建议
+    var kws = (f.keywords || []).slice(0, 5);
+    if (kws.length) html += '<div style="margin:6px 0 10px"><b style="font-size:12px;display:block;margin-bottom:6px">推荐关键词</b>' + kws.map(function (k) { return '<span class="tag" style="background:rgba(201,162,39,.12);color:var(--color-primary);margin:0 6px 6px 0;padding:4px 10px">' + esc(k) + '</span>'; }).join('') + '</div>';
+    var tips = (f.tips || []).slice(0, 4);
+    if (tips.length) html += '<div style="margin-bottom:10px"><b style="font-size:12px;display:block;margin-bottom:6px">改进要点</b><ul style="margin:0;padding-left:16px;font-size:12px;line-height:1.8;color:var(--color-text-secondary)">' + tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>';
+    html += '<div class="hint" style="font-size:11px">应用后自动部署（约 2 分钟上线）。标题/描述已优化的产品可直接使用「批量 AI 优化」补全剩余。</div>';
+    box.innerHTML = html;
+    // 绑定应用按钮
+    box.querySelectorAll('.seo-apply-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var field = btn.dataset.field;
+        var val = btn.dataset.val || btn.getAttribute('data-val');
+        seoApplyField(d.group, d.slug, field, val, btn, d.slug + '-' + field);
+      });
+    });
+  }
   // 核心 AI 建议请求（供按钮和行按钮共用）
   function seoTriggerAIAdvice(gslug, pslug, onDone) {
     var box = el('aiAdviceBox');
@@ -3214,23 +3487,30 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.ok) { box.innerHTML = '<div class="alert-card"><h3>AI 建议不可用</h3><p>' + (d.error || '未知错误') + '</p></div>'; return; }
-        box.innerHTML = '<h3 style="margin-bottom:6px">AI 优化建议 · ' + d.group + ' / ' + d.slug + '</h3>' +
-          '<div style="font-size:12px;line-height:1.8;white-space:pre-wrap">' + d.advice.replace(/</g, '&lt;') + '</div>' +
-          '<div id="ai-apply-wrap" style="margin-top:12px"><button class="btn btn-primary btn-sm" id="ai-apply">✅ 一键应用到产品</button> <span class="hint">写入产品标题与 Meta 描述，自动部署上线</span></div>';
-        var ap = document.getElementById('ai-apply');
-        if (ap) ap.addEventListener('click', function () {
-          ap.disabled = true; ap.textContent = 'AI 应用中…';
-          fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ apply: true, group: d.group, slug: d.slug }) })
-            .then(function (r2) { return r2.json(); })
-            .then(function (r2) {
-              if (!r2.ok) { toast('应用失败：' + (r2.error || '未知错误'), 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; return; }
-              toast('✅ 已应用，自动部署中', 'ok');
-              var wrap = document.getElementById('ai-apply-wrap');
-              if (wrap) wrap.innerHTML = '<span class="tag" style="background:rgba(76,217,100,.15);color:var(--ok)">✓ 已应用到 ' + r2.applied.slug + '</span>';
-              box.innerHTML = box.innerHTML + '<div class="alert-card" style="margin-top:10px"><h3 style="color:var(--ok)">已应用</h3><p><b>标题：</b>' + r2.applied.title.replace(/</g, '&lt;') + '</p><p><b>Meta：</b>' + r2.applied.description.replace(/</g, '&lt;') + '</p><p style="color:var(--color-text-secondary)">部署完成后点「刷新评分」验证分数提升。</p></div>';
-            })
-            .catch(function (e) { toast('应用失败：' + e.message, 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; });
-        });
+        if (d.fields) {
+          seoRenderFieldCards(d);
+        } else {
+          // 旧格式回退
+          box.innerHTML = '<h3 style="margin-bottom:6px">AI 优化建议 · ' + d.group + ' / ' + d.slug + '</h3>' +
+            '<div style="font-size:12px;line-height:1.8;white-space:pre-wrap">' + (d.advice || '').replace(/</g, '&lt;') + '</div>' +
+            '<div id="ai-apply-wrap" style="margin-top:12px"><button class="btn btn-primary btn-sm" id="ai-apply">✅ 一键应用到产品</button> <span class="hint">写入产品标题与 Meta 描述，自动部署上线</span></div>';
+          var ap = document.getElementById('ai-apply');
+          if (ap) ap.addEventListener('click', function () {
+            ap.disabled = true; ap.textContent = 'AI 应用中…';
+            fetch('/api/ai/advice', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ apply: true, group: d.group, slug: d.slug }) })
+              .then(function (r2) { return r2.json(); })
+              .then(function (r2) {
+                if (!r2.ok) { toast('应用失败：' + (r2.error || '未知错误'), 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; return; }
+                toast('✅ 已应用，自动部署中', 'ok');
+                seoMarkApplied(d.group, d.slug, 'title');
+                seoMarkApplied(d.group, d.slug, 'description');
+                var wrap = document.getElementById('ai-apply-wrap');
+                if (wrap) wrap.innerHTML = '<span class="tag" style="background:rgba(76,217,100,.15);color:var(--ok)">✓ 已应用到 ' + r2.applied.slug + '</span>';
+                box.innerHTML = box.innerHTML + '<div class="alert-card" style="margin-top:10px"><h3 style="color:var(--ok)">已应用</h3><p><b>标题：</b>' + (r2.applied.title || '').replace(/</g, '&lt;') + '</p><p><b>Meta：</b>' + (r2.applied.description || '').replace(/</g, '&lt;') + '</p><p style="color:var(--color-text-secondary)">评分已刷新。</p></div>';
+              })
+              .catch(function (e) { toast('应用失败：' + e.message, 'bad'); ap.disabled = false; ap.textContent = '✅ 一键应用到产品'; });
+          });
+        }
       })
       .catch(function (e) { box.innerHTML = '<div class="alert-card"><p>请求失败：' + e.message + '</p></div>'; })
       .then(function () { if (onDone) onDone(); });
@@ -3276,7 +3556,9 @@
         toast('⚡ 已优化 ' + d.applied + ' 个，剩余 ' + d.remaining + ' 个', 'ok');
         var box = document.getElementById('aiAdviceBox');
         box.style.display = 'block';
-        box.innerHTML = '<div class="alert-card" style="margin:0"><h3>⚡ 批量 AI 优化完成</h3><p>已为 ' + d.applied + ' 个产品生成 SEO 标题 + Meta 描述并写入，自动部署启动中。</p><p style="color:var(--color-text-secondary)">剩余 ' + d.remaining + ' 个可再次点击。部署完成后刷新评分查看提升。</p></div>';
+        box.innerHTML = '<div class="alert-card" style="margin:0"><h3>⚡ 批量 AI 优化完成</h3><p>已为 ' + d.applied + ' 个产品生成 SEO 标题 + Meta 描述并写入，自动部署启动中。</p><p style="color:var(--color-text-secondary)">剩余 ' + d.remaining + ' 个可再次点击。正在自动刷新评分…</p></div>';
+        // 4-B: 批量完成后自动重评分
+        seoData = null; seoRender();
       })
       .catch(function (e) { toast('批量优化失败：' + e.message, 'bad'); })
       .then(function () { btn.disabled = false; btn.textContent = '⚡ 批量 AI 优化'; });
