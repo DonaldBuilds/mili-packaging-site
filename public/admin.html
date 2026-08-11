@@ -573,13 +573,18 @@
                     <input id="f-img" placeholder="mig-luxury-magnetic-box-3.webp" />
                   </div>
                   <p class="hint" style="margin-top:6px">支持 mig-*.webp 格式，填写后自动预览 · <a href="https://mili-packaging.com/assets/images/" target="_blank" rel="noopener" style="color:var(--color-primary)">查看已有图片</a></p>
+                  <button type="button" class="btn btn-ghost btn-sm" id="ed-up-img" style="margin-top:8px">⬆ 上传图片</button>
+                  <input type="file" id="ed-file-input" accept="image/webp,image/jpeg,image/png" style="display:none" />
                 </div>
               </div>
               <!-- v10: 附图管理（任意数量，展示在详情页图库） -->
               <div style="margin-top:14px">
                 <label style="display:block;font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px">附图（详情页图库，可多张，不固定数量）</label>
                 <div id="ed-extra-imgs"></div>
-                <button type="button" class="btn btn-ghost btn-sm" id="ed-add-img" style="margin-top:6px">＋ 添加图片</button>
+                <div style="display:flex;gap:8px;margin-top:6px">
+                  <button type="button" class="btn btn-ghost btn-sm" id="ed-add-img">＋ 添加图片</button>
+                  <button type="button" class="btn btn-ghost btn-sm" id="ed-up-extra">⬆ 上传图片</button>
+                </div>
               </div>
             </div>
             <!-- ③ 价格规格 -->
@@ -1164,6 +1169,35 @@
     wrap.appendChild(row);
   }
   var edAddImgBtn = el('ed-add-img'); if (edAddImgBtn) edAddImgBtn.addEventListener('click', function () { edAddImgRow(''); });
+
+  // ── v10+: 图片文件上传 ──
+  var edFileInput = el('ed-file-input');
+  function edUploadImage(cb) {
+    if (!edFileInput) return;
+    edFileInput.onchange = function () {
+      var f = edFileInput.files[0];
+      if (!f) { return; }
+      if (f.size > 1500000) { toast('图片需 ≤1.5MB（当前 ' + Math.round(f.size / 1024) + 'KB）', 'bad'); edFileInput.value = ''; return; }
+      var fr = new FileReader();
+      fr.onload = function () {
+        var b64 = fr.result.split(',')[1];
+        var nm = f.name.toLowerCase().replace(/[^a-z0-9.-]/g, '-');
+        fetch('/api/upload', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: nm, data: b64 }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (!d.ok) { toast('上传失败：' + (d.error || '未知错误'), 'bad'); return; }
+            toast('✅ 已上传 ' + nm + '，部署后即可访问', 'ok');
+            cb(nm);
+          })
+          .catch(function (e) { toast('上传失败：' + e.message, 'bad'); });
+      };
+      fr.readAsDataURL(f);
+      edFileInput.value = '';
+    };
+    edFileInput.click();
+  }
+  var edUpImg = el('ed-up-img'); if (edUpImg) edUpImg.addEventListener('click', function () { edUploadImage(function (nm) { var x = el('f-img'); if (x) x.value = nm; edUpdateImgPreview(); }); });
+  var edUpExtra = el('ed-up-extra'); if (edUpExtra) edUpExtra.addEventListener('click', function () { edUploadImage(function (nm) { edAddImgRow(nm); }); });
 
   // ── Save product (POST /api/content，v4 会话 Cookie 鉴权) ──
   function postOps(ops) {

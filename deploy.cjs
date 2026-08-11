@@ -339,6 +339,28 @@ export default{async fetch(r,env){
     }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
   }
 
+  // ── image upload: save base64 image to repo public/assets/images/ ──
+  if(p==='/api/upload'&&r.method==='POST'){
+    try{
+      if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+      if(!env.OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'gh-pat-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
+      const body=await r.json();
+      const name=String(body.name||'').trim();
+      const data=String(body.data||'');
+      if(!/^[a-z0-9-]{2,60}\.(webp|jpg|jpeg|png)$/.test(name))throw new Error('bad-filename:'+name);
+      const bytes=Math.floor(data.length*3/4);
+      if(bytes>1500000)throw new Error('too-large:'+bytes);
+      const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public/assets/images/'+name;
+      const ghH={authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'};
+      let sha='';
+      const exist=await (await fetch(gh+'?ref=main',{headers:ghH})).json();
+      if(exist&&exist.sha)sha=exist.sha;
+      const put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify({message:'ops: upload image '+name+' '+new Date().toISOString().slice(0,16)+'Z',content:data,sha:sha})});
+      if(!put.ok)throw new Error('github-write:'+put.status);
+      return new Response(JSON.stringify({ok:true,name:name,path:'/assets/images/'+name,message:'图片已上传，自动部署后即可访问'}),{headers:{'content-type':'application/json'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+  }
+
   // Blog routes
   if(p==='/blog'||p==='/blog/'){return new Response(F['blog/index.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})})}
   let bm=null;if(p.startsWith('/blog/')&&p.length>6){bm=p.split('/').filter(x=>x)[1]}
