@@ -166,31 +166,84 @@
     .content { padding:14px 12px 40px; }
     table { display:block; overflow-x:auto; white-space:nowrap; }
   }
+
+  /* ── v8: Professional backend upgrade ── */
+  /* Sidebar icon items */
+  .sb-item { display:flex; align-items:center; gap:8px; }
+  .sb-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0; opacity:.75; }
+  .sb-item.active .sb-icon { opacity:1; }
+  .sb-label { flex:1; }
+  /* Config progress ring */
+  .cfg-ring-wrap { display:flex; align-items:center; gap:14px; padding:14px 16px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; margin-bottom:14px; cursor:pointer; transition:border-color .15s; }
+  .cfg-ring-wrap:hover { border-color:var(--color-primary); }
+  .cfg-ring { position:relative; width:52px; height:52px; flex-shrink:0; }
+  .cfg-ring svg { transform:rotate(-90deg); }
+  .cfg-ring-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--color-primary); }
+  .cfg-ring-info { flex:1; }
+  .cfg-ring-info b { display:block; font-size:14px; margin-bottom:2px; }
+  .cfg-ring-info span { font-size:12px; color:var(--color-text-secondary); }
+  /* Priority task card */
+  .priority-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-bottom:14px; }
+  .priority-item { display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; border-left:3px solid var(--color-border); transition:border-color .15s; cursor:pointer; }
+  .priority-item:hover { border-left-color:var(--color-primary); }
+  .priority-item.urgent { border-left-color:var(--color-danger); }
+  .priority-item.warn { border-left-color:var(--color-warning); }
+  .priority-item.ok { border-left-color:var(--color-success); }
+  .priority-ico { font-size:18px; margin-top:1px; flex-shrink:0; }
+  .priority-body b { display:block; font-size:13px; margin-bottom:3px; }
+  .priority-body span { font-size:11.5px; color:var(--color-text-secondary); line-height:1.5; }
+  /* SEO score bar */
+  .seo-bar-wrap { display:flex; align-items:center; gap:8px; }
+  .seo-bar-track { flex:1; height:6px; background:var(--color-surface-2); border-radius:3px; overflow:hidden; min-width:60px; }
+  .seo-bar-fill { height:100%; border-radius:3px; transition:width .3s; }
+  .seo-fix-btn { font-size:11px; padding:2px 8px; color:var(--color-primary); border:1px solid var(--color-primary); background:transparent; border-radius:3px; cursor:pointer; white-space:nowrap; }
+  .seo-fix-btn:hover { background:rgba(201,162,39,.1); }
+  /* Config priority groups */
+  .cfg-group { margin-bottom:16px; }
+  .cfg-group-header { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--color-text-secondary); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--color-border); }
+  .cfg-priority-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .cfg-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; margin-bottom:6px; }
+  .cfg-row-name { flex:1; font-size:13px; font-weight:600; }
+  .cfg-row-hint { font-size:11.5px; color:var(--color-text-secondary); flex:2; }
+  .cfg-steps { background:var(--color-surface-2); border-radius:4px; padding:10px 14px; margin-top:6px; font-size:12px; line-height:1.8; color:var(--color-text-secondary); }
+  .cfg-steps code { background:rgba(201,162,39,.12); color:var(--color-primary); padding:1px 5px; border-radius:3px; font-size:11px; }
+  .cfg-expand-btn { font-size:11px; color:var(--color-text-secondary); cursor:pointer; background:none; border:none; padding:0; }
+  .cfg-expand-btn:hover { color:var(--color-primary); }
+  /* Ticket history */
+  .ticket-history { max-height:200px; overflow-y:auto; }
+  .ticket-history-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--color-border); font-size:12px; }
+  .ticket-history-item:last-child { border:none; }
+  /* Security alert card */
+  .alert-card { border:1px solid var(--color-danger); background:rgba(255,107,107,.06); border-radius:6px; padding:14px 16px; margin-bottom:12px; }
+  .alert-card h3 { color:var(--color-danger); margin-bottom:6px; }
+  /* Topbar quick nav */
+  .topbar-kpi { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--color-text-secondary); padding:0 8px; }
+  .topbar-kpi b { color:var(--color-primary); }
+  @media (max-width:768px) { .topbar-kpi { display:none; } .priority-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="sb-overlay" id="sbOverlay"></div>
   <aside class="sidebar" id="sidebar">
-    <div class="sb-logo">Mili Packaging <span>工作台 v6</span></div>
-    <div class="sb-group">概览</div>
-    <button class="sb-item active" data-sb="dash">① 数据看板</button>
-    <div class="sb-group">产品</div>
-    <button class="sb-item" data-sb="editor">② 产品/内容编辑</button>
-    <div class="sb-group">线索</div>
-    <button class="sb-item" data-sb="inquiry">③ 询盘中心</button>
-    <div class="sb-group">工具与数据</div>
-    <button class="sb-item" data-sb="tools">④ 后台工具</button>
-    <button class="sb-item" data-sb="ticket">⑤ 修改工单</button>
-    <button class="sb-item" data-sb="audit">⑥ 审计日志</button>
-    <button class="sb-item" data-sb="cron">⑦ 自动任务</button>
-    <button class="sb-item" data-sb="v5">⑧ 数据驾驶舱</button>
-    <div class="sb-group">SEO &amp; 情报</div>
-    <button class="sb-item" data-sb="guide">⑨ 风格指南</button>
-    <button class="sb-item" data-sb="geo">⑩ AI 可见性</button>
-    <button class="sb-item" data-sb="seo">⑪ SEO 医生</button>
+    <div class="sb-logo">Mili Packaging <span>v8</span></div>
+    <div class="sb-group">今日运营</div>
+    <button class="sb-item active" data-sb="dash"><span class="sb-icon">📊</span><span class="sb-label">数据看板</span></button>
+    <div class="sb-group">线索中心</div>
+    <button class="sb-item" data-sb="inquiry"><span class="sb-icon">✉️</span><span class="sb-label">询盘中心</span></button>
+    <div class="sb-group">内容工厂</div>
+    <button class="sb-item" data-sb="editor"><span class="sb-icon">✏️</span><span class="sb-label">产品/内容编辑</span></button>
+    <button class="sb-item" data-sb="ticket"><span class="sb-icon">📝</span><span class="sb-label">修改工单</span></button>
+    <button class="sb-item" data-sb="tools"><span class="sb-icon">🔧</span><span class="sb-label">后台工具</span></button>
+    <div class="sb-group">增长工具</div>
+    <button class="sb-item" data-sb="seo"><span class="sb-icon">🏥</span><span class="sb-label">SEO 医生</span></button>
+    <button class="sb-item" data-sb="geo"><span class="sb-icon">🤖</span><span class="sb-label">AI 可见性</span></button>
+    <button class="sb-item" data-sb="v5"><span class="sb-icon">📈</span><span class="sb-label">数据驾驶舱</span></button>
     <div class="sb-group">系统</div>
-    <button class="sb-item" data-sb="config">⑫ 设置中心</button>
+    <button class="sb-item" data-sb="cron"><span class="sb-icon">⚙️</span><span class="sb-label">自动任务</span></button>
+    <button class="sb-item" data-sb="audit"><span class="sb-icon">📋</span><span class="sb-label">审计日志</span></button>
+    <button class="sb-item" data-sb="guide"><span class="sb-icon">🎨</span><span class="sb-label">风格指南</span></button>
+    <button class="sb-item" data-sb="config"><span class="sb-icon">🔑</span><span class="sb-label">设置中心</span></button>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -199,6 +252,7 @@
         <span class="crumb" id="crumb">工作台 / <b>数据看板</b></span>
       </div>
       <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
+        <div class="topbar-kpi" id="topbar-kpi" title="配置进度 / 点击跳转设置" style="cursor:pointer">配置 <b id="topbar-cfg-done">—</b>/8</div>
         <button class="tb-btn" id="themeToggle" title="切换主题：亮色 / 暗色 / 跟随系统">💻 跟随系统</button>
         <button class="tb-btn" id="logoutBtn2">退出登录</button>
       </div>
@@ -206,7 +260,7 @@
     <div class="content">
   <div class="wrap">
   <header>
-    <h1>Mili Packaging <span>运营工作台 v6</span></h1>
+    <h1>Mili Packaging <span>运营工作台 v8</span></h1>
     <span class="badge">内部使用 · noindex</span>
     <button class="btn ghost" id="logoutBtn" style="margin-left:auto;padding:6px 14px">退出登录</button>
   </header>
@@ -229,7 +283,28 @@
 
   <!-- ① 数据看板 -->
   <div id="tab-dash">
-    <h2>① 数据看板（自动同步 · 页面可见时按间隔刷新）</h2>
+    <h2>数据看板</h2>
+
+    <!-- 配置进度环 + 今日优先任务 -->
+    <div id="dash-config-ring" class="cfg-ring-wrap" onclick="document.querySelector('.tab[data-tab=config]').click()">
+      <div class="cfg-ring">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="20" fill="none" stroke="var(--color-surface-2)" stroke-width="5"/>
+          <circle id="cfg-ring-arc" cx="26" cy="26" r="20" fill="none" stroke="var(--color-primary)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 125.66"/>
+        </svg>
+        <div class="cfg-ring-num"><span id="cfg-ring-done">—</span></div>
+      </div>
+      <div class="cfg-ring-info">
+        <b id="cfg-ring-title">加载配置状态…</b>
+        <span id="cfg-ring-sub">点击进入设置中心</span>
+      </div>
+      <span class="tag" id="cfg-ring-tag" style="flex-shrink:0"></span>
+    </div>
+
+    <!-- 今日优先任务 -->
+    <div id="dash-priority" class="priority-grid"></div>
+
+    <!-- 同步控制条 -->
     <div class="card" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <span class="sync-state" id="dash-sync-state"><span class="sync-dot" id="dash-sync-dot"></span><span id="dash-sync-text">空闲</span></span>
@@ -246,7 +321,7 @@
           </select>
         </label>
       </div>
-      <p class="hint" style="margin:8px 0 0">数据源：GitHub Actions/提交 · Supabase 询盘 · 站点健康检查。切走标签页自动暂停，切回立即刷新。GA4/GSC 深度数据见「⑧ 数据驾驶舱」。</p>
+      <p class="hint" style="margin:8px 0 0">数据源：GitHub Actions/提交 · Supabase 询盘 · 站点健康检查。切走标签页自动暂停，切回立即刷新。</p>
     </div>
     <div class="grid">
       <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
@@ -340,20 +415,26 @@
 
   <!-- ⑤ 修改工单 -->
   <div id="tab-ticket" class="hide">
-    <h2>⑤ 内容修改工单（非结构化内容）</h2>
+    <h2>修改工单</h2>
     <div class="card">
-      <p>改首页文案、Blog、政策页等非产品内容：填工单 → 发邮件给运营，或直接告诉我（AI 助手）执行。产品级修改请用「产品/内容编辑」页。</p>
+      <p class="hint" style="margin-bottom:12px">改首页文案、Blog、政策页等非产品内容：填工单 → 发邮件或直接告诉 AI 助手执行。产品修改请用「产品/内容编辑」。</p>
       <div class="row">
         <div><label>页面 / 位置 *</label><input id="t-page" required placeholder="如：首页 Hero / About 团队区块" /></div>
         <div><label>优先级</label><select id="t-pri"><option>正常</option><option>紧急</option></select></div>
       </div>
       <label>要改成什么 *</label><textarea id="t-body" rows="4" placeholder="当前是什么 → 想改成什么（附新文案）"></textarea>
-      <button class="btn" id="ticketBtn" style="border:none;cursor:pointer">生成工单邮件</button>
-      <button class="btn ghost" id="copyBtn" style="cursor:pointer">复制工单文本</button>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <button class="btn btn-primary" id="ticketBtn">📧 生成工单邮件</button>
+        <button class="btn btn-ghost" id="copyBtn">📋 复制工单文本</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>历史工单（最近 10 条，本地存储）</h3>
+      <div id="ticket-history"><p class="hint">暂无历史工单</p></div>
     </div>
   </div>
 
-  <footer>Mili Packaging 运营工作台 v6 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Bing / Supabase / GitHub</footer>
+  <footer>Mili Packaging 运营工作台 v8 · 专业后台 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Supabase / GitHub</footer>
 </div>
 
   <!-- ⑥ 审计日志 -->
@@ -501,37 +582,36 @@
 
   <!-- ⑫ 设置中心（配置状态 + 连通性测试） -->
   <div id="tab-config" class="hide">
-    <h2>⑫ 设置中心 — 配置状态与连通性测试</h2>
+    <h2>设置中心</h2>
+    <!-- 安全警告（默认密码） -->
+    <div class="alert-card" id="pw-alert-card" style="display:none">
+      <h3>🔴 安全风险：使用默认密码</h3>
+      <p class="hint" style="line-height:1.8;margin-top:6px">当前工作台使用默认密码 <b>1127</b>，任何知道该密码的人均可登录。建议立即更换独立密码。<br/><b>更换步骤</b>：① 告知 AI 助手你的新密码 → ② AI 生成 SHA-256 哈希值 → ③ 在 GitHub 仓库 Settings → Secrets → Actions 中添加 <code>ADMIN_PW_HASH</code> 变量 → ④ 重新部署（约 2 分钟生效）</p>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-      <p class="hint" style="margin:0">所有密钥仅存环境变量（GitHub 仓库 Secrets 或部署时注入），前端零密钥；配置后重新部署自动生效（约 2 分钟）。</p>
+      <p class="hint" style="margin:0">所有密钥仅存环境变量（GitHub 仓库 Secrets），前端零密钥；配置后重新部署自动生效（约 2 分钟）。</p>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" id="config-export">复制状态</button>
-        <button class="btn btn-primary btn-sm" id="config-test">一键测试连通性</button>
+        <button class="btn btn-ghost btn-sm" id="config-export">📋 复制状态</button>
+        <button class="btn btn-primary btn-sm" id="config-test">⚡ 一键测试连通性</button>
       </div>
     </div>
-    <div class="card">
-      <div id="configArea">加载中…</div>
-    </div>
+    <div class="card" id="configGroupArea">加载中…</div>
     <div class="card" style="margin-top:12px">
       <h3>连通性测试结果</h3>
-      <div id="configTestArea"><p class="hint">点击「一键测试连通性」验证各已配置项是否真实可用（GA4/GSC 会实际调用 API，PushPlus 会发送一条测试消息到微信）。</p></div>
+      <div id="configTestArea"><p class="hint">点击「一键测试连通性」验证各已配置项是否真实可用（GA4/GSC 会实际调用 API，PushPlus 会发送测试消息到微信）。</p></div>
     </div>
+    <!-- 兼容旧版 configArea -->
+    <div id="configArea" style="display:none"></div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px" class="config-two">
       <div class="card">
-        <h3>会话信息</h3>
-        <p class="hint" style="line-height:1.8">当前登录会话：<b>admin</b>（密码登录）<br/>有效期：<b>24 小时</b>自动过期（HttpOnly + SameSite=Strict Cookie）<br/>登出后立即吊销当前会话。</p>
-        <button class="btn btn-ghost btn-sm" id="config-logout">立即退出登录</button>
+        <h3>🔐 会话信息</h3>
+        <p class="hint" style="line-height:1.8">当前会话：<b>admin</b>（密码登录）<br/>有效期：<b>24 小时</b>（HttpOnly + SameSite=Strict Cookie）<br/>登出后立即吊销当前会话。</p>
+        <button class="btn btn-ghost btn-sm" id="config-logout">退出登录</button>
       </div>
       <div class="card">
-        <h3>修改管理员密码</h3>
-        <p class="hint" style="line-height:1.9">当前密码为 <b>1127</b>（默认值），建议尽快更换。<br/>流程：把<b>新密码</b>告知运营协助者（Accio 助手）→ 生成 SHA-256 哈希 → 配置 <code>ADMIN_PW_HASH</code> 环境变量 → 重新部署。<br/>更换后旧密码立即失效。</p>
+        <h3>SLA 参数（只读）</h3>
+        <p class="hint" style="line-height:1.8">询盘跟进：4h 新 / 24h 提醒 / 48h 红色风险。<br/>每日简报：08:00 北京时间。<br/>死链巡检：每周一 09:00。<br/>IndexNow：每 6 小时。</p>
       </div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <h3>SLA 与自动化参数（只读）</h3>
-      <p class="hint" style="line-height:1.8">询盘跟进阈值：4h 新 / 24h 提醒 / 48h 红色风险（询盘中心已生效）。<br/>
-      自动化任务：每日简报 08:00 / 死链巡检 周一 09:00 / IndexNow 每 6 小时（自动任务 tab）。<br/>
-      归因阈值（模块 D）：核心指标环比 ±20% 触发归因（GA4/GSC 配置后启用）。</p>
     </div>
   </div>
 
@@ -833,15 +913,38 @@
     if (!page || !body) { flash('请填写页面位置和修改内容', true); return null; }
     return { subject: '【内容修改·' + pri + '】' + page, text: '页面位置：' + page + '\n优先级：' + pri + '\n\n修改内容：\n' + body };
   }
+  function saveTicketHistory(t) {
+    try {
+      var hist = JSON.parse(localStorage.getItem('mili-tickets') || '[]');
+      hist.unshift({ ts: new Date().toISOString(), subject: t.subject, text: t.text.slice(0, 120) });
+      if (hist.length > 10) hist = hist.slice(0, 10);
+      localStorage.setItem('mili-tickets', JSON.stringify(hist));
+    } catch (e) {}
+    renderTicketHistory();
+  }
+  function renderTicketHistory() {
+    var wrap = document.getElementById('ticket-history');
+    if (!wrap) return;
+    try {
+      var hist = JSON.parse(localStorage.getItem('mili-tickets') || '[]');
+      if (!hist.length) { wrap.innerHTML = '<p class="hint">暂无历史工单</p>'; return; }
+      wrap.innerHTML = '<div class="ticket-history">' + hist.map(function (h) {
+        return '<div class="ticket-history-item"><span class="hint" style="min-width:110px">' + h.ts.replace('T', ' ').slice(0, 16) + '</span><span style="flex:1">' + String(h.subject).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span></div>';
+      }).join('') + '</div>';
+    } catch (e) { wrap.innerHTML = '<p class="hint">读取失败</p>'; }
+  }
   document.getElementById('ticketBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
+    saveTicketHistory(t);
     location.href = 'mailto:info@mili-packaging.com?subject=' + encodeURIComponent(t.subject) + '&body=' + encodeURIComponent(t.text);
     flash('已打开邮件客户端，发送即生成工单');
   });
   document.getElementById('copyBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
+    saveTicketHistory(t);
     (navigator.clipboard ? navigator.clipboard.writeText(t.subject + '\n\n' + t.text) : Promise.reject()).then(function () { flash('工单已复制'); }).catch(function () { flash('复制失败，请手动复制', true); });
   });
+  renderTicketHistory();
 
   // ── v4: Audit log panel ──
   function loadAudit() {
@@ -868,20 +971,34 @@
   }
   document.querySelector('.tab[data-tab="audit"]').addEventListener('click', loadAudit);
 
-  // ── v4.5: Cron tasks panel ──
+  // ── v4.5: Cron tasks panel（v8 升级：密钥状态实时标注）──
   function loadCron() {
     var jobs = [
-      { name: '每日经营简报', cron: '每天 08:00（北京时间）', dep: 'PUSHPLUS_TOKEN / SB_URL+SB_ANON_KEY', desc: '昨日询盘数 · 站点 10 页健康 · 最近部署状态；GA4/GSC 需 Service Account（未配置则占位跳过）' },
-      { name: '死链 & 收录巡检', cron: '每周一 09:00（北京时间）', dep: 'PUSHPLUS_TOKEN（推送）', desc: '解析 sitemap 全部 URL → HEAD 检测 4xx/5xx 死链清单；GSC 收录比对需 Service Account（未配置则跳过）' },
-      { name: 'IndexNow 提交', cron: '每 6 小时', dep: 'INDEXNOW_KEY（Bing 索引加速）', desc: '提交首页 + sitemap 至 api.indexnow.org，加速新内容收录；未配置 key 则自动跳过' },
-      { name: 'sitemap 自动重建', cron: '每次代码/内容变更推送后（Actions）', dep: '无', desc: '构建流程自动重跑 gen-sitemap.mjs，产品/博客增删改后 sitemap 随部署自动更新（约 2 分钟）' },
+      { name: '每日经营简报', cron: '每天 08:00（北京时间）', deps: ['pushplus','supabase'], desc: '昨日询盘数 · 站点 10 页健康 · 最近部署状态；GA4/GSC 需 Service Account（未配置则占位跳过）', enabled: true },
+      { name: '死链 & 收录巡检', cron: '每周一 09:00（北京时间）', deps: ['pushplus'], desc: '解析 sitemap 全部 URL → HEAD 检测 4xx/5xx 死链清单；GSC 收录比对需 Service Account（未配置则跳过）', enabled: true },
+      { name: 'IndexNow 提交', cron: '每 6 小时', deps: ['indexnow'], desc: '提交首页 + sitemap 至 api.indexnow.org，加速新内容收录；未配置 key 则自动跳过', enabled: true },
+      { name: 'sitemap 自动重建', cron: '每次 git push（Actions）', deps: [], desc: '构建流程自动重跑 gen-sitemap.mjs，产品/博客增删改后 sitemap 随部署自动更新（约 2 分钟）', enabled: true },
     ];
-    var html = '<table><tr><th>任务</th><th>触发</th><th>依赖配置</th><th>说明</th></tr>';
-    jobs.forEach(function (j) {
-      html += '<tr><td style="white-space:nowrap;font-weight:600">' + j.name + '</td><td>' + j.cron + '</td><td style="font-size:11px">' + j.dep + '</td><td style="font-size:11px;max-width:300px">' + j.desc + '</td></tr>';
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      var cfgs = (d.ok && d.configs) || {};
+      var html = '<table><tr><th>任务</th><th>触发</th><th>状态</th><th>说明</th></tr>';
+      jobs.forEach(function (j) {
+        var missingDeps = j.deps.filter(function (dep) { return !(cfgs[dep] && cfgs[dep].ok); });
+        var statusBadge = missingDeps.length
+          ? '<span class="tag tag-warning">⚠ 部分跳过</span><br/><span class="hint" style="font-size:10px">缺：' + missingDeps.join('、') + '</span>'
+          : '<span class="tag tag-success">✓ 运行中</span>';
+        html += '<tr><td style="white-space:nowrap;font-weight:600">' + j.name + '</td><td style="font-size:11.5px">' + j.cron + '</td><td style="min-width:90px">' + statusBadge + '</td><td style="font-size:11px;max-width:260px">' + j.desc + '</td></tr>';
+      });
+      html += '</table><p class="hint" style="margin-top:10px">执行日志：Cloudflare 控制台 → Workers → flat-mud-c136 → 实时日志（搜索 "CRON:"）。任务内置失败自动重试 1 次。未就绪的密钥在设置中心配置后即可点亮。</p>';
+      document.getElementById('cronPanel').innerHTML = html;
+    }).catch(function () {
+      var html = '<table><tr><th>任务</th><th>触发</th><th>状态</th><th>说明</th></tr>';
+      jobs.forEach(function (j) {
+        html += '<tr><td style="white-space:nowrap;font-weight:600">' + j.name + '</td><td style="font-size:11.5px">' + j.cron + '</td><td><span class="tag tag-warning">状态未知</span></td><td style="font-size:11px">' + j.desc + '</td></tr>';
+      });
+      html += '</table>';
+      document.getElementById('cronPanel').innerHTML = html;
     });
-    html += '</table><p class="hint">执行日志：Cloudflare 控制台 → Workers → flat-mud-c136 → 实时日志（搜索 "CRON:"）。任务内置失败自动重试 1 次。配置项在仓库 Secrets 或 .env.local（部署时注入）。</p>';
-    document.getElementById('cronPanel').innerHTML = html;
   }
   document.querySelector('.tab[data-tab="cron"]').addEventListener('click', loadCron);
 
@@ -975,7 +1092,7 @@
       v5Render(d);
       fetch('/api/v5/realtime').then(function (r) { return r.json(); }).then(function (rt) {
         if (rt && rt.ok) {
-          var extra = rt.configured ? v5Card('⑦ 实时面板（当前在线人数 + 活跃页面）', 'GA4', v5Bars(rt.realtime || [], 0, 0)) : v5Card('⑦ 实时面板', 'GA4', '<p class="hint">GA4 未配置</p>');
+          var extra = rt.configured ? v5Card('⑦ 实时在线（当前活跃用户 + 活跃页面）', 'GA4 实时', v5Bars(rt.realtime || [], 0, 0)) : v5Card('⑦ 实时在线', 'GA4 实时', '<p class="hint">GA4 未配置</p>');
           document.getElementById('v5-body').innerHTML += extra;
         }
       }).catch(function () {});
@@ -1052,7 +1169,10 @@
   }
 
   // ── V6: sidebar nav ↔ tabs sync ──
-  var SB_NAMES = { dash: '数据看板', editor: '产品/内容编辑', inquiry: '询盘中心', tools: '后台工具', ticket: '修改工单', audit: '审计日志', cron: '自动任务', v5: '数据驾驶舱', guide: '风格指南', geo: 'AI 可见性', seo: 'SEO 医生', config: '设置中心' };
+  var SB_NAMES = { dash: '今日运营 / 数据看板', editor: '内容工厂 / 产品编辑', inquiry: '线索中心 / 询盘', tools: '内容工厂 / 后台工具', ticket: '内容工厂 / 修改工单', audit: '系统 / 审计日志', cron: '系统 / 自动任务', v5: '增长工具 / 数据驾驶舱', guide: '系统 / 风格指南', geo: '增长工具 / AI 可见性', seo: '增长工具 / SEO 医生', config: '系统 / 设置中心' };
+  // topbar KPI 进入设置
+  var topKpi = document.getElementById('topbar-kpi');
+  if (topKpi) topKpi.addEventListener('click', function () { document.querySelector('.tab[data-tab="config"]').click(); });
   function syncSidebar(name) {
     document.querySelectorAll('.sb-item').forEach(function (x) { x.classList.toggle('active', x.dataset.sb === name); });
     if (SB_NAMES[name]) document.getElementById('crumb').innerHTML = '工作台 / <b>' + SB_NAMES[name] + '</b>';
@@ -1187,25 +1307,58 @@
     return { score: s, detail: detail };
   }
   function seoRender() {
-    var el = document.getElementById('seoArea');
+    var seoEl = document.getElementById('seoArea');
     if (!seoData) { seoFetch().then(seoRender); return; }
     var rows = [];
     (seoData.productGroups || []).forEach(function (g) {
       (seoData.productCatalog[g.slug] || []).forEach(function (p) {
         var r = seoScore(p);
-        rows.push({ g: g.name, slug: p.slug, name: p.name, score: r.score, detail: r.detail });
+        rows.push({ g: g.name, gslug: g.slug, slug: p.slug, name: p.name, score: r.score, detail: r.detail });
       });
     });
     rows.sort(function (a, b) { return a.score - b.score; });
     var avg = Math.round(rows.reduce(function (a, r) { return a + r.score; }, 0) / (rows.length || 1));
     var low = rows.filter(function (r) { return r.score < 70; }).length;
-    var html = '<p class="hint">共 ' + rows.length + ' 个产品 · 平均 ' + avg + ' 分 · 待优化（<70 分）' + low + ' 个</p><table><tr><th>产品</th><th>分组</th><th>得分</th><th>扣分明细 / 建议</th></tr>';
+    var mid = rows.filter(function (r) { return r.score >= 70 && r.score < 85; }).length;
+    var good = rows.filter(function (r) { return r.score >= 85; }).length;
+    // 共性缺失摘要
+    var issueCnt = {};
+    rows.forEach(function (r) { r.detail.forEach(function (d) { var k = d.split('（')[0].split(' ')[0]; issueCnt[k] = (issueCnt[k] || 0) + 1; }); });
+    var topIssues = Object.keys(issueCnt).sort(function (a, b) { return issueCnt[b] - issueCnt[a]; }).slice(0, 5);
+    var summaryHtml = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">' +
+      '<div class="card" style="flex:1;min-width:100px;text-align:center;padding:12px"><b style="font-size:22px;color:var(--color-primary)">' + avg + '</b><div class="hint" style="margin:4px 0 0">平均分</div></div>' +
+      '<div class="card" style="flex:1;min-width:100px;text-align:center;padding:12px"><b style="font-size:22px;color:var(--bad)">' + low + '</b><div class="hint" style="margin:4px 0 0">待优化 &lt;70</div></div>' +
+      '<div class="card" style="flex:1;min-width:100px;text-align:center;padding:12px"><b style="font-size:22px;color:var(--color-warning)">' + mid + '</b><div class="hint" style="margin:4px 0 0">提升空间 70-84</div></div>' +
+      '<div class="card" style="flex:1;min-width:100px;text-align:center;padding:12px"><b style="font-size:22px;color:var(--ok)">' + good + '</b><div class="hint" style="margin:4px 0 0">优秀 ≥85</div></div>' +
+      '<div class="card" style="flex:2;min-width:200px;padding:12px"><b style="display:block;margin-bottom:6px;font-size:12px">最常见问题</b>' +
+      topIssues.map(function (k) { return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div class="seo-bar-track"><div class="seo-bar-fill" style="width:' + Math.round(issueCnt[k] / rows.length * 100) + '%;background:var(--bad)"></div></div><span class="hint" style="min-width:90px;white-space:nowrap">' + k + '（' + issueCnt[k] + '个）</span></div>'; }).join('') +
+      '</div></div>';
+    var tableHtml = '<table><tr><th>产品</th><th>分组</th><th>得分</th><th>扣分明细</th><th>操作</th></tr>';
     rows.forEach(function (r) {
-      var color = r.score >= 85 ? 'var(--ok)' : (r.score >= 70 ? 'var(--color-warning)' : 'var(--bad)');
-      html += '<tr><td>' + String(r.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + ' <span class="meta">' + r.slug + '</span></td><td>' + r.g + '</td><td><b style="color:' + color + '">' + r.score + '</b></td><td style="font-size:11px;color:var(--gray)">' + (r.detail.length ? r.detail.join('；') : '✔ 无扣分项') + '</td></tr>';
+      var barColor = r.score >= 85 ? 'var(--ok)' : (r.score >= 70 ? 'var(--color-warning)' : 'var(--bad)');
+      var scoreBar = '<div class="seo-bar-wrap"><div class="seo-bar-track"><div class="seo-bar-fill" style="width:' + r.score + '%;background:' + barColor + '"></div></div><b style="color:' + barColor + ';min-width:28px">' + r.score + '</b></div>';
+      var fixBtn = r.detail.length ? '<button class="seo-fix-btn" data-gslug="' + r.gslug + '" data-slug="' + r.slug + '">去修复 →</button>' : '';
+      tableHtml += '<tr><td>' + String(r.name).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '<br/><span class="meta">' + r.slug + '</span></td><td>' + r.g + '</td><td>' + scoreBar + '</td><td style="font-size:11px;color:var(--gray)">' + (r.detail.length ? r.detail.join('；') : '<span class="status ok">✔ 无扣分</span>') + '</td><td>' + fixBtn + '</td></tr>';
     });
-    el.innerHTML = html + '</table>';
+    seoEl.innerHTML = summaryHtml + tableHtml + '</table>';
     window.__seoRows = rows;
+    // 修复跳转：点击 → 切到编辑tab + 预选分组产品
+    seoEl.querySelectorAll('.seo-fix-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var gslug = b.dataset.gslug, slug = b.dataset.slug;
+        document.querySelector('.tab[data-tab="editor"]').click();
+        var trySelect = function () {
+          var gs = document.getElementById('ed-group');
+          var ps = document.getElementById('ed-product');
+          if (gs && gs.options.length > 1) {
+            gs.value = gslug; gs.dispatchEvent(new Event('change'));
+            setTimeout(function () { if (ps) { ps.value = slug; ps.dispatchEvent(new Event('change')); } }, 300);
+          } else { setTimeout(trySelect, 200); }
+        };
+        setTimeout(trySelect, 100);
+        toast('已跳转到产品编辑，请修复标注的问题', 'info');
+      });
+    });
   }
   document.getElementById('seo-refresh').addEventListener('click', function () {
     var b = this; if (b.disabled) return;
@@ -1226,31 +1379,145 @@
   });
   document.querySelector('.tab[data-tab="seo"]').addEventListener('click', function () { if (!seoData) seoRender(); });
 
-  // ── 设置中心：配置状态总览 ──
+  // ── v8: 设置中心 + 配置进度环 + 今日任务 ──
+  var CFG_GROUPS = [
+    { label: '安全', color: '#ff6b6b', items: [
+      { key: 'admin_pw', name: '管理员密码', role: '登录认证',
+        steps: '① 告知 AI 助手你的新密码 → ② AI 生成 SHA-256 哈希 → ③ GitHub 仓库 Settings → Secrets → Actions → 添加 <code>ADMIN_PW_HASH</code> → ④ 推送任意 commit 触发重新部署（约 2 分钟）' }
+    ]},
+    { label: '核心功能', color: '#c9a227', items: [
+      { key: 'gh_pat', name: 'GitHub 编辑管线（OPS_GH_PAT）', role: '产品保存发布 / 审计持久化 / sitemap 自动重建',
+        steps: '① 访问 github.com/settings/tokens → Generate new token (classic) → 勾选 <code>repo</code> scope（不需要 workflow scope）→ 复制 token ② GitHub 仓库 Secrets 添加 <code>OPS_GH_PAT</code> → 重新部署' },
+      { key: 'supabase', name: 'Supabase（SB_URL + SB_ANON_KEY）', role: '询盘入库 / 数据看板询盘统计',
+        steps: '① 访问 supabase.com → 你的项目 → Settings → API → 复制 Project URL 和 anon public key ② GitHub Secrets 添加 <code>SB_URL</code> 和 <code>SB_ANON_KEY</code> → 重新部署' },
+      { key: 'pushplus', name: 'PushPlus 微信通知（PUSHPLUS_TOKEN）', role: '每日简报 / 死链巡检 / SLA 超时告警推送到微信',
+        steps: '① 访问 pushplus.plus → 登录（微信扫码）→ 复制 token ② GitHub Secrets 添加 <code>PUSHPLUS_TOKEN</code> → 重新部署' }
+    ]},
+    { label: '数据驾驶舱', color: '#4cd964', items: [
+      { key: 'ga4', name: 'GA4 Service Account（GA4_SERVICE_JSON + GA4_PROPERTY_ID）', role: '驾驶舱：流量/来源/地域/设备/漏斗图',
+        steps: '① Google Cloud Console → IAM → Service Accounts → 创建账号 → 生成 JSON 密钥 ② GA4 属性 → 管理 → 属性访问权限 → 添加该 Service Account 邮箱（查看者角色）③ GitHub Secrets 添加 <code>GA4_SERVICE_JSON</code>（整个 JSON 内容）和 <code>GA4_PROPERTY_ID</code>（数字 ID）' },
+      { key: 'gsc', name: 'GSC Service Account（GSC_SERVICE_JSON + GSC_SITE_URL）', role: '驾驶舱：SEO 关键词榜',
+        steps: '① 可复用 GA4 的 Service Account ② Google Search Console → 设置 → 用户和权限 → 添加用户（Service Account 邮箱，受限查看者）③ GitHub Secrets 添加 <code>GSC_SERVICE_JSON</code> 和 <code>GSC_SITE_URL</code>（如 sc-domain:mili-packaging.com）' }
+    ]},
+    { label: '增强（可选）', color: '#9a9a9a', items: [
+      { key: 'llm', name: 'LLM API（LLM_API_KEY）', role: 'AI 优化建议（当前规则引擎降级运行中）',
+        steps: '① 获取 DeepSeek / OpenAI / 任意兼容 OpenAI 格式的 API Key ② GitHub Secrets 添加 <code>LLM_API_KEY</code>，可选添加 <code>LLM_ENDPOINT</code>（默认 OpenAI）' },
+      { key: 'indexnow', name: 'IndexNow Key（INDEXNOW_KEY）', role: 'Bing 新内容收录加速',
+        steps: '① 访问 bing.com/webmasters → IndexNow → 生成 key ② 将 key 文件放到网站根目录（部署流程已支持）③ GitHub Secrets 添加 <code>INDEXNOW_KEY</code>' }
+    ]}
+  ];
   function loadConfig() {
-    var el = document.getElementById('configArea');
     fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
-      if (!d.ok) { el.innerHTML = '<p class="status bad">读取失败</p>'; return; }
-      var items = [
-        ['GitHub 编辑管线（GH_PAT）', 'gh_pat', '产品保存发布 / 审计持久化 / sitemap 自动重建'],
-        ['PushPlus 微信通知', 'pushplus', '每日简报 / 死链巡检 / SLA 告警'],
-        ['GA4 数据源', 'ga4', '驾驶舱：流量 / 来源 / 地域 / 漏斗'],
-        ['GSC 数据源', 'gsc', '驾驶舱：SEO 关键词榜'],
-        ['LLM API', 'llm', 'AI 优化建议（当前规则引擎降级运行）'],
-        ['IndexNow', 'indexnow', 'Bing 新内容收录加速'],
-        ['Supabase', 'supabase', '询盘入库 / 统计'],
-        ['管理员密码哈希', 'admin_pw', '登录认证']
-      ];
-      var html = '<table><tr><th>配置项</th><th>状态</th><th>作用</th></tr>';
-      items.forEach(function (it) {
-        var c = d.configs[it[1]] || { ok: false };
-        html += '<tr><td><b>' + it[0] + '</b></td><td>' + (c.ok ? '<span class="tag tag-success">已配置</span>' : '<span class="tag tag-warning">未配置</span>') + '</td><td class="hint">' + it[2] + '</td></tr>';
+      if (!d.ok) { document.getElementById('configGroupArea').innerHTML = '<p class="status bad">读取失败</p>'; return; }
+      var cfgs = d.configs;
+      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow'];
+      var done = allKeys.filter(function (k) { return cfgs[k] && cfgs[k].ok; }).length;
+      // 更新进度环
+      updateCfgRing(done, allKeys.length, cfgs);
+      // 安全警告（默认密码）
+      var pwCard = document.getElementById('pw-alert-card');
+      if (pwCard) pwCard.style.display = (cfgs.admin_pw && cfgs.admin_pw.ok && String(cfgs.admin_pw.ok) !== 'ok-default') ? 'none' : '';
+      // 分组渲染
+      var html = '';
+      CFG_GROUPS.forEach(function (grp) {
+        html += '<div class="cfg-group"><div class="cfg-group-header"><div class="cfg-priority-dot" style="background:' + grp.color + '"></div>' + grp.label + '</div>';
+        grp.items.forEach(function (it) {
+          var c = cfgs[it.key] || { ok: false };
+          var isOkDefault = String(c.ok) === 'ok-default' || c.hint === '登录密码（当前为默认值，建议设置独立哈希）';
+          var badge = c.ok && !isOkDefault ? '<span class="tag tag-success">已配置</span>' : (isOkDefault ? '<span class="tag tag-warning">默认值</span>' : '<span class="tag tag-warning">未配置</span>');
+          html += '<div class="cfg-row"><div class="cfg-row-name">' + it.name + '</div>' +
+            '<div class="cfg-row-hint">' + it.role + '</div>' +
+            badge +
+            '<button class="cfg-expand-btn" data-key="' + it.key + '" aria-label="展开配置步骤">展开 ▾</button></div>' +
+            '<div class="cfg-steps" id="cfg-steps-' + it.key + '" style="display:none">' + it.steps + '</div>';
+        });
+        html += '</div>';
       });
-      var done = items.filter(function (it) { return d.configs[it[1]] && d.configs[it[1]].ok; }).length;
-      el.innerHTML = html + '</table><p class="hint" style="margin-top:10px">已配置 ' + done + ' / ' + items.length + ' 项。配置位置：GitHub 仓库 Secrets（或告知运营协助者填入环境变量重新部署）。</p>';
-    }).catch(function () { el.innerHTML = '<p class="status bad">读取失败</p>'; });
+      document.getElementById('configGroupArea').innerHTML = html;
+      // 展开/折叠步骤
+      document.querySelectorAll('.cfg-expand-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var panel = document.getElementById('cfg-steps-' + b.dataset.key);
+          if (!panel) return;
+          var open = panel.style.display !== 'none';
+          panel.style.display = open ? 'none' : '';
+          b.textContent = open ? '展开 ▾' : '收起 ▴';
+        });
+      });
+    }).catch(function () { document.getElementById('configGroupArea').innerHTML = '<p class="status bad">读取失败</p>'; });
+  }
+  function updateCfgRing(done, total, cfgs) {
+    var pct = done / total;
+    var circ = 2 * Math.PI * 20; // r=20
+    var arc = document.getElementById('cfg-ring-arc');
+    if (arc) arc.setAttribute('stroke-dasharray', (pct * circ).toFixed(1) + ' ' + circ.toFixed(1));
+    var numEl = document.getElementById('cfg-ring-done');
+    if (numEl) numEl.textContent = done;
+    var titleEl = document.getElementById('cfg-ring-title');
+    if (titleEl) titleEl.textContent = done === total ? '全部配置完成 🎉' : '已配置 ' + done + ' / ' + total + ' 项';
+    var subEl = document.getElementById('cfg-ring-sub');
+    if (subEl) subEl.textContent = done === 0 ? '建议优先配置安全类和核心功能 → 点击进入' : (done < total ? '剩余 ' + (total - done) + ' 项未配置 · 点击查看配置步骤' : '所有功能已点亮');
+    var tagEl = document.getElementById('cfg-ring-tag');
+    if (tagEl) {
+      if (done === total) { tagEl.className = 'tag tag-success'; tagEl.textContent = '全部就绪'; }
+      else if (done >= 4) { tagEl.className = 'tag tag-warning'; tagEl.textContent = '部分就绪'; }
+      else { tagEl.className = 'tag tag-danger'; tagEl.textContent = '待配置'; }
+    }
+    // 顶部 KPI
+    var topEl = document.getElementById('topbar-cfg-done');
+    if (topEl) topEl.textContent = done;
+    // 今日优先任务
+    renderPriorityTasks(done, cfgs);
+  }
+  function renderPriorityTasks(done, cfgs) {
+    var wrap = document.getElementById('dash-priority');
+    if (!wrap) return;
+    var tasks = [];
+    if (cfgs && cfgs.admin_pw && String(cfgs.admin_pw.ok) === 'ok-default') {
+      tasks.push({ cls: 'urgent', ico: '🔴', title: '修改默认密码', desc: '当前密码 1127 为默认值，存在安全风险', tab: 'config' });
+    }
+    if (cfgs && cfgs.gh_pat && !cfgs.gh_pat.ok) {
+      tasks.push({ cls: 'urgent', ico: '🔑', title: '配置 GitHub PAT', desc: '产品编辑发布链路未开通，无法保存产品修改', tab: 'config' });
+    }
+    if (cfgs && cfgs.supabase && !cfgs.supabase.ok) {
+      tasks.push({ cls: 'warn', ico: '📊', title: '配置 Supabase', desc: '询盘数据未接入，看板询盘统计为空', tab: 'config' });
+    }
+    if (cfgs && cfgs.ga4 && !cfgs.ga4.ok) {
+      tasks.push({ cls: 'warn', ico: '📈', title: '配置 GA4 数据源', desc: '数据驾驶舱全部 7 个模块待点亮', tab: 'config' });
+    }
+    if (!tasks.length) {
+      tasks.push({ cls: 'ok', ico: '✅', title: '配置全部就绪', desc: '所有功能正常运行中，可专注运营', tab: 'dash' });
+    }
+    if (typeof window.__seoRows !== 'undefined' && window.__seoRows) {
+      var seoLow = window.__seoRows.filter(function (r) { return r.score < 70; }).length;
+      if (seoLow > 0) tasks.push({ cls: 'warn', ico: '🏥', title: 'SEO 待优化 ' + seoLow + ' 个产品', desc: '平均分低于70，影响搜索排名和 AI 引用', tab: 'seo' });
+    }
+    wrap.innerHTML = tasks.map(function (t) {
+      return '<div class="priority-item ' + t.cls + '" data-goto="' + t.tab + '">' +
+        '<div class="priority-ico">' + t.ico + '</div>' +
+        '<div class="priority-body"><b>' + t.title + '</b><span>' + t.desc + '</span></div></div>';
+    }).join('');
+    wrap.querySelectorAll('.priority-item[data-goto]').forEach(function (it) {
+      it.addEventListener('click', function () {
+        var tabBtn = document.querySelector('.tab[data-tab="' + it.dataset.goto + '"]');
+        if (tabBtn) tabBtn.click();
+      });
+    });
   }
   document.querySelector('.tab[data-tab="config"]').addEventListener('click', loadConfig);
+  // 看板加载时同步拉配置
+  (function loadCfgForDash() {
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.ok) return;
+      var cfgs = d.configs;
+      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow'];
+      var done = allKeys.filter(function (k) { return cfgs[k] && cfgs[k].ok; }).length;
+      updateCfgRing(done, allKeys.length, cfgs);
+    }).catch(function () {
+      var topEl = document.getElementById('topbar-cfg-done');
+      if (topEl) topEl.textContent = '?';
+    });
+  })();
 
   // ── 设置中心：连通性一键测试 + 导出 + 登出 ──
   var CONFIG_ITEMS = [
