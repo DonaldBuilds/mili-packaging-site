@@ -2143,7 +2143,7 @@
         ? '<img src="' + thumbSrc + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=prod-thumb-placeholder>📦</div>\'" />'
         : '<div class="prod-thumb-placeholder">📦</div>';
       // 产品前台链接
-      var prodFrontUrl = 'https://mili-packaging.com/products/' + r.gslug + '/' + r.slug;
+      var prodFrontUrl = 'https://mili-packaging.com/products/' + g.slug + '/' + p.slug;
       var tierHtml = '';
       if (p.tierPrice && typeof p.tierPrice === 'object' && p.tierPrice['1000']) {
         tierHtml = '<div class="prod-moq">阶梯 1000：$' + p.tierPrice['1000'] + '</div>';
