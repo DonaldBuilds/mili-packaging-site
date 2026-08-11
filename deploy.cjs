@@ -128,6 +128,11 @@ const handleV5=async function(env,url){
     return new Response(JSON.stringify({ok:true,configured:true,cache:'miss',generatedAt:V5_CACHE[ck].generatedAt,modules:modules}),{headers:{'content-type':'application/json'}});
   }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
 };
+// Supabase 内置默认（anon key 为公开密钥，前端已使用；env 可覆盖）
+const SB_DEF_URL='https://qfecxuuvgbqqruzfgrpl.supabase.co';
+const SB_DEF_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZWN4dXV2Z2JxcXJ1emZncnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODgwMDEsImV4cCI6MjEwMDU2NDAwMX0.l_nwv0I1ZogH34_2EFBcJKyMMkYAzWbOc3cEkkFUMp0';
+const sbU=function(env){return(env&&env.SB_URL)||SB_DEF_URL};
+const sbK=function(env){return(env&&env.SB_ANON_KEY)||SB_DEF_KEY};
 const handleConfigTest=async function(env){
   const out={};
   if(env.OPS_GH_PAT){
@@ -142,9 +147,7 @@ const handleConfigTest=async function(env){
   if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
     try{const t=await oauthToken(env.GSC_SERVICE_JSON);const dr=ga4DateRange(7);await gscQuery(t,env.GSC_SITE_URL,{startDate:dr.start,endDate:dr.end,rowLimit:1});out.gsc='ok'}catch(e){out.gsc='fail:'+String((e&&e.message)||e)}
   }else{out.gsc='not-configured'}
-  if(env.SB_URL){
-    try{const r=await fetch(String(env.SB_URL)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:env.SB_ANON_KEY,Authorization:'Bearer '+env.SB_ANON_KEY}});out.supabase=r.ok?'ok':'fail:'+r.status}catch(e){out.supabase='fail'}
-  }else{out.supabase='not-configured'}
+  try{const r=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});out.supabase=r.ok?'ok':'fail:'+r.status}catch(e){out.supabase='fail'}
   out.llm=env.LLM_API_KEY?'ok':'not-configured';
   out.indexnow=env.INDEXNOW_KEY?'ok':'not-configured';
   out.admin_pw=env.ADMIN_PW_HASH?'ok':'ok-default';
@@ -205,7 +208,7 @@ export default{async fetch(r,env){
       gsc:{ok:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),hint:'数据驾驶舱 SEO 关键词'},
       llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
       indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
-      supabase:{ok:!!env.SB_URL,hint:'询盘入库与统计'},
+      supabase:{ok:true,hint:'询盘入库与统计（内置默认，env 可覆盖）'},
       admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'}
     }}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config/test'){return handleConfigTest(env)}
@@ -298,10 +301,10 @@ async scheduled(event,env,ctx){
       const lines=[];
       try{
         const y=new Date(Date.now()-86400000).toISOString();
-        const r=await fetch(String(env.SB_URL||'')+'/rest/v1/inquiries?select=created_at&created_at=gte.'+y,{headers:{apikey:env.SB_ANON_KEY,Authorization:'Bearer '+env.SB_ANON_KEY}});
+        const r=await fetch(sbU(env)+'/rest/v1/inquiries?select=created_at&created_at=gte.'+y,{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
         const rows=await r.json();
         lines.push('昨日新询盘: '+(Array.isArray(rows)?rows.length:'读取失败'));
-      }catch(e){lines.push('昨日新询盘: 未配置（SB_URL/SB_ANON_KEY）')}
+      }catch(e){lines.push('昨日新询盘: 读取失败')}
       let ok=0,bad=[];
       for(const u of ['/','/products','/portfolio','/about','/contact','/blog','/industries','/faq','/privacy-policy','/sitemap.xml']){
         try{const rr=await fetch('https://mili-packaging.com'+u,{method:'HEAD'});if(rr.ok)ok++;else bad.push(u+':'+rr.status)}catch(e){bad.push(u+':ERR')}

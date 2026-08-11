@@ -1473,7 +1473,7 @@
     var wrap = document.getElementById('dash-priority');
     if (!wrap) return;
     var tasks = [];
-    if (cfgs && cfgs.admin_pw && String(cfgs.admin_pw.ok) === 'ok-default') {
+    if (cfgs && cfgs.admin_pw && !cfgs.admin_pw.ok) {
       tasks.push({ cls: 'urgent', ico: '🔴', title: '修改默认密码', desc: '当前密码 1127 为默认值，存在安全风险', tab: 'config' });
     }
     if (cfgs && cfgs.gh_pat && !cfgs.gh_pat.ok) {
