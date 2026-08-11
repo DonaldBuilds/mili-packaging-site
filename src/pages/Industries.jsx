@@ -1,4 +1,4 @@
-﻿import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { productGroups } from '../data/products';
 
 export const industries = [
@@ -18,6 +18,12 @@ export const industries = [
     products: ['mailer-boxes', 'paper-bags', 'corrugated-shipping'],
     featuredProducts: ['custom-logo-mailer-box', 'hard-handle-kraft-bag'],
     capabilities: ['Tape-free mailers', 'Retail paper bags'],
+    stats: [['MOQ', '100 pcs'], ['Production', '10–12 days'], ['Sample', '48 h'], ['Volume pricing', '3,000+ pcs']],
+    why: [
+      ['Flat-pack, ship flat', 'Mailers and cartons ship flat to cut freight and warehouse space — up to 60% volume savings vs rigid alternatives.'],
+      ['One Pantone identity', 'Mailers, bags, tissue and inserts print in the same Pantone colors and foil finishes for a consistent retail + e-commerce brand.'],
+      ['Seasonal agility', 'Tooling and artwork stay on file — seasonal collections reorder in as little as 10 days production.'],
+    ],
     testimonial: { quote: 'Our branded mailers cut shipping prep time by 40% and the unboxing photos customers post doubled our organic reach.', name: 'Head of E-commerce', role: 'EU apparel brand, 10,000 units/quarter' },
     faq: [
       ['What is the best box for shipping clothing?', 'Mailer boxes are ideal - they ship flat, self-seal without tape, and print fully in your brand colors. For heavier outerwear use corrugated shipping boxes.'],
@@ -43,6 +49,12 @@ export const industries = [
     products: ['folding-cartons', 'rigid-gift-boxes', 'corrugated-shipping'],
     featuredProducts: ['luxury-cookie-rigid-box', 'marbled-foldable-gift-box'],
     capabilities: ['Food-safe inks', 'Window cartons'],
+    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Food-safe', 'Yes'], ['FSC stock', 'Available']],
+    why: [
+      ['Food-safe by default', 'Food-safe inks, water-based adhesives and FSC-certified board — with direct food-contact and window-patching options.'],
+      ['Shelf-ready design', 'Window cartons, rigid gift sets and foil finishing engineered to win trial on retail shelves.'],
+      ['Export-tested transit', 'Kraft shippers and rigid structures tested for courier and export shipping of fragile contents.'],
+    ],
     testimonial: { quote: 'The window cartons doubled our retail sell-through - customers can see the product. FSC certification opened two major grocery accounts.', name: 'Founder', role: 'Specialty chocolate brand, UK' },
     faq: [
       ['Are your cartons food-safe?', 'Yes - we use food-safe inks and FSC-certified board, with options for direct food contact and window patching.'],
@@ -68,6 +80,12 @@ export const industries = [
     products: ['cosmetic-boxes', 'rigid-gift-boxes', 'paper-bags'],
     featuredProducts: ['valentine-magnetic-folding-box', 'black-magnetic-gift-box'],
     capabilities: ['FSC board', 'EVA bottle cradles'],
+    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Set assembly', 'In-house'], ['Finishing', 'Full range']],
+    why: [
+      ['One supplier, one standard', 'Box, insert, holder and finishing coordinated in-house — consistent quality and one less vendor to manage.'],
+      ['Precision bottle cradles', 'EVA and foam die-cut to your exact bottle dimensions, tested for courier and export transit.'],
+      ['Luxury finishing stack', 'Soft-touch, foil stamping, embossing and magnetic structures that photograph like a campaign.'],
+    ],
     testimonial: { quote: 'One supplier for box, insert and finishing cut our lead time from 8 weeks to 4. The magnetic sets photograph like a luxury campaign.', name: 'Brand Manager', role: 'Skincare label, USA, 3 SKU gift line' },
     faq: [
       ['What is a complete cosmetic set?', 'Outer box (folding or rigid) + EVA/paper insert + bottle holder + foil stamping or soft-touch finish - everything coordinated by one supplier.'],
@@ -93,6 +111,12 @@ export const industries = [
     products: ['rigid-gift-boxes', 'corrugated-shipping', 'mailer-boxes'],
     featuredProducts: ['black-magnetic-gift-box', 'eco-printed-shipping-box'],
     capabilities: ['Anti-static foam', 'Precision die-cut inserts'],
+    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Anti-static', 'Available'], ['Drop rating', 'Export-tested']],
+    why: [
+      ['Anti-static protection', 'Anti-static EVA and foam inserts for sensitive components, PCBs and precision hardware.'],
+      ['Zero-damage transit', 'Double-wall corrugated with corner protection and precision-fit inserts, rated for international courier transit.'],
+      ['Premium unboxing stage', 'Rigid magnetic and drawer boxes with foam cradles turn unboxing into a brand moment reviewers mention.'],
+    ],
     testimonial: { quote: 'The rigid presentation boxes with foam cradles reduced our transit damage to zero and turned unboxing into a brand moment reviewers mention.', name: 'COO', role: 'Consumer electronics startup, DTC' },
     faq: [
       ['Do you offer anti-static packaging?', 'Yes - anti-static EVA and foam inserts are available for sensitive components and PCBs.'],
@@ -118,6 +142,12 @@ export const industries = [
     products: ['mailer-boxes', 'sample-starter-kits', 'corrugated-shipping'],
     featuredProducts: ['custom-logo-mailer-box', 'ecommerce-mailer-sample-kit'],
     capabilities: ['Tape-free programs', 'Volume pricing 3,000+'],
+    stats: [['MOQ', '100 pcs'], ['Production', '10–12 days'], ['Reorder lead time', '10–12 days'], ['Volume steps', '3k / 10k']],
+    why: [
+      ['Built for monthly reorders', 'Tooling and artwork stay on file — consistent pricing and 10-12 day production on every reorder.'],
+      ['Test before you commit', 'Starter kits let you compare 4-6 structures in a week before scaling volume.'],
+      ['Scales to volume', 'Volume pricing steps at 3,000 and 10,000 units with dedicated production slots.'],
+    ],
     testimonial: { quote: 'The starter kit let us compare five structures in a week. We picked the mailer, scaled to 20k units a month, and churn dropped after the redesign.', name: 'CEO', role: 'Subscription box brand, 40k subscribers' },
     faq: [
       ['Can you handle monthly subscription reorders?', 'Yes - we keep your tooling and artwork on file for fast reordering with consistent pricing and 10-12 day production.'],
@@ -143,6 +173,12 @@ export const industries = [
     products: ['rigid-gift-boxes', 'paper-bags', 'folding-cartons'],
     featuredProducts: ['bottle-product-rigid-set', 'luxury-magnetic-folding-gift-box'],
     capabilities: ['Rigid gift sets', 'Custom bottle cradles'],
+    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Tooling on file', 'Yes'], ['Volume pricing', '3,000+ pcs']],
+    why: [
+      ['Bottle-perfect cradles', 'Precision-cut foam and velvet cradles die-cut to your exact bottle dimensions, export-tested.'],
+      ['Festive-ready reordering', 'Tooling stays on file — holiday programs reorder in 12-15 days production.'],
+      ['Shelf-light design', 'Gold foil, deboss and magnetic structures engineered for duty-free and retail presentation.'],
+    ],
     testimonial: { quote: 'The magnetic gift sets with velvet cradles turned our holiday gifting into a brand moment — and the tooling stays on file so reorders ship in under two weeks.', name: 'Marketing Director', role: 'Premium spirits brand, USA' },
     faq: [
       ['Can you protect bottles in transit?', 'Yes - precision-cut foam and velvet cradles are die-cut to your exact bottle dimensions and tested for export shipping.'],
@@ -168,6 +204,12 @@ export const industries = [
     products: ['jewelry-boxes', 'watch-boxes', 'rigid-gift-boxes'],
     featuredProducts: ['drawer-sliding-jewelry-box', 'modern-luxury-single-watch-box'],
     capabilities: ['Velvet-lined interiors', 'Embossed logos'],
+    stats: [['MOQ', '100 pcs'], ['Production', '14–18 days'], ['Interiors', 'Tarnish-safe'], ['Embossing', 'Available']],
+    why: [
+      ['Tarnish-safe interiors', 'Anti-tarnish velvet and leatherette linings with precision-fit cushions protect silver, gold and fine pieces.'],
+      ['Boutique presentation at scale', 'Embossed logos, drawer structures and watch cradles engineered for production budgets.'],
+      ['Transit-safe by design', 'Foam cradles and cushioned pillows keep timepieces secure through export shipping.'],
+    ],
     testimonial: { quote: 'The velvet-lined drawer boxes photograph like a boutique counter. Our customers now ask for the box before they ask for the price.', name: 'Founder', role: 'Fine jewelry label, UK' },
     faq: [
       ['Are your interiors safe for silver and gold?', 'Yes - we use tarnish-safe, anti-tarnish velvet and leatherette linings with precision-fit cushions.'],
@@ -185,7 +227,6 @@ export default function Industries() {
   const { slug } = useParams();
   const ind = slug ? getIndustry(slug) : null;
 
-  // Detail page — pain points → recommended boxes → scene → testimonial → FAQ → CTA
   if (ind) {
     const groups = ind.products.map(s => productGroups.find(g => g.slug === s)).filter(Boolean);
     return (
@@ -196,25 +237,32 @@ export default function Industries() {
             <Link to="/industries" style={{ color: 'var(--gray-3)', textDecoration: 'none' }}>Industries</Link> <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ color: 'var(--gold)' }}>{ind.name}</span>
           </nav>
-
-          {/* Hero + scene image */}
-          <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center', marginBottom: 72 }}>
-            <div style={{ background: 'var(--black-2)', border: '1px solid var(--border-dim)' }}>
-              <img src={ind.img} alt={`${ind.name} custom packaging`} style={{ width: '100%', display: 'block' }} loading="lazy" />
-            </div>
-            <div>
-              <div className="gold-line" />
-              <span className="eyebrow">Industry Solutions</span>
-              <h1 style={{ fontSize: 'clamp(26px, 3vw, 42px)', margin: '10px 0 16px', fontFamily: 'var(--font-display)' }}>{ind.name} Packaging</h1>
-              <p style={{ color: 'var(--gray-2)', fontSize: 15, lineHeight: 1.8, marginBottom: 24 }}>{ind.intro}</p>
-              <div style={{ display: 'flex', gap: 12 }}>
-                <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get a Quote</Link>
-                <a href={`https://wa.me/8618296876285?text=Hi, I need packaging for ${encodeURIComponent(ind.name)}`} target="_blank" rel="noopener noreferrer" className="btn-outline-gold" style={{ textDecoration: 'none' }}>WhatsApp Us</a>
+          <section style={{ position: 'relative', overflow: 'hidden', marginBottom: 72, border: '1px solid var(--border-dim)' }}>
+            <img src={ind.img} alt={`${ind.name} custom packaging`} style={{ width: '100%', height: 520, objectFit: 'cover', display: 'block' }} loading="lazy" />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 55%, rgba(0,0,0,.1) 100%)' }} />
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '100%', display: 'flex', alignItems: 'center' }}>
+              <div style={{ padding: '0 48px', maxWidth: 640 }}>
+                <div className="gold-line" />
+                <span className="eyebrow">Industry Solutions</span>
+                <h1 style={{ fontSize: 'clamp(28px, 3.2vw, 46px)', margin: '10px 0 14px', fontFamily: 'var(--font-display)', color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,.4)' }}>{ind.name} Packaging</h1>
+                <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 15, lineHeight: 1.8, marginBottom: 24 }}>{ind.intro}</p>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get a Quote</Link>
+                  <a href={`https://wa.me/8618296876285?text=Hi, I need packaging for ${encodeURIComponent(ind.name)}`} target="_blank" rel="noopener noreferrer" className="btn-outline-gold" style={{ textDecoration: 'none' }}>WhatsApp Us</a>
+                </div>
               </div>
             </div>
           </section>
-
-          {/* Pain points */}
+          <section style={{ marginBottom: 72 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border-dim)', border: '1px solid var(--border-dim)' }}>
+              {ind.stats.map(([k, v]) => (
+                <div key={k} style={{ background: 'var(--black-2)', padding: '22px 20px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--gold)', fontFamily: 'var(--font-display)', marginBottom: 4 }}>{v}</div>
+                  <div style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gray-3)' }}>{k}</div>
+                </div>
+              ))}
+            </div>
+          </section>
           <section style={{ marginBottom: 72, maxWidth: 780, margin: '0 auto 72px' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <div className="gold-line gold-line-center" />
@@ -230,8 +278,6 @@ export default function Industries() {
               ))}
             </div>
           </section>
-
-          {/* Recommended box types (inner links) */}
           <section style={{ marginBottom: 72 }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <div className="gold-line gold-line-center" />
@@ -253,16 +299,27 @@ export default function Industries() {
               ))}
             </div>
           </section>
-
-          {/* Testimonial */}
+          <section style={{ marginBottom: 72 }}>
+            <div style={{ textAlign: 'center', marginBottom: 36 }}>
+              <div className="gold-line gold-line-center" />
+              <span className="eyebrow">Why Mili for {ind.name}</span>
+              <h2>Built for Your Industry</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+              {ind.why.map(([t, d]) => (
+                <div key={t} style={{ background: 'var(--black-2)', border: '1px solid var(--border-dim)', padding: '28px 24px' }}>
+                  <div style={{ fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 700, marginBottom: 10 }}>{t}</div>
+                  <p style={{ fontSize: 13.5, color: 'var(--gray-3)', lineHeight: 1.7, margin: 0 }}>{d}</p>
+                </div>
+              ))}
+            </div>
+          </section>
           <section style={{ marginBottom: 72, maxWidth: 760, margin: '0 auto 72px', textAlign: 'center' }}>
             <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--gold)" style={{ marginBottom: 16, opacity: 0.85 }} aria-hidden="true"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
             <p style={{ fontSize: 17, lineHeight: 1.9, color: 'var(--gray-2)', fontStyle: 'italic', marginBottom: 16 }}>&ldquo;{ind.testimonial.quote}&rdquo;</p>
             <div style={{ fontSize: 13, letterSpacing: '0.05em', color: 'var(--gold)' }}>{ind.testimonial.name}</div>
             <div style={{ fontSize: 12, color: 'var(--gray-3)' }}>{ind.testimonial.role}</div>
           </section>
-
-          {/* FAQ */}
           <section style={{ maxWidth: 760, margin: '0 auto 72px' }}>
             <div style={{ textAlign: 'center', marginBottom: 36 }}>
               <div className="gold-line gold-line-center" />
@@ -276,8 +333,6 @@ export default function Industries() {
               </details>
             ))}
           </section>
-
-          {/* CTA */}
           <section style={{ padding: '44px 40px', background: 'var(--black-2)', border: '1px solid var(--gold)', textAlign: 'center', marginBottom: 40 }}>
             <div style={{ fontSize: 20, color: 'var(--gold)', fontFamily: 'var(--font-display)', marginBottom: 8 }}>Ready to solve {ind.name} packaging?</div>
             <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 24 }}>Free design &amp; 3D mockup within 48 hours. MOQ from 100 pcs.</p>
@@ -288,7 +343,6 @@ export default function Industries() {
     );
   }
 
-  // Index page — 5 industry cards
   return (
     <div className="page-scaffold" style={{ paddingTop: 140 }}>
       <div className="container">
@@ -296,7 +350,7 @@ export default function Industries() {
           <div className="gold-line" />
           <span className="eyebrow">By Sector</span>
           <h1>Packaging Solutions for Every Industry</h1>
-          <p style={{ color: 'var(--gray-3)', maxWidth: 620, marginTop: 12 }}>Five sector playbooks with recommended box types, materials and finishing — matched to how your customers unbox.</p>
+          <p style={{ color: 'var(--gray-3)', maxWidth: 620, marginTop: 12 }}>Seven sector playbooks with recommended box types, materials and finishing — matched to how your customers unbox.</p>
         </div>
         <div className="product-grid">
           {industries.map(ind => (
@@ -310,6 +364,14 @@ export default function Industries() {
                 <span className="product-card-tag">View Solutions &rarr;</span>
               </div>
             </Link>
+          ))}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border-dim)', border: '1px solid var(--border-dim)', marginTop: 56 }}>
+          {[['7', 'Industry Playbooks'], ['50+', 'Export Countries'], ['100+', 'Box Structures'], ['48 h', 'Free 3D Mockup']].map(([n, l]) => (
+            <div key={l} style={{ background: 'var(--black-2)', padding: '26px 20px', textAlign: 'center' }}>
+              <div style={{ fontSize: 30, fontWeight: 700, color: 'var(--gold)', fontFamily: 'var(--font-display)' }}>{n}</div>
+              <div style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--gray-3)', marginTop: 4 }}>{l}</div>
+            </div>
           ))}
         </div>
       </div>
