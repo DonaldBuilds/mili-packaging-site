@@ -17,7 +17,7 @@ export default function BlogPost() {
       datePublished: post.date,
       dateModified: post.date,
       author: { '@type': 'Organization', name: 'Jiangxi Mili Packaging Materials Co., Ltd.' },
-      publisher: { '@type': 'Organization', name: 'Jiangxi Mili Packaging Materials Co., Ltd.', logo: { '@type': 'ImageObject', url: 'https://mili-packaging.com/assets/images/logo-horizontal-clear.png' } },
+      publisher: { '@type': 'Organization', name: 'Jiangxi Mili Packaging Materials Co., Ltd.', logo: { '@type': 'ImageObject', url: 'https://mili-packaging.com/assets/images/logo-horizontal-clear.webp' } },
       mainEntityOfPage: `https://mili-packaging.com/blog/${post.slug}`,
       articleSection: post.category,
       keywords: post.tags.join(', '),
