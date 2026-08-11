@@ -267,6 +267,19 @@ export default{async fetch(r,env){
     }catch(e){return new Response(JSON.stringify({ok:false,error:String(e&&e.message||e)}),{status:500,headers:{'content-type':'application/json'}})}
   }
 
+  // ── products data proxy（GitHub API 实时读取，绕开 raw CDN 超时）──
+  if(p==='/api/products'&&r.method==='GET'){
+    try{
+      if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+      if(!env.OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'gh-pat-not-configured'}),{status:400,headers:{'content-type':'application/json'}});
+      const ghH={authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'};
+      const m=await (await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json?ref=main',{headers:ghH})).json();
+      if(!m.content)throw new Error('github-read-fail');
+      const data=JSON.parse(decodeURIComponent(escape(atob(m.content))));
+      return new Response(JSON.stringify(data),{headers:{'content-type':'application/json'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+  }
+
   // ── AI advice: LLM-powered SEO suggestions ──
   if(p==='/api/ai/advice'&&r.method==='POST'){
     try{
