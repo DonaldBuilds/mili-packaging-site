@@ -143,9 +143,57 @@ const handleConfigTest=async function(env){
   }else{out.pushplus='not-configured'}
   if(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID){
     try{const t=await oauthToken(env.GA4_SERVICE_JSON);await ga4Report(t,env.GA4_PROPERTY_ID,'runReport',{dateRanges:[ga4DateRange(1)],metrics:[{name:'activeUsers'}]});out.ga4='ok'}catch(e){out.ga4='fail:'+String((e&&e.message)||e)+'|len:'+(env.GA4_SERVICE_JSON||'').length+'|pk:'+(()=>{try{return (JSON.parse(env.GA4_SERVICE_JSON).private_key||'').length}catch(x){return 'parse:'+x.message}})()}
-  }
+  }else{out.ga4='not-configured'}
   if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
     try{const t=await oauthToken(env.GSC_SERVICE_JSON);const dr=ga4DateRange(7);await gscQuery(t,env.GSC_SITE_URL,{startDate:dr.start,endDate:dr.end,rowLimit:1});out.gsc='ok'}catch(e){out.gsc='fail:'+String((e&&e.message)||e)+'|len:'+(env.GSC_SERVICE_JSON||'').length}
+  }else{out.gsc='not-configured'}
+  try{const r=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});out.supabase=r.ok?'ok':'fail:'+r.status}catch(e){out.supabase='fail'}
+  out.llm=env.LLM_API_KEY?'ok':'not-configured';
+  out.indexnow=env.INDEXNOW_KEY?'ok':'not-configured';
+  out.admin_pw=env.ADMIN_PW_HASH?'ok':'ok-default';
+  return new Response(JSON.stringify({ok:true,results:out}),{headers:{'content-type':'application/json'}});
+};
+const handleV5Realtime=async function(env){
+  try{
+    if(!env.GA4_SERVICE_JSON||!env.GA4_PROPERTY_ID)return new Response(JSON.stringify({ok:true,configured:false}),{headers:{'content-type':'application/json'}});
+    const token=await oauthToken(env.GA4_SERVICE_JSON);
+    const rt=await ga4Report(token,env.GA4_PROPERTY_ID,'runRealtimeReport',{dimensions:[{name:'unifiedScreenName'}],metrics:[{name:'activeUsers'}]});
+    return new Response(JSON.stringify({ok:true,configured:true,realtime:rowsToObj(rt)}),{headers:{'content-type':'application/json'}});
+  }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+};
+const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili 运营工作台 · 登录</title><style>body{background:#0a0a0a;color:#e8e8e8;font-family:"Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.box{background:#141416;border:1px solid #2a2a2e;padding:44px 40px;border-radius:8px;width:340px;max-width:90vw}.box h1{font-size:18px;margin:0 0 6px}.box h1 span{color:#c9a227}.sub{color:#9a9a9a;font-size:12px;margin:0 0 24px}input{width:100%;background:#0e0e10;border:1px solid #2a2a2e;color:#e8e8e8;padding:12px;border-radius:4px;font-size:14px;box-sizing:border-box}button{width:100%;background:#c9a227;color:#0a0a0a;border:none;padding:12px;border-radius:4px;font-size:14px;font-weight:700;margin-top:14px;cursor:pointer}#msg{color:#ff6b6b;font-size:12px;margin-top:12px;min-height:16px}.hint{color:#555;font-size:11px;margin-top:16px;text-align:center}</style></head><body><div class="box"><h1>Mili Packaging <span>运营工作台</span></h1><p class="sub">内部系统 · 请先登录（会话 24h）</p><input id="pw" type="password" placeholder="管理员密码" autocomplete="current-password"/><button id="btn">登 录</button><p id="msg"></p><div class="hint">登录后自动进入工作台</div></div><script>var b=document.getElementById("btn"),i=document.getElementById("pw"),m=document.getElementById("msg");function go(){m.textContent="";fetch("/api/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:i.value})}).then(function(r){if(r.ok){location.href="/admin.html"}else{return r.json().then(function(j){m.textContent=j.error==="bad-credentials"?"密码错误":"登录失败 ("+j.error+")"})}}).catch(function(){m.textContent="网络错误，请重试"})}b.onclick=go;i.addEventListener("keydown",function(e){if(e.key==="Enter")go()});</script></body></html>';
+
+export default{async fetch(r,env){
+  const F=await getF();
+  const url=new URL(r.url);
+  let p=url.pathname;
+  if(p==='/')p='/index.html';
+  let k=p.length>1&&p[0]==='/'?p.slice(1):p;
+  const OPS_GH_PAT=(env&&env.OPS_GH_PAT)||'';
+
+  // ── v4 Security: session (HMAC cookie), rate limit, audit ring ──
+  const SESSION_SECRET=(env&&env.SESSION_SECRET)||'d9bd1a6dab1fda8f6c9766f1836d5b203c145c9f47554ca334da5becc6859bc9';
+  const ADMIN_PW_HASH=(env&&env.ADMIN_PW_HASH)||'7377a71607a8dabc029ab10e7a6a895b92e87762538b10ce8b10c4c9ddc74448';
+  const AUDIT_LOG=(globalThis.__miliAudit=globalThis.__miliAudit||[]);
+  const RL=(globalThis.__miliRl=globalThis.__miliRl||{});
+  const sha256hex=async function(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(function(x){return x.toString(16).padStart(2,'0')}).join('')};
+  const hmacHex=async function(msg){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(SESSION_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(msg));return[...new Uint8Array(sig)].map(function(x){return x.toString(16).padStart(2,'0')}).join('')};
+  const getCookie=function(name){const m=(r.headers.get('cookie')||'').match(new RegExp('(?:^|; )'+name+'=([^;]*)'));return m?decodeURIComponent(m[1]):null};
+  const sessionValid=async function(){const t=getCookie('mili_session');if(!t)return false;const sp=t.split('.');if(sp.length!==2)return false;const exp=parseInt(sp[0],10);if(!exp||exp<Date.now())return false;try{const sig=await hmacHex('mili_session.'+exp);if(sig.length!==sp[1].length)return false;let ok=true;for(let i=0;i<sig.length;i++){if(sig[i]!==sp[1][i]){ok=false;break}}return ok}catch(e){return false}};
+  const audit=function(action,obj,before,after){const rec={t:new Date().toISOString(),actor:'admin',action:action,obj:obj,before:before,after:after};AUDIT_LOG.push(rec);if(AUDIT_LOG.length>500)AUDIT_LOG.splice(0,AUDIT_LOG.length-500)};
+  const ip=(r.headers.get('cf-connecting-ip'))||'unknown';const now=Date.now();const rc=RL[ip];
+  if(!rc||rc.r<now){RL[ip]={n:1,r:now+60000}}else{RL[ip].n++;if(RL[ip].n>60)return new Response(JSON.stringify({ok:false,error:'rate-limited'}),{status:429,headers:{'content-type':'application/json'}})}
+
+  // ── Auth API（/api/login 免会话，其余 /api/* 需会话） ──
+  if(p==='/api/login'&&r.method==='POST'){
+    try{
+      const b=await r.json();
+      const h=await sha256hex(String((b&&b.password)||''));
+      if(h!==ADMIN_PW_HASH)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
+      const exp=Date.now()+86400000;
+      const sig=await hmacHex('mili_session.'+exp);
+      return new Response(JSON.stringify({ok:true,exp:exp}),{headers:{'content-type':'application/json','set-cookie':'mili_session='+exp+'.'+sig+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}})}
   }
   if(p==='/api/logout'){return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json','set-cookie':'mili_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'}})}
   if(p.startsWith('/api/')){
