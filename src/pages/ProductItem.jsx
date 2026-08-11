@@ -122,10 +122,10 @@ export default function ProductItem() {
     ...(product.extraImgs || []).filter((img, i, arr) => img && arr.indexOf(img) === i && img !== product.img).slice(0, 5).map((img, i) => ({ id: `extra-${i}`, label: `View ${i + 1}`, img })),
   ];
   const FACTORY_FILL = [
-    { id: 'fac-2', label: 'Custom Options', img: 'https://sc02.alicdn.com/kf/H66dbd203365d4bd8a3495e495c1c67cbk.jpg' },
-    { id: 'fac-4', label: 'Showroom', img: 'https://sc02.alicdn.com/kf/Hba1838990eb54f6ab9bdf969a7d9f7adP.jpg' },
-    { id: 'fac-3', label: 'Our Factory', img: 'https://sc02.alicdn.com/kf/Hdddd8231f22a41c39c124e97c5094565r.jpg' },
-    { id: 'fac-1', label: 'Production Process', img: 'https://sc02.alicdn.com/kf/H3e36c1b9a8484a0298f40f5f3c65d69bq.jpg' },
+    { id: 'fac-2', label: 'Custom Options', img: '/assets/images/factory-options.webp' },
+    { id: 'fac-4', label: 'Showroom', img: '/assets/images/factory-showroom-2.webp' },
+    { id: 'fac-3', label: 'Our Factory', img: '/assets/images/factory-our-2.webp' },
+    { id: 'fac-1', label: 'Production Process', img: '/assets/images/factory-process-2.webp' },
   ];
   const gallery = [...ownImgs, ...FACTORY_FILL.slice(0, Math.max(0, 6 - ownImgs.length))];
   const mainImg = (gallery.find(g => g.id === view) || gallery[0]).img;
