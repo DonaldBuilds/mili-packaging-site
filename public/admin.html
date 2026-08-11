@@ -4,37 +4,41 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Mili Packaging 运营工作台 v4.5</title>
+<title>Mili Packaging 运营工作台 v6</title>
+<script>(function(){try{var t=localStorage.getItem('mili-theme');var d=document.documentElement;if(t==='light'||t==='dark'){d.setAttribute('data-theme',t)}else{d.removeAttribute('data-theme')}}catch(e){}})();</script>
 <style>
   /* ── V6 design tokens — dark (default) ── */
   :root {
     --color-primary:#c9a227; --color-primary-ink:#0a0a0a;
     --color-success:#4cd964; --color-warning:#ffb648; --color-danger:#ff6b6b;
     --color-surface:#141416; --color-surface-2:#0e0e10; --color-surface-3:#1d1d20;
-    --color-bg:#0a0a0a; --color-text:#e8e8e8; --color-text-dim:#9a9a9a; --color-border:#2a2a2e;
+    --color-bg:#0a0a0a; --color-text:#e8e8e8; --color-text-dim:#a4a4ae; --color-text-secondary:#bdbdc7; --color-border:#2a2a2e;
+    --color-input-bg:#121216; --color-input-border:#3a3a44; --color-placeholder:#90909b;
     --fs-h1:2rem; --fs-h2:1.5rem; --fs-h3:1.25rem; --fs-body:1rem; --fs-caption:.875rem;
     --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px;
     --radius:6px; --sidebar-w:240px; --topbar-h:56px;
     /* legacy aliases (existing styles keep working) */
-    --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --txt:#e8e8e8; --gray:#9a9a9a; --ok:#4cd964; --bad:#ff6b6b;
-    --black-2:#141416; --border-dim:#2a2a2e; --gray-3:#9a9a9a; --white:#e8e8e8; --font-display:'Segoe UI',system-ui,sans-serif;
+    --bg:#0a0a0a; --bg2:#141416; --border:#2a2a2e; --gold:#c9a227; --txt:#e8e8e8; --gray:#bdbdc7; --ok:#4cd964; --bad:#ff6b6b;
+    --black-2:#141416; --border-dim:#2a2a2e; --gray-3:#a4a4ae; --white:#e8e8e8; --font-display:'Segoe UI',system-ui,sans-serif;
   }
   :root[data-theme="light"] {
-    --color-primary:#a9851d; --color-primary-ink:#ffffff;
+    --color-primary:#8a6d14; --color-primary-ink:#ffffff;
     --color-success:#1f9d4d; --color-warning:#d98a00; --color-danger:#d64545;
     --color-surface:#ffffff; --color-surface-2:#f2f3f5; --color-surface-3:#e8eaee;
-    --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#6b7280; --color-border:#d8dde3;
-    --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#a9851d; --txt:#1c1e22; --gray:#6b7280; --ok:#1f9d4d; --bad:#d64545;
-    --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#6b7280; --white:#1c1e22;
+    --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#5f6672; --color-text-secondary:#3f4754; --color-border:#d8dde3;
+    --color-input-bg:#ffffff; --color-input-border:#b4bcc8; --color-placeholder:#5f6672;
+    --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#8a6d14; --txt:#1c1e22; --gray:#3f4754; --ok:#1f9d4d; --bad:#d64545;
+    --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#5f6672; --white:#1c1e22;
   }
   @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]):not([data-theme="light"]) {
-      --color-primary:#a9851d; --color-primary-ink:#ffffff;
+      --color-primary:#8a6d14; --color-primary-ink:#ffffff;
       --color-success:#1f9d4d; --color-warning:#d98a00; --color-danger:#d64545;
       --color-surface:#ffffff; --color-surface-2:#f2f3f5; --color-surface-3:#e8eaee;
-      --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#6b7280; --color-border:#d8dde3;
-      --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#a9851d; --txt:#1c1e22; --gray:#6b7280; --ok:#1f9d4d; --bad:#d64545;
-      --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#6b7280; --white:#1c1e22;
+      --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#5f6672; --color-text-secondary:#3f4754; --color-border:#d8dde3;
+      --color-input-bg:#ffffff; --color-input-border:#b4bcc8; --color-placeholder:#5f6672;
+      --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#8a6d14; --txt:#1c1e22; --gray:#3f4754; --ok:#1f9d4d; --bad:#d64545;
+      --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#5f6672; --white:#1c1e22;
     }
   }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -55,37 +59,42 @@
   table { width:100%; border-collapse:collapse; font-size:12.5px; }
   th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
   th { color:var(--gold); font-weight:600; white-space:nowrap; }
-  input, select, textarea { width:100%; background:#0e0e10; border:1px solid var(--border); color:var(--txt); padding:10px 12px; border-radius:3px; font-size:13px; margin-bottom:10px; }
+  input, select, textarea { width:100%; background:var(--color-input-bg); border:1px solid var(--color-input-border); color:var(--color-text); padding:10px 12px; border-radius:3px; font-size:13px; margin-bottom:10px; }
+  select option { background:var(--color-surface); color:var(--color-text); }
+  input:focus, select:focus, textarea:focus { border-color:var(--color-primary); outline:none; }
+  ::placeholder { color:var(--color-placeholder); opacity:1; }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid var(--color-primary); outline-offset:2px; }
+  tbody tr:nth-child(even) { background:var(--color-surface-2); }
   label { display:block; font-size:12px; color:var(--gray); margin-bottom:4px; }
   .row { display:flex; gap:12px; flex-wrap:wrap; } .row > div { flex:1; min-width:200px; }
   .lock { text-align:center; padding:40px 20px; }
   .hint { font-size:12px; color:var(--gray); margin-top:6px; }
-  .flash { position:fixed; top:16px; right:16px; background:#1d1d20; border:1px solid var(--gold); color:var(--gold); padding:12px 18px; font-size:13px; border-radius:4px; opacity:0; transition:opacity .3s; z-index:99; }
+  .flash { position:fixed; top:16px; right:16px; background:var(--color-surface-3); border:1px solid var(--gold); color:var(--gold); padding:12px 18px; font-size:13px; border-radius:4px; opacity:0; transition:opacity .3s; z-index:99; }
   .flash.show { opacity:1; }
   .flash.err { border-color:var(--bad); color:var(--bad); }
   footer { margin-top:40px; border-top:1px solid var(--border); padding-top:16px; font-size:12px; color:var(--gray); }
   /* v5 dashboard */
   .v5-card { margin-bottom: 14px; }
-  .v5-src { font-size:10px; color:var(--gray); border:1px solid var(--border); padding:2px 8px; border-radius:3px; letter-spacing:.06em; }
+  .v5-src { font-size:11px; color:var(--color-text-secondary); border:1px solid var(--color-border); padding:2px 8px; border-radius:3px; letter-spacing:.06em; }
   .v5-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
-  .v5-metric { background:#0e0e10; border:1px solid var(--border); padding:12px; }
+  .v5-metric { background:var(--color-surface-2); border:1px solid var(--color-border); padding:12px; }
   .v5-metric b { display:block; font-size:20px; color:var(--gold); font-family:var(--font-display); }
   .v5-metric span { font-size:11px; color:var(--gray); }
   .v5-delta { font-size:11px; font-weight:600; }
   .v5-delta.up { color:var(--ok); } .v5-delta.down { color:var(--bad); }
   .v5-bar { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:12px; }
   .v5-bar-l { width:170px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--gray); }
-  .v5-bar-track { flex:1; background:#0e0e10; height:14px; border-radius:2px; overflow:hidden; }
+  .v5-bar-track { flex:1; background:var(--color-surface-2); height:14px; border-radius:2px; overflow:hidden; }
   .v5-bar-fill { height:100%; background:var(--gold); opacity:.85; }
   .v5-bar-v { width:70px; text-align:right; color:var(--txt); }
   .v5-funnel { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
   .v5-fstep { display:flex; align-items:center; gap:12px; }
   .v5-fstep-name { width:120px; font-size:12px; color:var(--gray); }
-  .v5-fstep-track { flex:1; background:#0e0e10; height:22px; border-radius:2px; overflow:hidden; }
+  .v5-fstep-track { flex:1; background:var(--color-surface-2); height:22px; border-radius:2px; overflow:hidden; }
   .v5-fstep-fill { height:100%; background:var(--gold); display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:11px; color:#0a0a0a; font-weight:700; }
   .v5-fstep-n { width:110px; font-size:12px; text-align:right; color:var(--txt); }
   .v5-table td { max-width:260px; }
-  @media (max-width:768px) { .v5-metrics { grid-template-columns:repeat(2,1fr); } .v5-bar-l { width:110px; } .v5-fstep-name { width:90px; } .v5-three { grid-template-columns:1fr !important; } }
+  @media (max-width:768px) { .v5-metrics { grid-template-columns:repeat(2,1fr); } .v5-bar-l { width:110px; } .v5-fstep-name { width:90px; } .v5-three { grid-template-columns:1fr !important; } .config-two { grid-template-columns:1fr !important; } }
   .tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
   .tab { padding:8px 16px; border:1px solid var(--border); background:var(--bg2); color:var(--gray); cursor:pointer; font-size:13px; border-radius:3px; }
   .tab.active { color:var(--gold); border-color:var(--gold); }
@@ -97,7 +106,9 @@
   .btn-primary { background:var(--color-primary); color:var(--color-primary-ink); }
   .btn-secondary { background:transparent; color:var(--color-primary); border:1px solid var(--color-primary); }
   .btn-danger { background:var(--color-danger); color:#fff; }
-  .btn-ghost { background:transparent; color:var(--color-text-dim); border:1px solid var(--color-border); }
+  .btn-ghost { background:transparent; color:var(--color-text-secondary); border:1px solid var(--color-border); }
+  .btn-ghost:hover { color:var(--color-primary); border-color:var(--color-primary); }
+  .btn-secondary:hover { background:rgba(201,162,39,.08); }
   .btn-sm { padding:6px 12px; font-size:11px; }
   .btn.loading, .btn[disabled] { opacity:.55; cursor:not-allowed; }
   .tag { display:inline-block; font-size:10px; padding:2px 8px; border-radius:3px; letter-spacing:.04em; margin-right:4px; }
@@ -114,6 +125,14 @@
   .empty .empty-ico { font-size:30px; margin-bottom:8px; opacity:.5; }
   .skeleton { background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%); background-size:200% 100%; animation:sk 1.2s infinite; border-radius:4px; }
   @keyframes sk { from { background-position:200% 0; } to { background-position:-200% 0; } }
+  /* ── V6.1: dashboard sync state indicator ── */
+  .sync-state { display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--color-text-secondary); }
+  .sync-dot { width:9px; height:9px; border-radius:50%; background:var(--color-text-dim); display:inline-block; transition:background .2s; }
+  .sync-dot.syncing { background:var(--color-warning); animation:syncSpin 1s linear infinite; }
+  .sync-dot.ok { background:var(--color-success); }
+  .sync-dot.err { background:var(--color-danger); }
+  .sync-dot.off { background:var(--color-text-dim); }
+  @keyframes syncSpin { from { transform:rotate(0deg) } to { transform:rotate(360deg) } }
   .wrap { max-width:1180px; margin:0 auto; padding:0 0 60px; }
 
   /* ── V6 three-column SaaS layout ── */
@@ -121,14 +140,14 @@
   .sidebar { width:var(--sidebar-w); background:var(--color-surface); border-right:1px solid var(--color-border); padding:16px 12px; position:sticky; top:0; height:100vh; overflow-y:auto; flex-shrink:0; }
   .sb-logo { font-size:15px; font-weight:700; padding:4px 8px 14px; border-bottom:1px solid var(--color-border); margin-bottom:8px; }
   .sb-logo span { color:var(--color-primary); }
-  .sb-group { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-text-dim); padding:14px 8px 6px; }
-  .sb-item { display:block; width:100%; text-align:left; background:none; border:none; color:var(--color-text-dim); font-size:13px; padding:8px 10px; border-radius:4px; cursor:pointer; margin-bottom:2px; }
+  .sb-group { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-text-secondary); padding:14px 8px 6px; }
+  .sb-item { display:block; width:100%; text-align:left; background:none; border:none; color:var(--color-text-secondary); font-size:13px; padding:8px 10px; border-radius:4px; cursor:pointer; margin-bottom:2px; border-left:2px solid transparent; }
   .sb-item:hover { background:var(--color-surface-3); color:var(--color-text); }
-  .sb-item.active { background:rgba(201,162,39,.12); color:var(--color-primary); }
+  .sb-item.active { background:rgba(201,162,39,.14); color:var(--color-primary); border-left-color:var(--color-primary); font-weight:600; }
   .main { flex:1; min-width:0; display:flex; flex-direction:column; }
   .topbar { height:var(--topbar-h); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; gap:12px; position:sticky; top:0; background:var(--color-bg); z-index:20; }
-  .crumb { font-size:13px; color:var(--color-text-dim); } .crumb b { color:var(--color-text); font-weight:600; }
-  .tb-btn { background:none; border:1px solid var(--color-border); color:var(--color-text-dim); border-radius:4px; padding:6px 10px; font-size:12px; cursor:pointer; }
+  .crumb { font-size:13px; color:var(--color-text-secondary); } .crumb b { color:var(--color-text); font-weight:600; }
+  .tb-btn { background:none; border:1px solid var(--color-border); color:var(--color-text-secondary); border-radius:4px; padding:6px 10px; font-size:12px; cursor:pointer; }
   .tb-btn:hover { color:var(--color-text); border-color:var(--color-primary); }
   .hamburger { display:none; background:none; border:none; color:var(--color-text); font-size:20px; cursor:pointer; padding:4px 8px; }
   .content { flex:1; padding:20px 24px 40px; min-width:0; }
@@ -150,22 +169,23 @@
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo">Mili Packaging <span>工作台 v6</span></div>
     <div class="sb-group">概览</div>
-    <button class="sb-item active" data-sb="dash">数据看板</button>
+    <button class="sb-item active" data-sb="dash">① 数据看板</button>
     <div class="sb-group">产品</div>
-    <button class="sb-item" data-sb="editor">产品/内容编辑</button>
+    <button class="sb-item" data-sb="editor">② 产品/内容编辑</button>
     <div class="sb-group">线索</div>
-    <button class="sb-item" data-sb="inquiry">询盘中心</button>
+    <button class="sb-item" data-sb="inquiry">③ 询盘中心</button>
+    <div class="sb-group">工具与数据</div>
+    <button class="sb-item" data-sb="tools">④ 后台工具</button>
+    <button class="sb-item" data-sb="ticket">⑤ 修改工单</button>
+    <button class="sb-item" data-sb="audit">⑥ 审计日志</button>
+    <button class="sb-item" data-sb="cron">⑦ 自动任务</button>
+    <button class="sb-item" data-sb="v5">⑧ 数据驾驶舱</button>
     <div class="sb-group">SEO &amp; 情报</div>
-    <button class="sb-item" data-sb="v5">数据驾驶舱</button>
-    <button class="sb-item" data-sb="cron">自动任务</button>
-    <button class="sb-item" data-sb="tools">后台工具</button>
+    <button class="sb-item" data-sb="guide">⑨ 风格指南</button>
+    <button class="sb-item" data-sb="geo">⑩ AI 可见性</button>
+    <button class="sb-item" data-sb="seo">⑪ SEO 医生</button>
     <div class="sb-group">系统</div>
-    <button class="sb-item" data-sb="ticket">修改工单</button>
-    <button class="sb-item" data-sb="audit">审计日志</button>
-    <button class="sb-item" data-sb="guide">风格指南</button>
-    <button class="sb-item" data-sb="geo">AI 可见性</button>
-    <button class="sb-item" data-sb="seo">SEO 医生</button>
-    <button class="sb-item" data-sb="config">设置中心</button>
+    <button class="sb-item" data-sb="config">⑫ 设置中心</button>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -174,7 +194,7 @@
         <span class="crumb" id="crumb">工作台 / <b>数据看板</b></span>
       </div>
       <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
-        <button class="tb-btn" id="themeToggle" title="切换亮/暗模式">🌓 主题</button>
+        <button class="tb-btn" id="themeToggle" title="切换主题：亮色 / 暗色 / 跟随系统">💻 跟随系统</button>
         <button class="tb-btn" id="logoutBtn2">退出登录</button>
       </div>
     </header>
@@ -204,15 +224,33 @@
 
   <!-- ① 数据看板 -->
   <div id="tab-dash">
-    <h2>① 自动同步数据看板（每 30 秒刷新）</h2>
+    <h2>① 数据看板（自动同步 · 页面可见时按间隔刷新）</h2>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span class="sync-state" id="dash-sync-state"><span class="sync-dot" id="dash-sync-dot"></span><span id="dash-sync-text">空闲</span></span>
+        <span class="hint" style="margin:0">上次同步：<b id="dash-last-sync" style="color:var(--color-text)">—</b></span>
+        <span class="hint" style="margin:0">下次同步：<span id="dash-next-sync">—</span></span>
+        <button class="btn btn-ghost btn-sm" id="dash-refresh" style="margin-left:auto">⟳ 立即刷新</button>
+        <label class="hint" style="margin:0;display:flex;align-items:center;gap:6px">自动同步
+          <select id="dash-interval" style="width:auto;margin:0;padding:4px 8px;font-size:12px" aria-label="自动同步间隔">
+            <option value="60000">1 分钟</option>
+            <option value="300000" selected>5 分钟</option>
+            <option value="900000">15 分钟</option>
+            <option value="1800000">30 分钟</option>
+            <option value="0">关闭</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint" style="margin:8px 0 0">数据源：GitHub Actions/提交 · Supabase 询盘 · 站点健康检查。切走标签页自动暂停，切回立即刷新。GA4/GSC 深度数据见「⑧ 数据驾驶舱」。</p>
+    </div>
     <div class="grid">
-      <div class="card"><h3>最近部署状态</h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
-      <div class="card"><h3>最近提交</h3><div id="dash-commits">加载中…</div></div>
-      <div class="card"><h3>询盘统计</h3><div id="dash-inquiries">加载中…</div></div>
-      <div class="card"><h3>产品数据</h3><div id="dash-products">加载中…</div></div>
+      <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
+      <div class="card"><h3>最近提交 <span class="v5-src" id="dash-stamp-commits"></span></h3><div id="dash-commits">加载中…</div></div>
+      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span></h3><div id="dash-inquiries">加载中…</div></div>
+      <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span></h3><div id="dash-products">加载中…</div></div>
     </div>
     <div class="card" style="margin-top:12px">
-      <h3>站点健康检查（关键页面）</h3>
+      <h3>站点健康检查（关键页面） <span class="v5-src" id="dash-stamp-health"></span></h3>
       <div id="dash-health" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px">加载中…</div>
     </div>
     <h2 style="margin-top:26px">平台数据直达</h2>
@@ -226,7 +264,7 @@
 
   <!-- ② 产品/内容编辑 -->
   <div id="tab-editor" class="hide">
-    <h2>② 产品 / 内容编辑（保存后约 2 分钟自动上线）</h2>
+    <h2>② 产品/内容编辑（保存后约 2 分钟自动上线）</h2>
     <div class="card">
       <div class="row">
         <div><label>产品分组</label><select id="ed-group"><option value="">— 加载中… —</option></select></div>
@@ -310,7 +348,7 @@
     </div>
   </div>
 
-  <footer>Mili Packaging 运营工作台 v2 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Bing / Supabase / GitHub</footer>
+  <footer>Mili Packaging 运营工作台 v6 · 产品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Bing / Supabase / GitHub</footer>
 </div>
 
   <!-- ⑥ 审计日志 -->
@@ -516,41 +554,47 @@
   // ── Self-check ──
   var selfEl = document.getElementById('selfcheck');
   function selfCheck() {
-    Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
+    return Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
       return fetch('/' + u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
     })).then(function (rs) {
       selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
-    });
+      return rs.every(function (r) { return r.ok; });
+    }).catch(function () { return false; });
   }
   selfCheck();
 
-  // ── Auto-sync dashboard (30s refresh) ──
+  // ── Dashboard sync engine: manual refresh + auto interval + visibility pause/resume ──
   var GH_API = 'https://api.github.com/repos/DonaldBuilds/mili-packaging-site';
   function el(id) { return document.getElementById(id); }
   function fmtTime(t) { return t ? String(t).replace('T', ' ').slice(0, 16) : '—'; }
+  function nowStamp() { return new Date().toTimeString().slice(0, 8); }
   function loadDeploy() {
-    fetch(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
-      if (!d || !d.workflow_runs) return;
+    return fetch(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.workflow_runs) return false;
       el('dash-deploy').innerHTML = d.workflow_runs.slice(0, 3).map(function (run) {
         var ok = run.status === 'completed';
         var done = run.conclusion === 'success';
         return '<div class="status ' + (ok ? (done ? 'ok' : 'bad') : '') + '">' + (ok ? (done ? '✔ 成功' : '✘ ' + run.conclusion) : '… 进行中') + ' · ' + fmtTime(run.created_at) + '</div>';
       }).join('');
-    }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; });
+      el('dash-stamp-deploy').textContent = '截至 ' + nowStamp();
+      return true;
+    }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; return false; });
   }
   function loadCommits() {
-    fetch(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
-      if (!Array.isArray(d)) return;
+    return fetch(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
+      if (!Array.isArray(d)) return false;
       el('dash-commits').innerHTML = d.map(function (c) {
         return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--gray)">' + fmtTime(c.commit.author.date) + '</span><br/>' + (c.commit.message.split('\n')[0]).slice(0, 56) + '</div>';
       }).join('');
-    }).catch(function () { el('dash-commits').innerHTML = '<div class="status bad">无法读取</div>'; });
+      el('dash-stamp-commits').textContent = '截至 ' + nowStamp();
+      return true;
+    }).catch(function () { el('dash-commits').innerHTML = '<div class="status bad">无法读取</div>'; return false; });
   }
   function loadInquiryStats() {
-    fetch(SB_URL + '/rest/v1/inquiries?select=created_at&order=created_at.desc', {
+    return fetch(SB_URL + '/rest/v1/inquiries?select=created_at&order=created_at.desc', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
     }).then(function (r) { return r.json(); }).then(function (rows) {
-      if (!Array.isArray(rows)) return;
+      if (!Array.isArray(rows)) return false;
       var now = Date.now(), d7 = 0, d30 = 0;
       rows.forEach(function (r) {
         var t = new Date(r.created_at).getTime();
@@ -558,32 +602,101 @@
         if (now - t < 30 * 864e5) d30++;
       });
       el('dash-inquiries').innerHTML = '<div class="status">总询盘：<b style="color:var(--gold)">' + rows.length + '</b></div><div class="status">近 7 天：<b style="color:var(--gold)">' + d7 + '</b> · 近 30 天：<b style="color:var(--gold)">' + d30 + '</b></div>';
-    }).catch(function () { el('dash-inquiries').innerHTML = '<div class="status bad">无法读取</div>'; });
+      el('dash-stamp-inquiries').textContent = '截至 ' + nowStamp();
+      return true;
+    }).catch(function () { el('dash-inquiries').innerHTML = '<div class="status bad">无法读取</div>'; return false; });
   }
   function loadProductStats() {
-    fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
+    return fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
       var prods = [];
       d.productGroups.forEach(function (g) { prods = prods.concat(d.productCatalog[g.slug] || []); });
       var prices = prods.map(function (p) { return parseFloat(p.price); }).filter(function (n) { return !isNaN(n); });
       var hidden = prods.filter(function (p) { return p.status === 'hidden'; }).length;
       var noTier = prods.filter(function (p) { return !p.tierPrice; }).length;
       el('dash-products').innerHTML = '<div class="status">产品：<b style="color:var(--gold)">' + prods.length + '</b> 个 · 分组 ' + d.productGroups.length + '</div><div class="status">价格区间：$' + Math.min.apply(null, prices) + ' – $' + Math.max.apply(null, prices) + '</div><div class="status">下架中：' + hidden + ' · 分档价沿用组比例：' + noTier + '</div>';
-    }).catch(function () { el('dash-products').innerHTML = '<div class="status bad">无法读取</div>'; });
+      el('dash-stamp-products').textContent = '截至 ' + nowStamp();
+      return true;
+    }).catch(function () { el('dash-products').innerHTML = '<div class="status bad">无法读取</div>'; return false; });
   }
   function loadHealth() {
     var pages = ['/', '/products', '/products/rigid-gift-boxes', '/contact', '/about', '/faq', '/portfolio', '/industries', '/blog/', '/blog/1/', '/privacy-policy', '/sample-kits'];
-    Promise.all(pages.map(function (u) {
+    return Promise.all(pages.map(function (u) {
       var t0 = Date.now();
       return fetch(u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok, ms: Date.now() - t0, s: r.status }; }).catch(function () { return { u: u, ok: false, ms: 0, s: 0 }; });
     })).then(function (rs) {
       el('dash-health').innerHTML = rs.map(function (r) {
         return '<div style="font-size:11.5px;padding:6px 8px;border:1px solid var(--border);border-radius:3px"><span class="' + (r.ok ? 'status ok' : 'status bad') + '">' + (r.ok ? '✔' : '✘') + '</span> ' + r.u + ' <span style="color:var(--gray)">' + (r.ok ? r.s + ' · ' + r.ms + 'ms' : 'FAIL') + '</span></div>';
       }).join('');
+      el('dash-stamp-health').textContent = '截至 ' + nowStamp();
+      return rs.every(function (r) { return r.ok; });
+    }).catch(function () { return false; });
+  }
+  var dashBusy = false, dashTimer = null, dashCountdownTimer = null;
+  function setSyncState(st, msg) {
+    var dot = el('dash-sync-dot'), tx = el('dash-sync-text');
+    if (!dot || !tx) return;
+    dot.className = 'sync-dot ' + st;
+    tx.textContent = msg || '';
+  }
+  function syncIntervalMs() {
+    var v = parseInt((localStorage.getItem('mili-sync-interval') || '300000'), 10);
+    return (v && !isNaN(v)) ? v : 300000;
+  }
+  function fmtCountdown(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    return (s >= 60 ? Math.floor(s / 60) + ' 分 ' + (s % 60) + ' 秒' : s + ' 秒');
+  }
+  function clearSyncTimers() {
+    if (dashTimer) { clearTimeout(dashTimer); dashTimer = null; }
+    if (dashCountdownTimer) { clearInterval(dashCountdownTimer); dashCountdownTimer = null; }
+  }
+  function scheduleSync() {
+    clearSyncTimers();
+    var iv = syncIntervalMs();
+    if (!iv) { setSyncState('off', '自动同步已关闭'); el('dash-next-sync').textContent = '—'; return; }
+    var next = Date.now() + iv;
+    el('dash-next-sync').textContent = fmtCountdown(iv);
+    dashTimer = setTimeout(function () { refreshDash(false); }, iv);
+    dashCountdownTimer = setInterval(function () {
+      var left = next - Date.now();
+      if (left <= 0) { el('dash-next-sync').textContent = '同步中…'; clearInterval(dashCountdownTimer); dashCountdownTimer = null; }
+      else { el('dash-next-sync').textContent = fmtCountdown(left); }
+    }, 1000);
+  }
+  function refreshDash(manual) {
+    if (dashBusy) { if (manual) toast('同步进行中，请稍候', 'info'); return Promise.resolve(false); }
+    dashBusy = true;
+    setSyncState('syncing', '同步中…');
+    return Promise.all([loadDeploy(), loadCommits(), loadInquiryStats(), loadProductStats(), loadHealth(), selfCheck()]).then(function (res) {
+      dashBusy = false;
+      var fail = res.filter(function (x) { return !x; }).length;
+      var stamp = nowStamp();
+      el('dash-last-sync').textContent = stamp;
+      if (fail === 0) { setSyncState('ok', '同步成功'); if (manual) toast('数据已更新 · ' + stamp, 'ok'); }
+      else { setSyncState('err', '部分数据源失败（' + fail + '/' + res.length + '）'); if (manual) toast('有 ' + fail + ' 项数据源同步失败，将在下个周期自动重试', 'err'); }
+      scheduleSync();
+      return fail === 0;
+    }).catch(function () {
+      dashBusy = false;
+      setSyncState('err', '同步失败');
+      if (manual) toast('同步失败：网络异常，稍后自动重试', 'err');
+      scheduleSync();
+      return false;
     });
   }
-  function refreshDash() {
-    loadDeploy(); loadCommits(); loadInquiryStats(); loadProductStats(); loadHealth(); selfCheck();
-  }
+  el('dash-refresh').addEventListener('click', function () {
+    var b = this; b.disabled = true; b.classList.add('loading'); b.textContent = '同步中…';
+    refreshDash(true).then(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '⟳ 立即刷新'; });
+  });
+  el('dash-interval').addEventListener('change', function () {
+    localStorage.setItem('mili-sync-interval', this.value);
+    scheduleSync();
+    toast('自动同步间隔已更新' + (this.value === '0' ? '（已关闭）' : ''), 'ok');
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { clearSyncTimers(); }
+    else { refreshDash(false); }
+  });
 
   // ── Product editor: load data from GitHub raw (public repo) ──
   var RAW = 'https://raw.githubusercontent.com/DonaldBuilds/mili-packaging-site/main/src/data/products.json';
@@ -660,11 +773,11 @@
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
     postOps([{ action: 'product', group: groupSel.value, slug: prodSel.value, fields: fields }]).then(function (res) {
-      edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）';
+      edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）';
       if (res.ok) { flash('已发布：' + res.message); }
       else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
       else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; flash('网络错误，请重试', true); });
+    }).catch(function () { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; flash('网络错误，请重试', true); });
   });
 
   // ── Group save ──
@@ -676,11 +789,11 @@
     if (!Object.keys(fields).length) { flash('没有要保存的修改', true); return; }
     flash('正在提交…');
     postOps([{ action: 'group', group: gGroupSel.value, fields: fields }]).then(function (res) {
-      gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置';
+      gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置';
       if (res.ok) { flash('已发布：' + res.message); }
       else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
       else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; flash('网络错误', true); });
+    }).catch(function () { gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; flash('网络错误', true); });
   });
 
   // ── Inquiries (PIN-gated) ──
@@ -689,12 +802,14 @@
   var PIN = 'mili2026';
   var area = document.getElementById('inquiryArea');
   document.getElementById('unlockBtn').addEventListener('click', function () {
+    var ub = this; if (ub.disabled) return;
     if (document.getElementById('pin').value !== PIN) { flash('密码不正确', true); return; }
+    ub.disabled = true; ub.classList.add('loading'); ub.textContent = '解锁中…';
     fetch(SB_URL + '/rest/v1/inquiries?select=name,email,product_type,quantity,message,created_at&order=created_at.desc&limit=20', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
     }).then(function (r) { return r.json(); }).then(function (rows) {
-      if (!Array.isArray(rows)) { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; return; }
-      if (!rows.length) { area.innerHTML = '<p>暂无询盘记录。</p>'; return; }
+      if (!Array.isArray(rows)) { ub.disabled = false; ub.classList.remove('loading'); ub.textContent = '解锁查看'; area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; return; }
+      if (!rows.length) { area.innerHTML = '<div class="empty"><div class="empty-ico">📭</div>暂无询盘记录<br/><span style="font-size:12px;color:var(--color-text-secondary)">收到网站表单提交后，这里会自动显示最新询盘</span></div>'; return; }
       var html = '<table><tr><th>时间</th><th>姓名</th><th>邮箱</th><th>产品</th><th>数量</th><th>需求</th><th>跟进</th></tr>';
       rows.forEach(function (r) {
         var h = (Date.now() - new Date(r.created_at).getTime()) / 36e5;
@@ -702,7 +817,7 @@
         html += '<tr><td style="white-space:nowrap">' + (r.created_at || '').replace('T', ' ').slice(0, 16) + '</td><td>' + (r.name || '') + '</td><td>' + (r.email || '') + '</td><td>' + (r.product_type || '') + '</td><td>' + (r.quantity || '') + '</td><td style="max-width:220px">' + (r.message || '').slice(0, 80) + '</td><td>' + tag + '</td></tr>';
       });
       area.innerHTML = html + '</table><p class="hint">SLA 提示：4h 新 / 24h 提醒 / 48h 红色风险（完整记录：Supabase → inquiries）</p>';
-    }).catch(function () { area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; });
+    }).catch(function () { ub.disabled = false; ub.classList.remove('loading'); ub.textContent = '解锁查看'; area.innerHTML = '<p>读取失败，请到 Supabase 后台查看。</p>'; });
   });
 
   // ── Ticket → mail ──
@@ -870,7 +985,11 @@
     });
   });
   document.getElementById('v5-refresh').addEventListener('click', function () {
-    fetch('/api/v5/refresh', { method: 'POST' }).then(function () { flash('缓存已清空，重新拉取'); loadV5(); });
+    var b = this; if (b.disabled) return;
+    b.disabled = true; b.classList.add('loading'); b.textContent = '刷新中…';
+    fetch('/api/v5/refresh', { method: 'POST' }).then(function () { flash('缓存已清空，重新拉取'); loadV5(); toast('驾驶舱数据已刷新', 'ok'); })
+      .catch(function () { toast('刷新失败：网络异常', 'err'); })
+      .then(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '刷新缓存'; });
   });
   document.querySelector('.tab[data-tab="v5"]').addEventListener('click', loadV5);
 
@@ -879,26 +998,40 @@
     fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; });
   });
 
-  // ── V6: theme (dark/light, follows system unless overridden) ──
+  // ── V6: theme (light / dark / system three-state, persisted) ──
+  function themeActual() {
+    var t = document.documentElement.getAttribute('data-theme');
+    if (!t) return (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    return t;
+  }
   function applyTheme(t) {
     if (t === 'light' || t === 'dark') { document.documentElement.setAttribute('data-theme', t); }
     else { document.documentElement.removeAttribute('data-theme'); }
     var g = document.getElementById('guide-theme-name');
-    if (g) {
-      var actual = document.documentElement.getAttribute('data-theme');
-      if (!actual) actual = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-      g.textContent = actual === 'light' ? '亮色' : '暗色';
-    }
+    if (g) g.textContent = themeActual() === 'light' ? '亮色' : '暗色';
+    var btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = t === 'light' ? '☀️ 亮色' : (t === 'dark' ? '🌙 暗色' : '💻 跟随系统');
   }
-  var savedTheme = null; try { savedTheme = localStorage.getItem('mili-theme'); } catch (e) {}
+  var savedTheme = 'system'; try { savedTheme = localStorage.getItem('mili-theme') || 'system'; } catch (e) {}
   applyTheme(savedTheme);
   document.getElementById('themeToggle').addEventListener('click', function () {
-    var cur = document.documentElement.getAttribute('data-theme') || ((window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark');
-    var next = cur === 'dark' ? 'light' : 'dark';
+    var next = savedTheme === 'light' ? 'dark' : (savedTheme === 'dark' ? 'system' : 'light');
+    savedTheme = next;
     applyTheme(next);
     try { localStorage.setItem('mili-theme', next); } catch (e) {}
-    toast('已切换为' + (next === 'dark' ? '暗色' : '亮色') + '模式', 'info');
+    toast('主题：' + (next === 'light' ? '☀️ 亮色' : (next === 'dark' ? '🌙 暗色' : '💻 跟随系统')), 'info');
   });
+  if (window.matchMedia) {
+    var mqTheme = matchMedia('(prefers-color-scheme: light)');
+    if (mqTheme.addEventListener) {
+      mqTheme.addEventListener('change', function () {
+        if (savedTheme !== 'light' && savedTheme !== 'dark') {
+          var g = document.getElementById('guide-theme-name');
+          if (g) g.textContent = mqTheme.matches ? '亮色' : '暗色';
+        }
+      });
+    }
+  }
 
   // ── V6: toast (top-right, 3s, closable) ──
   function toast(msg, type) {
@@ -933,6 +1066,12 @@
   if (hamburger) hamburger.addEventListener('click', function () { document.getElementById('sidebar').classList.add('open'); document.getElementById('sbOverlay').classList.add('show'); });
   document.getElementById('sbOverlay').addEventListener('click', function () { this.classList.remove('show'); document.getElementById('sidebar').classList.remove('open'); });
   document.getElementById('logoutBtn2').addEventListener('click', function () { fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; }); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sbOverlay').classList.remove('show');
+    }
+  });
 
   // ── v7: GEO visibility (buyer-intent questions + sitemap coverage gap) ──
   var GEO_DEFAULT = [
@@ -1016,6 +1155,8 @@
     saveGeo(); geoRenderList(); geoRenderGap();
     toast('已添加，监测列表更新', 'ok');
   });
+  var geoNewInput = document.getElementById('geo-new-q');
+  if (geoNewInput) geoNewInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('geo-add').click(); });
   document.querySelector('.tab[data-tab="geo"]').addEventListener('click', function () { geoRenderList(); geoRenderGap(); });
 
   // ── SEO 医生：产品 SEO 评分（基于 GitHub raw 产品数据，零依赖） ──
@@ -1061,7 +1202,14 @@
     el.innerHTML = html + '</table>';
     window.__seoRows = rows;
   }
-  document.getElementById('seo-refresh').addEventListener('click', function () { document.getElementById('seoArea').innerHTML = '<div class="skeleton" style="height:120px"></div>'; seoData = null; seoRender(); });
+  document.getElementById('seo-refresh').addEventListener('click', function () {
+    var b = this; if (b.disabled) return;
+    b.disabled = true; b.classList.add('loading'); b.textContent = '评分中…';
+    document.getElementById('seoArea').innerHTML = '<div class="skeleton" style="height:120px"></div>';
+    seoData = null;
+    seoRender();
+    setTimeout(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '刷新评分'; }, 1500);
+  });
   document.getElementById('seo-export').addEventListener('click', function () {
     if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
     var esc = function (x) { return String(x).replace(/,/g, ' '); };
@@ -1111,9 +1259,13 @@
     ['管理员密码', 'admin_pw', '登录认证']
   ];
   function configTest() {
+    var btn = document.getElementById('config-test');
+    if (btn) { btn.disabled = true; btn.classList.add('loading'); btn.textContent = '测试中…'; }
+    var restore = function () { if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '一键测试连通性'; } };
     var el = document.getElementById('configTestArea');
     el.innerHTML = '<div class="skeleton" style="height:80px"></div>';
     fetch('/api/config/test').then(function (r) { return r.json(); }).then(function (d) {
+      restore();
       if (!d.ok) { el.innerHTML = '<p class="status bad">测试失败</p>'; return; }
       var html = '<table><tr><th>配置项</th><th>结果</th><th>说明</th></tr>';
       CONFIG_ITEMS.forEach(function (it) {
@@ -1127,8 +1279,9 @@
       });
       el.innerHTML = html + '</table>';
       var failed = Object.keys(d.results).filter(function (k) { return String(d.results[k]).indexOf('fail') === 0; });
-      if (failed.length) el.innerHTML += '<p class="status bad">有 ' + failed.length + ' 项测试失败，请检查密钥/权限配置</p>';
-    }).catch(function () { el.innerHTML = '<p class="status bad">请求失败</p>'; });
+      if (failed.length) { el.innerHTML += '<p class="status bad">有 ' + failed.length + ' 项测试失败，请检查密钥/权限配置</p>'; toast('连通性测试完成：' + failed.length + ' 项失败', 'err'); }
+      else { toast('连通性测试完成：全部正常', 'ok'); }
+    }).catch(function () { restore(); el.innerHTML = '<p class="status bad">请求失败</p>'; toast('连通性测试请求失败', 'err'); });
   }
   document.getElementById('config-test').addEventListener('click', configTest);
   document.getElementById('config-export').addEventListener('click', function () {
@@ -1144,6 +1297,7 @@
   function updateBCount() { var n = batchProds.filter(function (p) { return p._sel; }).length; var el = document.getElementById('b-count'); if (el) el.textContent = n; }
   function batchRender() {
     var el = document.getElementById('batchArea');
+    if (!batchProds.length) { el.innerHTML = '<div class="empty"><div class="empty-ico">📦</div>暂无产品数据<br/><span style="font-size:12px;color:var(--color-text-secondary)">点击下方「加载产品列表」从 GitHub 数据源拉取</span></div><div style="margin-top:10px"><button class="btn btn-ghost btn-sm" id="batch-load">加载产品列表</button></div>'; var bl2 = document.getElementById('batch-load'); if (bl2) bl2.addEventListener('click', batchLoad); return; }
     var html = '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px">' +
       '<button class="btn btn-ghost btn-sm" id="b-all">全选</button><button class="btn btn-ghost btn-sm" id="b-none">反选</button>' +
       '<span class="hint">已选 <b id="b-count">0</b> 个</span></div>' +
@@ -1166,6 +1320,8 @@
     updateBCount();
   }
   function batchApply() {
+    var btn = document.getElementById('b-apply');
+    if (btn && btn.disabled) return;
     var sel = batchProds.filter(function (p) { return p._sel; });
     if (!sel.length) { toast('请先勾选产品', 'err'); return; }
     var status = document.getElementById('b-status').value;
@@ -1179,13 +1335,17 @@
       if (mult && !isNaN(mult)) f.price = Math.round(p.price * mult * 100) / 100;
       return { action: 'product', group: p.gslug, slug: p.slug, fields: f };
     });
+    if (btn) { btn.disabled = true; btn.classList.add('loading'); btn.textContent = '提交中…'; }
     postOps(ops).then(function (res) {
+      if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '批量提交'; }
       if (res.ok) { toast('已提交 ' + sel.length + ' 个产品，约 2 分钟自动部署', 'ok'); }
       else if (res.error === 'server-not-configured') { toast('编辑管线未开通：需配置 GitHub PAT（GH_PAT）', 'err'); }
       else { toast('失败：' + (res.error || '未知'), 'err'); }
-    }).catch(function () { toast('网络错误', 'err'); });
+    }).catch(function () { if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '批量提交'; } toast('网络错误', 'err'); });
   }
-  document.getElementById('batch-load').addEventListener('click', function () {
+  function batchLoad() {
+    var btn = document.getElementById('batch-load');
+    if (btn) { btn.disabled = true; btn.classList.add('loading'); btn.textContent = '加载中…'; }
     fetch(RAW).then(function (r) { return r.json(); }).then(function (d) {
       batchProds = [];
       (d.productGroups || []).forEach(function (g) {
@@ -1194,28 +1354,38 @@
       batchRender();
       toast('已加载 ' + batchProds.length + ' 个产品', 'ok');
     }).catch(function () { toast('产品数据加载失败', 'err'); });
-  });
+  }
+  document.getElementById('batch-load').addEventListener('click', batchLoad);
 
-  // V6: 保存按钮 loading 态（防重复提交）
+  // V6: 保存按钮 loading 态（防重复提交：提交完成前保持禁用，8s 兜底防卡死）
   var edSave = document.getElementById('ed-save');
+  var edSaving = false;
   if (edSave) {
-    var edOrigHandler = edSave.onclick;
     edSave.addEventListener('click', function () {
+      if (edSaving) return;
+      if (!groupSel.value || !prodSel.value) return; // 校验失败由提交 listener 提示，不进入 loading
+      edSaving = true;
       edSave.disabled = true; edSave.classList.add('loading'); edSave.textContent = '发布中…';
-      setTimeout(function () { if (!edSave.dataset.done) { edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; } }, 1500);
+      setTimeout(function () { if (edSaving) { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '保存并发布（自动部署）'; } }, 8000);
     });
   }
   var gSave = document.getElementById('g-save');
+  var gSaving = false;
   if (gSave) {
     gSave.addEventListener('click', function () {
+      if (gSaving) return;
+      if (!gGroupSel.value) return; // 校验失败由提交 listener 提示，不进入 loading
+      gSaving = true;
       gSave.disabled = true; gSave.classList.add('loading'); gSave.textContent = '保存中…';
-      setTimeout(function () { gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; }, 1500);
+      setTimeout(function () { if (gSaving) { gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; } }, 8000);
     });
   }
 
-  // Start auto-sync dashboard after all bindings are defined
-  refreshDash();
-  setInterval(refreshDash, 30000);
+  // Start dashboard sync engine after all bindings are defined
+  var savedIv = null; try { savedIv = localStorage.getItem('mili-sync-interval'); } catch (e) {}
+  if (savedIv) el('dash-interval').value = savedIv;
+  scheduleSync();
+  refreshDash(false);
   syncSidebar('dash');
 })();
 </script>
