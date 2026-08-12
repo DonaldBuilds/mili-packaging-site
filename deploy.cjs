@@ -24,6 +24,7 @@ while (queue.length) {
   for (const entry of fs.readdirSync(fullDir, { withFileTypes: true })) {
     const rel = dir ? dir + '/' + entry.name : entry.name;
     if (entry.isDirectory()) { queue.push(rel); continue; }
+    if (entry.name === 'worker.test.mjs') continue; // smoke-test artifact, never embed
     const ext = path.extname(entry.name).toLowerCase();
     if (SKIP.has(ext)) continue;
     files[rel] = fs.readFileSync(path.join(fullDir, entry.name), 'utf8');
@@ -172,8 +173,10 @@ const handleV5Realtime=async function(env){
 const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili 运营工作台 · 登录</title><style>body{background:#0a0a0a;color:#e8e8e8;font-family:"Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}.box{background:#141416;border:1px solid #2a2a2e;padding:44px 40px;border-radius:8px;width:340px;max-width:90vw}.box h1{font-size:18px;margin:0 0 6px}.box h1 span{color:#c9a227}.sub{color:#9a9a9a;font-size:12px;margin:0 0 24px}input{width:100%;background:#0e0e10;border:1px solid #2a2a2e;color:#e8e8e8;padding:12px;border-radius:4px;font-size:14px;box-sizing:border-box}button{width:100%;background:#c9a227;color:#0a0a0a;border:none;padding:12px;border-radius:4px;font-size:14px;font-weight:700;margin-top:14px;cursor:pointer}#msg{color:#ff6b6b;font-size:12px;margin-top:12px;min-height:16px}.hint{color:#555;font-size:11px;margin-top:16px;text-align:center}</style></head><body><div class="box"><h1>Mili Packaging <span>运营工作台</span></h1><p class="sub">内部系统 · 请先登录（会话 24h）</p><input id="pw" type="password" placeholder="管理员密码" autocomplete="current-password"/><button id="btn">登 录</button><p id="msg"></p><div class="hint">登录后自动进入工作台</div></div><script>var b=document.getElementById("btn"),i=document.getElementById("pw"),m=document.getElementById("msg");function go(){m.textContent="";fetch("/api/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:i.value})}).then(function(r){if(r.ok){location.href="/admin.html"}else{return r.json().then(function(j){m.textContent=j.error==="bad-credentials"?"密码错误":"登录失败 ("+j.error+")"})}}).catch(function(){m.textContent="网络错误，请重试"})}b.onclick=go;i.addEventListener("keydown",function(e){if(e.key==="Enter")go()});</script></body></html>';
 
 export default{async fetch(r,env){
-  const F=await getF();
   const url=new URL(r.url);
+  // SEO: force HTTPS (single canonical host, no http/https duplication)
+  if(url.protocol==='http:')return Response.redirect('https://'+url.host+url.pathname+url.search,301);
+  const F=await getF();
   let p=url.pathname;
   if(p==='/')p='/index.html';
   let k=p.length>1&&p[0]==='/'?p.slice(1):p;
