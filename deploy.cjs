@@ -421,7 +421,7 @@ export default{async fetch(r,env){
     if(env.OPS_GH_PAT){
       let ghErr='';
       try{
-        const gh=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public'+k+'?ref=main',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'}});
+        const gh=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/public/'+k+'?ref=main',{headers:{authorization:'Bearer '+env.OPS_GH_PAT,'user-agent':'mili-ops','accept':'application/vnd.github+json'}});
         const j=await gh.json();
         if(j&&j.content){
           const bin=atob(j.content);
