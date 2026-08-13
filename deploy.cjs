@@ -439,8 +439,12 @@ export default{async fetch(r,env){
     return new Response('Not Found',{status:404});
   }
 
-  // Fallback → SPA index
-  return new Response(F['index.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
+  // Fallback → SPA index (SSR canonical per route: Google sees correct canonical on raw HTML)
+  let spa=F['index.html'];
+  const canonUrl='https://mili-packaging.com'+(url.pathname==='/'?'/':url.pathname);
+  spa=spa.replace('<link rel="canonical" href="https://mili-packaging.com/" />','<link rel="canonical" href="'+canonUrl+'" />');
+  spa=spa.replace('<meta property="og:url" content="https://mili-packaging.com/" />','<meta property="og:url" content="'+canonUrl+'" />');
+  return new Response(spa,{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
 },
 async scheduled(event,env,ctx){
   const cron=String((event&&event.cron)||'');
