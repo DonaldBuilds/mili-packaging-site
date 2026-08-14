@@ -393,56 +393,56 @@ h4 { font-size: 15px; font-weight: 600; }
 
 @media (max-width: 768px) { .pillars-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ─── INDUSTRY CARDS（8 卡 4×2 行业导航：场景图 + 定位 + 代表产品 + 能力标签） ─── */
+/* ─── INDUSTRY CARDS（8 卡 4×2 行业导航 v2：顶图 16:9 + 紧凑内容区，高度降低 ~30%） ─── */
 .industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
 .industry-card {
-  position: relative; aspect-ratio: 3/4; overflow: hidden;
-  text-decoration: none; display: block; background: var(--black-3);
+  position: relative; overflow: hidden;
+  text-decoration: none; display: flex; flex-direction: column;
+  background: var(--black-3); border: 1px solid transparent;
+  transition: border-color 0.25s ease;
 }
+.industry-card:hover { border-color: rgba(201,168,76,0.4); }
 .industry-card-bg {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0.65; transition: transform 0.4s ease, opacity 0.4s ease;
-  filter: brightness(0.92);
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+  filter: brightness(0.94); transition: transform 0.45s ease;
 }
-.industry-card:hover .industry-card-bg { transform: scale(1.05); opacity: 0.85; }
+.industry-card:hover .industry-card-bg { transform: scale(1.045); }
 .industry-card-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.15) 100%);
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 26px 24px;
+  flex: 1; display: flex; flex-direction: column;
+  padding: 14px 14px 12px;
 }
-.industry-card-overlay h4 { font-size: 19px; margin-bottom: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
-.industry-card-pos { color: rgba(255,255,255,0.75); font-size: 12px; line-height: 1.5; margin-bottom: 14px; text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
-.industry-prods { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.industry-card-overlay h4 { font-size: 16px; margin-bottom: 3px; }
+.industry-card-pos { color: var(--gray-3); font-size: 11px; line-height: 1.45; margin-bottom: 9px; }
+.industry-prods { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
 .industry-prod {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
-  padding: 7px 11px; font-size: 11.5px; color: rgba(255,255,255,0.92);
-  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  background: rgba(201,168,76,0.055); border: 1px solid var(--border-dim);
+  padding: 5px 8px; font-size: 10.5px; color: var(--gray-2); line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.industry-prod::after { content: '→'; color: var(--gold); font-size: 11px; flex-shrink: 0; }
-.industry-caps { display: flex; gap: 6px; flex-wrap: wrap; }
+.industry-prod b { color: var(--gold); font-weight: 700; font-size: 10.5px; flex-shrink: 0; }
+.industry-caps { display: flex; flex-wrap: wrap; gap: 4px; }
 .industry-cap {
-  font-size: 10px; letter-spacing: 0.04em; color: var(--gold);
-  border: 1px solid rgba(201,168,76,0.4); padding: 3px 9px; border-radius: 20px;
-  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.38); padding: 2px 8px; border-radius: 20px;
+  font-size: 9.5px; color: var(--gold); background: rgba(201,168,76,0.07);
 }
-.industry-card-link { color: var(--gold); font-size: 12px; letter-spacing: 0.06em; margin-top: 12px; display: block; }
-/* 第 8 卡：询盘引导卡 */
+.industry-card-link { color: var(--gold); font-size: 10.5px; letter-spacing: 0.06em; margin-top: auto; padding-top: 8px; display: block; }
+/* 第 8 卡：询盘引导卡（同步矮化） */
 .industry-card--cta {
   background: linear-gradient(160deg, var(--black-2) 0%, #0c0c0e 100%);
   border: 1px solid var(--gold);
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center; min-height: 210px;
 }
-.industry-card-cta-inner { position: relative; z-index: 1; text-align: center; padding: 30px 24px; display: flex; flex-direction: column; align-items: center; }
+.industry-card-cta-inner { text-align: center; padding: 24px 18px; display: flex; flex-direction: column; align-items: center; }
 .industry-card-cta-icon {
-  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--gold);
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gold);
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 22px; color: var(--gold);
-  margin-bottom: 14px;
+  font-family: var(--font-display); font-size: 18px; color: var(--gold);
+  margin-bottom: 10px;
 }
-.industry-card--cta h4 { font-size: 20px; margin-bottom: 8px; }
-.industry-card--cta p { color: var(--gray-3); font-size: 12.5px; line-height: 1.7; max-width: 240px; margin-bottom: 14px; }
-.industry-card--cta .industry-card-link { margin-top: 0; }
+.industry-card--cta h4 { font-size: 17px; margin-bottom: 6px; }
+.industry-card--cta p { color: var(--gray-3); font-size: 11.5px; line-height: 1.65; max-width: 230px; margin-bottom: 10px; }
+.industry-card--cta .industry-card-link { margin-top: 0; padding-top: 0; }
 
 .portfolio-result { margin-top: 12px; font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
 .portfolio-result::before { content: '▲'; font-size: 9px; opacity: 0.8; }
@@ -451,7 +451,7 @@ h4 { font-size: 15px; font-weight: 600; }
 @media (max-width: 768px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) {
   .industry-grid { grid-template-columns: 1fr; }
-  .industry-card { aspect-ratio: 4/3; }
+  .industry-card-bg { aspect-ratio: 16/7; }
 }
 
 /* ─── PORTFOLIO (Production & Projects) ─── */
@@ -917,19 +917,19 @@ html, body { overflow-x: hidden; }
 .wa-fab-btn:hover .wa-fab-tip { opacity: 1; }
 /* Delayed first-visit hint bubble */
 .wa-fab-hint {
-  position: relative; max-width: 300px;
+  position: relative; max-width: 240px;
   background: #141416; border: 1px solid rgba(201,168,76,0.55); border-radius: 10px;
   box-shadow: 0 12px 36px rgba(0,0,0,0.55);
   animation: waHintIn 0.35s ease;
 }
 .wa-fab-hint a {
-  display: block; padding: 16px 18px 14px; text-decoration: none;
+  display: block; padding: 10px 12px 10px; text-decoration: none;
 }
 .wa-fab-hint strong {
-  display: block; color: var(--gold); font-size: 13.5px; font-weight: 700; line-height: 1.45;
+  display: block; color: var(--gold); font-size: 12px; font-weight: 700; line-height: 1.4;
 }
 .wa-fab-hint small {
-  display: block; margin-top: 6px; color: rgba(210,210,210,0.7); font-size: 11px; line-height: 1.5;
+  display: block; margin-top: 3px; color: rgba(210,210,210,0.65); font-size: 10px; line-height: 1.4;
 }
 .wa-fab-hint-close {
   position: absolute; top: 6px; right: 8px; width: 22px; height: 22px;
@@ -952,26 +952,24 @@ html, body { overflow-x: hidden; }
   .wa-fab-btn, .whatsapp-btn { animation: none; }
 }
 
-/* Sticky Quick Quote button — compact pill, right side above WhatsApp, animated */
+/* Quick Quote pill — stacked inside .wa-fab, above the WhatsApp button (no separate fixed float) */
 .sticky-quote {
-  position: fixed; bottom: 96px; right: 24px; z-index: 999;
   width: max-content; max-width: calc(100vw - 48px);
   background: var(--gold); color: var(--black);
-  padding: 10px 20px; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
-  text-decoration: none; font-weight: 700;
+  padding: 8px 16px; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+  text-decoration: none; font-weight: 800;
   border-radius: 999px;
   box-shadow: 0 4px 20px rgba(201,168,76,0.35);
   animation: sq-glow 2.2s ease-in-out infinite;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.sticky-quote:hover { animation: none; transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 32px rgba(201,168,76,0.6); }
+.sticky-quote:hover { animation: none; transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(201,168,76,0.6); }
 @keyframes sq-glow {
   0%, 100% { box-shadow: 0 4px 20px rgba(201,168,76,0.35); transform: translateY(0); }
-  50% { box-shadow: 0 6px 34px rgba(201,168,76,0.7); transform: translateY(-3px); }
+  50% { box-shadow: 0 6px 34px rgba(201,168,76,0.7); transform: translateY(-2px); }
 }
 @media (max-width: 768px) {
-  .whatsapp-btn { width: 48px; height: 48px; font-size: 24px; bottom: 16px; right: 16px; }
-  .sticky-quote { bottom: 80px; right: 16px; padding: 8px 14px; font-size: 10px; }
+  .sticky-quote { padding: 7px 13px; font-size: 10px; }
 }
 
 /* Navbar products dropdown (Module 5) */
