@@ -133,7 +133,7 @@ export default function About() {
             <span className="eyebrow">Factory Strength</span>
             <h2>Precision at Scale</h2>
           </div>
-          <img src="/assets/images/factory-gate-cropped.webp" alt="Mili Packaging factory entrance, Jiangxi Mili Packaging Materials Co., Ltd." style={{ width:'100%', aspectRatio:'16/10', objectFit:'cover', marginBottom: 2 }} />
+          <img src="/assets/images/factory-floor.webp" alt="Mili Packaging production floor with printing and die-cutting lines" style={{ width:'100%', aspectRatio:'16/10', objectFit:'cover', marginBottom: 2 }} />
           <div className="stat-row" style={{ marginTop: 2 }}>
             {factory.map(([n,l]) => (
               <div className="stat-box" key={l}><div className="stat-num" style={{ fontSize:32 }}>{n}</div><div className="stat-label">{l}</div></div>
@@ -184,21 +184,19 @@ export default function About() {
             </div>
             <div className="sample-room-col">
               <div className="factory-tile">
-                <img src="/assets/images/factory-showroom.webp" alt="Mili Packaging showroom with category displays" loading="lazy" />
+                <img src="/assets/images/factory-sample-detail.webp" alt="Mili Packaging sample display with watch and jewelry boxes" loading="lazy" />
               </div>
               <div className="factory-tile">
                 <img src="/assets/images/factory-shelves.webp" alt="Mili Packaging sample shelves with branded boxes" loading="lazy" />
               </div>
             </div>
           </div>
-          <div className="factory-grid" style={{ marginTop: 2 }}>
+          <div className="factory-grid factory-grid--4" style={{ marginTop: 2 }}>
             {[
-              ['Workshop Panorama', '/assets/images/factory-floor.webp'],
-              ['Production Overview', '/assets/images/factory-overview.webp'],
-              ['Industry Applications', '/assets/images/factory-industry-cases.webp'],
-              ['Factory Capabilities', '/assets/images/factory-capability.webp'],
-              ['Custom Design', '/assets/images/factory-showroom.webp'],
-              ['Factory-Direct', '/assets/images/factory-gate.webp'],
+              ['Printing Workshop', '/assets/images/factory-print.webp'],
+              ['Hand Assembly', '/assets/images/factory-handline.webp'],
+              ['Loading & Shipping', '/assets/images/factory-loading.webp'],
+              ['Sample Display', '/assets/images/factory-samples.webp'],
             ].map(([t, img]) => (
               <div className="factory-tile" key={t}>
                 <img src={img} alt={`${t} at Mili Packaging`} loading="lazy" />
@@ -220,7 +218,7 @@ export default function About() {
             <h2>Dedicated Teams, One Account Manager</h2>
           </div>
           <div className="team-photos">
-            <img src="/assets/images/team-collab.webp" alt="Mili packaging team collaborating on the production floor" loading="lazy" />
+            <img src="/assets/images/team-collab-crop.webp" alt="Mili packaging team collaborating on the production floor" loading="lazy" />
             <img src="/assets/images/team-qc.webp" alt="Mili QC team inspecting incoming materials" loading="lazy" />
           </div>
           <div className="values-grid">

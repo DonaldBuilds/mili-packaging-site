@@ -418,50 +418,71 @@ h4 { font-size: 15px; font-weight: 600; }
 
 @media (max-width: 768px) { .pillars-grid { grid-template-columns: repeat(2, 1fr); } }
 
-/* ─── INDUSTRY CARDS v3：1:1 产品图 + 极简信息条（去除拥挤信息堆叠） ─── */
-.industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-.industry-card {
-  position: relative; overflow: hidden;
-  text-decoration: none; display: flex; flex-direction: column;
-  background: var(--black-3); border: 1px solid transparent;
-  transition: border-color 0.25s ease;
+/* ─── INDUSTRY SOLUTIONS v4：焦点行业 + 紧凑索引列表（编辑风，不拥挤） ─── */
+.industry-split {
+  display: grid; grid-template-columns: 1.12fr 1fr; gap: 2px;
+  background: var(--border-dim); border: 1px solid var(--border-dim);
 }
-.industry-card:hover { border-color: rgba(201,168,76,0.4); }
-.industry-card-img-wrap { aspect-ratio: 1/1; overflow: hidden; }
-.industry-card-bg {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: brightness(0.95); transition: transform 0.45s ease;
+.industry-featured {
+  display: grid; grid-template-columns: 1.05fr 1fr; min-height: 520px;
+  background: var(--black-3); text-decoration: none; position: relative; overflow: hidden;
 }
-.industry-card:hover .industry-card-bg { transform: scale(1.05); }
-.industry-card-overlay {
-  flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 12px 14px; border-top: 1px solid var(--border-dim);
+.industry-featured-media { position: relative; overflow: hidden; }
+.industry-featured-media img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; filter: brightness(0.95); transition: transform 0.5s ease;
 }
-.industry-card-overlay h4 { font-size: 14.5px; margin: 0; line-height: 1.3; }
-.industry-card-link { color: var(--gold); font-size: 10.5px; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; }
-/* 第 8 卡：询盘引导卡（1:1 等高） */
-.industry-card--cta {
+.industry-featured:hover .industry-featured-media img { transform: scale(1.05); }
+.industry-featured-body {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 40px 34px; gap: 14px;
+}
+.industry-featured-eyebrow {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold); font-weight: 700;
+}
+.industry-featured-body h3 { font-family: var(--font-display); font-size: 30px; line-height: 1.15; margin: 0; }
+.industry-featured-body p { color: var(--gray-3); font-size: 13.5px; line-height: 1.7; margin: 0; }
+.industry-featured-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.industry-featured-chips span {
+  font-size: 10.5px; letter-spacing: 0.03em; color: var(--gray-2);
+  border: 1px solid rgba(201,162,39,0.4); background: rgba(201,162,39,0.05);
+  padding: 4px 10px;
+}
+.industry-featured-cta { color: var(--gold); font-size: 12.5px; letter-spacing: 0.06em; font-weight: 700; margin-top: 2px; }
+
+.industry-index { display: flex; flex-direction: column; gap: 1px; background: var(--border-dim); }
+.industry-index-row {
+  display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center;
+  padding: 12px 16px; background: var(--black-3); text-decoration: none; flex: 1;
+  transition: background 0.2s ease;
+}
+.industry-index-row:hover { background: var(--black-2); }
+.industry-index-thumb { width: 64px; height: 64px; object-fit: cover; }
+.industry-index-text { min-width: 0; }
+.industry-index-text h4 { font-size: 14.5px; margin: 0 0 3px; color: var(--white); }
+.industry-index-text p {
+  font-size: 11.5px; color: var(--gray-3); line-height: 1.5; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.industry-index-arrow { color: var(--gold); opacity: 0.45; font-size: 17px; transition: transform 0.2s ease, opacity 0.2s ease; }
+.industry-index-row:hover .industry-index-arrow { transform: translateX(4px); opacity: 1; }
+.industry-index-cta {
+  grid-template-columns: 1fr; justify-items: center; text-align: center;
   background: linear-gradient(160deg, var(--black-2) 0%, #0c0c0e 100%);
   border: 1px solid var(--gold);
-  display: flex; align-items: center; justify-content: center; min-height: 300px;
 }
-.industry-card-cta-inner { text-align: center; padding: 24px 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.industry-card-cta-icon {
-  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gold);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 18px; color: var(--gold);
+.industry-index-cta-text { color: var(--gold); font-size: 12.5px; letter-spacing: 0.06em; font-weight: 700; }
+
+@media (max-width: 1100px) {
+  .industry-split { grid-template-columns: 1fr; }
+  .industry-featured { min-height: 0; }
 }
-.industry-card--cta h4 { font-size: 17px; margin: 0; }
-.industry-card--cta .industry-card-link { margin-top: 0; padding-top: 0; }
-
-.portfolio-result { margin-top: 12px; font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
-.portfolio-result::before { content: '▲'; font-size: 9px; opacity: 0.8; }
-
-@media (max-width: 1100px) { .industry-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 768px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) {
-  .industry-grid { grid-template-columns: 1fr; }
-  .industry-card-img-wrap { aspect-ratio: 4/3; }
+@media (max-width: 640px) {
+  .industry-featured { grid-template-columns: 1fr; }
+  .industry-featured-media { aspect-ratio: 16/10; }
+  .industry-featured-body { padding: 28px 22px; }
+  .industry-index-thumb { width: 56px; height: 56px; }
 }
 
 /* ─── PORTFOLIO (Production & Projects) ─── */
@@ -611,6 +632,7 @@ html, body { overflow-x: hidden; }
 
 /* ─── FACTORY GALLERY ─── */
 .factory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.factory-grid--4 { grid-template-columns: repeat(4, 1fr); }
 .factory-tile { position: relative; overflow: hidden; aspect-ratio: 4/3; background: var(--black-2); }
 .factory-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .factory-tile-label {
@@ -621,8 +643,10 @@ html, body { overflow-x: hidden; }
 .sample-room-col { display: grid; gap: 2px; }
 @media (max-width: 768px) {
   .factory-grid { grid-template-columns: 1fr 1fr; }
+  .factory-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .sample-room-grid { grid-template-columns: 1fr; }
 }
+@media (max-width: 1100px) { .factory-grid--4 { grid-template-columns: repeat(2, 1fr); } }
 
 /* ─── CONTACT PAGE ─── */
 .contact-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; max-width: 1100px; margin: 0 auto; }
