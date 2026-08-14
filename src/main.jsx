@@ -173,8 +173,7 @@ function App() {
         </Routes>
       </Suspense>
       <Footer />
-      {/* Global floating CTAs — every page: WhatsApp (structured prefilled quote) + 60-sec quote pill */}
-      <a href="/contact" className="sticky-quote">⚡ 60-Sec Quote</a>
+      {/* Global floating CTA — WhatsApp + 60-sec quote pill (stacked in wa-fab) */}
       <WhatsAppButton />
     </Router>
   );
