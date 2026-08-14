@@ -428,7 +428,7 @@ h4 { font-size: 15px; font-weight: 600; }
   background: var(--black-3); text-decoration: none; position: relative; overflow: hidden;
   scroll-margin-top: 96px;
 }
-.industry-featured-media { position: relative; overflow: hidden; height: 500px; }
+.industry-featured-media { position: relative; overflow: hidden; aspect-ratio: 1/1; }
 .industry-featured-media img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; filter: brightness(0.95); transition: transform 0.5s ease;
