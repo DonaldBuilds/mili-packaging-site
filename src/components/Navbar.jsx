@@ -61,7 +61,7 @@ export default function Navbar() {
                     <span style={{ color: 'var(--gold)', fontSize: 12 }}>›</span>
                   </Link>
                   {productGroups.map(g => (
-                    <Link to={`/products/${g.slug}`} key={g.slug} onClick={() => setDrop(false)}>
+                    <Link to={`/products?group=${g.slug}`} key={g.slug} onClick={() => setDrop(false)}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {NAV_LABELS[g.slug] || g.name}
                         {g.isNew && <span className="badge-new">New</span>}
@@ -93,8 +93,8 @@ export default function Navbar() {
           {productsOpen && (
             <div style={{ paddingLeft: 16, marginBottom: 4 }}>
               {productGroups.map(g => (
-                <Link key={g.slug} to={`/products/${g.slug}`} onClick={() => setOpen(false)}
-                  style={{ ...groupLinkStyle(`/products/${g.slug}`), display: 'flex', alignItems: 'center', gap: 8, minHeight: 40, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 13 }}>
+                <Link key={g.slug} to={`/products?group=${g.slug}`} onClick={() => setOpen(false)}
+                  style={{ ...groupLinkStyle(`/products?group=${g.slug}`), display: 'flex', alignItems: 'center', gap: 8, minHeight: 40, padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 13 }}>
                   {g.name}
                   {g.isNew && <span className="badge-new">New</span>}
                 </Link>
