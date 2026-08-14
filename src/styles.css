@@ -987,7 +987,7 @@ html, body { overflow-x: hidden; }
   position: absolute; top: 100%; right: 0;
   background: var(--black-2); border: 1px solid var(--border-dim);
   padding: 3px; display: flex; flex-direction: column;
-  width: max-content; min-width: 168px; max-width: 240px; z-index: 200;
+  width: max-content; min-width: 148px; max-width: 216px; z-index: 200;
   box-shadow: 0 24px 48px rgba(0,0,0,0.55);
 }
 .navbar-dropdown a {
