@@ -1,5 +1,5 @@
-﻿import { useState } from 'react';
-import { Link } from 'react-router-dom';
+﻿import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { productGroups, productCatalog } from '../data/products';
 
 const WA_PHONE = '8618296876285';
@@ -22,8 +22,23 @@ const FILTER_ICONS = {
 };
 
 export default function Products() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const groupParam = searchParams.get('group');
+  const [activeFilter, setActiveFilter] = useState(groupParam && GROUP_ORDER.includes(groupParam) ? groupParam : 'all');
   const [activeTab, setActiveTab] = useState('magnetic');
+
+  // Sync filter with ?group= (navbar dropdown / category-details links open that group's full product list)
+  useEffect(() => {
+    const gp = searchParams.get('group');
+    if (gp && GROUP_ORDER.includes(gp)) setActiveFilter(gp);
+    else if (!gp) setActiveFilter('all');
+  }, [searchParams]);
+
+  const selectFilter = (slug) => {
+    setActiveFilter(slug);
+    if (slug === 'all') setSearchParams({});
+    else setSearchParams({ group: slug }, { replace: true });
+  };
 
   // Groups in display order (with products)
   const groups = GROUP_ORDER
@@ -88,7 +103,7 @@ export default function Products() {
             role="tab"
             aria-selected={activeFilter === 'all'}
             className={`product-filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('all')}
+            onClick={() => selectFilter('all')}
           >
             {FILTER_ICONS.all}
             All Products
@@ -99,7 +114,7 @@ export default function Products() {
               role="tab"
               aria-selected={activeFilter === g.slug}
               className={`product-filter-pill ${activeFilter === g.slug ? 'active' : ''}`}
-              onClick={() => setActiveFilter(g.slug)}
+              onClick={() => selectFilter(g.slug)}
             >
               {FILTER_ICONS[g.slug]}
               {g.name}
@@ -140,7 +155,7 @@ export default function Products() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <Link to={`/products/${g.slug}`} className="btn-outline-gold" style={{ textDecoration: 'none', fontSize: 12, padding: '10px 20px' }}>Category Details &rarr;</Link>
+                  <Link to={`/products?group=${g.slug}`} className="btn-outline-gold" style={{ textDecoration: 'none', fontSize: 12, padding: '10px 20px' }}>Category Details &rarr;</Link>
                 </div>
               </div>
 
