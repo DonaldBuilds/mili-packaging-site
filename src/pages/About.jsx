@@ -33,12 +33,12 @@ export default function About() {
     <div className="page-scaffold">
       {/* Hero — 大图 + 渐变遮罩 */}
       <div style={{ position: 'relative', minHeight: 520, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-        <img src="/assets/images/factory-gate.webp" alt="Mili Packaging factory" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src="/assets/images/factory-gate-cropped.webp" alt="Mili Packaging factory" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.2) 100%)' }} />
         <div className="container" style={{ position: 'relative', padding: '100px 0' }}>
           <div className="gold-line" />
           <span className="eyebrow">About Mili Packaging</span>
-          <h1 style={{ fontSize: 'clamp(30px, 3.6vw, 52px)', margin: '12px 0 18px', fontFamily: 'var(--font-display)', color: '#fff', maxWidth: 720, textShadow: '0 2px 16px rgba(0,0,0,.5)' }}>We Don't Just Make Boxes.<br />We Make Brands Memorable.</h1>
+          <h1 style={{ fontSize: 'clamp(30px, 3.6vw, 52px)', margin: '12px 0 18px', fontFamily: 'var(--font-display)', color: '#fff', maxWidth: 720, textShadow: '0 2px 16px rgba(0,0,0,.5)' }}>Premium Packaging,<br />Engineered for Brands That Ship Global.</h1>
           <p style={{ color: 'rgba(255,255,255,.85)', fontSize: 15, lineHeight: 1.8, maxWidth: 620, marginBottom: 28 }}>
             Jiangxi Mili Packaging Materials Co., Ltd. — a premium B2B custom packaging manufacturer founded in 2018, serving global brands with factory-direct quality.
           </p>
@@ -133,7 +133,7 @@ export default function About() {
             <span className="eyebrow">Factory Strength</span>
             <h2>Precision at Scale</h2>
           </div>
-          <img src="/assets/images/factory-gate.webp" alt="Mili Packaging factory entrance, Jiangxi Mili Packaging Materials Co., Ltd." style={{ width:'100%', aspectRatio:'16/8', objectFit:'cover', marginBottom: 2 }} />
+          <img src="/assets/images/factory-gate-cropped.webp" alt="Mili Packaging factory entrance, Jiangxi Mili Packaging Materials Co., Ltd." style={{ width:'100%', aspectRatio:'16/10', objectFit:'cover', marginBottom: 2 }} />
           <div className="stat-row" style={{ marginTop: 2 }}>
             {factory.map(([n,l]) => (
               <div className="stat-box" key={l}><div className="stat-num" style={{ fontSize:32 }}>{n}</div><div className="stat-label">{l}</div></div>
