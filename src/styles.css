@@ -420,7 +420,7 @@ h4 { font-size: 15px; font-weight: 600; }
 
 /* ─── INDUSTRY SOLUTIONS v4：焦点行业 + 紧凑索引列表（编辑风，不拥挤） ─── */
 .industry-split {
-  display: grid; grid-template-columns: 0.85fr 1fr; gap: 2px;
+  display: grid; grid-template-columns: 0.64fr 1fr; gap: 2px;
   background: var(--border-dim); border: 1px solid var(--border-dim);
 }
 .industry-featured {
