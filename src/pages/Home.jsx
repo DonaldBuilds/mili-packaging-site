@@ -358,7 +358,7 @@ export default function Home() {
                   {(ind.featuredProducts || []).map(slug => {
                     const p = findProduct(slug);
                     return p ? (
-                      <span className="industry-prod" key={slug}>{p.name} · From ${p.price}</span>
+                      <span className="industry-prod" key={slug}><span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</span><b>${p.price}</b></span>
                     ) : null;
                   })}
                 </div>
