@@ -1,5 +1,5 @@
 ﻿import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { productGroups, getProduct, productCatalog } from '../data/products';
 import { industries } from './Industries';
 import { cases } from './Portfolio';
@@ -67,6 +67,8 @@ const testimonials = [
 ];
 
 export default function Home() {
+  const [activeInd, setActiveInd] = useState(industries.find(i => i.slug === 'jewelry-watches') || industries[0]);
+  const featRef = useRef(null);
   return (
     <>
       {/* ── Hero ── */}
@@ -341,54 +343,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Industries：行业方案（焦点行业 + 紧凑索引列表，编辑风） ── */}
+      {/* ── Industries：行业方案（点击右侧行业 → 左侧焦点卡联动切换） ── */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container" style={{ marginBottom: 48, display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:12 }}>
           <div>
             <div className="gold-line" />
             <span className="eyebrow">Industry Solutions</span>
-            <h2>Built for Your Industry</h2>
+            <h2>Packaging for Every Industry</h2>
           </div>
           <Link to="/industries" style={{ color:'var(--gold)', textDecoration:'none', fontSize:13, letterSpacing:'0.05em' }}>All Industries &rarr;</Link>
         </div>
         <div className="industry-split">
-          {(() => {
-            const feat = industries.find(i => i.slug === 'jewelry-watches') || industries[0];
-            const rest = industries.filter(i => i.slug !== feat.slug);
-            return (
-              <>
-                <Link to={`/industries/${feat.slug}`} className="industry-featured" aria-label={`${feat.name} packaging solutions`}>
-                  <div className="industry-featured-media">
-                    <img src={feat.cardImg} alt={`${feat.name} custom packaging`} loading="lazy" />
-                  </div>
-                  <div className="industry-featured-body">
-                    <span className="industry-featured-eyebrow">Featured Solution</span>
-                    <h3>{feat.name}</h3>
-                    <p>{feat.intro}</p>
-                    <div className="industry-featured-chips">
-                      {feat.points.slice(0, 3).map(pt => <span key={pt}>{pt}</span>)}
-                    </div>
-                    <span className="industry-featured-cta">Explore Solutions &rarr;</span>
-                  </div>
-                </Link>
-                <div className="industry-index">
-                  {rest.map(ind => (
-                    <Link to={`/industries/${ind.slug}`} className="industry-index-row" key={ind.slug}>
-                      <img className="industry-index-thumb" src={ind.cardImg} alt={ind.name} loading="lazy" />
-                      <div className="industry-index-text">
-                        <h4>{ind.name}</h4>
-                        <p>{ind.intro}</p>
-                      </div>
-                      <span className="industry-index-arrow">&rarr;</span>
-                    </Link>
-                  ))}
-                  <Link to="/contact#quote-form" className="industry-index-row industry-index-cta">
-                    <span className="industry-index-cta-text">Your Industry Not Listed? Talk to Us &rarr;</span>
-                  </Link>
+          <div className="industry-featured" ref={featRef}>
+            <div className="industry-featured-media">
+              <img key={activeInd.slug} src={activeInd.cardImg} alt={`${activeInd.name} custom packaging`} loading="lazy" />
+            </div>
+            <div className="industry-featured-body">
+              <span className="industry-featured-eyebrow">Custom Solutions</span>
+              <h3>{activeInd.name}</h3>
+              <p>{activeInd.intro}</p>
+              <div className="industry-featured-chips">
+                {activeInd.points.slice(0, 3).map(pt => <span key={pt}>{pt}</span>)}
+              </div>
+              <Link to={`/industries/${activeInd.slug}`} className="industry-featured-cta">View {activeInd.name} Packaging &rarr;</Link>
+            </div>
+          </div>
+          <div className="industry-index">
+            {industries.map(ind => (
+              <Link
+                to={`/industries/${ind.slug}`}
+                className={`industry-index-row${ind.slug === activeInd.slug ? ' active' : ''}`}
+                key={ind.slug}
+                onClick={e => {
+                  e.preventDefault();
+                  setActiveInd(ind);
+                  if (window.innerWidth < 640) featRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                aria-current={ind.slug === activeInd.slug ? 'true' : undefined}
+              >
+                <img className="industry-index-thumb" src={ind.cardImg} alt={ind.name} loading="lazy" />
+                <div className="industry-index-text">
+                  <h4>{ind.name}</h4>
+                  <p>{ind.intro}</p>
                 </div>
-              </>
-            );
-          })()}
+                <span className="industry-index-arrow">&rarr;</span>
+              </Link>
+            ))}
+            <Link to="/contact#quote-form" className="industry-index-row industry-index-cta">
+              <span className="industry-index-cta-text">Don&rsquo;t See Your Industry? Get a Custom Quote &rarr;</span>
+            </Link>
+          </div>
         </div>
       </section>
 
