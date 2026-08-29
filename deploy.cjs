@@ -212,7 +212,16 @@ export default{async fetch(r,env){
   if(p==='/api/logout'){return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json','set-cookie':'mili_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'}})}
   if(p.startsWith('/api/')){
     if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
-    if(p==='/api/session')return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/session')return new Response(JSON.stringify({ok:true,inquiryUnlocked:!!getCookie('mili_inquiry')}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/inquiry/unlock'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const pinVal=String((b&&b.pin)||'');
+        const INQ_PIN=(env&&env.INQUIRY_PIN)||'mili2026';
+        if(pinVal!==INQ_PIN)return new Response(JSON.stringify({ok:false,error:'bad-pin'}),{status:401,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json','set-cookie':'mili_inquiry=1; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config')return new Response(JSON.stringify({ok:true,configs:{
@@ -223,7 +232,8 @@ export default{async fetch(r,env){
       llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
       indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
       supabase:{ok:true,hint:'询盘入库与统计（内置默认，env 可覆盖）'},
-      admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'}
+      admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
+      inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
     }}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config/test'){return handleConfigTest(env)}
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
@@ -243,6 +253,34 @@ export default{async fetch(r,env){
       const body=await r.json();
       const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/products.json';
       const ghH={authorization:'Bearer '+OPS_GH_PAT,'accept':'application/vnd.github+json','user-agent':'mili-ops','content-type':'application/json'};
+      // ── 字段白名单 + 格式校验（null 表示删除字段；拒绝未知字段与非法值） ──
+      const PF=['name','price','moq','tagline','spec','specs','tierPrice','copy','img','extraImgs','order','status','title','description','keywords','faq','imgAlt','extraAlt'];
+      const GF=['name','moq','tagline','heroImg','whiteImg'];
+      const strOrNull=function(v,max){if(v===null||v===undefined)return true;if(typeof v!=='string')return false;if(max&&v.length>max)return false;return true};
+      const arrOrNull=function(v){if(v===null||v===undefined)return true;if(!Array.isArray(v))return false;for(let i=0;i<v.length;i++){if(typeof v[i]!=='string')return false}return true};
+      const sanitizeFields=function(fields,allow){
+        if(!fields||typeof fields!=='object'||Array.isArray(fields))return {error:'bad-fields'};
+        const out={};
+        for(const k of Object.keys(fields)){
+          if(allow.indexOf(k)<0)return {error:'bad-field:'+k};
+          const v=fields[k];
+          if(k==='status'&&v!==null&&v!=='active'&&v!=='hidden')return {error:'bad-status'};
+          if(k==='order'&&v!==null&&typeof v!=='number')return {error:'bad-order'};
+          if(k==='name'&&!strOrNull(v,120))return {error:'bad-name'};
+          if(k==='title'&&!strOrNull(v,70))return {error:'bad-title'};
+          if(k==='description'&&!strOrNull(v,170))return {error:'bad-desc'};
+          if(k==='tagline'&&!strOrNull(v,120))return {error:'bad-tagline'};
+          if(k==='spec'&&!strOrNull(v,100))return {error:'bad-spec'};
+          if((k==='img'||k==='imgAlt'||k==='price'||k==='moq')&&!strOrNull(v,200))return {error:'bad-'+k};
+          if((k==='copy'||k==='extraImgs'||k==='keywords')&&!arrOrNull(v))return {error:'bad-'+k};
+          if(k==='keywords'&&Array.isArray(v)){for(let i=0;i<v.length;i++){if(v[i].length>60)return {error:'bad-keyword'}}}
+          if(k==='extraAlt'&&v!==null&&(typeof v!=='object'||Array.isArray(v)))return {error:'bad-extraAlt'};
+          if(k==='faq'&&v!==null&&!Array.isArray(v))return {error:'bad-faq'};
+          if(k==='tierPrice'&&v!==null&&(typeof v!=='object'||Array.isArray(v)))return {error:'bad-tier'};
+          out[k]=v;
+        }
+        return {fields:out};
+      };
       const cur=await fetch(gh,{headers:ghH});
       if(!cur.ok)return new Response(JSON.stringify({ok:false,error:'github-read:'+cur.status}),{status:502,headers:{'content-type':'application/json'}});
       const meta=await cur.json();
@@ -252,22 +290,36 @@ export default{async fetch(r,env){
         if(op.action==='product'&&op.group&&op.slug&&op.fields){
           const list=data.productCatalog[op.group];
           if(!Array.isArray(list))return new Response(JSON.stringify({ok:false,error:'group-not-found:'+op.group}),{status:400,headers:{'content-type':'application/json'}});
-          const prod=list.find(x=>x.slug===op.slug);
-          if(!prod){prod={slug:op.slug,name:op.slug};list.push(prod);}
+          const s=sanitizeFields(op.fields,PF);
+          if(s.error)return new Response(JSON.stringify({ok:false,error:s.error}),{status:400,headers:{'content-type':'application/json'}});
+          let prod=list.find(x=>x.slug===op.slug);
+          if(!prod){
+            if(!s.fields.name)return new Response(JSON.stringify({ok:false,error:'name-required'}),{status:400,headers:{'content-type':'application/json'}});
+            prod={slug:op.slug,name:op.slug};list.push(prod);
+          }
           const before=JSON.parse(JSON.stringify(prod));
-          Object.assign(prod,op.fields);
+          for(const k of Object.keys(s.fields)){if(s.fields[k]===null){delete prod[k]}else{prod[k]=s.fields[k]}}
           audit('product.update',op.group+'/'+op.slug,before,JSON.parse(JSON.stringify(prod)));
         } else if(op.action==='group'&&op.group&&op.fields){
           const g=data.productGroups.find(x=>x.slug===op.group);
           if(!g)return new Response(JSON.stringify({ok:false,error:'group-not-found:'+op.group}),{status:400,headers:{'content-type':'application/json'}});
+          const s=sanitizeFields(op.fields,GF);
+          if(s.error)return new Response(JSON.stringify({ok:false,error:s.error}),{status:400,headers:{'content-type':'application/json'}});
           const before=JSON.parse(JSON.stringify(g));
-          Object.assign(g,op.fields);
+          for(const k of Object.keys(s.fields)){if(s.fields[k]===null){delete g[k]}else{g[k]=s.fields[k]}}
           audit('group.update',op.group,before,JSON.parse(JSON.stringify(g)));
         } else {
           return new Response(JSON.stringify({ok:false,error:'unknown-op'}),{status:400,headers:{'content-type':'application/json'}});
         }
       }
-      const put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify({message:'ops: workbench update '+new Date().toISOString().slice(0,16)+'Z',content:btoa(unescape(encodeURIComponent(JSON.stringify(data)))),sha:meta.sha})});
+      const content=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+      const putBody={message:'ops: workbench update '+new Date().toISOString().slice(0,16)+'Z',content:content,sha:meta.sha};
+      let put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify(putBody)});
+      if(put.status===409){
+        // 并发冲突：重读最新 sha 重试 1 次
+        const cur2=await fetch(gh,{headers:ghH});
+        if(cur2.ok){const meta2=await cur2.json();putBody.sha=meta2.sha;put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify(putBody)});}
+      }
       if(!put.ok)return new Response(JSON.stringify({ok:false,error:'github-write:'+put.status}),{status:502,headers:{'content-type':'application/json'}});
       return new Response(JSON.stringify({ok:true,message:'updated & pushed — auto-deploy started'}),{headers:{'content-type':'application/json'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:String(e&&e.message||e)}),{status:500,headers:{'content-type':'application/json'}})}

@@ -853,7 +853,7 @@
     <div class="grid">
       <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
       <div class="card"><h3>最近提交 <span class="v5-src" id="dash-stamp-commits"></span></h3><div id="dash-commits">加载中…</div></div>
-      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span></h3><div id="dash-inquiries">加载中…</div></div>
+      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span></h3><div id="dash-inquiries">加载中…</div><div id="dash-followup" style="margin-top:8px"></div></div>
       <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span></h3><div id="dash-products">加载中…</div></div>
     </div>
     <div class="card" style="margin-top:12px">
@@ -892,6 +892,14 @@
       </div>
       <select id="ed-filter-group" style="width:auto;margin:0;padding:8px 12px;font-size:13px">
         <option value="">全部分组</option>
+      </select>
+      <select id="ed-filter-gap" style="width:auto;margin:0;padding:8px 12px;font-size:13px" title="快捷缺口筛选">
+        <option value="">全部产品</option>
+        <option value="seo">SEO 低分（&lt;70）</option>
+        <option value="meta">缺 Meta 字段</option>
+        <option value="img">缺附图</option>
+        <option value="tier">缺阶梯价</option>
+        <option value="hidden">下架中</option>
       </select>
       <button class="btn btn-ghost btn-sm" id="ed-reload" title="重新加载产品数据">⟳ 刷新</button>
       <button class="btn btn-primary btn-sm" id="ed-new" title="手动新增产品">＋ 新建产品</button>
@@ -1101,13 +1109,32 @@
                 <input id="f-order" type="number" placeholder="1（数字越小越靠前）" />
               </div>
             </div>
-            <!-- ④ 描述文案 -->
+            <!-- ④ 描述文案 + SEO 字段（title/description/faq 可编辑） -->
             <div class="ed-section" id="sec-desc">
               <div class="ed-section-title">描述文案</div>
               <div class="ed-field-wrap">
                 <label>产品描述 / 核心卖点（第 1 段）</label>
                 <textarea id="f-copy" rows="5" placeholder="写给海外买家的核心价值主张：工厂直供、免费设计、7天样品…" style="padding-bottom:24px"></textarea>
                 <span class="ed-counter" id="cnt-copy">0/500</span>
+              </div>
+              <div class="ed-field-wrap">
+                <label>SEO 标题 (Title) <span class="hint" style="font-weight:normal">— 50-62 字符最佳，突出产品类型+用途</span></label>
+                <input id="f-title" placeholder="Custom Luxury Gift Box with Magnetic Closure" style="padding-right:52px" />
+                <span class="ed-counter" id="cnt-title">0/70</span>
+              </div>
+              <div class="ed-field-wrap">
+                <label>Meta 描述 (Description) <span class="hint" style="font-weight:normal">— 120-160 字符，含核心卖点/MOQ/定制能力</span></label>
+                <textarea id="f-desc" rows="3" placeholder="Factory-direct custom luxury gift boxes from MOQ 100 pcs. Free 3D mockup within 48h, FSC-certified materials, 7-15 day lead time." style="padding-bottom:24px"></textarea>
+                <span class="ed-counter" id="cnt-desc">0/170</span>
+              </div>
+              <div class="ed-field-wrap">
+                <label>关键词（逗号分隔，用于 SEO 覆盖）</label>
+                <input id="f-keywords" placeholder="magnetic gift box, luxury packaging, custom rigid box" />
+              </div>
+              <div class="ed-field-wrap">
+                <label>FAQ（问答式，利于搜索与 AI 引用；至少 2 条）</label>
+                <div id="faq-editor-rows"></div>
+                <button type="button" class="btn btn-ghost btn-sm" id="faq-add-row" style="margin-top:6px">＋ 添加 FAQ</button>
               </div>
             </div>
             <!-- ⑤ 发布设置 -->
@@ -1505,7 +1532,7 @@
       <div id="account-list">
         <div class="user-list-row">
           <div class="user-avatar-sm">M</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">管理员</div><div style="font-size:11px;color:var(--color-text-secondary)">默认管理员账号 · 登录密码 mili2026</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">管理员</div><div style="font-size:11px;color:var(--color-text-secondary)">默认管理员账号 · 登录密码在设置中心管理</div></div>
           <span class="user-role-badge admin">管理员</span>
           <span class="tag" style="font-size:10px;background:rgba(76,217,100,.1);color:var(--ok)">当前登录</span>
         </div>
@@ -1577,7 +1604,7 @@
   var selfEl = document.getElementById('selfcheck');
   function selfCheck() {
     return Promise.all(['sitemap.xml', 'robots.txt', 'llms.txt', 'admin.html'].map(function (u) {
-      return fetch('/' + u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
+      return fetchT('/' + u, { method: 'HEAD' }, 8000).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
     })).then(function (rs) {
       selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
       return rs.every(function (r) { return r.ok; });
@@ -1587,11 +1614,21 @@
 
   // ── Dashboard sync engine: manual refresh + auto interval + visibility pause/resume ──
   var GH_API = 'https://api.github.com/repos/DonaldBuilds/mili-packaging-site';
+  // fetch 带超时（AbortController），默认 12s，防止单数据源挂起卡住同步状态
+  function fetchT(url, opts, ms) {
+    opts = opts || {};
+    var ctl = new AbortController();
+    var timer = setTimeout(function () { ctl.abort(); }, ms || 12000);
+    return fetch(url, Object.assign({}, opts, { signal: ctl.signal })).then(function (r) {
+      clearTimeout(timer);
+      return r;
+    }, function (e) { clearTimeout(timer); throw e; });
+  }
   function el(id) { return document.getElementById(id); }
-  function fmtTime(t) { return t ? String(t).replace('T', ' ').slice(0, 16) : '—'; }
+  function fmtTime(t) { if (!t) return '—'; var d = new Date(t); if (isNaN(d.getTime())) return '—'; var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
   function nowStamp() { return new Date().toTimeString().slice(0, 8); }
   function loadDeploy() {
-    return fetch(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
+    return fetchT(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
       if (!d || !d.workflow_runs) return false;
       el('dash-deploy').innerHTML = d.workflow_runs.slice(0, 3).map(function (run) {
         var ok = run.status === 'completed';
@@ -1603,7 +1640,7 @@
     }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; return false; });
   }
   function loadCommits() {
-    return fetch(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
+    return fetchT(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
       if (!Array.isArray(d)) return false;
       el('dash-commits').innerHTML = d.map(function (c) {
         return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--gray)">' + fmtTime(c.commit.author.date) + '</span><br/>' + (c.commit.message.split('\n')[0]).slice(0, 56) + '</div>';
@@ -1614,12 +1651,13 @@
   }
   function loadInquiryStats() {
     var chanMap = { website: '🌐 网站', whatsapp: '💬 WhatsApp', email: '✉️ 邮件', chat: '💭 聊天', phone: '📞 电话' };
-    return fetch(SB_URL + '/rest/v1/inquiries?select=created_at,channel,status,follow_up_at&order=created_at.desc', {
+    return fetchT(SB_URL + '/rest/v1/inquiries?select=created_at,channel,status,follow_up_at,updated_at,name,email,owner&order=created_at.desc', {
       headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
     }).then(function (r) { return r.json(); }).then(function (rows) {
       if (!Array.isArray(rows)) return false;
       var now = Date.now(), d7 = 0, d30 = 0, month = 0, pend = 0, won = 0, chan = {};
       rows.forEach(function (r) {
+        if (r.status === 'deleted') return; // 与询盘中心口径一致：已归档不计入统计
         var t = new Date(r.created_at).getTime();
         if (now - t < 7 * 864e5) d7++;
         if (now - t < 30 * 864e5) d30++;
@@ -1634,11 +1672,33 @@
       el('dash-inquiries').innerHTML = '<div class="status">总询盘：<b style="color:var(--gold)">' + total + '</b> · 近 7 天：<b>' + d7 + '</b> · 近 30 天：<b>' + d30 + '</b> · 本月：<b>' + month + '</b> · 待跟进：<b style="color:' + (pend ? 'var(--bad)' : 'var(--ok)') + '">' + pend + '</b> · 成交：<b style="color:var(--ok)">' + won + '</b> (' + (total ? Math.round(won / total * 100) : 0) + '%)</div>' +
         '<div class="status" style="font-size:11.5px;color:var(--color-text-secondary)">' + Object.keys(chan).sort(function (a, b) { return chan[b] - chan[a]; }).map(function (c) { return (chanMap[c] || c) + ' <b style="color:var(--gold)">' + chan[c] + '</b>'; }).join(' · ') + '</div>';
       el('dash-stamp-inquiries').textContent = '截至 ' + nowStamp();
+      // 今日待跟进清单（follow_up_at 已到期且未终结，按到期时间升序取 8 条）
+      var fu = rows.filter(function (r) {
+        if (r.status === 'won' || r.status === 'lost' || r.status === 'deleted') return false;
+        var f = r.follow_up_at ? new Date(r.follow_up_at).getTime() : 0;
+        return f && f <= Date.now();
+      }).sort(function (a, b) { return new Date(a.follow_up_at || 0) - new Date(b.follow_up_at || 0); }).slice(0, 8);
+      var fuEl = el('dash-followup');
+      if (fuEl) {
+        fuEl.innerHTML = fu.length
+          ? '<div style="font-size:11.5px;font-weight:700;margin:6px 0 2px">⏰ 待跟进（已到期 ' + fu.length + ' 条）</div>' + fu.map(function (r) {
+              return '<div data-fu="1" style="display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:3px 0;border-bottom:1px solid var(--border);cursor:pointer" title="点击跳转询盘中心">' +
+                '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58%">' + esc(r.name || r.email || '未命名客户') + '</span>' +
+                '<span style="color:var(--color-text-secondary);white-space:nowrap">' + fmtTime(r.follow_up_at) + (r.owner ? ' · ' + esc(r.owner) : '') + '</span></div>';
+            }).join('')
+          : '<div class="hint" style="margin-top:6px">✔ 今日无到期跟进</div>';
+        fuEl.querySelectorAll('[data-fu]').forEach(function (it) {
+          it.addEventListener('click', function () {
+            var tab = document.querySelector('.tab[data-tab="inquiry"]'); if (tab) tab.click();
+            toast('已跳转询盘中心，可按「下次跟进」排序查看', 'info');
+          });
+        });
+      }
       return true;
     }).catch(function () { el('dash-inquiries').innerHTML = '<div class="status bad">无法读取</div>'; return false; });
   }
   function loadProductStats() {
-    return fetch(RAW()).then(function (r) { return r.json(); }).then(function (d) {
+    return fetchT(RAW()).then(function (r) { return r.json(); }).then(function (d) {
       var prods = [];
       d.productGroups.forEach(function (g) { prods = prods.concat(d.productCatalog[g.slug] || []); });
       var prices = prods.map(function (p) { return parseFloat(p.price); }).filter(function (n) { return !isNaN(n); });
@@ -1653,7 +1713,7 @@
     var pages = ['/', '/products', '/products/rigid-gift-boxes', '/contact', '/about', '/faq', '/portfolio', '/industries', '/blog/', '/blog/1/', '/privacy-policy', '/sample-kits'];
     return Promise.all(pages.map(function (u) {
       var t0 = Date.now();
-      return fetch(u, { method: 'HEAD' }).then(function (r) { return { u: u, ok: r.ok, ms: Date.now() - t0, s: r.status }; }).catch(function () { return { u: u, ok: false, ms: 0, s: 0 }; });
+      return fetchT(u, { method: 'HEAD' }, 8000).then(function (r) { return { u: u, ok: r.ok, ms: Date.now() - t0, s: r.status }; }).catch(function () { return { u: u, ok: false, ms: 0, s: 0 }; });
     })).then(function (rs) {
       el('dash-health').innerHTML = rs.map(function (r) {
         return '<div style="font-size:11.5px;padding:6px 8px;border:1px solid var(--border);border-radius:3px"><span class="' + (r.ok ? 'status ok' : 'status bad') + '">' + (r.ok ? '✔' : '✘') + '</span> ' + r.u + ' <span style="color:var(--gray)">' + (r.ok ? r.s + ' · ' + r.ms + 'ms' : 'FAIL') + '</span></div>';
@@ -1788,11 +1848,20 @@
     edBuildList();
   });
 
-  // 搜索框
-  el('ed-search').addEventListener('input', function () { edSearchQ = this.value; edBuildList(); });
+  // 搜索框（200ms 防抖）
+  var edSearchDeb = null;
+  el('ed-search').addEventListener('input', function () {
+    var self = this;
+    clearTimeout(edSearchDeb);
+    edSearchDeb = setTimeout(function () { edSearchQ = self.value; edBuildList(); }, 200);
+  });
 
   // 分组筛选
   el('ed-filter-group').addEventListener('change', function () { edBuildList(); });
+
+  // 快捷缺口筛选
+  var gapSel = el('ed-filter-gap');
+  if (gapSel) gapSel.addEventListener('change', function () { edBuildList(); });
 
   // 刷新按钮
   el('ed-reload').addEventListener('click', function () {
@@ -1923,6 +1992,47 @@
     if (term && m[3]) term.value = m[3];
     if (port) port.value = m[4] || '';
   }
+
+  // ── FAQ 编辑器（数据形状兼容 {value:[q,a], Count:2}） ──
+  function faqRowHtml(q, a) {
+    var escq = String(q == null ? '' : q).replace(/"/g, '&quot;');
+    var esca = String(a == null ? '' : a).replace(/"/g, '&quot;');
+    return '<div class="faq-editor-row" style="display:grid;grid-template-columns:1fr 1fr 32px;gap:6px;margin-bottom:6px">' +
+      '<input type="text" placeholder="问题（英文）" class="faq-q" value="' + escq + '" />' +
+      '<input type="text" placeholder="答案（英文）" class="faq-a" value="' + esca + '" />' +
+      '<button type="button" class="faq-del-btn" title="删除此行">✕</button></div>';
+  }
+  function fillFaqEditor(faq) {
+    var rows = document.getElementById('faq-editor-rows');
+    if (!rows) return;
+    rows.innerHTML = '';
+    (faq || []).forEach(function (f) {
+      var v = (f && f.value && f.value.length) ? f.value : ['', ''];
+      rows.insertAdjacentHTML('beforeend', faqRowHtml(v[0], v[1]));
+    });
+    rows.querySelectorAll('.faq-del-btn').forEach(function (b) { b.onclick = function () { b.parentElement.remove(); }; });
+  }
+  function collectFaq() {
+    var out = [];
+    document.querySelectorAll('.faq-editor-row').forEach(function (row) {
+      var q = ((row.querySelector('.faq-q') || {}).value || '').trim();
+      var a = ((row.querySelector('.faq-a') || {}).value || '').trim();
+      if (q && a) out.push({ value: [q, a], Count: 2 });
+    });
+    return out.length ? out : null;
+  }
+  function collectKeywords() {
+    var v = (el('f-keywords') || {}).value || '';
+    return v.split(/[,，]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  var faqAddBtn = document.getElementById('faq-add-row');
+  if (faqAddBtn) faqAddBtn.addEventListener('click', function () {
+    var rows = document.getElementById('faq-editor-rows');
+    if (!rows) return;
+    rows.insertAdjacentHTML('beforeend', faqRowHtml('', ''));
+    var b = rows.querySelector('.faq-editor-row:last-child .faq-del-btn');
+    if (b) b.onclick = function () { b.parentElement.remove(); };
+  });
 
   var WEEKDAYS = ['周日','周一','周二','周三','周四','周五','周六'];
   var MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -2064,7 +2174,9 @@
     if (!DATA) { toast('产品数据未加载，请稍候', 'err'); return; }
     edNewMode = true;
     edCurrentGroup = ''; edCurrentSlug = '';
-    ['f-name', 'f-tagline', 'f-spec', 'f-img', 'f-price', 'f-moq', 'f-order', 'f-copy', 'f-new-slug'].forEach(function (id) { var x = el(id); if (x) x.value = ''; });
+    ['f-name', 'f-tagline', 'f-spec', 'f-img', 'f-price', 'f-moq', 'f-order', 'f-copy', 'f-new-slug', 'f-title', 'f-desc', 'f-keywords'].forEach(function (id) { var x = el(id); if (x) x.value = ''; });
+    fillFaqEditor(null);
+    edAlts = { main: '', extra: {} };
     var st = el('f-status'); if (st) st.value = 'active';
     el('ed-drawer-title').textContent = '新建产品';
     el('ed-drawer-slug').textContent = '填写信息后保存发布';
@@ -2201,6 +2313,11 @@
     el('f-spec').value = p.spec || '';
     el('f-img').value = p.img || '';
     el('f-price').value = p.price || '';
+    el('f-title').value = p.title || '';
+    el('f-desc').value = p.description || '';
+    el('f-keywords').value = (p.keywords || []).join(', ');
+    fillFaqEditor(p.faq);
+    edAlts = { main: p.imgAlt || '', extra: p.extraAlt || {} };
     if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) { setPriceMode('tier'); fillTierEditor(p.tierPrice); }
     else if (p.price && /^[\d.]+\s*[-–]\s*[\d.]+\s*[A-Z]{3}/.test(String(p.price))) { setPriceMode('range'); fillRangeEditor(p.price); }
     else { setPriceMode('single'); }
@@ -2252,6 +2369,13 @@
     // filter by search
     var q = edSearchQ.toLowerCase().trim();
     if (q) filtered = filtered.filter(function (x) { return String(x.p.name || '').toLowerCase().includes(q) || String(x.g.name || '').toLowerCase().includes(q) || String(x.p.slug || '').toLowerCase().includes(q); });
+    // 快捷缺口筛选
+    var gap = el('ed-filter-gap') ? el('ed-filter-gap').value : '';
+    if (gap === 'seo') { filtered = filtered.filter(function (x) { var sc = seoScore ? seoScore(x.p) : null; return sc && sc.score < 70; }); }
+    else if (gap === 'meta') { filtered = filtered.filter(function (x) { return !x.p.title || !x.p.description; }); }
+    else if (gap === 'img') { filtered = filtered.filter(function (x) { return !x.p.extraImgs || !x.p.extraImgs.length; }); }
+    else if (gap === 'tier') { filtered = filtered.filter(function (x) { return !x.p.tierPrice; }); }
+    else if (gap === 'hidden') { filtered = filtered.filter(function (x) { return x.p.status === 'hidden'; }); }
     if (!filtered.length) { list.innerHTML = '<div class="prod-list-empty"><div style="font-size:28px;margin-bottom:8px">🔍</div>没有符合条件的产品</div>'; return; }
     list.innerHTML = filtered.map(function (x) {
       var p = x.p, g = x.g;
@@ -2311,6 +2435,7 @@
 
   // ── v9: quick toggle status ──
   function edQuickStatus(gslug, pslug, newStatus, btn) {
+    if (newStatus === 'hidden' && !confirm('确认下架「' + pslug + '」？下架后产品从列表隐藏（直链仍可访问）。')) return;
     btn.disabled = true; btn.textContent = '…';
     postOps([{ action: 'product', group: gslug, slug: pslug, fields: { status: newStatus } }]).then(function (res) {
       if (res.ok) { toast(pslug + ' 已' + (newStatus === 'active' ? '上架' : '下架') + '，约 2 分钟生效', 'ok'); edReloadData(); }
@@ -2336,6 +2461,11 @@
     el('f-spec').value = p.spec || '';
     el('f-img').value = p.img || '';
     el('f-price').value = p.price || '';
+    el('f-title').value = p.title || '';
+    el('f-desc').value = p.description || '';
+    el('f-keywords').value = (p.keywords || []).join(', ');
+    fillFaqEditor(p.faq);
+    edAlts = { main: p.imgAlt || '', extra: p.extraAlt || {} };
     // 价格模式：tierPrice 对象 → 阶梯；"x-y TERM" 字符串 → 区间；否则单一
     if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) {
       setPriceMode('tier'); fillTierEditor(p.tierPrice);
@@ -2406,7 +2536,9 @@
     { id: 'f-name', cnt: 'cnt-name', max: 80 },
     { id: 'f-tagline', cnt: 'cnt-tagline', max: 120 },
     { id: 'f-spec', cnt: 'cnt-spec', max: 100 },
-    { id: 'f-copy', cnt: 'cnt-copy', max: 500 }
+    { id: 'f-copy', cnt: 'cnt-copy', max: 500 },
+    { id: 'f-title', cnt: 'cnt-title', max: 70 },
+    { id: 'f-desc', cnt: 'cnt-desc', max: 170 }
   ];
   function edUpdateCounters() {
     edCounterMap.forEach(function (m) {
@@ -2425,6 +2557,12 @@
   // ── v9: real-time SEO score in drawer ──
   function edUpdateScore() {
     if (!window.seoScore) return;
+    // 合并当前产品真实数据（title/description/faq/tierPrice），表单值优先，避免评分失真
+    var base = { title: '', description: '', faq: [], tierPrice: null };
+    if (DATA && edCurrentGroup && edCurrentSlug) {
+      var bp = (DATA.productCatalog[edCurrentGroup] || []).find(function (x) { return x.slug === edCurrentSlug; });
+      if (bp) base = bp;
+    }
     var pseudo = {
       name: el('f-name').value,
       tagline: el('f-tagline').value,
@@ -2433,9 +2571,13 @@
       moq: el('f-moq').value,
       price: el('f-price').value,
       copy: [el('f-copy').value],
-      tierPrice: null,
-      faq: []
+      title: (el('f-title') || {}).value || base.title || '',
+      description: (el('f-desc') || {}).value || base.description || '',
+      faq: (collectFaq ? collectFaq() : null) || base.faq || [],
+      tierPrice: null
     };
+    if (curPriceMode === 'tier') { pseudo.tierPrice = (collectTierPrice ? collectTierPrice() : null) || base.tierPrice || null; }
+    else if (base.tierPrice) { pseudo.tierPrice = base.tierPrice; }
     var r = seoScore(pseudo);
     var scoreEl = el('dr-seo-score');
     var issuesEl = el('dr-seo-issues');
@@ -2476,12 +2618,16 @@
   // 草稿暂存
   function edSaveDraft() {
     if (!edCurrentSlug || !edDirty) return;
+    var ex = [];
+    document.querySelectorAll('.ed-extra-img-input').forEach(function (inp) { var v = inp.value.trim(); if (v) ex.push(v); });
     var draft = { ts: Date.now(), group: edCurrentGroup, slug: edCurrentSlug,
       name: (el('f-name') || {}).value || '', tagline: (el('f-tagline') || {}).value || '',
       spec: (el('f-spec') || {}).value || '', img: (el('f-img') || {}).value || '',
       price: (el('f-price') || {}).value || '', moq: (el('f-moq') || {}).value || '',
       copy: (el('f-copy') || {}).value || '', status: (el('f-status') || {}).value || '',
-      order: (el('f-order') || {}).value || '' };
+      order: (el('f-order') || {}).value || '', title: (el('f-title') || {}).value || '',
+      desc: (el('f-desc') || {}).value || '', keywords: (el('f-keywords') || {}).value || '',
+      faq: (collectFaq ? collectFaq() : null), extraImgs: ex };
     try { localStorage.setItem('mili-draft-' + edCurrentSlug, JSON.stringify(draft)); } catch (e) {}
   }
   function edCheckDraft(slug) {
@@ -2500,6 +2646,11 @@
         if (el('f-copy')) el('f-copy').value = d.copy || '';
         if (el('f-status')) el('f-status').value = d.status || '';
         if (el('f-order')) el('f-order').value = d.order || '';
+        if (el('f-title')) el('f-title').value = d.title || '';
+        if (el('f-desc')) el('f-desc').value = d.desc || '';
+        if (el('f-keywords')) el('f-keywords').value = d.keywords || '';
+        if (d.faq) { if (fillFaqEditor) fillFaqEditor(d.faq); }
+        edRenderExtraImgs(d.extraImgs || []);
         banner.style.display = 'none';
         edUpdateCounters(); edRenderImageCenter(); edUpdateScore(); edSetDirty(true);
         toast('草稿已恢复', 'ok');
@@ -2525,14 +2676,14 @@
 
   // 脏状态触发：监听所有字段 input
   (function () {
-    var ids = ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order','f-price-min','f-price-max','f-price-port'];
+    var ids = ['f-name','f-tagline','f-spec','f-price','f-moq','f-copy','f-order','f-price-min','f-price-max','f-price-port','f-title','f-desc','f-keywords'];
     ids.forEach(function (id) { var x = el(id); if (x) x.addEventListener('input', function () { edSetDirty(true); }); });
     var st = el('f-status'); if (st) st.addEventListener('change', function () { edSetDirty(true); });
     var term = el('f-price-term'); if (term) term.addEventListener('change', function () { edSetDirty(true); edUpdatePreviewPanel(); });
-    // 动态行（阶梯/区间/附图）输入事件委托
+    // 动态行（阶梯/区间/附图/FAQ）输入事件委托
     document.addEventListener('input', function (e) {
       var t = e.target;
-      if (t && t.classList && (t.classList.contains('tier-qty') || t.classList.contains('tier-price-val') || t.classList.contains('ed-extra-img-input'))) {
+      if (t && t.classList && (t.classList.contains('tier-qty') || t.classList.contains('tier-price-val') || t.classList.contains('ed-extra-img-input') || t.classList.contains('faq-q') || t.classList.contains('faq-a'))) {
         edSetDirty(true); edUpdatePreviewPanel();
       }
     });
@@ -2567,13 +2718,13 @@
     if (el('pv-price')) el('pv-price').textContent = priceDisp || '—';
     if (el('pv-moq')) el('pv-moq').textContent = 'MOQ ' + moq;
     if (el('pv-copy')) el('pv-copy').textContent = copy.slice(0, 120) + (copy.length > 120 ? '…' : '');
-    if (el('pv-title')) el('pv-title').textContent = title || '产品标题将显示在此';
+    if (el('pv-title')) el('pv-title').textContent = (el('f-title') || {}).value || title || '产品标题将显示在此';
     if (el('pv-url')) el('pv-url').textContent = 'mili-packaging.com › products › ' + (group || '…') + ' › ' + (slug || '…');
     // SEO 分实时同步
     if (window.seoScore && DATA && group && slug) {
       var p = (DATA.productCatalog[group] || []).find(function (x) { return x.slug === slug; });
       if (p) {
-        var merged = { slug: p.slug, name: title || p.name, spec: spec !== '—' ? spec : p.spec, img: (el('f-img') || {}).value || p.img, extraImgs: p.extraImgs, faq: p.faq, tierPrice: p.tierPrice, tagline: (el('f-tagline') || {}).value || p.tagline, copy: copy ? [copy] : p.copy, title: title, description: p.description };
+        var merged = { slug: p.slug, name: title || p.name, spec: spec !== '—' ? spec : p.spec, img: (el('f-img') || {}).value || p.img, extraImgs: p.extraImgs, faq: (collectFaq ? collectFaq() : null) || p.faq || [], tierPrice: curPriceMode === 'tier' ? ((collectTierPrice ? collectTierPrice() : null) || p.tierPrice || null) : (p.tierPrice || null), tagline: (el('f-tagline') || {}).value || p.tagline, copy: copy ? [copy] : p.copy, title: (el('f-title') || {}).value || p.title || '', description: (el('f-desc') || {}).value || p.description || '' };
         var sc = seoScore(merged);
         if (el('pv-seo-score')) { el('pv-seo-score').textContent = sc.score; el('pv-seo-score').style.color = sc.score >= 85 ? 'var(--ok)' : sc.score >= 70 ? 'var(--color-warning)' : 'var(--bad)'; }
         if (el('pv-seo-issues')) el('pv-seo-issues').textContent = sc.detail.length ? sc.detail.slice(0, 3).join('\n') : '✔ 无扣分项';
@@ -2591,14 +2742,17 @@
   var imgAltTarget = null; // 当前编辑 alt 的图片 {index, isMain}
   var imgDragSrc = null;
 
+  // 当前编辑产品的 alt 状态（主图 + 附图，按 src 索引；持久化到 imgAlt / extraAlt 字段）
+  var edAlts = { main: '', extra: {} };
+
   function edGetAllImages() {
     // 返回 [{src, isMain, alt, index}]
     var imgs = [];
     var mainVal = (el('f-img') || {}).value || '';
-    if (mainVal) imgs.push({ src: mainVal, isMain: true, alt: '', index: 0 });
+    if (mainVal) imgs.push({ src: mainVal, isMain: true, alt: edAlts.main || '', index: 0 });
     // 附图从 ed-extra-imgs 读（v10 的行输入）
     var extraRows = document.querySelectorAll('.ed-extra-img-input');
-    extraRows.forEach(function (inp, i) { var v = inp.value.trim(); if (v) imgs.push({ src: v, isMain: false, alt: '', index: imgs.length }); });
+    extraRows.forEach(function (inp, i) { var v = inp.value.trim(); if (v) imgs.push({ src: v, isMain: false, alt: edAlts.extra[v] || '', index: imgs.length }); });
     return imgs;
   }
 
@@ -2701,25 +2855,37 @@
     edRenderImageCenter(); edSetDirty(true);
   }
 
-  // alt 弹层
+  // alt 弹层（保存写回 edAlts，随产品保存持久化）
   (function () {
     var cancel = el('img-alt-cancel'), save = el('img-alt-save'), modal = el('img-alt-modal');
     if (cancel) cancel.onclick = function () { modal.style.display = 'none'; };
     if (save) save.onclick = function () {
+      var v = el('img-alt-val').value.trim();
+      if (imgAltTarget) {
+        if (imgAltTarget.idx === 0) { edAlts.main = v; }
+        else { edAlts.extra[imgAltTarget.src] = v; }
+        imgAltTarget = null;
+      }
       modal.style.display = 'none';
-      toast('alt 已更新（保存后生效）', 'ok');
+      toast('alt 已更新，保存产品后生效', 'ok');
       edSetDirty(true);
     };
   })();
 
-  // 批量生成 alt
+  // 批量生成 alt（真实写入每张图）
   (function () {
     var btn = el('img-gen-alt'); if (!btn) return;
     btn.addEventListener('click', function () {
       var name = (el('f-name') || {}).value || edCurrentSlug || 'product';
       var group = edCurrentGroup ? edCurrentGroup.replace(/-/g, ' ') : 'packaging';
-      var alt = 'Custom ' + name + ' - Premium ' + group + ' - Factory Direct';
-      toast('Alt 已预填（当前仅预览，保存后生效）：' + alt.slice(0, 50), 'ok');
+      var imgs = edGetAllImages();
+      imgs.forEach(function (img) {
+        var alt = 'Custom ' + name + ' - Premium ' + group + ' - Factory Direct';
+        if (!img.isMain) alt = 'Custom ' + name + ' - ' + group + ' view ' + img.index + ' - Factory Direct';
+        if (img.isMain) { edAlts.main = alt; } else { edAlts.extra[img.src] = alt; }
+      });
+      edRenderImageCenter();
+      toast('已为 ' + imgs.length + ' 张图生成 alt，保存产品后生效', 'ok');
       edSetDirty(true);
     });
   })();
@@ -2809,22 +2975,27 @@
 
   // ── v9: new ed-save (reads from drawer state) ──
   document.getElementById('ed-save').addEventListener('click', function () {
+    if (edSaving) { toast('正在发布中，请稍候…', 'info'); return; }
+    edSaving = true;
+    var sb0 = el('ed-save');
+    if (sb0) { sb0.disabled = true; sb0.classList.add('loading'); sb0.textContent = '发布中…'; }
+    var release = function () { edSaving = false; var sb = el('ed-save'); if (sb) { sb.disabled = false; sb.classList.remove('loading'); sb.textContent = '💾 保存并发布'; } };
     if (edNewMode) {
       var slug = el('f-new-slug').value.trim();
       var group = el('ed-group-sel').value;
-      if (!group) { toast('请选择所属分组', 'err'); return; }
-      if (!/^[a-z0-9-]{3,60}$/.test(slug)) { toast('slug 需为 3-60 位小写英文/数字/连字符（如 custom-luxury-box）', 'err'); return; }
+      if (!group) { release(); toast('请选择所属分组', 'err'); return; }
+      if (!/^[a-z0-9-]{3,60}$/.test(slug)) { release(); toast('slug 需为 3-60 位小写英文/数字/连字符（如 custom-luxury-box）', 'err'); return; }
       var dup = (DATA.productCatalog[group] || []).some(function (x) { return x.slug === slug; });
-      if (dup) { toast('该分组下已存在同名 slug', 'err'); return; }
+      if (dup) { release(); toast('该分组下已存在同名 slug', 'err'); return; }
       edCurrentGroup = group; edCurrentSlug = slug;
     }
-    if (!edCurrentGroup || !edCurrentSlug) { toast('请先在列表中点击「编辑」选择产品', 'err'); return; }
+    if (!edCurrentGroup || !edCurrentSlug) { release(); toast('请先在列表中点击「编辑」选择产品', 'err'); return; }
     // 价格：根据当前模式收集
     var priceVal = el('f-price') ? el('f-price').value.trim() : '';
     var tierVal = null;
     if (curPriceMode === 'tier') {
       var vErr = validateTierPrice();
-      if (vErr) { edSaving = false; var vb = el('ed-save'); if (vb) { vb.disabled = false; vb.classList.remove('loading'); vb.textContent = '💾 保存并发布'; } toast(vErr, 'err'); return; }
+      if (vErr) { release(); toast(vErr, 'err'); return; }
       tierVal = collectTierPrice();
       if (tierVal) { var tkeys = Object.keys(tierVal).sort(function(a,b){return +a-+b;}); priceVal = tierVal[tkeys[tkeys.length-1]] || priceVal; }
     } else if (curPriceMode === 'range') {
@@ -2838,6 +3009,7 @@
       tagline: el('f-tagline').value.trim(),
       spec: el('f-spec').value.trim()
     };
+    if (!fields.name) { release(); toast('产品名称不能为空', 'err'); return; }
     if (tierVal) fields.tierPrice = tierVal;
     var copy = el('f-copy').value.trim();
     var img = el('f-img').value.trim();
@@ -2845,50 +3017,66 @@
     var status = el('f-status').value;
     var extra = [];
     document.querySelectorAll('.ed-extra-img-input').forEach(function (inp) { var v = inp.value.trim(); if (v) extra.push(v); });
-    if (copy) fields.copy = [copy];
-    if (img) fields.img = img;
-    if (extra.length) fields.extraImgs = extra;
+    // SEO 字段
+    var titleV = el('f-title') ? el('f-title').value.trim() : '';
+    var descV = el('f-desc') ? el('f-desc').value.trim() : '';
+    if (titleV.length > 70) { release(); toast('SEO 标题超出建议上限 70 字符（当前 ' + titleV.length + '）', 'err'); return; }
+    if (descV.length > 170) { release(); toast('Meta 描述超出建议上限 170 字符（当前 ' + descV.length + '）', 'err'); return; }
+    var kwArr = collectKeywords();
+    var faqArr = collectFaq();
+    // 显式空值语义：null → 服务端删除字段（支持清空图片/描述/SEO 字段）
+    fields.copy = copy ? [copy] : null;
+    fields.img = img || null;
+    fields.extraImgs = extra.length ? extra : null;
+    fields.title = titleV || null;
+    fields.description = descV || null;
+    fields.keywords = kwArr.length ? kwArr : null;
+    fields.faq = faqArr;
+    fields.imgAlt = edAlts.main || null;
+    var extraAlt = {};
+    extra.forEach(function (src) { if (edAlts.extra[src]) extraAlt[src] = edAlts.extra[src]; });
+    fields.extraAlt = Object.keys(extraAlt).length ? extraAlt : null;
     if (order !== '') fields.order = order;
     if (status) fields.status = status;
     flash('正在提交并触发自动部署…');
     postOps([{ action: 'product', group: edCurrentGroup, slug: edCurrentSlug, fields: fields }]).then(function (res) {
-      edSaving = false;
-      var btn = document.getElementById('ed-save');
-      if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '💾 保存并发布'; }
+      release();
       if (res.ok) { flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edClearDraft(); edSetDirty(false); edReloadData(); }
       else if (res.error === 'server-not-configured') { flash('编辑管线未开通：请在设置中心配置 GitHub PAT', true); toast('GH_PAT 未配置，无法保存发布', 'err'); }
       else { flash('失败：' + (res.error || '未知'), true); toast('保存失败：' + (res.error || ''), 'err'); }
     }).catch(function () {
-      edSaving = false;
-      var btn = document.getElementById('ed-save');
-      if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '💾 保存并发布'; }
+      release();
       flash('网络错误，请重试', true);
     });
   });
 
   // ── Group save ──
   document.getElementById('g-save').addEventListener('click', function () {
+    if (gSaving) { toast('正在保存中，请稍候…', 'info'); return; }
     if (!gGroupSel.value) { flash('请选择分组', true); return; }
     var fields = {};
     var nm = document.getElementById('g-name').value.trim(); if (nm) fields.name = nm;
     var moq = document.getElementById('g-moq').value.trim(); if (moq) fields.moq = moq;
     if (!Object.keys(fields).length) { flash('没有要保存的修改', true); return; }
+    gSaving = true;
+    gSave.disabled = true; gSave.classList.add('loading'); gSave.textContent = '保存中…';
+    var grelease = function () { gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; };
     flash('正在提交…');
     postOps([{ action: 'group', group: gGroupSel.value, fields: fields }]).then(function (res) {
-      gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置';
+      grelease();
       if (res.ok) { flash('已发布：' + res.message); }
       else if (res.error === 'server-not-configured') { flash('自动发布未开通：需配置 GitHub PAT（GH_PAT）后才能保存上线', true); }
       else { flash('失败：' + (res.error || '未知'), true); }
-    }).catch(function () { gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; flash('网络错误', true); });
+    }).catch(function () { grelease(); flash('网络错误', true); });
   });
 
   // ── Inquiries 全渠道工作台 v2 (PIN-gated) ──
   var SB_URL = 'https://qfecxuuvgbqqruzfgrpl.supabase.co';
   var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZWN4dXV2Z2JxcXJ1emZncnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODgwMDEsImV4cCI6MjEwMDU2NDAwMX0.l_nwv0I1ZogH34_2EFBcJKyMMkYAzWbOc3cEkkFUMp0';
-  var PIN = 'mili2026';
+  var PIN = ''; // v9: 访问密码校验移至 Worker（/api/inquiry/unlock），前端不再存放明文
   var inqChan = { website: { i: '🌐', l: '网站表单' }, whatsapp: { i: '💬', l: 'WhatsApp' }, email: { i: '✉️', l: '邮件' }, chat: { i: '💭', l: '在线聊天' }, phone: { i: '📞', l: '电话' } };
   var inqSts = { new: { l: '新询盘', c: 's-new' }, contacted: { l: '已联系', c: 's-contacted' }, quoted: { l: '已报价', c: 's-quoted' }, negotiating: { l: '洽谈中', c: 's-negotiating' }, won: { l: '已成交', c: 's-won' }, lost: { l: '已流失', c: 's-lost' }, deleted: { l: '已归档', c: 's-del' } };
-  var inqState = { rows: [], view: 'list', page: 0, size: 25, sel: {}, f: { chan: '', sts: '', pri: '', range: '', q: '' } };
+  var inqState = { rows: [], view: 'list', page: 0, size: 25, sel: {}, f: { chan: '', sts: '', pri: '', range: '', q: '', owner: '' }, sort: { key: '', dir: 1 } };
   var inqTplDefs = [
     { t: '💬 WhatsApp 首询回复', body: 'Hi {name}, thanks for reaching out to Mili Packaging!\n\nQuick response to your inquiry:\n• Product: {product}\n• MOQ: from 100 pcs (watch boxes from 50)\n• Free 3D mockup within 48h\n• Free structural samples in 3–5 days\n\nMay I confirm the quantity and target delivery date? I will send a formal quotation today.' },
     { t: '✉️ 邮件报价跟进', body: 'Dear {name},\n\nThank you for your inquiry about {product} ({qty}).\n\nWe are finalizing your quotation and will send it within 24h, including tier pricing for 100 / 1,000 / 5,000 pcs.\n\nBest regards,\nMili Packaging' },
@@ -2902,7 +3090,9 @@
     return fetch(SB_URL + path, opts).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
   }
   function inqAge(r) { return (Date.now() - new Date(r.created_at).getTime()) / 36e5; }
-  function inqT(s) { var d = new Date(s); return isNaN(d.getTime()) ? '' : String(s).replace('T', ' ').slice(0, 16); }
+  function inqT(s) { var d = new Date(s); if (isNaN(d.getTime())) return ''; var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+  // SLA 基于最后活动时间（updated_at），非创建时间；范围筛选仍用 created_at
+  function inqSlaAge(r) { var base = r.updated_at || r.created_at; if (!base) return 0; var t = new Date(base).getTime(); return isNaN(t) ? 0 : (Date.now() - t) / 36e5; }
   function inqFind(id) { for (var i = 0; i < inqState.rows.length; i++) if (inqState.rows[i].id === id) return inqState.rows[i]; return null; }
   function inqWaLink(phone) { var d = String(phone || '').replace(/[^\d]/g, ''); return d ? 'https://wa.me/' + d + '?text=' + encodeURIComponent('Hi, following up on your packaging inquiry with Mili Packaging.') : '#'; }
   function inqLoad() {
@@ -2917,17 +3107,27 @@
       .catch(function (e) { flash('更新失败：' + e.message, true); });
   }
 
-  // 解锁
+  // 解锁（PIN 校验在 Worker：/api/inquiry/unlock，成功后下发 HttpOnly cookie）
   document.getElementById('unlockBtn').addEventListener('click', function () {
     var ub = this; if (ub.disabled) return;
-    if (document.getElementById('pin').value !== PIN) { flash('密码不正确', true); return; }
-    ub.disabled = true; ub.textContent = '加载中…';
-    inqLoad().then(function () {
-      ub.disabled = false; ub.textContent = '解锁查看';
-      var lock = document.querySelector('#inquiryArea .lock'); if (lock) lock.style.display = 'none';
-      el('inquiryDash').classList.remove('hide');
-      inqBind();
-    }).catch(function () { ub.disabled = false; ub.textContent = '解锁查看'; flash('询盘读取失败：Supabase 不可达，或表结构未升级（需先执行 SQL 迁移）', true); });
+    var pinVal = document.getElementById('pin').value;
+    ub.disabled = true; ub.textContent = '验证中…';
+    fetch('/api/inquiry/unlock', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin: pinVal }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) {
+          flash(d.error === 'bad-pin' ? '访问密码不正确' : '解锁失败：' + (d.error || '未知'), true);
+          ub.disabled = false; ub.textContent = '解锁查看';
+          return;
+        }
+        inqLoad().then(function () {
+          ub.disabled = false; ub.textContent = '解锁查看';
+          var lock = document.querySelector('#inquiryArea .lock'); if (lock) lock.style.display = 'none';
+          el('inquiryDash').classList.remove('hide');
+          inqBind();
+        }).catch(function () { ub.disabled = false; ub.textContent = '解锁查看'; flash('询盘读取失败：Supabase 不可达，或表结构未升级（需先执行 SQL 迁移）', true); });
+      })
+      .catch(function () { ub.disabled = false; ub.textContent = '解锁查看'; flash('解锁请求失败：网络异常', true); });
   });
 
   // 一次性绑定
@@ -2975,17 +3175,29 @@
   }
 
   // ── 筛选栏（仅构建一次） ──
+  function inqOwnerList() {
+    var seen = {}, out = [];
+    inqState.rows.forEach(function (r) { var o = (r.owner || '').trim(); if (o && !seen[o]) { seen[o] = 1; out.push(o); } });
+    return out;
+  }
   function inqRenderFilters() {
     var ch = '<select id="inq-f-chan"><option value="">全部渠道</option>' + Object.keys(inqChan).map(function (k) { return '<option value="' + k + '">' + inqChan[k].i + ' ' + inqChan[k].l + '</option>'; }).join('') + '</select>';
     var st = '<select id="inq-f-sts"><option value="">全部状态</option>' + Object.keys(inqSts).map(function (k) { return '<option value="' + k + '">' + inqSts[k].l + '</option>'; }).join('') + '</select>';
     var pr = '<select id="inq-f-pri"><option value="">全部优先级</option><option value="high">🔥 高优先级</option><option value="normal">普通</option></select>';
     var rg = '<select id="inq-f-range"><option value="">全部时间</option><option value="7">近 7 天</option><option value="30">近 30 天</option><option value="month">本月</option></select>';
-    el('inqFilters').innerHTML = ch + st + pr + rg + '<input type="text" class="inq-q" id="inq-f-q" placeholder="🔍 搜索客户 / 邮箱 / 产品 / 需求…" />';
-    var ids = ['inq-f-chan', 'inq-f-sts', 'inq-f-pri', 'inq-f-range'];
+    var ow = '<select id="inq-f-owner"><option value="">全部跟进人</option>' + inqOwnerList().map(function (o) { return '<option value="' + esc(o) + '">' + esc(o) + '</option>'; }).join('') + '</select>';
+    el('inqFilters').innerHTML = ch + st + pr + rg + ow + '<input type="text" class="inq-q" id="inq-f-q" placeholder="🔍 搜索客户 / 邮箱 / 产品 / 需求…" />';
+    var ids = ['inq-f-chan', 'inq-f-sts', 'inq-f-pri', 'inq-f-range', 'inq-f-owner'];
     ids.forEach(function (id) {
       el(id).addEventListener('change', function () { inqState.f[id.split('-')[2]] = this.value; inqState.page = 0; inqRender(); });
     });
-    el('inq-f-q').addEventListener('input', function () { inqState.f.q = this.value; inqState.page = 0; inqRender(); });
+    // 300ms 防抖
+    var qDeb = null;
+    el('inq-f-q').addEventListener('input', function () {
+      var self = this;
+      clearTimeout(qDeb);
+      qDeb = setTimeout(function () { inqState.f.q = self.value; inqState.page = 0; inqRender(); }, 300);
+    });
   }
   function inqFiltered() {
     var f = inqState.f;
@@ -2993,6 +3205,7 @@
       if (f.sts && r.status !== f.sts) return false;
       if (!f.sts && r.status === 'deleted') return false;
       if (f.chan && r.channel !== f.chan) return false;
+      if (f.owner && (r.owner || '') !== f.owner) return false;
       if (f.pri && r.priority !== f.pri) return false;
       if (f.range) { var h = inqAge(r); if (f.range === '7' && h > 168) return false; if (f.range === '30' && h > 720) return false; if (f.range === 'month') { var d = new Date(r.created_at), n = new Date(); if (d.getFullYear() !== n.getFullYear() || d.getMonth() !== n.getMonth()) return false; } }
       if (f.q) { var q = f.q.toLowerCase(); var hay = ((r.name || '') + ' ' + (r.email || '') + ' ' + (r.phone || '') + ' ' + (r.company || '') + ' ' + (r.product_type || '') + ' ' + (r.message || '')).toLowerCase(); if (hay.indexOf(q) < 0) return false; }
@@ -3001,15 +3214,31 @@
   }
   function inqRenderTable() {
     var rows = inqFiltered(), total = rows.length, size = inqState.size, page = inqState.page;
+    // 列排序（点击表头切换，默认按创建时间倒序）
+    if (inqState.sort.key) {
+      var sk = inqState.sort.key, dir = inqState.sort.dir;
+      rows.sort(function (a, b) {
+        var va, vb;
+        if (sk === 'created_at' || sk === 'follow_up_at') { va = new Date(a[sk] || 0).getTime(); vb = new Date(b[sk] || 0).getTime(); }
+        else if (sk === 'value_usd') { va = parseFloat(a.value_usd) || 0; vb = parseFloat(b.value_usd) || 0; }
+        else if (sk === 'sla') { va = inqSlaAge(a); vb = inqSlaAge(b); }
+        else { va = String(a[sk] == null ? '' : a[sk]).toLowerCase(); vb = String(b[sk] == null ? '' : b[sk]).toLowerCase(); }
+        if (va === vb) return 0;
+        return (va > vb ? 1 : -1) * dir;
+      });
+    } else {
+      rows.sort(function (a, b) { return new Date(b.created_at || 0) - new Date(a.created_at || 0); });
+    }
     var pages = Math.max(1, Math.ceil(total / size));
     if (page >= pages) { page = pages - 1; inqState.page = page; }
     var slice = rows.slice(page * size, (page + 1) * size);
-    var thead = '<tr><th style="width:26px"><input type="checkbox" id="inq-all" /></th><th>渠道</th><th>时间 / SLA</th><th>客户</th><th>联系方式</th><th>产品</th><th>数量</th><th>需求</th><th>状态</th><th>优先级</th><th>跟进人</th><th>下次跟进</th><th>金额$</th><th>操作</th></tr>';
+    var sortMark = function (k) { return inqState.sort.key === k ? (inqState.sort.dir === 1 ? ' ▲' : ' ▼') : ''; };
+    var thead = '<tr><th style="width:26px"><input type="checkbox" id="inq-all" /></th><th data-sort="channel">渠道' + sortMark('channel') + '</th><th data-sort="created_at">时间 / SLA' + sortMark('created_at') + '</th><th data-sort="name">客户' + sortMark('name') + '</th><th>联系方式</th><th data-sort="product_type">产品</th><th data-sort="quantity">数量</th><th>需求</th><th data-sort="status">状态' + sortMark('status') + '</th><th data-sort="priority">优先级</th><th data-sort="owner">跟进人</th><th data-sort="follow_up_at">下次跟进</th><th data-sort="value_usd">金额$' + sortMark('value_usd') + '</th><th>操作</th></tr>';
     var html = '';
     slice.forEach(function (r) {
       var ch = inqChan[r.channel] || { i: '🌐', l: r.channel || '?' };
       var st = inqSts[r.status] || inqSts.new;
-      var age = inqAge(r);
+      var age = inqSlaAge(r);
       var sla = age > 48 ? '<span class="inq-st s-lost">超48h</span>' : (age > 24 ? '<span class="inq-st s-negotiating">超24h</span>' : (age > 4 ? '<span class="inq-st s-quoted">' + Math.round(age) + 'h</span>' : '<span class="inq-st s-won">新</span>'));
       var fu = r.follow_up_at ? '<span style="color:' + (new Date(r.follow_up_at).getTime() <= Date.now() ? 'var(--bad)' : 'var(--ok)') + '">' + inqT(r.follow_up_at) + '</span>' : '—';
       var contact = (r.email ? '<a href="mailto:' + esc(r.email) + '" style="color:var(--color-primary)">✉ ' + esc(r.email) + '</a>' + (r.phone ? '<br/>' : '') : '') + (r.phone ? '<a href="' + inqWaLink(r.phone) + '" target="_blank" rel="noopener" style="color:var(--ok)">💬 ' + esc(r.phone) + '</a>' : '');
@@ -3031,6 +3260,17 @@
         '</tr>';
     });
     el('inqTable').querySelector('thead').innerHTML = thead;
+    var ths = el('inqTable').querySelectorAll('th[data-sort]');
+    for (var ti = 0; ti < ths.length; ti++) {
+      ths[ti].style.cursor = 'pointer';
+      ths[ti].title = '点击排序';
+      ths[ti].addEventListener('click', function () {
+        var k = this.getAttribute('data-sort');
+        if (inqState.sort.key === k) { inqState.sort.dir = -inqState.sort.dir; } else { inqState.sort.key = k; inqState.sort.dir = 1; }
+        inqState.page = 0;
+        inqRenderTable();
+      });
+    }
     el('inqTable').querySelector('tbody').innerHTML = html || '<tr><td colspan="14" style="text-align:center;color:var(--color-text-dim);padding:24px">没有符合条件的询盘</td></tr>';
     var all = el('inq-all');
     if (all) all.addEventListener('change', function () { slice.forEach(function (r) { inqState.sel[r.id] = all.checked; }); inqRenderSelBar(); });
@@ -3042,14 +3282,23 @@
       var nodes = document.querySelectorAll(cls);
       for (var i = 0; i < nodes.length; i++) nodes[i].addEventListener(ev, fn);
     };
-    bind('.inq-st-sel', 'change', function () { inqPatch(this.getAttribute('data-id'), { status: this.value }); });
+    bind('.inq-st-sel', 'change', function () {
+      var id = this.getAttribute('data-id'), nv = this.value, r = inqFind(id);
+      var needConfirm = nv === 'won' || nv === 'lost' || nv === 'deleted';
+      if (needConfirm && r && r.status !== nv) {
+        var nm = { won: '成交', lost: '流失', deleted: '归档' };
+        if (!confirm('确认将该询盘标记为「' + nm[nv] + '」？此操作影响转化率统计。')) { this.value = r.status; return; }
+      }
+      inqPatch(id, { status: nv });
+    });
     bind('.inq-owner', 'change', function () { inqPatch(this.getAttribute('data-id'), { owner: this.value }); });
     bind('.inq-fu', 'change', function () { var v = this.value; inqPatch(this.getAttribute('data-id'), { follow_up_at: v ? new Date(v).toISOString() : null }); });
     bind('.inq-val', 'change', function () { var v = parseFloat(this.value); inqPatch(this.getAttribute('data-id'), { value_usd: isNaN(v) ? null : v }); });
     bind('.inq-reply', 'click', function () { inqReply(inqFind(this.getAttribute('data-id'))); });
     bind('.inq-arch', 'click', function () { var id = this.getAttribute('data-id'); if (confirm('归档该询盘？（软删除，可在状态筛选中查看）')) inqPatch(id, { status: 'deleted' }); });
     bind('.inq-profile', 'click', function () { inqOpenDrawer(inqFind(this.getAttribute('data-id'))); });
-    el('inqPager').innerHTML = '<span style="margin-right:auto">共 ' + total + ' 条 · 第 ' + (page + 1) + '/' + pages + ' 页</span>' +
+    var capNote = inqState.rows.length >= 500 ? ' <span class="hint">（当前载入最近 500 条）</span>' : '';
+    el('inqPager').innerHTML = '<span style="margin-right:auto">共 ' + total + ' 条 · 第 ' + (page + 1) + '/' + pages + ' 页' + capNote + '</span>' +
       '<button class="btn btn-ghost btn-sm" id="inq-p-prev"' + (page === 0 ? ' disabled' : '') + '>‹ 上一页</button>' +
       '<button class="btn btn-ghost btn-sm" id="inq-p-next"' + (page >= pages - 1 ? ' disabled' : '') + '>下一页 ›</button>';
     var pv = el('inq-p-prev'); if (pv) pv.addEventListener('click', function () { if (inqState.page > 0) { inqState.page--; inqRenderTable(); } });
@@ -3188,14 +3437,44 @@
   }
 
   // ── 数据报表（渠道 / 状态漏斗 / 30 天趋势 / 产品 / 客户） ──
+  var inqReportRange = '';
+  function csvCell(v) {
+    var s = String(v == null ? '' : v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s; // 防 Excel 公式注入
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  function inqExportCsv(rows) {
+    var chanName = function (c) { var ch = inqChan[c] || {}; return ch.l || c; };
+    var stsName = function (s) { var st = inqSts[s] || {}; return st.l || s; };
+    var head = ['渠道', '时间', '客户', '邮箱', '电话', '公司', '产品', '数量', '状态', '优先级', '跟进人', '下次跟进', '金额USD', '需求'];
+    var lines = ['\uFEFF' + head.map(csvCell).join(',')];
+    rows.forEach(function (r) {
+      lines.push([chanName(r.channel), inqT(r.created_at), r.name || '', r.email || '', r.phone || '', r.company || '',
+        r.product_type || '', r.quantity || '', stsName(r.status), r.priority === 'high' ? '高' : '普通', r.owner || '',
+        r.follow_up_at ? inqT(r.follow_up_at) : '', r.value_usd || '', String(r.message || '').replace(/\s+/g, ' ')].map(csvCell).join(','));
+    });
+    var a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(lines.join('\n'));
+    a.download = 'mili-inquiries-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    toast('已导出 ' + rows.length + ' 条询盘', 'ok');
+  }
   function inqRenderReport() {
-    var rows = inqState.rows.filter(function (r) { return r.status !== 'deleted'; }), now = new Date();
-    var chan = {};
-    rows.forEach(function (r) { var c = r.channel || 'website'; chan[c] = (chan[c] || 0) + 1; });
+    var now = new Date();
+    var rows = inqState.rows.filter(function (r) { return r.status !== 'deleted'; });
+    if (inqReportRange === '30') { rows = rows.filter(function (r) { return inqAge(r) <= 720; }); }
+    else if (inqReportRange === 'month') { rows = rows.filter(function (r) { var d = new Date(r.created_at), n = new Date(); return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth(); }); }
+    var tool = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">' +
+      '<span class="hint" style="margin:0">报表范围：</span>' +
+      '<select id="inq-r-range" style="width:auto;margin:0;padding:6px 10px;font-size:12px"><option value="">全部时间</option><option value="30"' + (inqReportRange === '30' ? ' selected' : '') + '>近 30 天</option><option value="month"' + (inqReportRange === 'month' ? ' selected' : '') + '>本月</option></select>' +
+      '<button class="btn btn-ghost btn-sm" id="inq-r-export" style="margin-left:auto">📥 导出 CSV（' + rows.length + ' 条）</button></div>';
+    var chan = {}, chanWon = {};
+    rows.forEach(function (r) { var c = r.channel || 'website'; chan[c] = (chan[c] || 0) + 1; if (r.status === 'won') chanWon[c] = (chanWon[c] || 0) + 1; });
     var chanMax = Math.max.apply(null, Object.keys(chan).map(function (c) { return chan[c]; }).concat([1]));
     var chHtml = Object.keys(chan).sort(function (a, b) { return chan[b] - chan[a]; }).map(function (c) {
       var ch = inqChan[c] || { i: '🌐', l: c };
-      return '<div class="inq-bar"><span class="bar-label">' + ch.i + ' ' + ch.l + ' <b>' + chan[c] + '</b></span><div style="flex:1"><div class="bar-fill" style="width:' + Math.round(chan[c] / chanMax * 100) + '%"></div></div></div>';
+      var w = chanWon[c] || 0, pct = chan[c] ? Math.round(w / chan[c] * 100) : 0;
+      return '<div class="inq-bar"><span class="bar-label">' + ch.i + ' ' + ch.l + ' <b>' + chan[c] + '</b></span><div style="flex:1"><div class="bar-fill" style="width:' + Math.round(chan[c] / chanMax * 100) + '%"></div></div><span style="font-size:11px;color:var(--color-text-dim);min-width:96px;text-align:right">成交 ' + w + ' · ' + pct + '%</span></div>';
     }).join('');
     var sts = {};
     rows.forEach(function (r) { var s = r.status || 'new'; sts[s] = (sts[s] || 0) + 1; });
@@ -3230,13 +3509,33 @@
       var c = cust[k];
       return '<div class="inq-bar"><span class="bar-label">' + esc(c.n || k) + ' <b>' + c.c + '</b></span><div style="flex:1"><div class="bar-fill" style="width:' + Math.round(c.c / cMax * 100) + '%"></div></div><span style="font-size:11px;color:var(--color-text-dim);min-width:60px;text-align:right">$' + Math.round(c.val).toLocaleString() + '</span></div>';
     }).join('');
-    el('inqReportView').innerHTML = '<div class="inq-report-grid">' +
-      '<div class="card"><h3>渠道分布<span style="font-size:11px;color:var(--color-text-dim)">' + rows.length + ' 条</span></h3>' + (chHtml || '<p class="hint">暂无数据</p>') + '</div>' +
+    // 跟进人漏斗
+    var own = {};
+    rows.forEach(function (r) {
+      var o = (r.owner || '未指派').trim();
+      if (!own[o]) own[o] = { total: 0, won: 0, lost: 0, pending: 0 };
+      own[o].total++;
+      if (r.status === 'won') own[o].won++;
+      else if (r.status === 'lost') own[o].lost++;
+      else if (r.status !== 'deleted') own[o].pending++;
+    });
+    var ownMax = Math.max.apply(null, Object.keys(own).map(function (o) { return own[o].total; }).concat([1]));
+    var ownHtml = Object.keys(own).sort(function (a, b) { return own[b].total - own[a].total; }).map(function (o) {
+      var s = own[o];
+      return '<div class="inq-bar"><span class="bar-label">' + esc(o) + ' <b>' + s.total + '</b></span><div style="flex:1"><div class="bar-fill" style="width:' + Math.round(s.total / ownMax * 100) + '%"></div></div><span style="font-size:11px;color:var(--color-text-dim);min-width:150px;text-align:right">成交 ' + s.won + ' · 流失 ' + s.lost + ' · 待跟进 ' + s.pending + '</span></div>';
+    }).join('');
+    el('inqReportView').innerHTML = tool + '<div class="inq-report-grid">' +
+      '<div class="card"><h3>渠道分布（含成交转化率）<span style="font-size:11px;color:var(--color-text-dim)">' + rows.length + ' 条</span></h3>' + (chHtml || '<p class="hint">暂无数据</p>') + '</div>' +
       '<div class="card"><h3>状态漏斗（转化追踪）</h3>' + (stHtml || '<p class="hint">暂无数据</p>') + '</div>' +
       '<div class="card"><h3>近 30 天趋势</h3><div style="display:flex;gap:2px;align-items:flex-end;height:76px">' + dayHtml + '</div></div>' +
       '<div class="card"><h3>产品 Top 10</h3>' + (pHtml || '<p class="hint">暂无数据</p>') + '</div>' +
       '<div class="card" style="grid-column:1/-1"><h3>客户 Top 10（询盘次数 + 金额）</h3>' + (cHtml || '<p class="hint">暂无数据</p>') + '</div>' +
+      '<div class="card" style="grid-column:1/-1"><h3>跟进人漏斗（每人成交 / 流失 / 待跟进）</h3>' + (ownHtml || '<p class="hint">暂无数据</p>') + '</div>' +
       '</div>';
+    var rsel = el('inq-r-range');
+    if (rsel) rsel.addEventListener('change', function () { inqReportRange = this.value; inqRenderReport(); });
+    var rex = el('inq-r-export');
+    if (rex) rex.addEventListener('click', function () { inqExportCsv(rows); });
   }
 
   // ── Ticket → mail ──
@@ -3996,8 +4295,7 @@
 
   document.getElementById('seo-export').addEventListener('click', function () {
     if (!window.__seoRows) { toast('请先刷新评分', 'err'); return; }
-    var esc = function (x) { return String(x).replace(/,/g, ' '); };
-    var csv = '\uFEFF#,产品,分组,得分,扣分项\n' + window.__seoRows.map(function (r, i) { return [i + 1, esc(r.name), r.g, r.score, esc(r.detail.join(';'))].join(','); }).join('\n');
+    var csv = '\uFEFF' + ['#', '产品', '分组', '得分', '扣分项'].map(csvCell).join(',') + '\n' + window.__seoRows.map(function (r, i) { return [i + 1, r.name, r.g, r.score, r.detail.join(';')].map(csvCell).join(','); }).join('\n');
     var a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv); a.download = 'mili-seo-audit.csv'; a.click();
     toast('CSV 已导出（含序号）', 'ok');
   });
@@ -4244,19 +4542,27 @@
     if (!sel.length) { toast('请先勾选产品', 'err'); return; }
     var status = document.getElementById('b-status').value;
     var moq = document.getElementById('b-moq').value.trim();
-    var mult = parseFloat(document.getElementById('b-price').value);
-    if (!status && !moq && !(mult && !isNaN(mult))) { toast('请设置至少一个批量值', 'err'); return; }
+    var priceInput = document.getElementById('b-price').value.trim();
+    var mult = parseFloat(priceInput);
+    var hasMult = priceInput !== '' && !isNaN(mult);
+    if (!status && !moq && !hasMult) { toast('请设置至少一个批量值', 'err'); return; }
+    var skipped = 0;
     var ops = sel.map(function (p) {
       var f = {};
       if (status) f.status = status;
       if (moq) f.moq = moq;
-      if (mult && !isNaN(mult)) f.price = Math.round(p.price * mult * 100) / 100;
+      if (hasMult) {
+        // 仅对纯数字价格生效；区间价/带贸易条款的价格跳过，避免破坏格式
+        if (/^[\d.]+$/.test(String(p.price).trim())) { f.price = Math.round(parseFloat(p.price) * mult * 100) / 100; }
+        else { skipped++; }
+      }
       return { action: 'product', group: p.gslug, slug: p.slug, fields: f };
-    });
+    }).filter(function (op) { return Object.keys(op.fields).length; });
+    if (!ops.length) { toast('没有可应用的修改（价格乘数跳过了 ' + skipped + ' 个区间价产品）', 'err'); return; }
     if (btn) { btn.disabled = true; btn.classList.add('loading'); btn.textContent = '提交中…'; }
     postOps(ops).then(function (res) {
       if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '批量提交'; }
-      if (res.ok) { toast('已提交 ' + sel.length + ' 个产品，约 2 分钟自动部署', 'ok'); }
+      if (res.ok) { toast('已提交 ' + ops.length + ' 个产品' + (skipped ? '（跳过 ' + skipped + ' 个区间价产品）' : '') + '，约 2 分钟自动部署', 'ok'); }
       else if (res.error === 'server-not-configured') { toast('编辑管线未开通：需配置 GitHub PAT（GH_PAT）', 'err'); }
       else { toast('失败：' + (res.error || '未知'), 'err'); }
     }).catch(function () { if (btn) { btn.disabled = false; btn.classList.remove('loading'); btn.textContent = '批量提交'; } toast('网络错误', 'err'); });
@@ -4275,36 +4581,23 @@
   }
   document.getElementById('batch-load').addEventListener('click', batchLoad);
 
-  // V6: 保存按钮 loading 态（防重复提交：提交完成前保持禁用，8s 兜底防卡死）
-  var edSave = document.getElementById('ed-save');
-  var edSaving = false;
-  if (edSave) {
-    edSave.addEventListener('click', function () {
-      if (edSaving) return;
-      if (!edCurrentGroup || !edCurrentSlug) return; // 未选产品，由提交 listener 提示
-      edSaving = true;
-      edSave.disabled = true; edSave.classList.add('loading'); edSave.textContent = '发布中…';
-      setTimeout(function () { if (edSaving) { edSaving = false; edSave.disabled = false; edSave.classList.remove('loading'); edSave.textContent = '💾 保存并发布'; } }, 8000);
-    });
-  }
-  var gSave = document.getElementById('g-save');
-  var gSaving = false;
-  if (gSave) {
-    gSave.addEventListener('click', function () {
-      if (gSaving) return;
-      if (!gGroupSel.value) return; // 校验失败由提交 listener 提示，不进入 loading
-      gSaving = true;
-      gSave.disabled = true; gSave.classList.add('loading'); gSave.textContent = '保存中…';
-      setTimeout(function () { if (gSaving) { gSaving = false; gSave.disabled = false; gSave.classList.remove('loading'); gSave.textContent = '保存分组设置'; } }, 8000);
-    });
-  }
-
   // Start dashboard sync engine after all bindings are defined
   var savedIv = null; try { savedIv = localStorage.getItem('mili-sync-interval'); } catch (e) {}
   if (savedIv) el('dash-interval').value = savedIv;
   scheduleSync();
   refreshDash(false);
   syncSidebar('dash');
+
+  // 若会话已解锁过询盘中心（HttpOnly cookie），刷新后自动解锁
+  fetch('/api/session').then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.inquiryUnlocked) {
+      var lock = document.querySelector('#inquiryArea .lock');
+      if (lock) lock.style.display = 'none';
+      el('inquiryDash').classList.remove('hide');
+      if (typeof inqBind === 'function') inqBind();
+      inqLoad();
+    }
+  }).catch(function () {});
 })();
 </script>
 </div>
