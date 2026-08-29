@@ -417,6 +417,21 @@
   .topbar-avatar-menu-item { display:block; width:100%; text-align:left; padding:7px 10px; font-size:12.5px; color:var(--color-text); background:none; border:none; border-radius:4px; cursor:pointer; white-space:nowrap; }
   .topbar-avatar-menu-item:hover { background:var(--color-surface-2); }
   .topbar-avatar-menu-item.danger { color:var(--bad); }
+  /* v19: 经营总览（KPI + SVG 可视化） */
+  .v19-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+  .v19-kpi { background:var(--color-surface-2); border:1px solid var(--color-border); border-radius:8px; padding:10px 12px; position:relative; overflow:hidden; }
+  .v19-kpi::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--color-primary); opacity:.7; }
+  .v19-kpi .k-label { font-size:11px; color:var(--color-text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .v19-kpi .k-val { font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.3; }
+  .v19-kpi .k-sub { font-size:10.5px; color:var(--color-text-secondary); }
+  .v19-kpi .k-sub .up { color:var(--ok); } .v19-kpi .k-sub .dn { color:var(--bad); }
+  .v19-r.on { background:var(--color-primary); color:#000; border-color:var(--color-primary); }
+  .v19-bars { display:flex; flex-direction:column; gap:6px; }
+  .v19-bar-row { display:flex; align-items:center; gap:8px; font-size:11.5px; }
+  .v19-bar-row .b-name { min-width:80px; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--color-text-secondary); }
+  .v19-bar-row .b-track { flex:1; height:10px; background:var(--color-surface-2); border-radius:5px; overflow:hidden; }
+  .v19-bar-row .b-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,var(--color-primary),rgba(201,162,39,.45)); min-width:2px; }
+  .v19-bar-row .b-val { min-width:34px; text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
 
   /* SVG 图标菜单项 */
   .sb-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
@@ -1005,9 +1020,10 @@
           <div class="topbar-avatar" id="user-avatar" title="账户菜单">M</div>
           <div class="topbar-avatar-menu" id="user-menu">
             <div style="padding:8px 10px 8px;border-bottom:1px solid var(--color-border);margin-bottom:4px">
-              <div style="font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px"><span class="sb-status-dot" style="width:7px;height:7px;display:inline-block"></span>管理员 · 已登录</div>
+              <div style="font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px"><span class="sb-status-dot" style="width:7px;height:7px;display:inline-block"></span><span id="user-menu-name">管理员</span> · <span id="user-menu-role">已登录</span></div>
               <div style="font-size:11px;color:var(--color-text-secondary)">mili-packaging.com</div>
             </div>
+            <button class="topbar-avatar-menu-item" id="user-menu-accounts" style="display:none" onclick="document.querySelector('[data-sb=config]').click();setTimeout(function(){var p=document.getElementById('acc-panel');if(p){p.scrollIntoView({behavior:'smooth'});}},200)">👥 账号管理</button>
             <button class="topbar-avatar-menu-item" onclick="document.querySelector('[data-sb=config]').click()">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>设置中心
             </button>
@@ -1119,6 +1135,33 @@
         </label>
       </div>
       <p class="hint" style="margin:8px 0 0">数据源：GitHub Actions/提交 · Supabase 询盘 · 站点健康检查。切走标签页自动暂停，切回立即刷新。</p>
+    </div>
+    <div class="card" id="v19-zone" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <h3 style="margin:0">📊 经营总览 <span class="v5-src" id="v19-stamp"></span></h3>
+        <span style="margin-left:auto;display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm v19-r" data-r="today">今日</button>
+          <button class="btn btn-ghost btn-sm v19-r" data-r="week">近 7 天</button>
+          <button class="btn btn-ghost btn-sm v19-r on" data-r="month">近 30 天</button>
+        </span>
+      </div>
+      <div class="v19-kpis" id="v19-kpis">加载中…</div>
+      <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>访客趋势（近 14 天）</h4><div id="v19-trend-v" style="height:130px">—</div></div>
+        <div class="card" style="margin:0"><h4>询盘 / 订单趋势（近 14 天）</h4><div id="v19-trend-i" style="height:130px">—</div></div>
+        <div class="card" style="margin:0"><h4>流量来源</h4><div id="v19-sources" style="height:130px">—</div></div>
+      </div>
+      <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>国家分布 TOP</h4><div id="v19-countries">—</div></div>
+        <div class="card" style="margin:0"><h4>设备分布</h4><div id="v19-devices">—</div></div>
+        <div class="card" style="margin:0"><h4>询盘渠道对比</h4><div id="v19-channels">—</div></div>
+      </div>
+      <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>产品询盘 TOP</h4><div id="v19-products">—</div></div>
+        <div class="card" style="margin:0"><h4>关键词搜索 TOP</h4><div id="v19-keywords">—</div></div>
+        <div class="card" style="margin:0"><h4>客户生命周期</h4><div id="v19-lifecycle">—</div></div>
+      </div>
+      <p class="hint" id="v19-hint" style="margin:10px 0 0">埋点未启用时流量卡显示引导；业务数据（询盘/订单/客户/库存）实时。</p>
     </div>
     <div class="grid">
       <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
@@ -1927,6 +1970,20 @@
       <h3>连通性测试结果</h3>
       <div id="configTestArea"><p class="hint">点击「一键测试连通性」验证各已配置项是否真实可用（GA4/GSC 会实际调用 API，PushPlus 会发送测试消息到微信）。</p></div>
     </div>
+    <!-- v19: 账号管理（RBAC，owner 专属） -->
+    <div class="card" id="acc-panel" style="margin-top:12px;display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <h3>👥 账号管理 <span class="hint" style="font-weight:400">（多账号 + 角色权限，仅所有者可见）</span></h3>
+        <button class="btn btn-primary btn-sm" id="acc-add-btn">＋ 新增账号</button>
+      </div>
+      <p class="hint" id="acc-hint" style="margin:6px 0 10px;line-height:1.7">角色权限：<b>owner</b> 全部+账号管理 · <b>admin</b> 业务+营销 · <b>operator</b> 业务读写 · <b>viewer</b> 只读。密码使用 PBKDF2-SHA256（10 万次迭代）加密存储。</p>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+          <thead><tr style="text-align:left;color:var(--color-text-secondary)"><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">账号</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">昵称</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">角色</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">状态</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">最近登录</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">操作</th></tr></thead>
+          <tbody id="acc-tbody"><tr><td colspan="6" class="hint">加载中…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
     <!-- 兼容旧版 configArea -->
     <div id="configArea" style="display:none"></div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px" class="config-two">
@@ -2025,6 +2082,7 @@
         <button class="inq-tab active" data-cv="list">📇 客户列表</button>
       </div>
       <div class="inq-actions">
+        <button class="btn btn-ghost btn-sm" id="cust-campaign-btn">📣 营销活动</button>
         <button class="btn btn-ghost btn-sm" id="cust-refresh-btn">⟳ 刷新</button>
         <button class="btn btn-primary btn-sm" id="cust-add-btn">＋ 新增客户</button>
       </div>
@@ -2040,6 +2098,7 @@
         <div class="row"><div><label>客户姓名 *</label><input id="cust-name" /></div><div><label>邮箱</label><input id="cust-email" /></div></div>
         <div class="row"><div><label>电话</label><input id="cust-phone" /></div><div><label>国家</label><input id="cust-country" /></div></div>
         <div class="row"><div><label>公司</label><input id="cust-company" /></div><div><label>来源渠道</label><select id="cust-source"><option value="">—</option><option value="website">网站</option><option value="whatsapp">WhatsApp</option><option value="email">邮件</option><option value="chat">聊天</option><option value="phone">电话</option><option value="referral">转介绍</option></select></div></div>
+        <label>标签（逗号分隔，如：大客户,需打样,价格敏感）</label><input id="cust-tags" placeholder="大客户,需打样" />
         <label>备注</label><textarea id="cust-note" rows="2" placeholder="客户偏好、采购周期、历史沟通要点等"></textarea>
         <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
           <button class="btn btn-ghost btn-sm" id="cust-modal-cancel">取消</button>
@@ -2379,6 +2438,108 @@
       return rs.every(function (r) { return r.ok; });
     }).catch(function () { return false; });
   }
+  // v19: 经营总览（/api/dashboard 聚合 + 内联 SVG，D2 零依赖）
+  var v19Range = 'month';
+  function v19Esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function v19Line(el, arr, color, label) {
+    if (!el || !arr || !arr.length) { return; }
+    var W = 320, H = 100, pad = 6, max = 1;
+    arr.forEach(function (p) { max = Math.max(max, p.v); });
+    var x = function (i) { return pad + (W - pad * 2) * (i / (arr.length - 1 || 1)); };
+    var y = function (v) { return H - pad - (H - pad * 2) * (v / max); };
+    var pts = arr.map(function (p, i) { return x(i).toFixed(1) + ',' + y(p.v).toFixed(1); }).join(' ');
+    var last = arr[arr.length - 1];
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:100%">' +
+      '<polyline points="' + pts + '" fill="none" stroke="' + (color || '#c9a227') + '" stroke-width="2" stroke-linejoin="round"/>' +
+      '<circle cx="' + x(arr.length - 1) + '" cy="' + y(last.v) + '" r="3" fill="' + (color || '#c9a227') + '"/>' +
+      '</svg><div style="font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">' + (label || '') + ' · 最新 ' + v19Esc(last.d) + '：' + last.v + '</div>';
+  }
+  function v19Bars(el, arr, color) {
+    if (!el || !arr || !arr.length) { return; }
+    var W = 320, H = 100, pad = 6, bw = Math.max(3, (W - pad * 2) / arr.length - 1), max = 1;
+    arr.forEach(function (p) { max = Math.max(max, p.v || p.c || 0); });
+    var h = function (v) { return (H - pad * 2) * (v / max); };
+    var html = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:100%">';
+    arr.forEach(function (p, i) {
+      var bh = h(p.v || p.c || 0), xx = pad + i * ((W - pad * 2) / arr.length);
+      html += '<rect x="' + xx + '" y="' + (H - pad - bh) + '" width="' + bw + '" height="' + Math.max(1, bh) + '" rx="1.5" fill="' + (color || 'rgba(201,162,39,.75)') + '"/>';
+    });
+    html += '</svg>';
+    el.innerHTML = html;
+  }
+  function v19Donut(el, arr) {
+    if (!el || !arr || !arr.length) { el.innerHTML = '<p class="hint">埋点未启用</p>'; return; }
+    var total = arr.reduce(function (s, p) { return s + p.value; }, 0) || 1;
+    var colors = ['#c9a227', '#e8b64c', '#8a6d1d', '#4da3ff', '#4cd964', '#ff7a59', '#9b7bff', '#5ac8fa'];
+    var r = 40, cx = 55, cy = 50, sw = 14;
+    var html = '<svg viewBox="0 0 170 100" style="width:100%;height:100%">';
+    var a0 = -Math.PI / 2;
+    arr.forEach(function (p, i) {
+      var a1 = a0 + (p.value / total) * Math.PI * 2;
+      var large = p.value / total > 0.5 ? 1 : 0;
+      var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
+      var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      html += '<path d="M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + '" fill="none" stroke="' + colors[i % colors.length] + '" stroke-width="' + sw + '"/>';
+      a0 = a1;
+    });
+    html += '<text x="' + cx + '" y="' + cy + '" text-anchor="middle" dominant-baseline="central" font-size="11" fill="currentColor">' + total + '</text></svg>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:4px;font-size:10.5px;color:var(--color-text-secondary)">';
+    arr.forEach(function (p, i) { html += '<span><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + colors[i % colors.length] + ';margin-right:4px"></i>' + v19Esc(p.name) + ' ' + p.value + '</span>'; });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+  function v19Hbars(el, arr, emptyMsg) {
+    if (!el) { return; }
+    if (!arr || !arr.length) { el.innerHTML = '<p class="hint">' + v19Esc(emptyMsg || '暂无数据') + '</p>'; return; }
+    var max = 1;
+    arr.forEach(function (p) { max = Math.max(max, p.value); });
+    var html = '<div class="v19-bars">';
+    arr.slice(0, 8).forEach(function (p) {
+      var w = Math.max(3, Math.round(p.value / max * 100));
+      html += '<div class="v19-bar-row"><span class="b-name" title="' + v19Esc(p.name) + '">' + v19Esc(p.name) + '</span><div class="b-track"><div class="b-fill" style="width:' + w + '%"></div></div><span class="b-val">' + p.value + '</span></div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+  function v19Load() {
+    var zone = el('v19-zone');
+    if (!zone) { return Promise.resolve(true); }
+    el('v19-stamp').textContent = nowStamp();
+    return fetch('/api/dashboard').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.ok) { throw new Error((d && d.error) || 'dashboard-fail'); }
+      var k = d.kpi[v19Range] || d.kpi.month || {};
+      var kpiDef = [
+        { l: '访客 UV', v: k.uv, s: 'PV ' + k.pv },
+        { l: '新询盘', v: k.inquiries, s: '转化率 ' + (k.conversion || 0) + '%' },
+        { l: '新客户', v: k.newCustomers, s: '客户档案' },
+        { l: '订单数', v: k.orders, s: 'GMV $' + (k.gmv || 0) },
+        { l: '库存预警', v: k.inventoryAlerts, s: 'out / limited' },
+        { l: '询盘转化率', v: (k.conversion || 0) + '%', s: '访客→询盘' }
+      ];
+      el('v19-kpis').innerHTML = kpiDef.map(function (x) {
+        return '<div class="v19-kpi"><div class="k-label">' + x.l + '</div><div class="k-val">' + v19Esc(x.v) + '</div><div class="k-sub">' + x.s + '</div></div>';
+      }).join('');
+      v19Line(el('v19-trend-v'), d.trend.visitors || [], '#4da3ff', 'UV');
+      v19Bars(el('v19-trend-i'), (d.trend.orders || []).map(function (p) { return { d: p.d, v: p.a }; }), '#c9a227');
+      var oi = d.trend.inquiries || [];
+      if (oi.length) {
+        var last = oi[oi.length - 1];
+        el('v19-trend-i').innerHTML += '<div style="font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">订单金额(USD) · 最新 ' + v19Esc(last.d) + ' 询盘 ' + last.v + ' 条</div>';
+      }
+      v19Donut(el('v19-sources'), d.sources || []);
+      v19Hbars(el('v19-countries'), d.countries || []);
+      v19Hbars(el('v19-devices'), d.devices || []);
+      v19Hbars(el('v19-channels'), d.channels || []);
+      v19Hbars(el('v19-products'), d.productTop || [], '暂无询盘记录');
+      v19Hbars(el('v19-keywords'), d.keywords || [], '埋点未启用：访问站点后自动积累');
+      v19Hbars(el('v19-lifecycle'), d.lifecycle || []);
+      el('v19-hint').textContent = '生成于 ' + String(d.generatedAt || '').slice(0, 19).replace('T', ' ') + ' · 埋点数据自启用起累积 · 业务数据实时（Supabase）';
+      return true;
+    }).catch(function (e) {
+      el('v19-kpis').innerHTML = '<p class="hint">经营总览加载失败：' + v19Esc((e && e.message) || e) + '</p>';
+      return false;
+    });
+  }
   var dashBusy = false, dashTimer = null, dashCountdownTimer = null;
   function setSyncState(st, msg) {
     var dot = el('dash-sync-dot'), tx = el('dash-sync-text');
@@ -2415,7 +2576,7 @@
     if (dashBusy) { if (manual) toast('同步进行中，请稍候', 'info'); return Promise.resolve(false); }
     dashBusy = true;
     setSyncState('syncing', '同步中…');
-    return Promise.all([loadDeploy(), loadCommits(), loadInquiryStats(), loadProductStats(), loadHealth(), selfCheck()]).then(function (res) {
+    return Promise.all([loadDeploy(), loadCommits(), loadInquiryStats(), loadProductStats(), loadHealth(), selfCheck(), v19Load()]).then(function (res) {
       dashBusy = false;
       var fail = res.filter(function (x) { return !x; }).length;
       var stamp = nowStamp();
@@ -2437,6 +2598,15 @@
     var b = this; b.disabled = true; b.classList.add('loading'); b.textContent = '同步中…';
     refreshDash(true).then(function () { b.disabled = false; b.classList.remove('loading'); b.textContent = '⟳ 立即刷新'; });
   });
+  var v19Btns = document.querySelectorAll('.v19-r');
+  for (var vb = 0; vb < v19Btns.length; vb++) {
+    v19Btns[vb].addEventListener('click', function () {
+      v19Range = this.getAttribute('data-r');
+      var all = document.querySelectorAll('.v19-r');
+      for (var i2 = 0; i2 < all.length; i2++) { all[i2].classList.toggle('on', all[i2] === this); }
+      v19Load();
+    });
+  }
   el('dash-interval').addEventListener('change', function () {
     localStorage.setItem('mili-sync-interval', this.value);
     scheduleSync();
@@ -2769,6 +2939,69 @@
       menu.classList.toggle('open');
     });
     document.addEventListener('click', function(){ menu.classList.remove('open'); });
+    // v19: 当前账号信息（/api/session/me → 头像/昵称/角色）
+    try {
+      fetch('/api/session/me').then(function (r) { return r.json(); }).then(function (d) {
+        if (!d || !d.ok || !d.me) return;
+        var me = d.me;
+        var nm = document.getElementById('user-menu-name');
+        var rl = document.getElementById('user-menu-role');
+        if (nm) nm.textContent = me.name || me.uid || '管理员';
+        if (rl) rl.textContent = ({ owner: '所有者', admin: '管理员', operator: '运营', viewer: '访客' })[me.role] || me.role;
+        var av = document.getElementById('user-avatar');
+        if (av) av.textContent = String(me.name || 'M').charAt(0).toUpperCase();
+        var accBtn = document.getElementById('user-menu-accounts');
+        if (accBtn && me.role === 'owner') accBtn.style.display = 'block';
+        window.__miliMe = me;
+        if (window.__miliRoleReady) window.__miliRoleReady(me);
+      }).catch(function () {});
+    } catch (e) {}
+    // v19: Supabase Realtime 秒级订阅（D6：postgres_changes，失败自动回退轮询）
+    try {
+      var rt = window.__miliRealtime;
+      if (!rt) {
+        rt = {
+          ws: null, tables: ['inquiries', 'orders', 'customers'], retry: 0,
+          connect: function () {
+            try {
+              rt.ws = new WebSocket('wss://qfecxuuvgbqqruzfgrpl.supabase.co/realtime/v1/websocket?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmZWN4dXV2Z2JxcXJ1emZncnBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5ODgwMDEsImV4cCI6MjEwMDU2NDAwMX0.l_nwv0I1ZogH34_2EFBcJKyMMkYAzWbOc3cEkkFUMp0&vsn=1.0.0');
+              rt.ws.onopen = function () {
+                rt.retry = 0;
+                rt.tables.forEach(function (t) {
+                  rt.send({ topic: 'realtime:' + t, event: 'phx_join', payload: {}, ref: rt.ref++ });
+                });
+              };
+              rt.ws.onmessage = function (ev) {
+                try {
+                  var m = JSON.parse(ev.data);
+                  if (m && (m.event === 'postgres_changes' || (m.payload && m.payload.type === 'INSERT'))) {
+                    if (rt.onChange) rt.onChange(m);
+                  }
+                } catch (e) {}
+              };
+              rt.ws.onclose = function () {
+                if (rt.retry < 3) { rt.retry++; setTimeout(rt.connect, 10000 * rt.retry); }
+              };
+              rt.ws.onerror = function () { try { rt.ws.close(); } catch (e) {} };
+            } catch (e) {}
+          },
+          send: function (obj) { try { rt.ws.send(JSON.stringify(obj)); } catch (e) {} },
+          ref: 1,
+          onChange: function (m) {
+            var t = String(m.topic || '').replace('realtime:', '');
+            if (window.__miliNotifRefresh) window.__miliNotifRefresh();
+            var cur = document.querySelector('.tab-panel.active');
+            if (!cur) return;
+            if (t === 'inquiries' && cur.id === 'tab-inquiry') inqLoad();
+            else if (t === 'orders' && cur.id === 'tab-orders') ordLoad && ordLoad();
+            else if (t === 'customers' && cur.id === 'tab-customers') custLoad && custLoad();
+            else if (t === 'inquiries' || t === 'orders') { v19Load && v19Load(); }
+          }
+        };
+        window.__miliRealtime = rt;
+        rt.connect();
+      }
+    } catch (e) {}
   })();
 
   // 品牌区账户菜单（点击 Logo → 登录状态/设置/退出）
@@ -5372,6 +5605,109 @@
     });
   }
   document.querySelector('.tab[data-tab="config"]').addEventListener('click', loadConfig);
+
+  // ── v19: 账号管理（RBAC） ──
+  var accState = { rows: [], edId: null };
+  function accRoleName(r) { return ({ owner: '所有者', admin: '管理员', operator: '运营', viewer: '访客' })[r] || r; }
+  function accLoad() {
+    return fetch('/api/account/list').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.ok) { el('acc-tbody').innerHTML = '<tr><td colspan="6" class="hint">' + esc((d && d.error) || '加载失败') + '</td></tr>'; return; }
+      accState.rows = d.rows || [];
+      var me = window.__miliMe || {};
+      el('acc-tbody').innerHTML = accState.rows.map(function (a) {
+        var isSelf = me.uid && a.id === me.uid;
+        var roleBadge = '<span style="background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:4px;padding:1px 7px;font-size:11px">' + accRoleName(a.role) + (isSelf ? '（我）' : '') + '</span>';
+        var st = a.status === 'active'
+          ? '<span style="color:var(--ok)">● 启用</span>'
+          : '<span style="color:var(--bad)">● 禁用</span>';
+        var last = a.last_login_at ? String(a.last_login_at).slice(0, 16).replace('T', ' ') : '—';
+        var ops = '<button class="btn btn-ghost btn-sm" data-acc-edit="' + esc(a.id) + '" style="padding:2px 8px">编辑</button> ' +
+          '<button class="btn btn-ghost btn-sm" data-acc-pw="' + esc(a.id) + '" style="padding:2px 8px">重置密码</button> ' +
+          (isSelf ? '' : '<button class="btn btn-ghost btn-sm" data-acc-del="' + esc(a.id) + '" style="padding:2px 8px;color:var(--bad)">删除</button>');
+        return '<tr><td style="padding:6px 8px;border-bottom:1px solid var(--color-border);font-weight:600">' + esc(a.username) + '</td>' +
+          '<td style="padding:6px 8px;border-bottom:1px solid var(--color-border)">' + esc(a.display_name || '—') + '</td>' +
+          '<td style="padding:6px 8px;border-bottom:1px solid var(--color-border)">' + roleBadge + '</td>' +
+          '<td style="padding:6px 8px;border-bottom:1px solid var(--color-border)">' + st + '</td>' +
+          '<td style="padding:6px 8px;border-bottom:1px solid var(--color-border);color:var(--color-text-secondary)">' + last + '</td>' +
+          '<td style="padding:6px 8px;border-bottom:1px solid var(--color-border);white-space:nowrap">' + ops + '</td></tr>';
+      }).join('') || '<tr><td colspan="6" class="hint">暂无账号，点击「新增账号」创建第一个运营账号</td></tr>';
+      // 事件绑定
+      el('acc-tbody').querySelectorAll('[data-acc-edit]').forEach(function (b) {
+        b.onclick = function () { var a = accState.rows.find(function (x) { return x.id === b.getAttribute('data-acc-edit'); }); accOpenModal(a); };
+      });
+      el('acc-tbody').querySelectorAll('[data-acc-pw]').forEach(function (b) {
+        b.onclick = function () { accResetPw(b.getAttribute('data-acc-pw')); };
+      });
+      el('acc-tbody').querySelectorAll('[data-acc-del]').forEach(function (b) {
+        b.onclick = function () { accDelete(b.getAttribute('data-acc-del')); };
+      });
+    }).catch(function (e) { el('acc-tbody').innerHTML = '<tr><td colspan="6" class="hint">' + esc(e.message) + '</td></tr>'; });
+  }
+  function accOpenModal(a) {
+    accState.edId = (a && a.id) || null;
+    var roles = ['owner', 'admin', 'operator', 'viewer'].map(function (r) {
+      return '<option value="' + r + '"' + ((a && a.role === r) || (!a && r === 'operator') ? ' selected' : '') + '>' + accRoleName(r) + '</option>';
+    }).join('');
+    var html = '<div id="accModalOv" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">' +
+      '<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:20px;width:100%;max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,.4)">' +
+      '<h3 style="margin:0 0 14px">' + (accState.edId ? '编辑账号' : '新增账号') + '</h3>' +
+      '<div style="display:grid;gap:10px">' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">账号（登录名）*</label><input id="acc-f-username" value="' + esc((a && a.username) || '') + '" ' + (accState.edId ? 'disabled' : '') + ' style="width:100%;box-sizing:border-box" /></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">昵称（显示名）</label><input id="acc-f-name" value="' + esc((a && a.display_name) || '') + '" style="width:100%;box-sizing:border-box" /></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">角色</label><select id="acc-f-role" style="width:100%">' + roles + '</select></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">状态</label><select id="acc-f-status" style="width:100%"><option value="active"' + (!a || a.status === 'active' ? ' selected' : '') + '>启用</option><option value="disabled"' + (a && a.status === 'disabled' ? ' selected' : '') + '>禁用</option></select></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">头像 URL（可选）</label><input id="acc-f-avatar" value="' + esc((a && a.avatar_url) || '') + '" placeholder="https://…" style="width:100%;box-sizing:border-box" /></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">' + (accState.edId ? '重置密码（留空不修改）' : '初始密码 *（至少 6 位）') + '</label><input id="acc-f-pw" type="password" placeholder="' + (accState.edId ? '留空保持原密码' : '至少 6 位') + '" style="width:100%;box-sizing:border-box" /></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">' +
+      '<button class="btn btn-ghost btn-sm" id="acc-f-cancel">取消</button>' +
+      '<button class="btn btn-primary btn-sm" id="acc-f-save">💾 保存</button>' +
+      '</div></div></div>';
+    var d = document.createElement('div');
+    d.innerHTML = html;
+    document.body.appendChild(d.firstChild);
+    el('acc-f-cancel').onclick = function () { el('accModalOv').remove(); };
+    el('acc-f-save').onclick = function () {
+      var username = el('acc-f-username').value.trim();
+      var body = { id: accState.edId || undefined, username: username, display_name: el('acc-f-name').value.trim(), role: el('acc-f-role').value, status: el('acc-f-status').value, avatar_url: el('acc-f-avatar').value.trim() };
+      var pw = el('acc-f-pw').value;
+      if (!accState.edId) { body.password = pw; }
+      else if (pw) { body.password = pw; }
+      if (!body.password && !accState.edId) { toast('请设置初始密码', 'err'); return; }
+      fetch('/api/account/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }).then(function (d2) {
+        if (d2 && d2.ok) { toast('账号已保存', 'ok'); el('accModalOv').remove(); accLoad(); }
+        else { toast((d2 && d2.error) || '保存失败', 'err'); }
+      });
+    };
+  }
+  function accDelete(id) {
+    if (!confirm('确认删除该账号？删除后不可恢复（owner 不可删除）。')) return;
+    fetch('/api/account/delete', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) }).then(function (r) { return r.json(); }).then(function (d) {
+      toast(d && d.ok ? '账号已删除' : ((d && d.error) || '删除失败'), d && d.ok ? 'ok' : 'err');
+      if (d && d.ok) accLoad();
+    });
+  }
+  function accResetPw(id) {
+    var pw = prompt('输入新密码（至少 6 位）：');
+    if (!pw) return;
+    if (pw.length < 6) { toast('密码至少 6 位', 'err'); return; }
+    fetch('/api/account/reset-pw', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id, password: pw }) }).then(function (r) { return r.json(); }).then(function (d) {
+      toast(d && d.ok ? '密码已重置' : ((d && d.error) || '重置失败'), d && d.ok ? 'ok' : 'err');
+    });
+  }
+  function accInit() {
+    var btn = el('acc-add-btn');
+    if (btn) btn.onclick = function () { accOpenModal(null); };
+    if (window.__miliRoleReady) return;
+    // 等待 session/me 确定角色后决定是否显示面板
+    var show = function (me) {
+      if (me && me.role === 'owner') { var p = el('acc-panel'); if (p) p.style.display = 'block'; accLoad(); }
+    };
+    window.__miliRoleReady = show;
+    if (window.__miliMe) show(window.__miliMe);
+    else fetch('/api/session/me').then(function (r) { return r.json(); }).then(function (d) { if (d && d.ok) show(d.me); }).catch(function () {});
+  }
+  accInit();
   // 看板加载时同步拉配置
   (function loadCfgForDash() {
     fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
@@ -5877,6 +6213,7 @@
     el('custModal-title').textContent = p.id ? '编辑客户' : '＋ 新增客户';
     el('cust-name').value = p.name || ''; el('cust-email').value = p.email || ''; el('cust-phone').value = p.phone || '';
     el('cust-country').value = p.country || ''; el('cust-company').value = p.company || ''; el('cust-source').value = p.source || ''; el('cust-note').value = p.note || '';
+    el('cust-tags').value = (Array.isArray(p.tags) ? p.tags.join(',') : (p.tags || ''));
     custState.edId = p.id || null;
     el('custModal').style.display = 'flex';
   }
@@ -5884,7 +6221,8 @@
   function custSave() {
     var name = el('cust-name').value.trim(), email = el('cust-email').value.trim(), phone = el('cust-phone').value.trim();
     if (!name && !email && !phone) { toast('至少填写姓名、邮箱或电话之一', 'err'); return; }
-    var body = { id: custState.edId || undefined, name: name, email: email || null, phone: phone || null, country: el('cust-country').value.trim() || null, company: el('cust-company').value.trim() || null, source: el('cust-source').value || null, note: el('cust-note').value.trim() || null };
+    var tagsVal = el('cust-tags').value.split(',').map(function (t) { return t.trim(); }).filter(Boolean).slice(0, 20);
+    var body = { id: custState.edId || undefined, name: name, email: email || null, phone: phone || null, country: el('cust-country').value.trim() || null, company: el('cust-company').value.trim() || null, source: el('cust-source').value || null, note: el('cust-note').value.trim() || null, tags: tagsVal.length ? tagsVal : null };
     var btn = el('cust-save-btn'); btn.disabled = true; btn.textContent = '保存中…';
     fetch('/api/customer/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
       .then(function (r) { return r.json(); }).then(function (d) {
@@ -5906,25 +6244,150 @@
       return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--color-border)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:50%">' + esc(x.order_no || '') + ' · ' + esc(x.title || '') + '</span><span style="color:var(--color-text-secondary);white-space:nowrap">' + (ORD_ST[x.status] || x.status) + ' · $' + (x.amount || 0) + '</span></div>';
     }).join('') || '<p class="hint">暂无关联订单（可在新增订单时关联此客户）</p>';
     var inner = el('custDrawerInner');
+    var tagsHtml = (Array.isArray(r.tags) && r.tags.length) ? r.tags.map(function (t) { return '<span style="display:inline-block;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:10px;padding:1px 8px;font-size:10.5px;margin:2px 4px 2px 0">#' + esc(t) + '</span>'; }).join('') : '';
+    var lastMs = new Date(r.updated_at || 0).getTime();
+    var lifeDays = isNaN(lastMs) ? 99 : (Date.now() - lastMs) / 864e5;
+    var lifeTxt = lifeDays < 7 ? '<span style="color:var(--ok)">● 活跃</span>' : (lifeDays < 30 ? '<span style="color:var(--color-warning)">● 跟进中</span>' : '<span style="color:var(--bad)">● 沉睡</span>');
+    var lifeStage = lifeDays < 7 ? '活跃' : (lifeDays < 30 ? '跟进中' : '沉睡');
     inner.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">' + esc(r.name || '未命名客户') + '</h3><button class="ed-act-btn" id="custD-close">✕</button></div>' +
-      '<div class="inq-card" style="margin-bottom:10px"><b>客户档案</b><div style="margin-top:6px;font-size:12px;line-height:1.8">' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>客户画像</b>' + (tagsHtml ? '<div style="margin-top:4px">' + tagsHtml + '</div>' : '') + '<div style="margin-top:6px;font-size:12px;line-height:1.8">' +
       (r.email ? '✉ ' + esc(r.email) + '<br/>' : '') + (r.phone ? '💬 ' + esc(r.phone) + '<br/>' : '') +
       '🏢 ' + esc(r.company || '—') + (r.country ? ' · ' + esc(r.country) : '') + '<br/>' +
       '来源：' + esc(r.source || '—') + ' · 分级：<b style="color:var(--color-primary)">' + (r.grade || 'C') + '</b><br/>' +
+      '生命周期：' + lifeTxt + '（' + lifeStage + '） · 活跃度：' + (lifeDays < 7 ? '高' : (lifeDays < 30 ? '中' : '低')) + '<br/>' +
       '询盘 <b>' + s.inq + '</b> · 订单 <b>' + s.orders + '</b> · 累计 <b style="color:var(--ok)">$' + Math.round(s.amount).toLocaleString() + '</b></div></div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>行为时间线</b><div id="custD-events" style="margin-top:4px;font-size:11.5px">加载中…</div></div>' +
       '<div class="inq-card" style="margin-bottom:10px"><b>询盘历史</b>' + inqHtml + '</div>' +
       '<div class="inq-card" style="margin-bottom:10px"><b>订单历史</b>' + ordHtml + '</div>' +
       (r.note ? '<div class="inq-card" style="margin-bottom:10px"><b>备注</b><div style="margin-top:4px;font-size:12px;white-space:pre-wrap">' + esc(r.note) + '</div></div>' : '') +
-      '<div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" id="custD-edit" style="flex:1">✏️ 编辑客户</button><button class="btn btn-ghost btn-sm" id="custD-order" style="flex:1">＋ 创建订单</button></div>';
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" id="custD-edit" style="flex:1;min-width:90px">✏️ 编辑客户</button><button class="btn btn-ghost btn-sm" id="custD-order" style="flex:1;min-width:90px">＋ 创建订单</button><button class="btn btn-ghost btn-sm" id="custD-mail" style="flex:1;min-width:90px">📣 邮件群发</button></div>';
     el('custDrawer').classList.add('show');
     el('custD-close').onclick = function () { el('custDrawer').classList.remove('show'); };
     el('custD-edit').onclick = function () { el('custDrawer').classList.remove('show'); custOpenModal(r); };
+    // v19: 行为时间线（/api/customer/events）
+    try {
+      fetch('/api/customer/events?customer_id=' + encodeURIComponent(r.id) + '&email=' + encodeURIComponent(r.email || '')).then(function (rr) { return rr.json(); }).then(function (dd) {
+        var evEl = el('custD-events');
+        if (!evEl) return;
+        var evs = (dd && dd.events) || [];
+        var typeIcon = { visit: '👁', inquiry: '📩', email: '✉', whatsapp: '💬', quote: '📄', order: '📦', campaign: '📣' };
+        var typeTxt = { visit: '访问网站', inquiry: '提交询盘', email: '邮件往来', whatsapp: 'WhatsApp 联系', quote: '报价', order: '订单更新', campaign: '活动触达' };
+        var evHtml = evs.slice(0, 20).map(function (e) {
+          var pl = (e.payload && typeof e.payload === 'object') ? JSON.stringify(e.payload) : '';
+          return '<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px dashed var(--color-border)"><span>' + (typeIcon[e.type] || '•') + '</span><span style="flex:1">' + (typeTxt[e.type] || e.type) + (pl && pl.length < 120 ? ' <span style="color:var(--color-text-dim)">' + esc(pl) + '</span>' : '') + '</span><span style="color:var(--color-text-secondary);white-space:nowrap">' + fmtTime(e.created_at) + '</span></div>';
+        }).join('');
+        evEl.innerHTML = evHtml || '<span class="hint">暂无行为记录（询盘/邮件/WhatsApp 触达后自动记录）</span>';
+      }).catch(function () { var evEl = el('custD-events'); if (evEl) evEl.innerHTML = '<span class="hint">时间线加载失败</span>'; });
+    } catch (e) {}
     el('custD-order').onclick = function () {
       el('custDrawer').classList.remove('show');
       goTab('orders');
       setTimeout(function () { ordOpenModal({ customer_name: r.name, customer_email: r.email, customer_phone: r.phone, customer_country: r.country }); }, 300);
     };
+    el('custD-mail').onclick = function () {
+      el('custDrawer').classList.remove('show');
+      if (!r.email) { toast('该客户无邮箱，可在营销活动中导出 WhatsApp 清单', 'err'); return; }
+      campaignOpen({ preset: [{ name: r.name || '', email: r.email }] });
+    };
   }
+  // v19: 营销活动（邮件群发 163 SMTP / WhatsApp 导出 / 活动记录）
+  var CAMP_TEMPLATES = [
+    { n: '新品通知', sub: 'New Product Launch – Mili Packaging', body: 'Hi {name},\n\nWe are excited to introduce our new packaging solutions at mili-packaging.com. Factory-direct pricing, MOQ from 100pcs, free design in 48h.\n\nBest regards,\nMili Packaging Team' },
+    { n: '节日问候', sub: 'Season\u2019s Greetings from Mili Packaging', body: 'Dear {name},\n\nWishing you a wonderful season. As your packaging partner, we remain ready for your upcoming projects.\n\nBest regards,\nMili Packaging Team' },
+    { n: '沉睡唤醒', sub: 'Special Offer for You – Mili Packaging', body: 'Hi {name},\n\nWe noticed it has been a while. Here is a special offer for your next packaging order: free design + quick samples.\n\nReply or visit mili-packaging.com.\n\nBest regards,\nMili Packaging Team' },
+    { n: '报价跟进', sub: 'Following Up on Your Quote – Mili Packaging', body: 'Hi {name},\n\nJust checking in on your recent inquiry. Let us know if you need adjusted pricing, samples, or a 3D mockup.\n\nBest regards,\nMili Packaging Team' }
+  ];
+  function campaignOpen(opts) {
+    opts = opts || {};
+    var preset = (opts.preset || []).map(function (c) { return c.email; }).filter(Boolean);
+    var tplOpts = CAMP_TEMPLATES.map(function (t, i) { return '<option value="' + i + '">' + t.n + '</option>'; }).join('');
+    var html = '<div id="cmpOv" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">' +
+      '<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:18px;width:100%;max-width:640px;max-height:92vh;overflow:auto">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">📣 营销活动</h3><button class="ed-act-btn" id="cmp-close">✕</button></div>' +
+      '<div style="display:grid;gap:8px">' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">活动名称</label><input id="cmp-name" placeholder="如：8月新品邮件推广" style="width:100%;box-sizing:border-box" /></div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><label style="font-size:12px;color:var(--color-text-secondary);flex:1;min-width:180px">收件人（每行一个邮箱）<textarea id="cmp-emails" rows="4" style="width:100%;box-sizing:border-box;font-size:11.5px" placeholder="customer@example.com">' + esc(preset.join('\n')) + '</textarea></label>' +
+      '<div style="font-size:12px;color:var(--color-text-secondary);flex:1;min-width:180px">快捷填充<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px"><button class="btn btn-ghost btn-sm" id="cmp-fill-all">全部客户</button><button class="btn btn-ghost btn-sm" id="cmp-fill-a">A 级客户</button><button class="btn btn-ghost btn-sm" id="cmp-fill-sleep">沉睡客户</button></div>' +
+      '<div style="margin-top:8px">邮件模板<select id="cmp-tpl" style="width:100%;margin-top:2px"><option value="-1">自定义…</option>' + tplOpts + '</select></div></div></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">主题</label><input id="cmp-subject" style="width:100%;box-sizing:border-box" /></div>' +
+      '<div><label style="font-size:12px;color:var(--color-text-secondary)">正文（{name} 会替换为客户姓名）</label><textarea id="cmp-body" rows="6" style="width:100%;box-sizing:border-box;font-size:11.5px"></textarea></div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">' +
+      '<button class="btn btn-primary btn-sm" id="cmp-send">📤 邮件群发</button>' +
+      '<button class="btn btn-ghost btn-sm" id="cmp-export">💬 导出 WhatsApp 清单</button>' +
+      '<button class="btn btn-ghost btn-sm" id="cmp-save">💾 保存为活动</button>' +
+      '<span class="hint" id="cmp-msg" style="margin:0"></span></div>' +
+      '<div id="cmp-history" style="margin-top:10px;border-top:1px solid var(--color-border);padding-top:8px;font-size:11.5px"></div>' +
+      '</div></div></div>';
+    var d = document.createElement('div');
+    d.innerHTML = html;
+    document.body.appendChild(d.firstChild);
+    el('cmp-close').onclick = function () { el('cmpOv').remove(); };
+    el('cmp-tpl').onchange = function () {
+      var i = parseInt(this.value, 10);
+      if (i >= 0 && CAMP_TEMPLATES[i]) { el('cmp-subject').value = CAMP_TEMPLATES[i].sub; el('cmp-body').value = CAMP_TEMPLATES[i].body; }
+    };
+    el('cmp-fill-all').onclick = function () {
+      el('cmp-emails').value = custState.rows.map(function (c) { return c.email; }).filter(Boolean).join('\n');
+      toast('已填充 ' + custState.rows.filter(function (c) { return c.email; }).length + ' 个邮箱', 'info');
+    };
+    el('cmp-fill-a').onclick = function () {
+      var rows = custState.rows.filter(function (c) { return c.email && (c.grade === 'A' || c.grade === 'S'); });
+      el('cmp-emails').value = rows.map(function (c) { return c.email; }).join('\n');
+      toast('已填充 ' + rows.length + ' 个 A/S 级邮箱', 'info');
+    };
+    el('cmp-fill-sleep').onclick = function () {
+      var rows = custState.rows.filter(function (c) { return c.email && new Date(c.updated_at || 0).getTime() < Date.now() - 30 * 864e5; });
+      el('cmp-emails').value = rows.map(function (c) { return c.email; }).join('\n');
+      toast('已填充 ' + rows.length + ' 个沉睡客户邮箱', 'info');
+    };
+    function readCmp() {
+      var emails = el('cmp-emails').value.split(/\n|,|;|\s+/).map(function (s) { return s.trim(); }).filter(function (s) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s); });
+      return { name: el('cmp-name').value.trim() || ('活动 ' + new Date().toLocaleDateString()), emails: emails.slice(0, 50), subject: el('cmp-subject').value.trim(), body: el('cmp-body').value };
+    }
+    el('cmp-send').onclick = function () {
+      var c = readCmp();
+      if (!c.emails.length || !c.subject || !c.body) { toast('请填写收件人、主题与正文', 'err'); return; }
+      var btn = this; btn.disabled = true; btn.textContent = '发送中…';
+      fetch('/api/mail/send', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ emails: c.emails, subject: c.subject, body: c.body }) })
+        .then(function (r) { return r.json(); }).then(function (d) {
+          btn.disabled = false; btn.textContent = '📤 邮件群发';
+          if (d && d.ok) {
+            el('cmp-msg').textContent = '✓ 成功 ' + d.okCount + ' / ' + d.count + ' 封（失败可重试）';
+            fetch('/api/campaign/create', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: c.name, channel: 'email', audience: c.emails.join(','), template: c.subject + '\n\n' + c.body }) }).catch(function () {});
+            campaignHistory();
+          } else { el('cmp-msg').textContent = '发送失败：' + ((d && (d.message || d.error)) || '未知'); }
+        }).catch(function () { btn.disabled = false; btn.textContent = '📤 邮件群发'; el('cmp-msg').textContent = '网络错误'; });
+    };
+    el('cmp-export').onclick = function () {
+      var c = readCmp();
+      var phones = custState.rows.map(function (x) { return x.phone; }).filter(Boolean);
+      var lines = c.emails.map(function (e) {
+        var r = custState.rows.filter(function (x) { return (x.email || '').toLowerCase() === e.toLowerCase(); })[0];
+        return (r && r.phone ? r.phone : '') + '|' + (r ? (r.name || '') : '') + '|' + c.body.split('\n').slice(0, 1).join(' ');
+      }).filter(function (l) { return l.indexOf('|') > 0; });
+      if (!lines.length) { lines = phones.map(function (p) { return p + '|' + c.subject; }); }
+      var txt = lines.join('\n');
+      navigator.clipboard.writeText(txt).then(function () { toast('WhatsApp 清单已复制（号码|姓名|首行话术）', 'ok'); }).catch(function () { prompt('复制 WhatsApp 清单：', txt); });
+      fetch('/api/campaign/create', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: c.name + ' (WA)', channel: 'whatsapp', audience: txt.slice(0, 300), template: c.subject + '\n' + c.body }) }).catch(function () {});
+    };
+    el('cmp-save').onclick = function () {
+      var c = readCmp();
+      fetch('/api/campaign/create', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: c.name, channel: 'email', audience: c.emails.join(','), template: c.subject + '\n\n' + c.body }) })
+        .then(function (r) { return r.json(); }).then(function (d) { toast(d && d.ok ? '活动已保存' : '保存失败', d && d.ok ? 'ok' : 'err'); if (d && d.ok) campaignHistory(); });
+    };
+    campaignHistory();
+  }
+  function campaignHistory() {
+    var h = el('cmp-history');
+    if (!h) return;
+    fetch('/api/campaign/list').then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.rows) || [];
+      h.innerHTML = '<div style="font-weight:600;margin-bottom:4px">最近活动</div>' + (rows.length ? rows.slice(0, 6).map(function (c) {
+        return '<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed var(--color-border)"><span>' + esc(c.name) + ' <span style="color:var(--color-text-dim)">[' + esc(c.channel) + ']</span></span><span style="color:var(--color-text-secondary);white-space:nowrap">' + (c.status || 'draft') + ' · ' + fmtTime(c.created_at) + '</span></div>';
+      }).join('') : '<span class="hint">暂无活动记录</span>');
+    }).catch(function () {});
+  }
+  document.getElementById('cust-campaign-btn').addEventListener('click', function () { campaignOpen(); });
   document.getElementById('cust-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; custLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
   document.getElementById('cust-add-btn').addEventListener('click', function () { custOpenModal({}); });
   document.getElementById('cust-modal-cancel').addEventListener('click', custCloseModal);

@@ -56,7 +56,7 @@ const M=Object.fromEntries(Object.entries({
   '.txt':['text/plain','public,max-age=3600'],
   '.xml':['application/xml','public,max-age=3600']
 }).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
-const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
+const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
 const BLOG_PATHS=['/blog','/blog/'];
 
 // ── v5: GA4 + GSC dashboard helpers (Service Account JWT, 1h in-memory cache) ──
@@ -170,7 +170,7 @@ const handleV5Realtime=async function(env){
     return new Response(JSON.stringify({ok:true,configured:true,realtime:rowsToObj(rt)}),{headers:{'content-type':'application/json'}});
   }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
 };
-const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili Packaging 运营工作台 · 登录</title><style>\\n*{margin:0;padding:0;box-sizing:border-box}\\nbody{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#0a0a0a;min-height:100vh;display:flex}\\n.hero{position:relative;flex:1.7;min-height:100vh;overflow:hidden;display:flex;align-items:flex-end}\\n.hero .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;background-size:cover;background-position:center}\\n.hero .slide.on{opacity:1}\\n.hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.38) 100%)}\\n.hero .copy{position:relative;z-index:2;padding:56px 52px;color:#fff;max-width:660px}\\n.hero .kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c9a227;font-weight:700}\\n.hero h1{font-size:42px;font-weight:600;margin:14px 0 8px;letter-spacing:.01em;line-height:1.2}\\n.hero h1 em{font-style:normal;color:#c9a227}\\n.hero .sub{font-size:16px;opacity:.88;margin-bottom:20px}\\n.hero .tags{display:flex;gap:10px;flex-wrap:wrap}\\n.hero .tags span{font-size:11px;letter-spacing:.06em;border:1px solid rgba(255,255,255,.38);padding:6px 13px;border-radius:2px;opacity:.92}\\n.hero .trust{font-size:12.5px;opacity:.62;margin-top:20px}\\n.hero .dots{position:absolute;left:52px;bottom:32px;display:flex;gap:8px;z-index:3}\\n.hero .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.38);cursor:pointer;transition:all .3s}\\n.hero .dots i.on{width:28px;border-radius:4px;background:#c9a227}\\n.panel{flex:1;min-width:400px;max-width:540px;background:#fff;color:#1c1e22;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 46px;position:relative}\\n.panel .brand{text-align:center;margin-bottom:32px}\\n.panel .logo{width:58px;height:58px;margin:0 auto 14px;background:linear-gradient(135deg,#0a0a0a,#3a3a3a);color:#c9a227;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.18)}\\n.panel .brand b{font-size:22px;font-weight:700}\\n.panel .brand b span{color:#c9a227}\\n.panel .brand p{color:#8a8f98;font-size:12.5px;margin-top:6px}\\n.panel form{width:100%;max-width:340px}\\n.panel label{display:block;font-size:12px;font-weight:600;color:#3f4754;margin:16px 0 6px;letter-spacing:.02em}\\n.panel .field{position:relative}\\n.panel input{width:100%;padding:12px 14px;border:1px solid #d8dde3;border-radius:6px;font-size:14px;color:#1c1e22;outline:none;transition:border-color .2s,box-shadow .2s;background:#fbfcfd}\\n.panel input:focus{border-color:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.14)}\\n.panel .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;opacity:.55;padding:4px}\\n.panel .eye:hover{opacity:1}\\n.panel button[type=submit]{width:100%;margin-top:26px;background:#c9a227;color:#0a0a0a;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;letter-spacing:.14em;cursor:pointer;transition:all .2s;box-shadow:0 8px 20px rgba(201,162,39,.28)}\\n.panel button[type=submit]:hover{background:#b08e1f;transform:translateY(-1px);box-shadow:0 10px 26px rgba(201,162,39,.36)}\\n.panel button[type=submit]:disabled{opacity:.55;cursor:wait;transform:none}\\n#msg{color:#d64545;font-size:12.5px;margin-top:14px;min-height:18px;text-align:center}\\n.panel .foot{position:absolute;bottom:26px;color:#b6bcc6;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:center}\\n.panel .hint{color:#9aa1ab;font-size:11.5px;margin-top:18px;text-align:center}\\n@media (max-width:860px){\\nbody{flex-direction:column}\\n.hero{flex:none;height:36vh;min-height:0}\\n.hero .copy{padding:22px 22px}\\n.hero h1{font-size:23px;margin-top:8px}\\n.hero .sub{font-size:13px;margin-bottom:10px}\\n.hero .tags span{display:none}\\n.hero .trust{font-size:11px;margin-top:10px}\\n.hero .dots{left:22px;bottom:14px}\\n.panel{min-width:0;flex:1;padding:34px 24px}\\n.panel .foot{position:static;margin-top:26px}\\n}\\n</style></head><body>\\n<div class="hero">\\n  <div class="slide on" style="background-image:url(\\'/assets/images/login-1.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-2.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-3.webp\\')"></div>\\n  <div class="veil"></div>\\n  <div class="copy">\\n    <div class="kicker">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n    <h1>Mili Packaging <em>运营工作台</em></h1>\\n    <div class="sub">一站式独立站运营管理</div>\\n    <div class="tags"><span>产品管理</span><span>询盘中心</span><span>SEO 医生</span><span>数据看板</span><span>实时同步</span></div>\\n    <div class="trust">工厂直供 · 500+ 品牌 · 50+ 国家 · 数据实时同步</div>\\n  </div>\\n  <div class="dots"><i class="on" data-i="0"></i><i data-i="1"></i><i data-i="2"></i></div>\\n</div>\\n<div class="panel">\\n  <div class="brand">\\n    <div class="logo">M</div>\\n    <b>Mili <span>Packaging</span></b>\\n    <p>运营工作台 · 内部系统（会话 24h）</p>\\n  </div>\\n  <form id="f" autocomplete="on">\\n    <label for="acc">邮箱 / 账户名</label>\\n    <div class="field"><input id="acc" type="email" placeholder="请输入您的邮箱" autocomplete="username" required /></div>\\n    <label for="pw">密码</label>\\n    <div class="field">\\n      <input id="pw" type="password" placeholder="请输入密码" autocomplete="current-password" required />\\n      <button type="button" class="eye" id="eye" aria-label="显示/隐藏密码">👁</button>\\n    </div>\\n    <button type="submit" id="btn">登 录</button>\\n    <p id="msg"></p>\\n    <div class="hint">登录后自动进入工作台</div>\\n  </form>\\n  <div class="foot">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n</div>\\n<script>\\nvar slides=document.querySelectorAll(\\'.hero .slide\\'),dots=document.querySelectorAll(\\'.hero .dots i\\'),idx=0,timer;\\nfunction show(n){idx=(n+slides.length)%slides.length;for(var i=0;i<slides.length;i++){slides[i].classList.toggle(\\'on\\',i===idx);dots[i].classList.toggle(\\'on\\',i===idx)}}\\nfunction next(){show(idx+1)}\\ntimer=setInterval(next,4500);\\nfor(var d=0;d<dots.length;d++){(function(k){dots[k].addEventListener(\\'click\\',function(){show(k);clearInterval(timer);timer=setInterval(next,4500)})})(d)}\\nvar eye=document.getElementById(\\'eye\\'),pw=document.getElementById(\\'pw\\'),btn=document.getElementById(\\'btn\\'),f=document.getElementById(\\'f\\'),m=document.getElementById(\\'msg\\');\\neye.addEventListener(\\'click\\',function(){pw.type=pw.type===\\'password\\'?\\'text\\':\\'password\\';eye.textContent=pw.type===\\'password\\'?\\'👁\\':\\'🙈\\'});\\nfunction go(){\\n  m.textContent=\\'\\';\\n  var acc=document.getElementById(\\'acc\\').value.trim();\\n  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(acc)){m.textContent=\\'请输入有效的邮箱地址\\';return}\\n  btn.disabled=true;btn.textContent=\\'登录中…\\';\\n  fetch(\\'/api/login\\',{method:\\'POST\\',headers:{\\'content-type\\':\\'application/json\\'},body:JSON.stringify({account:acc,password:pw.value})}).then(function(r){\\n    if(r.ok){location.href=\\'/admin.html\\'}else{return r.json().then(function(j){m.textContent=j.error===\\'bad-credentials\\'?\\'密码错误\\':(j.error===\\'bad-account\\'?\\'请输入有效的邮箱地址\\':\\'登录失败 (\\'+j.error+\\')\\')})}\\n  }).catch(function(){m.textContent=\\'网络错误，请重试\\'}).then(function(){btn.disabled=false;btn.textContent=\\'登 录\\'});\\n}\\nf.addEventListener(\\'submit\\',function(e){e.preventDefault();go()});\\npw.addEventListener(\\'keydown\\',function(e){if(e.key===\\'Enter\\')go()});\\n</script></body></html>';
+const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili Packaging 运营工作台 · 登录</title><style>\\n*{margin:0;padding:0;box-sizing:border-box}\\nbody{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#0a0a0a;min-height:100vh;display:flex}\\n.hero{position:relative;flex:1.7;min-height:100vh;overflow:hidden;display:flex;align-items:flex-end}\\n.hero .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;background-size:cover;background-position:center}\\n.hero .slide.on{opacity:1}\\n.hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.38) 100%)}\\n.hero .copy{position:relative;z-index:2;padding:56px 52px;color:#fff;max-width:660px}\\n.hero .kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c9a227;font-weight:700}\\n.hero h1{font-size:42px;font-weight:600;margin:14px 0 8px;letter-spacing:.01em;line-height:1.2}\\n.hero h1 em{font-style:normal;color:#c9a227}\\n.hero .sub{font-size:16px;opacity:.88;margin-bottom:20px}\\n.hero .tags{display:flex;gap:10px;flex-wrap:wrap}\\n.hero .tags span{font-size:11px;letter-spacing:.06em;border:1px solid rgba(255,255,255,.38);padding:6px 13px;border-radius:2px;opacity:.92}\\n.hero .trust{font-size:12.5px;opacity:.62;margin-top:20px}\\n.hero .dots{position:absolute;left:52px;bottom:32px;display:flex;gap:8px;z-index:3}\\n.hero .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.38);cursor:pointer;transition:all .3s}\\n.hero .dots i.on{width:28px;border-radius:4px;background:#c9a227}\\n.panel{flex:1;min-width:400px;max-width:540px;background:#fff;color:#1c1e22;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 46px;position:relative}\\n.panel .brand{text-align:center;margin-bottom:32px}\\n.panel .logo{width:58px;height:58px;margin:0 auto 14px;background:linear-gradient(135deg,#0a0a0a,#3a3a3a);color:#c9a227;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.18)}\\n.panel .brand b{font-size:22px;font-weight:700}\\n.panel .brand b span{color:#c9a227}\\n.panel .brand p{color:#8a8f98;font-size:12.5px;margin-top:6px}\\n.panel form{width:100%;max-width:340px}\\n.panel label{display:block;font-size:12px;font-weight:600;color:#3f4754;margin:16px 0 6px;letter-spacing:.02em}\\n.panel .field{position:relative}\\n.panel input{width:100%;padding:12px 14px;border:1px solid #d8dde3;border-radius:6px;font-size:14px;color:#1c1e22;outline:none;transition:border-color .2s,box-shadow .2s;background:#fbfcfd}\\n.panel input:focus{border-color:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.14)}\\n.panel .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;opacity:.55;padding:4px}\\n.panel .eye:hover{opacity:1}\\n.panel button[type=submit]{width:100%;margin-top:26px;background:#c9a227;color:#0a0a0a;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;letter-spacing:.14em;cursor:pointer;transition:all .2s;box-shadow:0 8px 20px rgba(201,162,39,.28)}\\n.panel button[type=submit]:hover{background:#b08e1f;transform:translateY(-1px);box-shadow:0 10px 26px rgba(201,162,39,.36)}\\n.panel button[type=submit]:disabled{opacity:.55;cursor:wait;transform:none}\\n#msg{color:#d64545;font-size:12.5px;margin-top:14px;min-height:18px;text-align:center}\\n.panel .foot{position:absolute;bottom:26px;color:#b6bcc6;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:center}\\n.panel .hint{color:#9aa1ab;font-size:11.5px;margin-top:18px;text-align:center}\\n@media (max-width:860px){\\nbody{flex-direction:column}\\n.hero{flex:none;height:36vh;min-height:0}\\n.hero .copy{padding:22px 22px}\\n.hero h1{font-size:23px;margin-top:8px}\\n.hero .sub{font-size:13px;margin-bottom:10px}\\n.hero .tags span{display:none}\\n.hero .trust{font-size:11px;margin-top:10px}\\n.hero .dots{left:22px;bottom:14px}\\n.panel{min-width:0;flex:1;padding:34px 24px}\\n.panel .foot{position:static;margin-top:26px}\\n}\\n</style></head><body>\\n<div class="hero">\\n  <div class="slide on" style="background-image:url(\\'/assets/images/login-1.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-2.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-3.webp\\')"></div>\\n  <div class="veil"></div>\\n  <div class="copy">\\n    <div class="kicker">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n    <h1>Mili Packaging <em>运营工作台</em></h1>\\n    <div class="sub">一站式独立站运营管理</div>\\n    <div class="tags"><span>产品管理</span><span>询盘中心</span><span>SEO 医生</span><span>数据看板</span><span>实时同步</span></div>\\n    <div class="trust">工厂直供 · 500+ 品牌 · 50+ 国家 · 数据实时同步</div>\\n  </div>\\n  <div class="dots"><i class="on" data-i="0"></i><i data-i="1"></i><i data-i="2"></i></div>\\n</div>\\n<div class="panel">\\n  <div class="brand">\\n    <div class="logo">M</div>\\n    <b>Mili <span>Packaging</span></b>\\n    <p>运营工作台 · 内部系统（会话 24h）</p>\\n  </div>\\n  <form id="f" autocomplete="on">\\n    <label for="acc">账号 / 邮箱</label>\\n    <div class="field"><input id="acc" type="text" placeholder="账号（首次登录用 owner）或邮箱" autocomplete="username" required /></div>\\n    <label for="pw">密码</label>\\n    <div class="field">\\n      <input id="pw" type="password" placeholder="请输入密码" autocomplete="current-password" required />\\n      <button type="button" class="eye" id="eye" aria-label="显示/隐藏密码">👁</button>\\n    </div>\\n    <button type="submit" id="btn">登 录</button>\\n    <p id="msg"></p>\\n    <div class="hint">登录后自动进入工作台</div>\\n  </form>\\n  <div class="foot">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n</div>\\n<script>\\nvar slides=document.querySelectorAll(\\'.hero .slide\\'),dots=document.querySelectorAll(\\'.hero .dots i\\'),idx=0,timer;\\nfunction show(n){idx=(n+slides.length)%slides.length;for(var i=0;i<slides.length;i++){slides[i].classList.toggle(\\'on\\',i===idx);dots[i].classList.toggle(\\'on\\',i===idx)}}\\nfunction next(){show(idx+1)}\\ntimer=setInterval(next,4500);\\nfor(var d=0;d<dots.length;d++){(function(k){dots[k].addEventListener(\\'click\\',function(){show(k);clearInterval(timer);timer=setInterval(next,4500)})})(d)}\\nvar eye=document.getElementById(\\'eye\\'),pw=document.getElementById(\\'pw\\'),btn=document.getElementById(\\'btn\\'),f=document.getElementById(\\'f\\'),m=document.getElementById(\\'msg\\');\\neye.addEventListener(\\'click\\',function(){pw.type=pw.type===\\'password\\'?\\'text\\':\\'password\\';eye.textContent=pw.type===\\'password\\'?\\'👁\\':\\'🙈\\'});\\nfunction go(){\\n  m.textContent=\\'\\';\\n  var acc=document.getElementById(\\'acc\\').value.trim();\\n  if(acc.length<2){m.textContent=\\'请输入账号\\';return}\\n  btn.disabled=true;btn.textContent=\\'登录中…\\';\\n  fetch(\\'/api/login\\',{method:\\'POST\\',headers:{\\'content-type\\':\\'application/json\\'},body:JSON.stringify({account:acc,password:pw.value})}).then(function(r){\\n    if(r.ok){location.href=\\'/admin.html\\'}else{return r.json().then(function(j){m.textContent=j.error===\\'bad-credentials\\'?\\'账号或密码错误\\':(j.error===\\'account-disabled\\'?\\'账号已被禁用，请联系管理员\\':\\'登录失败 (\\'+j.error+\\')\\')})}\\n  }).catch(function(){m.textContent=\\'网络错误，请重试\\'}).then(function(){btn.disabled=false;btn.textContent=\\'登 录\\'});\\n}\\nf.addEventListener(\\'submit\\',function(e){e.preventDefault();go()});\\npw.addEventListener(\\'keydown\\',function(e){if(e.key===\\'Enter\\')go()});\\n</script></body></html>';
 
 export default{async fetch(r,env){
   const url=new URL(r.url);
@@ -188,10 +188,89 @@ export default{async fetch(r,env){
   const AUDIT_LOG=(globalThis.__miliAudit=globalThis.__miliAudit||[]);
   const RL=(globalThis.__miliRl=globalThis.__miliRl||{});
   const sha256hex=async function(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(function(x){return x.toString(16).padStart(2,'0')}).join('')};
+  // v19: PBKDF2 密码哈希（D5：升级为 PBKDF2-SHA256，100k 迭代）
+  const SB_SERVICE_KEY=(env&&env.SB_SERVICE_KEY)||'';
+  const pbkdf2Hash=async function(password,salt,iterations){
+    const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(String(password)),'PBKDF2',false,['deriveBits']);
+    const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(String(salt)),iterations:iterations||100000,hash:'SHA-256'},key,256);
+    return[...new Uint8Array(bits)].map(function(x){return x.toString(16).padStart(2,'0')}).join('');
+  };
+  const genSalt=function(){const a=new Uint8Array(16);crypto.getRandomValues(a);return[...a].map(function(x){return x.toString(16).padStart(2,'0')}).join('')};
+  const hashPw=async function(password){const salt=genSalt();const hash=await pbkdf2Hash(password,salt,100000);return 'pbkdf2_sha256$100000$'+salt+'$'+hash};
+  const verifyPw=async function(password,stored){
+    const parts=String(stored||'').split('$');
+    if(parts.length!==4||parts[0]!=='pbkdf2_sha256')return false;
+    const hash=await pbkdf2Hash(password,parts[2],parseInt(parts[1],10)||100000);
+    return hash===parts[3];
+  };
+  // service key 访问 accounts（RLS 拒绝 anon，worker 专用 key 可选配置）
+  const accFetch=async function(path,opts){
+    const h=Object.assign({apikey:sbK(env),Authorization:'Bearer '+sbK(env)},(opts&&opts.headers)||{});
+    if(SB_SERVICE_KEY){h.apikey=SB_SERVICE_KEY;h.Authorization='Bearer '+SB_SERVICE_KEY}
+    return fetch(sbU(env)+'/rest/v1/'+path,Object.assign({},opts,{headers:h}));
+  };
   const hmacHex=async function(msg){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(SESSION_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(msg));return[...new Uint8Array(sig)].map(function(x){return x.toString(16).padStart(2,'0')}).join('')};
   const getCookie=function(name){const m=(r.headers.get('cookie')||'').match(new RegExp('(?:^|; )'+name+'=([^;]*)'));return m?decodeURIComponent(m[1]):null};
-  const sessionValid=async function(){const t=getCookie('mili_session');if(!t)return false;const sp=t.split('.');if(sp.length!==2)return false;const exp=parseInt(sp[0],10);if(!exp||exp<Date.now())return false;try{const sig=await hmacHex('mili_session.'+exp);if(sig.length!==sp[1].length)return false;let ok=true;for(let i=0;i<sig.length;i++){if(sig[i]!==sp[1][i]){ok=false;break}}return ok}catch(e){return false}};
-  const audit=function(action,obj,before,after){const rec={t:new Date().toISOString(),actor:'admin',action:action,obj:obj,before:before,after:after};AUDIT_LOG.push(rec);if(AUDIT_LOG.length>500)AUDIT_LOG.splice(0,AUDIT_LOG.length-500)};
+  const sessionInfo=async function(){
+    const t=getCookie('mili_session');
+    if(!t)return null;
+    const sp=t.split('.');
+    if(sp.length<2||sp.length>3)return null;
+    const exp=parseInt(sp[0],10);
+    if(!exp||exp<Date.now())return null;
+    let payload='';
+    if(sp.length===3)payload=sp[1];
+    const msg='mili_session.'+exp+(payload?'.'+payload:'');
+    try{
+      const sig=await hmacHex(msg);
+      const expect=sp[sp.length-1];
+      if(sig.length!==expect.length)return null;
+      let ok=true;for(let i=0;i<sig.length;i++){if(sig[i]!==expect[i]){ok=false;break}}
+      if(!ok)return null;
+      let info={uid:null,role:'owner',name:'admin'};
+      if(payload){
+        try{
+          const raw=atob(payload.replace(/-/g,'+').replace(/_/g,'/'));
+          const j=JSON.parse(decodeURIComponent(escape(raw)));
+          if(j&&j.uid)info={uid:j.uid,role:j.role||'operator',name:j.name||j.username||''};
+        }catch(e){}
+      }
+      return info;
+    }catch(e){return null}
+  };
+  const sessionValid=async function(){return !!(await sessionInfo())};
+  const requireRole=async function(roles){
+    const si=await sessionInfo();
+    if(!si)return {ok:false,code:401,error:'unauthorized'};
+    if(roles&&roles.length&&roles.indexOf(si.role)<0)return {ok:false,code:403,error:'forbidden'};
+    return {ok:true,si:si};
+  };
+  const audit=function(action,obj,before,after){const rec={t:new Date().toISOString(),actor:(globalThis.__miliActor)||'admin',action:action,obj:obj,before:before,after:after};AUDIT_LOG.push(rec);if(AUDIT_LOG.length>500)AUDIT_LOG.splice(0,AUDIT_LOG.length-500)};
+  // v19: 客户自动建档（email/phone 去重归并；供询盘新增/邮件同步/批量录入调用）
+  const upsertCustomer=async function(env,c){
+    if(!c||(!c.email&&!c.phone))return null;
+    const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
+    let found=null;
+    try{
+      if(c.email){
+        const r=await fetch(sbU(env)+'/rest/v1/customers?select=id,name,email,phone,company,country,source,grade,tags&email=eq.'+encodeURIComponent(c.email)+'&limit=1',{headers:H0});
+        if(r.ok){const rows=await r.json();if(Array.isArray(rows)&&rows[0])found=rows[0]}
+      }
+      if(!found&&c.phone){
+        const r=await fetch(sbU(env)+'/rest/v1/customers?select=id,name,email,phone,company,country,source,grade,tags&phone=eq.'+encodeURIComponent(c.phone)+'&limit=1',{headers:H0});
+        if(r.ok){const rows=await r.json();if(Array.isArray(rows)&&rows[0])found=rows[0]}
+      }
+    }catch(e){}
+    const upd={updated_at:new Date().toISOString()};
+    for(const k of ['name','email','phone','company','country','source']){if(c[k]&&(!found||!found[k]))upd[k]=c[k]}
+    if(found){
+      const r=await fetch(sbU(env)+'/rest/v1/customers?id=eq.'+encodeURIComponent(found.id),{method:'PATCH',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify(upd)});
+      return {id:found.id,created:false};
+    }
+    const r=await fetch(sbU(env)+'/rest/v1/customers',{method:'POST',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=representation'}),body:JSON.stringify(Object.assign({grade:'C',source:c.source||'website'},upd))});
+    if(r.ok||r.status===201){const j=await r.json();const row=Array.isArray(j)?j[0]:j;return {id:(row&&row.id)||null,created:true}}
+    return null;
+  };
   const ip=(r.headers.get('cf-connecting-ip'))||'unknown';const now=Date.now();const rc=RL[ip];
   if(!rc||rc.r<now){RL[ip]={n:1,r:now+60000}}else{RL[ip].n++;if(RL[ip].n>60)return new Response(JSON.stringify({ok:false,error:'rate-limited'}),{status:429,headers:{'content-type':'application/json'}})}
 
@@ -199,20 +278,147 @@ export default{async fetch(r,env){
   if(p==='/api/login'&&r.method==='POST'){
     try{
       const b=await r.json();
-      const acc=String((b&&b.account)||'').trim();
-      if(acc&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(acc))return new Response(JSON.stringify({ok:false,error:'bad-account'}),{status:400,headers:{'content-type':'application/json'}});
-      const h=await sha256hex(String((b&&b.password)||''));
-      if(h!==ADMIN_PW_HASH)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
+      const username=String((b&&b.username)||(b&&b.account)||'owner').trim().toLowerCase();
+      const password=String((b&&b.password)||'');
+      if(!password)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+      if(username.length>100||username.length<2)return new Response(JSON.stringify({ok:false,error:'bad-username'}),{status:400,headers:{'content-type':'application/json'}});
+      let info=null;
+      // 1) 账号体系登录（accounts 表）
+      try{
+        const rr=await accFetch('accounts?username=eq.'+encodeURIComponent(username)+'&select=id,username,display_name,avatar_url,role,status,password_hash',{signal:AbortSignal.timeout(8000)});
+        if(rr.ok){
+          const rows=await rr.json();
+          const accRow=Array.isArray(rows)&&rows[0]?rows[0]:null;
+          if(accRow){
+            if(accRow.status!=='active')return new Response(JSON.stringify({ok:false,error:'account-disabled'}),{status:403,headers:{'content-type':'application/json'}});
+            const okPw=await verifyPw(password,accRow.password_hash);
+            if(!okPw)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
+            info={uid:accRow.id,role:accRow.role||'operator',name:accRow.display_name||accRow.username||username};
+            // 更新 last_login_at
+            try{await accFetch('accounts?id=eq.'+encodeURIComponent(accRow.id),{method:'PATCH',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({last_login_at:new Date().toISOString()})})}catch(e){}
+          }
+        }
+      }catch(e){}
+      // 2) 兼容旧密码：owner 账号 + ADMIN_PW_HASH（首次自动创建账号）
+      if(!info&&username==='owner'){
+        const h=await sha256hex(password);
+        if(h===ADMIN_PW_HASH){
+          info={uid:null,role:'owner',name:'owner'};
+          try{
+            const chk=await accFetch('accounts?select=id&limit=1');
+            if(!chk.ok||!((await chk.json()).length)){
+              const ph=await hashPw(password);
+              await accFetch('accounts',{method:'POST',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({username:'owner',display_name:'管理员',role:'owner',password_hash:ph,status:'active'})});
+            }
+          }catch(e){}
+        }
+      }
+      if(!info)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
       const exp=Date.now()+86400000;
-      const sig=await hmacHex('mili_session.'+exp);
-      audit('login',{account:acc||'admin'});
-      return new Response(JSON.stringify({ok:true,exp:exp}),{headers:{'content-type':'application/json','set-cookie':'mili_session='+exp+'.'+sig+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
+      const payload=btoa(unescape(encodeURIComponent(JSON.stringify({uid:info.uid,role:info.role,name:info.name})))).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/g,'');
+      const sig=await hmacHex('mili_session.'+exp+'.'+payload);
+      audit('login',{account:username});
+      return new Response(JSON.stringify({ok:true,exp:exp,me:info}),{headers:{'content-type':'application/json','set-cookie':'mili_session='+exp+'.'+payload+'.'+sig+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}})}
   }
   if(p==='/api/logout'){return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json','set-cookie':'mili_session=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'}})}
+  // v19: 流量埋点（免会话；Origin 校验 + 限流；写入 page_views）
+  if(p==='/api/track'&&r.method==='POST'){
+    const origin=String(r.headers.get('origin')||'');
+    if(origin&&origin.indexOf('mili-packaging.com')<0&&origin.indexOf('localhost')<0&&origin.indexOf('127.0.0.1')<0&&origin.indexOf('accio.ai')<0)return new Response(JSON.stringify({ok:false,error:'bad-origin'}),{status:403,headers:{'content-type':'application/json'}});
+    try{
+      const b=await r.json();
+      const page=String((b&&b.page)||'').slice(0,200);
+      if(!page||page.length<2)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+      const body={
+        page:page,
+        ref:String((b&&b.ref)||'').slice(0,300)||null,
+        source:String((b&&b.source)||'direct').slice(0,30),
+        country:String(r.headers.get('cf-ipcountry')||(b&&b.country)||'').slice(0,10)||null,
+        device:String((b&&b.device)||'desktop').slice(0,20),
+        keyword:String((b&&b.keyword)||'').slice(0,120)||null,
+        session:String((b&&b.session)||'').slice(0,40)||null,
+        ts:new Date().toISOString()
+      };
+      const rr=await fetch(sbU(env)+'/rest/v1/page_views',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});
+      if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+      return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+    }catch(e){return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}})}
+  }
   if(p.startsWith('/api/')){
-    if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
-    if(p==='/api/session')return new Response(JSON.stringify({ok:true,inquiryUnlocked:!!getCookie('mili_inquiry')}),{headers:{'content-type':'application/json'}});
+    const siNow=await sessionInfo();
+    if(!siNow)return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
+    globalThis.__miliActor=siNow.name||siNow.role||'admin';
+    if(p==='/api/session')return new Response(JSON.stringify({ok:true,inquiryUnlocked:!!getCookie('mili_inquiry'),me:siNow}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/session/me')return new Response(JSON.stringify({ok:true,me:siNow}),{headers:{'content-type':'application/json'}});
+    // v19: 账号管理（仅 owner）
+    if(p==='/api/account/list'&&r.method==='GET'){
+      const g=await requireRole(['owner']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await accFetch('accounts?select=id,username,display_name,avatar_url,role,status,last_login_at,created_at&order=created_at.asc');
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        const rows=await rr.json();
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(rows)?rows:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/account/save'&&r.method==='POST'){
+      const g=await requireRole(['owner']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const username=String((b&&b.username)||'').trim().toLowerCase();
+        if(!/^[a-z0-9_.@-]{2,60}$/.test(username))return new Response(JSON.stringify({ok:false,error:'bad-username'}),{status:400,headers:{'content-type':'application/json'}});
+        const role=String((b&&b.role)||'operator');
+        if(['owner','admin','operator','viewer'].indexOf(role)<0)return new Response(JSON.stringify({ok:false,error:'bad-role'}),{status:400,headers:{'content-type':'application/json'}});
+        const status=String((b&&b.status)||'active');
+        if(['active','disabled'].indexOf(status)<0)return new Response(JSON.stringify({ok:false,error:'bad-status'}),{status:400,headers:{'content-type':'application/json'}});
+        const display_name=String((b&&b.display_name)||username).slice(0,60);
+        const avatar_url=String((b&&b.avatar_url)||'').slice(0,300);
+        const body={username:username,display_name:display_name,avatar_url:avatar_url,role:role,status:status,updated_at:new Date().toISOString()};
+        if(b.id){
+          if(b.id===g.si.uid&&role!=='owner')return new Response(JSON.stringify({ok:false,error:'cannot-demote-self'}),{status:400,headers:{'content-type':'application/json'}});
+          const rr=await accFetch('accounts?id=eq.'+encodeURIComponent(String(b.id)),{method:'PATCH',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});
+          if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        }else{
+          if(!b.password||String(b.password).length<6)return new Response(JSON.stringify({ok:false,error:'bad-password'}),{status:400,headers:{'content-type':'application/json'}});
+          body.password_hash=await hashPw(String(b.password));
+          const rr=await accFetch('accounts',{method:'POST',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});
+          if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        }
+        audit('account.save',username,undefined,b);
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/account/delete'&&r.method==='POST'){
+      const g=await requireRole(['owner']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const id=String((b&&b.id)||'');
+        if(!id)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        if(id===g.si.uid)return new Response(JSON.stringify({ok:false,error:'cannot-delete-self'}),{status:400,headers:{'content-type':'application/json'}});
+        const rr=await accFetch('accounts?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+        if(!rr.ok&&rr.status!==204)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        audit('account.delete',id);
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/account/reset-pw'&&r.method==='POST'){
+      const g=await requireRole(['owner']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const id=String((b&&b.id)||'');
+        const pw=String((b&&b.password)||'');
+        if(!id||pw.length<6)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        const ph=await hashPw(pw);
+        const rr=await accFetch('accounts?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({password_hash:ph,updated_at:new Date().toISOString()})});
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        audit('account.reset-pw',id);
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     // v14: GitHub API 代理（看板部署/提交状态，OPS_GH_PAT 鉴权免限流）
     // v15: 站点装修配置（GitHub src/data/site.json 读写）
     if(p==='/api/site'&&r.method==='GET'){
@@ -314,6 +520,13 @@ export default{async fetch(r,env){
         clean.updated_at=new Date().toISOString();
         const rr=await fetch(sbU(env)+'/rest/v1/inquiries',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
         if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        // v19: 自动建档客户（去重归并）+ 行为事件
+        try{
+          const cu=await upsertCustomer(env,{name:clean.name,email:clean.email,phone:clean.phone,company:clean.company,country:clean.country,source:clean.channel||'website'});
+          if(cu&&cu.id){
+            await fetch(sbU(env)+'/rest/v1/customer_events',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({customer_id:cu.id,type:'inquiry',payload:{product_type:clean.product_type||null,quantity:clean.quantity||null,message:(clean.message||'').slice(0,300)}})});
+          }
+        }catch(e){}
         return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
@@ -400,6 +613,11 @@ export default{async fetch(r,env){
             }catch(e){}
           }
           const ins=await fetch(sbU(env)+'/rest/v1/inquiries',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(fields)});
+          // v19: 邮件客户自动建档
+          try{
+            const cu=await upsertCustomer(env,{name:fields.name||name,email:fields.email||fromAddr,phone:fields.phone,company:fields.company,country:null,source:'email'});
+            if(cu&&cu.id){await fetch(sbU(env)+'/rest/v1/customer_events',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({customer_id:cu.id,type:'email',payload:{subject:subject.slice(0,200)}})})}
+          }catch(e){}
           results.push({from:fromAddr,subject:subject,ok:ins.ok||ins.status===201});
           await send('a6 STORE '+seq+' +FLAGS (\\Seen)');await waitTag('a6',8000);
         }
@@ -407,6 +625,68 @@ export default{async fetch(r,env){
         try{socket.close()}catch(_){}
         return {ok:true,count:results.length,results:results};
       }catch(e){try{socket.close()}catch(_){};return {ok:false,error:String((e&&e.message)||e),message:'邮件同步失败：'+(e&&e.message||'网络错误')};}
+    };
+    // v19: SMTP 邮件群发（163 SSL 465；MAIL_SMTP_* 未配置时复用 IMAP 授权码）
+    const mailSendNow=async function(env,r){
+      const host=String((env&&env.MAIL_SMTP_HOST)||'smtp.163.com');
+      const user=String((env&&env.MAIL_SMTP_USER)||(env&&env.MAIL_IMAP_USER)||'');
+      const pass=String((env&&env.MAIL_SMTP_PASS)||(env&&env.MAIL_IMAP_PASS)||'');
+      if(!user||!pass)return {ok:false,error:'not-configured',message:'未配置 SMTP 授权码（MAIL_SMTP_USER/MAIL_SMTP_PASS，或复用 IMAP 的 MAIL_IMAP_USER/MAIL_IMAP_PASS）'};
+      if(typeof connect!=='function')return {ok:false,error:'no-tcp',message:'当前运行时不支持 TCP（群发不可用）'};
+      let b={};
+      try{b=await r.json()}catch(e){}
+      const emails=(b&&Array.isArray(b.emails)?b.emails:[]).filter(function(e){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e))}).slice(0,50);
+      const subject=String((b&&b.subject)||'').slice(0,200);
+      const body=String((b&&b.body)||'').slice(0,4000);
+      if(!emails.length||!subject||!body)return {ok:false,error:'bad-request',message:'需要 emails（有效邮箱数组）、subject、body'};
+      const enc=new TextEncoder();
+      const smtpOne=async function(to){
+        return await new Promise(function(resolve){
+          let socket=null;
+          (async function(){
+            try{
+              socket=connect({hostname:host,port:465,tls:true});
+              const reader=socket.readable.getReader();
+              const writer=socket.writable.getWriter();
+              const dec=new TextDecoder();
+              let buf='',done=false;
+              (async function(){try{while(true){const x=await reader.read();if(x.done)break;if(x.value)buf+=dec.decode(x.value,{stream:true})}}catch(e){}finally{done=true}})();
+              const waitResp=function(timeout){return new Promise(function(res){const timer=setTimeout(function(){res(null)},timeout||10000);(function pump(){const i=buf.indexOf('\\n');if(i>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);clearTimeout(timer);res(line)}else if(done){clearTimeout(timer);res(null)}else{setTimeout(pump,80)}})()})};
+              const send=async function(cmd){await writer.write(enc.encode(cmd+'\\r\\n'))};
+              await waitResp(8000);
+              await send('EHLO mili-packaging.com');
+              await waitResp(8000);
+              await send('AUTH LOGIN');
+              await waitResp(8000);
+              await send(btoa(user));
+              await waitResp(8000);
+              await send(btoa(pass));
+              const auth=await waitResp(10000);
+              if(!auth||auth.indexOf('235')<0){resolve({to:to,ok:false,err:'auth:'+(auth||'no-resp')});try{socket.close()}catch(_){}return}
+              await send('MAIL FROM:<'+user+'>');
+              await waitResp(8000);
+              await send('RCPT TO:<'+to+'>');
+              const rcpt=await waitResp(8000);
+              if(!rcpt||(rcpt.indexOf('250')<0&&rcpt.indexOf('251')<0)){resolve({to:to,ok:false,err:'rcpt:'+(rcpt||'no-resp')});try{socket.close()}catch(_){}return}
+              await send('DATA');
+              const dataResp=await waitResp(8000);
+              if(!dataResp||dataResp.indexOf('354')<0){resolve({to:to,ok:false,err:'data:'+(dataResp||'no-resp')});try{socket.close()}catch(_){}return}
+              const msg='From: Mili Packaging <'+user+'>\\r\\nTo: <'+to+'>\\r\\nSubject: =?UTF-8?B?'+btoa(unescape(encodeURIComponent(subject)))+'?=\\r\\nMIME-Version: 1.0\\r\\nContent-Type: text/plain; charset=UTF-8\\r\\nContent-Transfer-Encoding: base64\\r\\n\\r\\n';
+              const b64Body=btoa(unescape(encodeURIComponent(body)));
+              const bodyLines=[];for(let i=0;i<b64Body.length;i+=76)bodyLines.push(b64Body.slice(i,i+76));
+              await send(msg+bodyLines.join('\\r\\n')+'\\r\\n.');
+              const fin=await waitResp(12000);
+              await send('QUIT');
+              resolve({to:to,ok:!!(fin&&fin.indexOf('250')>=0),err:fin&&fin.indexOf('250')<0?('fin:'+fin):null});
+              try{socket.close()}catch(_){}
+            }catch(e){resolve({to:to,ok:false,err:'ex:'+String((e&&e.message)||e)});try{if(socket)socket.close()}catch(_){}}
+          })();
+        });
+      };
+      const results=[];
+      for(const to of emails){results.push(await smtpOne(to))}
+      const okN=results.filter(function(x){return x.ok}).length;
+      return {ok:okN>0,count:results.length,okCount:okN,results:results};
     };
     if(p==='/api/mail/sync'&&r.method==='POST'){
       const res=await mailSyncNow(env);
@@ -508,7 +788,7 @@ export default{async fetch(r,env){
     if(p==='/api/customer/save'&&r.method==='POST'){
       try{
         const b=await r.json();
-        const CF=['name','email','phone','company','country','source','grade','note'];
+        const CF=['name','email','phone','company','country','source','grade','note','tags'];
         const clean={};
         for(const k of Object.keys(b||{})){if(CF.indexOf(k)>=0)clean[k]=b[k]}
         if(!clean.name&&!clean.email&&!clean.phone)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
@@ -526,6 +806,171 @@ export default{async fetch(r,env){
     }
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
+    // v19: 看板聚合（单请求返回 KPI / 趋势 / 分布，第一方数据实时）
+    if(p==='/api/dashboard'&&r.method==='GET'){
+      try{
+        const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
+        const dayFmt=function(d){return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0')};
+        const todayKey=dayFmt(new Date());
+        const since30=new Date(Date.now()-30*86400000).toISOString();
+        const since7=new Date(Date.now()-7*86400000).toISOString();
+        const ds=new Date();ds.setHours(0,0,0,0);
+        const sinceToday=ds.toISOString();
+        const [inqR,ordR,cusR,stkR,pvR]=await Promise.all([
+          fetch(sbU(env)+'/rest/v1/inquiries?select=created_at,channel,product_type&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/orders?select=created_at,amount&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/customers?select=created_at,grade&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/product_stock?select=status&limit=500',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/page_views?select=ts,source,country,device,keyword,session&ts=gte.'+since30+'&limit=5000',{headers:H0})
+        ]);
+        const inq=inqR.ok?(await inqR.json()):[];
+        const ord=ordR.ok?(await ordR.json()):[];
+        const cus=cusR.ok?(await cusR.json()):[];
+        const stk=stkR.ok?(await stkR.json()):[];
+        const pv=pvR.ok?(await pvR.json()):[];
+        const inqA=Array.isArray(inq)?inq:[],ordA=Array.isArray(ord)?ord:[],cusA=Array.isArray(cus)?cus:[],stkA=Array.isArray(stk)?stk:[],pvA=Array.isArray(pv)?pv:[];
+        const countSince=function(rows,ts){let n=0;for(const r of rows){if(String(r.created_at||r.ts||'')>=ts)n++}return n};
+        const gmvOf=function(rows,ts){let s=0;for(const r of rows){if(String(r.created_at||'')>=ts){const a=parseFloat(r.amount);if(isFinite(a)&&a>0)s+=a}}return s};
+        const trend=function(rows,key){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]=0}for(const r of rows){const k=dayFmt(new Date(r.created_at));if(m[k]!==undefined)m[k]++}return Object.keys(m).map(function(k){return {d:k,v:m[k]}})};
+        const ordTrend=function(rows){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]={amount:0,count:0}}for(const r of rows){const k=dayFmt(new Date(r.created_at));if(m[k]){m[k].amount+=(parseFloat(r.amount)||0);m[k].count++}}return Object.keys(m).map(function(k){return {d:k,a:Math.round(m[k].amount*100)/100,c:m[k].count}})};
+        const pvTrend=function(rows){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]={uv:0,pv:0,s:new Set()}}for(const r of rows){const k=dayFmt(new Date(r.ts));if(m[k]){m[k].pv++;if(r.session)m[k].s.add(r.session)}}return Object.keys(m).map(function(k){return {d:k,uv:m[k].s.size,pv:m[k].pv}})};
+        const topN=function(rows,key,n,emptyKey){const m={};for(const r of rows){const v=(r[key]&&String(r[key]).trim())||emptyKey||'其他';m[v]=(m[v]||0)+1}return Object.keys(m).map(function(k){return {name:k,value:m[k]}}).sort(function(a,b){return b.value-a.value}).slice(0,n||10)};
+        const uvSet=new Set();for(const r of pvA){if(r.session)uvSet.add(r.session)}
+        const kpi=function(ts){
+          return {
+            inquiries:countSince(inqA,ts),orders:countSince(ordA,ts),gmv:gmvOf(ordA,ts),
+            newCustomers:countSince(cusA,ts),
+            uv:ts===sinceToday?uvSet.size:0,pv:countSince(pvA,ts),
+            inventoryAlerts:(stkA.filter(function(r){return r.status==='out'||r.status==='limited'})).length
+          };
+        };
+        const k0=kpi(sinceToday),k7=kpi(since7),k30=kpi(since30);
+        k0.conversion=k0.uv>0?Math.round(k0.inquiries/k0.uv*10000)/100:0;
+        k7.conversion=k7.uv>0?Math.round(k7.inquiries/k7.uv*10000)/100:0;
+        k30.conversion=k30.uv>0?Math.round(k30.inquiries/k30.uv*10000)/100:0;
+        // 生命周期：按最近 30 天互动与订单判断
+        const life={new:0,follow:0,won:0,lost:0};
+        const nowMs=Date.now();
+        for(const r of cusA){
+          const last=new Date(r.created_at).getTime();
+          if(nowMs-last>30*86400000)life.lost++;
+          else if(nowMs-last>14*86400000)life.follow++;
+          else life.new++;
+        }
+        return new Response(JSON.stringify({
+          ok:true,generatedAt:new Date().toISOString(),
+          kpi:{today:k0,week:k7,month:k30},
+          trend:{inquiries:trend(inqA,'created_at'),orders:ordTrend(ordA),visitors:pvTrend(pvA)},
+          sources:topN(pvA,'source',8,'直接'),countries:topN(pvA,'country',10,'未知'),devices:topN(pvA,'device',6,'未知'),
+          keywords:topN(pvA,'keyword',10,''),channels:topN(inqA,'channel',8,'其他'),
+          productTop:topN(inqA,'product_type',10,'未指定'),
+          lifecycle:[{name:'新客户',value:life.new},{name:'跟进中',value:life.follow},{name:'已成交',value:life.won},{name:'流失/沉睡',value:life.lost}]
+        }),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v19: 客户合并（迁移订单/事件归属后删除重复客户）
+    if(p==='/api/customer/merge'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin','operator']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const primary=String((b&&b.primary)||'');const ids=(b&&b.ids)||[];
+        if(!primary||!Array.isArray(ids)||!ids.length)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
+        for(const id of ids){
+          if(id===primary)continue;
+          await fetch(sbU(env)+'/rest/v1/orders?customer_id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify({customer_id:primary})});
+          await fetch(sbU(env)+'/rest/v1/customer_events?customer_id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify({customer_id:primary})});
+          await fetch(sbU(env)+'/rest/v1/customers?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:Object.assign({},H0,{'Prefer':'return=minimal'})});
+        }
+        audit('customer.merge',primary+' <- '+ids.join(','));
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v19: 客户行为时间线
+    if(p==='/api/customer/events'&&r.method==='GET'){
+      try{
+        const cid=String(url.searchParams.get('customer_id')||'');
+        if(!cid)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
+        const [evR,iqR,odR]=await Promise.all([
+          fetch(sbU(env)+'/rest/v1/customer_events?select=type,payload,created_at&customer_id=eq.'+encodeURIComponent(cid)+'&order=created_at.desc&limit=100',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/inquiries?select=name,email,phone,company,message,channel,created_at&email=eq.'+encodeURIComponent(url.searchParams.get('email')||'___')+'&order=created_at.desc&limit=50',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/orders?select=order_no,title,amount,status,created_at&customer_id=eq.'+encodeURIComponent(cid)+'&order=created_at.desc&limit=50',{headers:H0})
+        ]);
+        const ev=evR.ok?(await evR.json()):[];const iq=iqR.ok?(await iqR.json()):[];const od=odR.ok?(await odR.json()):[];
+        return new Response(JSON.stringify({ok:true,events:Array.isArray(ev)?ev:[],inquiries:Array.isArray(iq)?iq:[],orders:Array.isArray(od)?od:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v19: 客户分组（手动 + 动态规则）
+    if(p==='/api/segment/list'&&r.method==='GET'){
+      try{
+        const rr=await fetch(sbU(env)+'/rest/v1/customer_segments?select=*&order=created_at.asc&limit=100',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/segment/save'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin','operator']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const name=String((b&&b.name)||'').trim().slice(0,60);
+        if(!name)return new Response(JSON.stringify({ok:false,error:'bad-name'}),{status:400,headers:{'content-type':'application/json'}});
+        const type=String((b&&b.type)||'manual');
+        if(['manual','dynamic'].indexOf(type)<0)return new Response(JSON.stringify({ok:false,error:'bad-type'}),{status:400,headers:{'content-type':'application/json'}});
+        const body={name:name,type:type,rule:(b&&b.rule)||null,member_ids:(b&&b.member_ids)||null,updated_at:new Date().toISOString()};
+        const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
+        let rr;
+        if(b.id){rr=await fetch(sbU(env)+'/rest/v1/customer_segments?id=eq.'+encodeURIComponent(String(b.id)),{method:'PATCH',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify(body)})}
+        else{rr=await fetch(sbU(env)+'/rest/v1/customer_segments',{method:'POST',headers:Object.assign({},H0,{'content-type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify(body)})}
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/segment/delete'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin','operator']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const rr=await fetch(sbU(env)+'/rest/v1/customer_segments?id=eq.'+encodeURIComponent(String((b&&b.id)||'')),{method:'DELETE',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'Prefer':'return=minimal'}});
+        if(!rr.ok&&rr.status!==204)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v19: 营销活动
+    if(p==='/api/campaign/list'&&r.method==='GET'){
+      try{
+        const rr=await fetch(sbU(env)+'/rest/v1/campaigns?select=*&order=created_at.desc&limit=100',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/campaign/create'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const name=String((b&&b.name)||'').trim().slice(0,80);
+        if(!name)return new Response(JSON.stringify({ok:false,error:'bad-name'}),{status:400,headers:{'content-type':'application/json'}});
+        const channel=String((b&&b.channel)||'email');
+        if(['email','whatsapp'].indexOf(channel)<0)return new Response(JSON.stringify({ok:false,error:'bad-channel'}),{status:400,headers:{'content-type':'application/json'}});
+        const body={name:name,channel:channel,audience:String((b&&b.audience)||'').slice(0,300)||null,template:String((b&&b.template)||'').slice(0,4000)||null,created_by:(g.si&&(g.si.name||g.si.uid))||''};
+        const rr=await fetch(sbU(env)+'/rest/v1/campaigns',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        const j=await rr.json();const row=Array.isArray(j)?j[0]:j;
+        audit('campaign.create',name);
+        return new Response(JSON.stringify({ok:true,id:(row&&row.id)||null}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v19: SMTP 邮件群发（163 授权码，复用 IMAP 配置；MAIL_SMTP_* 可单独覆盖）
+    if(p==='/api/mail/send'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      const res=await mailSendNow(env,r);
+      audit('mail.send',res&&res.error||('count:'+((res&&res.count)||0)));
+      return new Response(JSON.stringify(res),{headers:{'content-type':'application/json'}});
+    }
     if(p==='/api/config'){
       // v17: Supabase 真实连通检测（项目暂停/删除/域名失效会显示明确状态）
       let sbOk=true, sbHint='询盘入库与统计（env 可覆盖 SB_URL/SB_ANON_KEY）';
@@ -545,6 +990,8 @@ export default{async fetch(r,env){
         supabase:{ok:sbOk,hint:sbHint},
         mail_sync:{ok:!!env.MAIL_IMAP_USER,hint:'邮箱客户同步（163 IMAP，配置授权码后自动拉取新邮件入库）'},
         admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
+        accounts:{ok:!!SB_SERVICE_KEY,hint:'账号权限（配置 SB_SERVICE_KEY 后启用多账号与角色管理；未配置时使用单一密码登录）'},
+        mail_smtp:{ok:!!((env&&env.MAIL_SMTP_USER)||(env&&env.MAIL_IMAP_USER)),hint:'SMTP 邮件群发（复用 IMAP 授权码，MAIL_SMTP_* 可单独覆盖）'},
         inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
       },cron:globalThis.__cronLast||{},mailLast:globalThis.__mailLast||null}),{headers:{'content-type':'application/json'}});
     }
@@ -901,7 +1348,7 @@ if (SKIP_UPLOAD) {
 // Env vars injected at deploy time (read from process env; absent → worker falls back to dev defaults).
 // Production: set ADMIN_PW_HASH / SESSION_SECRET / PUSHPLUS_TOKEN / LLM_API_KEY in the CI/deploy env.
 const VARS = {};
-['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT', 'OPS_GH_PAT', 'SB_URL', 'SB_ANON_KEY', 'INDEXNOW_KEY', 'GA4_SERVICE_JSON', 'GA4_PROPERTY_ID', 'GSC_SERVICE_JSON', 'GSC_SITE_URL'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
+['ADMIN_PW_HASH', 'SESSION_SECRET', 'PUSHPLUS_TOKEN', 'LLM_API_KEY', 'LLM_ENDPOINT', 'OPS_GH_PAT', 'SB_URL', 'SB_ANON_KEY', 'SB_SERVICE_KEY', 'INDEXNOW_KEY', 'GA4_SERVICE_JSON', 'GA4_PROPERTY_ID', 'GSC_SERVICE_JSON', 'GSC_SITE_URL', 'MAIL_IMAP_USER', 'MAIL_IMAP_PASS', 'MAIL_SMTP_USER', 'MAIL_SMTP_PASS'].forEach(v => { if (process.env[v]) VARS[v] = process.env[v]; });
 // v4.5 cron triggers: daily brief 08:00 CST (UTC 00:00), weekly link check Mon 09:00 CST (UTC 01:00), IndexNow every 6h
 const TRIGGERS = ['0 0 * * *', '0 1 * * 1', '0 */6 * * *'];
 const metadata = JSON.stringify({ main_module: 'worker.js', vars: VARS, triggers: { crons: TRIGGERS } });
