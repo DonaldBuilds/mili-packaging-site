@@ -1146,52 +1146,66 @@
     </div>
     <div class="card" id="v19-zone" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
-        <h3 style="margin:0">📊 经营总览 <span class="v5-src" id="v19-stamp"></span></h3>
-        <span style="margin-left:auto;display:flex;gap:4px">
+        <h3 style="margin:0">📊 经营总览</h3>
+        <span style="margin-left:auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap">
           <button class="btn btn-ghost btn-sm v19-r" data-r="today">今日</button>
-          <button class="btn btn-ghost btn-sm v19-r" data-r="week">近 7 天</button>
-          <button class="btn btn-ghost btn-sm v19-r on" data-r="month">近 30 天</button>
+          <button class="btn btn-ghost btn-sm v19-r on" data-r="week">近 7 天</button>
+          <button class="btn btn-ghost btn-sm v19-r" data-r="month">近 30 天</button>
+          <button class="btn btn-ghost btn-sm" id="dash-metric-help" title="数据口径与统计说明">📐 口径说明</button>
+          <span class="v5-src" id="v19-stamp"></span>
         </span>
       </div>
       <div class="v19-kpis" id="v19-kpis">加载中…</div>
-      <div class="grid" style="margin-top:12px">
-        <div class="card" style="margin:0"><h4>访客趋势（近 14 天）</h4><div id="v19-trend-v" style="height:130px">—</div></div>
-        <div class="card" style="margin:0"><h4>询盘 / 订单趋势（近 14 天）</h4><div id="v19-trend-i" style="height:130px">—</div></div>
-        <div class="card" style="margin:0"><h4>流量来源</h4><div id="v19-sources" style="height:130px">—</div></div>
+      <div class="card" style="margin:12px 0 0;padding:12px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+          <h4 style="margin:0">📈 趋势分析 <span class="hint" style="font-weight:400">近 14 天 · 本期 vs 上期对比</span></h4>
+          <span style="margin-left:auto;display:flex;gap:4px">
+            <button class="btn btn-ghost btn-sm v19-t on" data-t="visitors">访客 UV</button>
+            <button class="btn btn-ghost btn-sm v19-t" data-t="inquiries">询盘</button>
+            <button class="btn btn-ghost btn-sm v19-t" data-t="orders">订单金额</button>
+          </span>
+        </div>
+        <div id="v19-trend-main" style="height:180px">—</div>
+        <div style="display:flex;gap:14px;font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">
+          <span><i style="display:inline-block;width:12px;height:2px;background:#c9a227;vertical-align:middle;margin-right:5px"></i>本期</span>
+          <span><i style="display:inline-block;width:12px;height:2px;background:rgba(140,150,160,.55);vertical-align:middle;margin-right:5px"></i>上期（前 14 天）</span>
+        </div>
       </div>
       <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>询盘转化漏斗（近 30 天）</h4><div id="v19-funnel" style="min-height:130px">加载中…</div></div>
+        <div class="card" style="margin:0"><h4>本期 vs 上期对比</h4><div id="v19-compare" style="min-height:130px">加载中…</div></div>
+      </div>
+      <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>流量来源</h4><div id="v19-sources" style="min-height:120px">—</div></div>
         <div class="card" style="margin:0"><h4>国家分布 TOP</h4><div id="v19-countries">—</div></div>
         <div class="card" style="margin:0"><h4>设备分布</h4><div id="v19-devices">—</div></div>
-        <div class="card" style="margin:0"><h4>询盘渠道对比</h4><div id="v19-channels">—</div></div>
       </div>
       <div class="grid" style="margin-top:12px">
+        <div class="card" style="margin:0"><h4>询盘渠道对比</h4><div id="v19-channels">—</div></div>
         <div class="card" style="margin:0"><h4>产品询盘 TOP</h4><div id="v19-products">—</div></div>
         <div class="card" style="margin:0"><h4>关键词搜索 TOP</h4><div id="v19-keywords">—</div></div>
-        <div class="card" style="margin:0"><h4>客户生命周期</h4><div id="v19-lifecycle">—</div></div>
       </div>
-      <p class="hint" id="v19-hint" style="margin:10px 0 0">埋点未启用时流量卡显示引导；业务数据（询盘/订单/客户/库存）实时。</p>
+      <p class="hint" id="v19-hint" style="margin:10px 0 0"></p>
     </div>
-    <div class="grid">
-      <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
-      <div class="card"><h3>最近提交 <span class="v5-src" id="dash-stamp-commits"></span></h3><div id="dash-commits">加载中…</div></div>
-      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('inquiry')" style="float:right;cursor:pointer">查看全部 →</a></h3><div id="dash-inquiries">加载中…</div><div id="dash-followup" style="margin-top:8px"></div></div>
-      <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('editor')" style="float:right;cursor:pointer">管理产品 →</a></h3><div id="dash-products">加载中…</div></div>
-    </div>
-    <div class="grid" style="margin-top:12px">
-      <div class="card"><h3>询盘转化漏斗 <span class="v5-src" id="dash-stamp-funnel"></span></h3><div id="dash-funnel">加载中…</div></div>
-      <div class="card"><h3>询盘趋势（近 14 天） <span class="v5-src" id="dash-stamp-trend"></span></h3><div id="dash-trend">加载中…</div></div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <h3>站点健康检查（关键页面） <span class="v5-src" id="dash-stamp-health"></span></h3>
-      <div id="dash-health" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px">加载中…</div>
-    </div>
-    <h2 style="margin-top:26px">平台数据直达</h2>
-    <div class="grid">
-      <div class="card"><h3>GA4 · 访问与转化</h3><p>用户 / 浏览 / 来源 / whatsapp_click 转化。</p><a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4 数据面板</a></div>
-      <div class="card"><h3>Google Search Console</h3><p>收录 / 关键词 / 点击展示。</p><a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a></div>
-      <div class="card"><h3>Bing Webmaster</h3><p>Bing 索引与 sitemap 处理状态。</p><a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a></div>
-      <div class="card"><h3>站点自检</h3><div id="selfcheck">检测中…</div></div>
-    </div>
+    <details class="card" style="margin-top:14px;padding:0 14px 14px">
+      <summary style="cursor:pointer;font-weight:600;padding:12px 0">⚙️ 系统与站点状态（部署 / 提交 / 健康检查 / 平台直达）</summary>
+      <div class="grid" style="margin-top:8px">
+        <div class="card" style="margin:0"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
+        <div class="card" style="margin:0"><h3>最近提交 <span class="v5-src" id="dash-stamp-commits"></span></h3><div id="dash-commits">加载中…</div></div>
+        <div class="card" style="margin:0"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('editor')" style="float:right;cursor:pointer">管理产品 →</a></h3><div id="dash-products">加载中…</div></div>
+        <div class="card" style="margin:0"><h3>站点自检</h3><div id="selfcheck">检测中…</div></div>
+      </div>
+      <div class="card" style="margin:12px 0 0">
+        <h3>站点健康检查（关键页面） <span class="v5-src" id="dash-stamp-health"></span></h3>
+        <div id="dash-health" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px">加载中…</div>
+      </div>
+      <h2 style="margin-top:16px">平台数据直达</h2>
+      <div class="grid">
+        <div class="card" style="margin:0"><h3>GA4 · 访问与转化</h3><p>用户 / 浏览 / 来源 / whatsapp_click 转化。</p><a class="btn" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">打开 GA4 数据面板</a></div>
+        <div class="card" style="margin:0"><h3>Google Search Console</h3><p>收录 / 关键词 / 点击展示。</p><a class="btn" href="https://search.google.com/search-console" target="_blank" rel="noopener">打开 GSC</a></div>
+        <div class="card" style="margin:0"><h3>Bing Webmaster</h3><p>Bing 索引与 sitemap 处理状态。</p><a class="btn" href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">打开 Bing</a></div>
+      </div>
+    </details>
   </div>
 
   <!-- ② 产品/内容编辑 v9 — 阿里国际站风格专业编辑器 -->
@@ -2421,7 +2435,8 @@
     }).catch(function () { return false; });
   }
   // v19: 经营总览（/api/dashboard 聚合 + 内联 SVG，D2 零依赖）
-  var v19Range = 'month';
+  var v19Range = 'week';
+  var v19Trend = 'visitors';
   function v19Esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function v19Line(el, arr, color, label) {
     if (!el || !arr || !arr.length) { return; }
@@ -2483,31 +2498,103 @@
     html += '</div>';
     el.innerHTML = html;
   }
+  function v19LineDual(el2, curArr, prevArr, color) {
+    if (!el2) { return; }
+    var W = 640, H = 150, pad = 8;
+    var ser = function (arr, f) { return (arr || []).map(function (p) { return { d: p.d, v: f(p) }; }); };
+    var cur = ser(curArr, function (p) { return p.uv != null ? p.uv : (p.a != null ? p.a : p.v); });
+    var prev = ser(prevArr, function (p) { return p.uv != null ? p.uv : (p.a != null ? p.a : p.v); });
+    if (!cur.length && !prev.length) { el2.innerHTML = '<p class="hint">暂无趋势数据</p>'; return; }
+    var max = 1;
+    cur.concat(prev).forEach(function (p) { max = Math.max(max, p.v); });
+    var x = function (i, n) { return pad + (W - pad * 2) * (i / ((n || cur.length) - 1 || 1)); };
+    var y = function (v) { return H - pad - (H - pad * 2) * (v / max); };
+    var pts = function (arr, o) {
+      if (!arr.length) return '';
+      var n = Math.max(cur.length, prev.length, 1);
+      return arr.map(function (p, i) { return x(i + (o || 0), n).toFixed(1) + ',' + y(p.v).toFixed(1); }).join(' ');
+    };
+    var last = cur[cur.length - 1];
+    el2.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:100%">' +
+      (prev.length ? '<polyline points="' + pts(prev) + '" fill="none" stroke="rgba(140,150,160,.55)" stroke-width="1.6" stroke-dasharray="5 4" stroke-linejoin="round"/>' : '') +
+      '<polyline points="' + pts(cur) + '" fill="none" stroke="' + (color || '#c9a227') + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+      (last ? '<circle cx="' + x(cur.length - 1, cur.length) + '" cy="' + y(last.v) + '" r="3.5" fill="' + (color || '#c9a227') + '"/>' : '') +
+      '</svg><div style="font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">最新 ' + v19Esc(last ? last.d : '') + '：' + (last ? last.v : 0) + '（上期同期 ' + (prev[prev.length - 1] ? prev[prev.length - 1].v : 0) + '）</div>';
+  }
+  function v19TrendRender(d) {
+    var map = {
+      visitors: { cur: (d.trend.visitors || []).map(function (p) { return { d: p.d, uv: p.uv }; }), prev: (d.trend.visitorsPrev || []).map(function (p) { return { d: p.d, uv: p.uv }; }), color: '#4da3ff' },
+      inquiries: { cur: d.trend.inquiries || [], prev: d.trend.inquiriesPrev || [], color: '#c9a227' },
+      orders: { cur: (d.trend.orders || []).map(function (p) { return { d: p.d, a: p.a }; }), prev: (d.trend.ordersPrev || []).map(function (p) { return { d: p.d, a: p.a }; }), color: '#4cd964' }
+    };
+    var t = map[v19Trend] || map.visitors;
+    v19LineDual(el('v19-trend-main'), t.cur, t.prev, t.color);
+  }
+  function v19FunnelRender(f) {
+    var el2 = el('v19-funnel');
+    if (!el2) return;
+    if (!f || !f.length) { el2.innerHTML = '<p class="hint">暂无数据</p>'; return; }
+    var html = '';
+    f.forEach(function (s) {
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
+        '<span style="width:56px;font-size:11px;color:var(--color-text-secondary);text-align:right;white-space:nowrap">' + v19Esc(s.l) + '</span>' +
+        '<div style="flex:1;background:var(--color-surface-2);border-radius:3px;height:22px;overflow:hidden"><div style="width:' + Math.max(6, s.pct) + '%;height:100%;background:linear-gradient(90deg,var(--color-primary),rgba(201,162,39,.55));display:flex;align-items:center;padding-left:8px;color:#000;font-size:11px;font-weight:700">' + s.v + '</div></div>' +
+        '<span style="width:46px;font-size:10.5px;color:' + (s.rate < 30 ? 'var(--bad)' : 'var(--ok)') + ';white-space:nowrap">' + s.rate + '%</span></div>';
+    });
+    el2.innerHTML = html + '<p class="hint" style="margin-top:4px">口径：近 30 天询盘按状态流转 · 转化率=下一阶段/上一阶段</p>';
+  }
+  function v19CompareRender(k) {
+    var el2 = el('v19-compare');
+    if (!el2) return;
+    if (!k) { el2.innerHTML = '<p class="hint">暂无数据</p>'; return; }
+    var cur = k.cur || {}, prev = k.prev || {};
+    var rows = [
+      { l: '访客 UV', a: cur.uv, b: prev.uv, fmt: function (v) { return v; } },
+      { l: '新询盘', a: cur.inquiries, b: prev.inquiries, fmt: function (v) { return v; } },
+      { l: '询盘转化率', a: cur.conversion, b: prev.conversion, fmt: function (v) { return v + '%'; } },
+      { l: '订单数', a: cur.orders, b: prev.orders, fmt: function (v) { return v; } },
+      { l: 'GMV（USD）', a: cur.gmv, b: prev.gmv, fmt: function (v) { return '$' + (v || 0).toLocaleString(); } },
+      { l: '新客户', a: cur.newCustomers, b: prev.newCustomers, fmt: function (v) { return v; } },
+      { l: '浏览量 PV', a: cur.pv, b: prev.pv, fmt: function (v) { return v; } }
+    ];
+    var html = '<div class="v19-bars">';
+    rows.forEach(function (r) {
+      var chg = r.b ? Math.round((r.a - r.b) / r.b * 100) : (r.a ? 100 : 0);
+      var cls = chg > 0 ? 'up' : (chg < 0 ? 'dn' : '');
+      var arrow = chg > 0 ? '▲' : (chg < 0 ? '▼' : '—');
+      html += '<div class="v19-bar-row" style="font-size:11px"><span class="b-name" style="min-width:76px">' + r.l + '</span>' +
+        '<span style="flex:1;display:flex;gap:6px;align-items:center"><span style="font-weight:700;font-variant-numeric:tabular-nums">' + r.fmt(r.a) + '</span>' +
+        '<span style="color:var(--color-text-dim)">← 上期 ' + r.fmt(r.b) + '</span>' +
+        '<span class="' + cls + '" style="min-width:58px;text-align:right;font-weight:600">' + arrow + (chg > 0 ? '+' : '') + chg + '%</span></span></div>';
+    });
+    html += '</div><p class="hint" style="margin-top:4px">环比：本期 vs 上一同长周期（今日 vs 昨日 / 近 7 天 vs 前 7 天 / 近 30 天 vs 前 30 天）</p>';
+    el2.innerHTML = html;
+  }
   function v19Load() {
     var zone = el('v19-zone');
     if (!zone) { return Promise.resolve(true); }
     el('v19-stamp').textContent = nowStamp();
     return fetch('/api/dashboard').then(function (r) { return r.json(); }).then(function (d) {
       if (!d || !d.ok) { throw new Error((d && d.error) || 'dashboard-fail'); }
-      var k = d.kpi[v19Range] || d.kpi.month || {};
+      window.__miliDashLast = d;
+      var k = d.kpi[v19Range] || d.kpi.week || d.kpi.month || { cur: {}, prev: {} };
+      var cur = k.cur || {}, prev = k.prev || {};
+      var chg = function (a, b) { return b ? Math.round((a - b) / b * 100) : (a ? 100 : 0); };
       var kpiDef = [
-        { l: '访客 UV', v: k.uv, s: 'PV ' + k.pv },
-        { l: '新询盘', v: k.inquiries, s: '转化率 ' + (k.conversion || 0) + '%' },
-        { l: '新客户', v: k.newCustomers, s: '客户档案' },
-        { l: '订单数', v: k.orders, s: 'GMV $' + (k.gmv || 0) },
-        { l: '库存预警', v: k.inventoryAlerts, s: 'out / limited' },
-        { l: '询盘转化率', v: (k.conversion || 0) + '%', s: '访客→询盘' }
+        { l: '访客 UV', v: cur.uv, sub: 'PV ' + (cur.pv || 0), chg: chg(cur.uv, prev.uv) },
+        { l: '新询盘', v: cur.inquiries, sub: '转化率 ' + (cur.conversion || 0) + '%', chg: chg(cur.inquiries, prev.inquiries) },
+        { l: '询盘转化率', v: (cur.conversion || 0) + '%', sub: '访客 → 询盘', chg: chg(cur.conversion || 0, prev.conversion || 0) },
+        { l: '订单数', v: cur.orders, sub: 'GMV $' + (cur.gmv || 0), chg: chg(cur.orders, prev.orders) },
+        { l: '新客户', v: cur.newCustomers, sub: '客户档案', chg: chg(cur.newCustomers, prev.newCustomers) },
+        { l: '库存预警', v: cur.inventoryAlerts, sub: 'out / limited', chg: null }
       ];
       el('v19-kpis').innerHTML = kpiDef.map(function (x) {
-        return '<div class="v19-kpi"><div class="k-label">' + x.l + '</div><div class="k-val">' + v19Esc(x.v) + '</div><div class="k-sub">' + x.s + '</div></div>';
+        var chgHtml = x.chg == null ? '' : (x.chg > 0 ? '<span class="up">▲ +' + x.chg + '%</span>' : (x.chg < 0 ? '<span class="dn">▼ ' + x.chg + '%</span>' : '<span>— 0%</span>'));
+        return '<div class="v19-kpi"><div class="k-label">' + x.l + '</div><div class="k-val">' + v19Esc(x.v) + '</div><div class="k-sub">' + x.s + ' · 环比 ' + chgHtml + '</div></div>';
       }).join('');
-      v19Line(el('v19-trend-v'), (d.trend.visitors || []).map(function (p) { return { d: p.d, v: p.uv }; }), '#4da3ff', 'UV');
-      v19Bars(el('v19-trend-i'), (d.trend.orders || []).map(function (p) { return { d: p.d, v: p.a }; }), '#c9a227');
-      var oi = d.trend.inquiries || [];
-      if (oi.length) {
-        var last = oi[oi.length - 1];
-        el('v19-trend-i').innerHTML += '<div style="font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">订单金额(USD) · 最新 ' + v19Esc(last.d) + ' 询盘 ' + last.v + ' 条</div>';
-      }
+      v19TrendRender(d);
+      v19FunnelRender(d.funnel || []);
+      v19CompareRender(k);
       v19Donut(el('v19-sources'), d.sources || []);
       v19Hbars(el('v19-countries'), d.countries || []);
       v19Hbars(el('v19-devices'), d.devices || []);
@@ -2515,12 +2602,34 @@
       v19Hbars(el('v19-products'), d.productTop || [], '暂无询盘记录');
       v19Hbars(el('v19-keywords'), d.keywords || [], '埋点未启用：访问站点后自动积累');
       v19Hbars(el('v19-lifecycle'), d.lifecycle || []);
-      el('v19-hint').textContent = '生成于 ' + String(d.generatedAt || '').slice(0, 19).replace('T', ' ') + ' · 埋点数据自启用起累积 · 业务数据实时（Supabase）';
+      el('v19-hint').textContent = '数据生成于 ' + String(d.generatedAt || '').slice(0, 19).replace('T', ' ') + ' · 业务数据实时（Supabase）；流量数据来自自建埋点（启用后累积）。各指标口径见「📐 口径说明」。';
       return true;
     }).catch(function (e) {
       el('v19-kpis').innerHTML = '<p class="hint">经营总览加载失败：' + v19Esc((e && e.message) || e) + '</p>';
       return false;
     });
+  }
+  // 数据口径说明（可读性 + 准确性）
+  function v19MetricHelp() {
+    var rows = [
+      ['访客 UV / PV', 'UV=去重访客（按会话 ID），PV=页面浏览量。数据源：自建埋点（page_views 表），自埋点启用日起累积，无历史数据。'],
+      ['新询盘', '本期新增询盘数（排除已归档 status=deleted）。数据源：Supabase inquiries。'],
+      ['询盘转化率', '访客 UV 中提交询盘的比例 = 新询盘 ÷ 访客 UV（同口径同周期）。'],
+      ['订单数 / GMV', '本期创建订单数与订单金额合计（USD）。数据源：Supabase orders。'],
+      ['新客户', '本期新建客户档案数（询盘/邮件/WhatsApp 自动建档归并后）。数据源：Supabase customers。'],
+      ['库存预警', '当前库存状态为缺货(out)或少量(limited)的商品数（快照值，不随周期变化）。'],
+      ['趋势对比', '本期（近 14 天）实线与上期（前 14 天）虚线对比；KPI 环比=本期 vs 上一同长周期。'],
+      ['分布类图表', '来源/国家/设备/关键词来自埋点；渠道/产品 TOP 来自询盘记录；生命周期按客户最近互动天数划分（<7 天新客 / <30 天跟进 / 其余沉睡）。'],
+      ['刷新机制', '看板随页面 5 分钟自动同步 + 切回标签页立即刷新；手动点「⟳ 立即刷新」可即时更新。']
+    ];
+    var html = '<div id="metricHelpOv" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">' +
+      '<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:18px;width:100%;max-width:560px;max-height:86vh;overflow:auto">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">📐 数据口径说明</h3><button class="ed-act-btn" onclick="document.getElementById(\'metricHelpOv\').remove()">✕</button></div>' +
+      rows.map(function (r) { return '<div style="margin-bottom:9px;font-size:12px;line-height:1.7"><b>' + r[0] + '</b><div style="color:var(--color-text-secondary)">' + r[1] + '</div></div>'; }).join('') +
+      '</div></div>';
+    var d = document.createElement('div');
+    d.innerHTML = html;
+    document.body.appendChild(d.firstChild);
   }
   var dashBusy = false, dashTimer = null, dashCountdownTimer = null;
   function setSyncState(st, msg) {
@@ -2589,6 +2698,18 @@
       v19Load();
     });
   }
+  var v19Tabs = document.querySelectorAll('.v19-t');
+  for (var vt = 0; vt < v19Tabs.length; vt++) {
+    v19Tabs[vt].addEventListener('click', function () {
+      v19Trend = this.getAttribute('data-t');
+      var all2 = document.querySelectorAll('.v19-t');
+      for (var i3 = 0; i3 < all2.length; i3++) { all2[i3].classList.toggle('on', all2[i3] === this); }
+      var lastDash = window.__miliDashLast;
+      if (lastDash) v19TrendRender(lastDash);
+    });
+  }
+  var mh = el('dash-metric-help');
+  if (mh) mh.addEventListener('click', v19MetricHelp);
   el('dash-interval').addEventListener('change', function () {
     localStorage.setItem('mili-sync-interval', this.value);
     scheduleSync();

@@ -812,16 +812,20 @@ export default{async fetch(r,env){
         const H0={apikey:sbK(env),Authorization:'Bearer '+sbK(env)};
         const dayFmt=function(d){return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0')};
         const todayKey=dayFmt(new Date());
-        const since30=new Date(Date.now()-30*86400000).toISOString();
-        const since7=new Date(Date.now()-7*86400000).toISOString();
+        const dayMs=86400000;
+        const since60=new Date(Date.now()-60*dayMs).toISOString();
+        const since30=new Date(Date.now()-30*dayMs).toISOString();
+        const since14=new Date(Date.now()-14*dayMs).toISOString();
+        const since7=new Date(Date.now()-7*dayMs).toISOString();
         const ds=new Date();ds.setHours(0,0,0,0);
         const sinceToday=ds.toISOString();
+        const sinceYesterday=new Date(ds.getTime()-dayMs).toISOString();
         const [inqR,ordR,cusR,stkR,pvR]=await Promise.all([
-          fetch(sbU(env)+'/rest/v1/inquiries?select=created_at,channel,product_type&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
-          fetch(sbU(env)+'/rest/v1/orders?select=created_at,amount&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
-          fetch(sbU(env)+'/rest/v1/customers?select=created_at,grade&created_at=gte.'+since30+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/inquiries?select=created_at,channel,product_type,status&created_at=gte.'+since60+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/orders?select=created_at,amount&created_at=gte.'+since60+'&limit=1000',{headers:H0}),
+          fetch(sbU(env)+'/rest/v1/customers?select=created_at,grade&created_at=gte.'+since60+'&limit=1000',{headers:H0}),
           fetch(sbU(env)+'/rest/v1/product_stock?select=status&limit=500',{headers:H0}),
-          fetch(sbU(env)+'/rest/v1/page_views?select=ts,source,country,device,keyword,session&ts=gte.'+since30+'&limit=5000',{headers:H0})
+          fetch(sbU(env)+'/rest/v1/page_views?select=ts,source,country,device,keyword,session&ts=gte.'+since60+'&limit=5000',{headers:H0})
         ]);
         const inq=inqR.ok?(await inqR.json()):[];
         const ord=ordR.ok?(await ordR.json()):[];
@@ -829,25 +833,36 @@ export default{async fetch(r,env){
         const stk=stkR.ok?(await stkR.json()):[];
         const pv=pvR.ok?(await pvR.json()):[];
         const inqA=Array.isArray(inq)?inq:[],ordA=Array.isArray(ord)?ord:[],cusA=Array.isArray(cus)?cus:[],stkA=Array.isArray(stk)?stk:[],pvA=Array.isArray(pv)?pv:[];
-        const countSince=function(rows,ts){let n=0;for(const r of rows){if(String(r.created_at||r.ts||'')>=ts)n++}return n};
-        const gmvOf=function(rows,ts){let s=0;for(const r of rows){if(String(r.created_at||'')>=ts){const a=parseFloat(r.amount);if(isFinite(a)&&a>0)s+=a}}return s};
-        const trend=function(rows,key){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]=0}for(const r of rows){const k=dayFmt(new Date(r.created_at));if(m[k]!==undefined)m[k]++}return Object.keys(m).map(function(k){return {d:k,v:m[k]}})};
-        const ordTrend=function(rows){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]={amount:0,count:0}}for(const r of rows){const k=dayFmt(new Date(r.created_at));if(m[k]){m[k].amount+=(parseFloat(r.amount)||0);m[k].count++}}return Object.keys(m).map(function(k){return {d:k,a:Math.round(m[k].amount*100)/100,c:m[k].count}})};
-        const pvTrend=function(rows){const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*86400000);m[dayFmt(d)]={uv:0,pv:0,s:new Set()}}for(const r of rows){const k=dayFmt(new Date(r.ts));if(m[k]){m[k].pv++;if(r.session)m[k].s.add(r.session)}}return Object.keys(m).map(function(k){return {d:k,uv:m[k].s.size,pv:m[k].pv}})};
-        const topN=function(rows,key,n,emptyKey){const m={};for(const r of rows){const v=(r[key]&&String(r[key]).trim())||emptyKey||'其他';m[v]=(m[v]||0)+1}return Object.keys(m).map(function(k){return {name:k,value:m[k]}}).sort(function(a,b){return b.value-a.value}).slice(0,n||10)};
-        const uvSet=new Set();for(const r of pvA){if(r.session)uvSet.add(r.session)}
-        const kpi=function(ts){
-          return {
-            inquiries:countSince(inqA,ts),orders:countSince(ordA,ts),gmv:gmvOf(ordA,ts),
-            newCustomers:countSince(cusA,ts),
-            uv:ts===sinceToday?uvSet.size:0,pv:countSince(pvA,ts),
-            inventoryAlerts:(stkA.filter(function(r){return r.status==='out'||r.status==='limited'})).length
-          };
+        const trendN=function(rows,key,offsetDays,span){
+          span=span||14;offsetDays=offsetDays||0;
+          const m={};for(let i=span-1;i>=0;i--){const d=new Date(Date.now()-(i+offsetDays)*dayMs);m[dayFmt(d)]=0}
+          for(const r of rows){const k=dayFmt(new Date(r.created_at||r.ts||0));if(m[k]!==undefined)m[k]++}
+          return Object.keys(m).map(function(k){return {d:k,v:m[k]}});
         };
-        const k0=kpi(sinceToday),k7=kpi(since7),k30=kpi(since30);
-        k0.conversion=k0.uv>0?Math.round(k0.inquiries/k0.uv*10000)/100:0;
-        k7.conversion=k7.uv>0?Math.round(k7.inquiries/k7.uv*10000)/100:0;
-        k30.conversion=k30.uv>0?Math.round(k30.inquiries/k30.uv*10000)/100:0;
+        const ordTrendN=function(rows,offsetDays){
+          offsetDays=offsetDays||0;const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-(i+offsetDays)*dayMs);m[dayFmt(d)]={amount:0,count:0}}
+          for(const r of rows){const k=dayFmt(new Date(r.created_at||0));if(m[k]){m[k].amount+=(parseFloat(r.amount)||0);m[k].count++}}
+          return Object.keys(m).map(function(k){return {d:k,a:Math.round(m[k].amount*100)/100,c:m[k].count}});
+        };
+        const pvTrendN=function(rows,offsetDays){
+          offsetDays=offsetDays||0;const m={};for(let i=13;i>=0;i--){const d=new Date(Date.now()-(i+offsetDays)*dayMs);m[dayFmt(d)]={uv:0,pv:0,s:new Set()}}
+          for(const r of rows){const k=dayFmt(new Date(r.ts||0));if(m[k]){m[k].pv++;if(r.session)m[k].s.add(r.session)}}
+          return Object.keys(m).map(function(k){return {d:k,uv:m[k].s.size,pv:m[k].pv}});
+        };
+        const topN=function(rows,key,n,emptyKey){const m={};for(const r of rows){const v=(r[key]&&String(r[key]).trim())||emptyKey||'其他';m[v]=(m[v]||0)+1}return Object.keys(m).map(function(k){return {name:k,value:m[k]}}).sort(function(a,b){return b.value-a.value}).slice(0,n||10)};
+        // 周期 KPI（from<=ts<to）：本期 cur 与上期 prev（环比）
+        const kpiRange=function(from,to){
+          const inF=function(rows,key){return rows.filter(function(r){const t=String(r.created_at||r.ts||'');return t>=from&&(!to||t<to)})};
+          const inq=inF(inqA),ord=inF(ordA),cus=inF(cusA),pv=inF(pvA,'ts');
+          const uvS=new Set();for(const r of pv){if(r.session)uvS.add(r.session)}
+          let gmv=0;for(const r of ord){const a=parseFloat(r.amount);if(isFinite(a)&&a>0)gmv+=a}
+          const inv=(stkA.filter(function(r){return r.status==='out'||r.status==='limited'})).length;
+          return {inquiries:inq.length,orders:ord.length,gmv:Math.round(gmv*100)/100,newCustomers:cus.length,uv:uvS.size,pv:pv.length,inventoryAlerts:inv};
+        };
+        const addConv=function(k){k.conversion=k.uv>0?Math.round(k.inquiries/k.uv*10000)/100:0;return k};
+        const k0=addConv(kpiRange(sinceToday)),kY=addConv(kpiRange(sinceYesterday,sinceToday)),
+          k7=addConv(kpiRange(since7)),k7p=addConv(kpiRange(since14,since7)),
+          k30=addConv(kpiRange(since30)),k30p=addConv(kpiRange(since60,since30));
         // 生命周期：按最近 30 天互动与订单判断
         const life={new:0,follow:0,won:0,lost:0};
         const nowMs=Date.now();
@@ -859,12 +874,21 @@ export default{async fetch(r,env){
         }
         return new Response(JSON.stringify({
           ok:true,generatedAt:new Date().toISOString(),
-          kpi:{today:k0,week:k7,month:k30},
-          trend:{inquiries:trend(inqA,'created_at'),orders:ordTrend(ordA),visitors:pvTrend(pvA)},
+          kpi:{today:{cur:k0,prev:kY},week:{cur:k7,prev:k7p},month:{cur:k30,prev:k30p}},
+          trend:{inquiries:trendN(inqA,'created_at',0),inquiriesPrev:trendN(inqA,'created_at',14),orders:ordTrendN(ordA,0),ordersPrev:ordTrendN(ordA,14),visitors:pvTrendN(pvA,0),visitorsPrev:pvTrendN(pvA,14)},
           sources:topN(pvA,'source',8,'直接'),countries:topN(pvA,'country',10,'未知'),devices:topN(pvA,'device',6,'未知'),
           keywords:topN(pvA,'keyword',10,''),channels:topN(inqA,'channel',8,'其他'),
           productTop:topN(inqA,'product_type',10,'未指定'),
-          lifecycle:[{name:'新客户',value:life.new},{name:'跟进中',value:life.follow},{name:'已成交',value:life.won},{name:'流失/沉睡',value:life.lost}]
+          lifecycle:[{name:'新客户',value:life.new},{name:'跟进中',value:life.follow},{name:'已成交',value:life.won},{name:'流失/沉睡',value:life.lost}],
+          funnel:(function(){
+            const inq30=inqA.filter(function(r){return String(r.created_at||'')>=since30});
+            const cnt=function(s){return inq30.filter(function(r){return (r.status||'new')===s}).length};
+            const steps=[['new','新询盘'],['quoted','已报价'],['negotiating','谈判中'],['won','已成交']];
+            const arr=steps.map(function(s){return {k:s[0],l:s[1],v:cnt(s[0])}});
+            let max=1;arr.forEach(function(x){max=Math.max(max,x.v)});
+            arr.forEach(function(x,i){x.rate=i===0?100:(arr[i-1].v?Math.round(x.v/arr[i-1].v*100):0);x.pct=Math.round(x.v/max*100)});
+            return arr;
+          })()
         }),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
