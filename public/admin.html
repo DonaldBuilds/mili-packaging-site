@@ -2590,7 +2590,7 @@
       ];
       el('v19-kpis').innerHTML = kpiDef.map(function (x) {
         var chgHtml = x.chg == null ? '' : (x.chg > 0 ? '<span class="up">▲ +' + x.chg + '%</span>' : (x.chg < 0 ? '<span class="dn">▼ ' + x.chg + '%</span>' : '<span>— 0%</span>'));
-        return '<div class="v19-kpi"><div class="k-label">' + x.l + '</div><div class="k-val">' + v19Esc(x.v) + '</div><div class="k-sub">' + x.s + ' · 环比 ' + chgHtml + '</div></div>';
+        return '<div class="v19-kpi"><div class="k-label">' + x.l + '</div><div class="k-val">' + v19Esc(x.v) + '</div><div class="k-sub">' + x.sub + ' · 环比 ' + chgHtml + '</div></div>';
       }).join('');
       v19TrendRender(d);
       v19FunnelRender(d.funnel || []);
@@ -2602,7 +2602,7 @@
       v19Hbars(el('v19-products'), d.productTop || [], '暂无询盘记录');
       v19Hbars(el('v19-keywords'), d.keywords || [], '埋点未启用：访问站点后自动积累');
       v19Hbars(el('v19-lifecycle'), d.lifecycle || []);
-      el('v19-hint').textContent = '数据生成于 ' + String(d.generatedAt || '').slice(0, 19).replace('T', ' ') + ' · 业务数据实时（Supabase）；流量数据来自自建埋点（启用后累积）。各指标口径见「📐 口径说明」。';
+      try { el('v19-hint').textContent = '数据生成于 ' + new Date(d.generatedAt).toLocaleString('zh-CN', { hour12: false }) + ' · 业务数据实时（Supabase）；流量数据来自自建埋点（启用后累积）。各指标口径见「📐 口径说明」。'; } catch (e) {}
       return true;
     }).catch(function (e) {
       el('v19-kpis').innerHTML = '<p class="hint">经营总览加载失败：' + v19Esc((e && e.message) || e) + '</p>';
@@ -2622,14 +2622,21 @@
       ['分布类图表', '来源/国家/设备/关键词来自埋点；渠道/产品 TOP 来自询盘记录；生命周期按客户最近互动天数划分（<7 天新客 / <30 天跟进 / 其余沉睡）。'],
       ['刷新机制', '看板随页面 5 分钟自动同步 + 切回标签页立即刷新；手动点「⟳ 立即刷新」可即时更新。']
     ];
-    var html = '<div id="metricHelpOv" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">' +
+    var html = '<div id="metricHelpOv" class="metric-help-ov" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:center;justify-content:center;padding:16px">' +
       '<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:18px;width:100%;max-width:560px;max-height:86vh;overflow:auto">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">📐 数据口径说明</h3><button class="ed-act-btn" onclick="document.getElementById(\'metricHelpOv\').remove()">✕</button></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">📐 数据口径说明</h3><button class="ed-act-btn metric-help-close" aria-label="关闭">✕</button></div>' +
       rows.map(function (r) { return '<div style="margin-bottom:9px;font-size:12px;line-height:1.7"><b>' + r[0] + '</b><div style="color:var(--color-text-secondary)">' + r[1] + '</div></div>'; }).join('') +
       '</div></div>';
     var d = document.createElement('div');
     d.innerHTML = html;
-    document.body.appendChild(d.firstChild);
+    var ov = d.firstChild;
+    document.body.appendChild(ov);
+    var close = function () { try { ov.remove(); } catch (e) {} document.removeEventListener('keydown', escFn, true); };
+    var escFn = function (ev) { if (ev.key === 'Escape') { ev.stopPropagation(); close(); } };
+    ov.addEventListener('click', function (ev) { if (ev.target === ov) close(); });
+    var cbtn = ov.querySelector('.metric-help-close');
+    if (cbtn) cbtn.addEventListener('click', function (ev) { ev.stopPropagation(); close(); });
+    document.addEventListener('keydown', escFn, true);
   }
   var dashBusy = false, dashTimer = null, dashCountdownTimer = null;
   function setSyncState(st, msg) {
