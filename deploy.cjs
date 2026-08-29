@@ -213,6 +213,19 @@ export default{async fetch(r,env){
   if(p.startsWith('/api/')){
     if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
     if(p==='/api/session')return new Response(JSON.stringify({ok:true,inquiryUnlocked:!!getCookie('mili_inquiry')}),{headers:{'content-type':'application/json'}});
+    // v14: GitHub API 代理（看板部署/提交状态，OPS_GH_PAT 鉴权免限流）
+    if(p==='/api/gh'&&r.method==='GET'){
+      const ghPath=String(url.searchParams.get('path')||'');
+      if(ghPath.length>200||!/^[a-zA-Z0-9/._?=&-]{1,200}$/.test(ghPath))return new Response(JSON.stringify({ok:false,error:'bad-path'}),{status:400,headers:{'content-type':'application/json'}});
+      try{
+        const hh={accept:'application/vnd.github+json','user-agent':'mili-ops'};
+        if(OPS_GH_PAT)hh.authorization='Bearer '+OPS_GH_PAT;
+        const rr=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/'+ghPath,{headers:hh});
+        const j=await rr.json();
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'gh:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,data:j}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     if(p==='/api/inquiry/unlock'&&r.method==='POST'){
       try{
         const b=await r.json();
@@ -263,6 +276,87 @@ export default{async fetch(r,env){
         return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
+    // v14: 商品库存（product_stock 表，迁移见 supabase-migration-stock-v3.sql）
+    if(p==='/api/stock/list'&&r.method==='GET'){
+      try{
+        const rr=await fetch(sbU(env)+'/rest/v1/product_stock?select=slug,status,note,updated_at',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/stock/patch'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const slug=String((b&&b.slug)||'');const status=String((b&&b.status)||'');const note=(b&&typeof b.note==='string')?b.note:'';
+        if(!/^[a-z0-9-]{1,80}$/.test(slug)||['in-stock','limited','out','pre-order'].indexOf(status)<0)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        const rr=await fetch(sbU(env)+'/rest/v1/product_stock?on_conflict=slug',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({slug:slug,status:status,note:note,updated_at:new Date().toISOString()})});
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // v14: 订单履约 + 客户中心（orders/customers 表，迁移见 supabase-migration-orders-customers-v4.sql）
+    const sbQ=function(env,q){return sbU(env)+'/rest/v1/'+q};
+    if(p==='/api/order/list'&&r.method==='GET'){
+      const q=String(url.searchParams.get('q')||'');
+      if(q.length>400||!/^[a-zA-Z0-9_=,&.()*%+\-: ]{0,400}$/.test(q))return new Response(JSON.stringify({ok:false,error:'bad-query'}),{status:400,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await fetch(sbQ(env,'orders?'+q),{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/order/save'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const OF=['customer_id','customer_name','customer_email','customer_phone','customer_country','inquiry_id','title','amount','currency','payment_status','status','eta','carrier','tracking_no','note','order_no'];
+        const clean={};
+        for(const k of Object.keys(b||{})){if(OF.indexOf(k)>=0)clean[k]=b[k]}
+        if(!clean.title||typeof clean.title!=='string')return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        if(clean.status&&['quote','confirmed','sampling','production','qc','shipped','delivered','cancelled','onhold','dispute'].indexOf(clean.status)<0)return new Response(JSON.stringify({ok:false,error:'bad-status'}),{status:400,headers:{'content-type':'application/json'}});
+        if(clean.payment_status&&['unpaid','deposit','balance','paid'].indexOf(clean.payment_status)<0)return new Response(JSON.stringify({ok:false,error:'bad-payment'}),{status:400,headers:{'content-type':'application/json'}});
+        clean.updated_at=new Date().toISOString();
+        let rr;
+        if(b.id){
+          rr=await fetch(sbQ(env,'orders?id=eq.'+encodeURIComponent(String(b.id))),{method:'PATCH',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        }else{
+          clean.order_no=clean.order_no||('ML-'+new Date().getFullYear()+'-'+String(Math.floor(1000+Math.random()*9000)));
+          rr=await fetch(sbQ(env,'orders'),{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        }
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/customer/list'&&r.method==='GET'){
+      const q=String(url.searchParams.get('q')||'');
+      if(q.length>400||!/^[a-zA-Z0-9_=,&.()*%+\-: ]{0,400}$/.test(q))return new Response(JSON.stringify({ok:false,error:'bad-query'}),{status:400,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await fetch(sbQ(env,'customers?'+q),{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/customer/save'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const CF=['name','email','phone','company','country','source','grade','note'];
+        const clean={};
+        for(const k of Object.keys(b||{})){if(CF.indexOf(k)>=0)clean[k]=b[k]}
+        if(!clean.name&&!clean.email&&!clean.phone)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        if(clean.grade&&['S','A','B','C','D'].indexOf(clean.grade)<0)return new Response(JSON.stringify({ok:false,error:'bad-grade'}),{status:400,headers:{'content-type':'application/json'}});
+        clean.updated_at=new Date().toISOString();
+        let rr;
+        if(b.id){
+          rr=await fetch(sbQ(env,'customers?id=eq.'+encodeURIComponent(String(b.id))),{method:'PATCH',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        }else{
+          rr=await fetch(sbQ(env,'customers'),{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        }
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config')return new Response(JSON.stringify({ok:true,configs:{
@@ -275,7 +369,7 @@ export default{async fetch(r,env){
       supabase:{ok:true,hint:'询盘入库与统计（内置默认，env 可覆盖）'},
       admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
       inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
-    }}),{headers:{'content-type':'application/json'}});
+    },cron:globalThis.__cronLast||{}}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config/test'){return handleConfigTest(env)}
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
     if(p==='/api/v5/dashboard'){return handleV5(env,url)}
@@ -548,8 +642,10 @@ async scheduled(event,env,ctx){
   const L=function(tag,status,detail){console.log('CRON:'+tag+' '+status+' '+(detail||'')+' @'+nowIso)};
   // 每个任务失败自动重试 1 次
   const run=async function(tag,fn){
-    try{const out=await fn();L(tag,'OK',String(out||''));return out}
-    catch(e){L(tag,'FAIL1',String((e&&e.message)||e));try{const out=await fn();L(tag,'OK-RETRY',String(out||''));return out}catch(e2){L(tag,'FAIL2',String((e2&&e2.message)||e2));return null}}
+    globalThis.__cronLast=globalThis.__cronLast||{};
+    globalThis.__cronLast[tag]={ts:nowIso,ok:'running'};
+    try{const out=await fn();L(tag,'OK',String(out||''));globalThis.__cronLast[tag]={ts:nowIso,ok:true};return out}
+    catch(e){L(tag,'FAIL1',String((e&&e.message)||e));try{const out=await fn();L(tag,'OK-RETRY',String(out||''));globalThis.__cronLast[tag]={ts:nowIso,ok:true};return out}catch(e2){L(tag,'FAIL2',String((e2&&e2.message)||e2));globalThis.__cronLast[tag]={ts:nowIso,ok:false,err:String((e2&&e2.message)||e2)};return null}}
   };
   const push=async function(title,content){
     if(!env.PUSHPLUS_TOKEN){L('push','skipped','PUSHPLUS_TOKEN not set');return}

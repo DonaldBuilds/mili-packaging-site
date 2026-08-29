@@ -1126,6 +1126,10 @@
       <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('inquiry')" style="float:right;cursor:pointer">查看全部 →</a></h3><div id="dash-inquiries">加载中…</div><div id="dash-followup" style="margin-top:8px"></div></div>
       <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('editor')" style="float:right;cursor:pointer">管理产品 →</a></h3><div id="dash-products">加载中…</div></div>
     </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="card"><h3>询盘转化漏斗 <span class="v5-src" id="dash-stamp-funnel"></span></h3><div id="dash-funnel">加载中…</div></div>
+      <div class="card"><h3>询盘趋势（近 14 天） <span class="v5-src" id="dash-stamp-trend"></span></h3><div id="dash-trend">加载中…</div></div>
+    </div>
     <div class="card" style="margin-top:12px">
       <h3>站点健康检查（关键页面） <span class="v5-src" id="dash-stamp-health"></span></h3>
       <div id="dash-health" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px">加载中…</div>
@@ -1170,6 +1174,7 @@
         <option value="img">缺附图</option>
         <option value="tier">缺阶梯价</option>
         <option value="hidden">下架中</option>
+        <option value="stock">库存不足（少量/缺货）</option>
       </select>
       <button class="btn btn-ghost btn-sm" id="ed-reload" title="重新加载产品数据">⟳ 刷新</button>
       <button class="btn btn-primary btn-sm" id="ed-new" title="手动新增产品">＋ 新建产品</button>
@@ -1417,6 +1422,15 @@
                 <option value="hidden">🚫 下架（隐藏，直链仍可访问）</option>
               </select>
               <p class="hint" style="margin-top:4px">保存后约 2 分钟自动上线，无需手动操作</p>
+              <label style="margin-top:12px">库存状态 <span class="hint" style="font-weight:400">（写入库存表，自动同步）</span></label>
+              <select id="f-stock">
+                <option value="">— 未设置 —</option>
+                <option value="in-stock">🟢 有货（In Stock）</option>
+                <option value="limited">🟡 少量（Limited）</option>
+                <option value="out">🔴 缺货（Out of Stock）</option>
+                <option value="pre-order">🔵 预售（Pre-Order）</option>
+              </select>
+              <p class="hint" style="margin-top:4px">库存保存在 Supabase product_stock 表（需先执行 supabase-migration-stock-v3.sql 迁移）；保存产品时自动更新</p>
             </div>
           </div>
           <!-- 右：实时预览面板（全屏时显示） -->
@@ -1469,6 +1483,7 @@
         <div class="inq-toolbar">
           <div class="inq-tabs">
             <button class="inq-tab active" data-iv="list">📋 询盘列表</button>
+            <button class="inq-tab" data-iv="cust">📇 客户聚合</button>
             <button class="inq-tab" data-iv="report">📊 数据报表</button>
           </div>
           <div class="inq-actions">
@@ -1485,6 +1500,7 @@
           </div>
           <div class="inq-pager" id="inqPager"></div>
         </div>
+        <div id="inqCustView" class="hide"></div>
         <div id="inqReportView" class="hide"></div>
         <div id="inqTplPanel" class="hide"></div>
       </div>
@@ -1578,9 +1594,10 @@
 
   <!-- ⑥ 审计日志 -->
   <div id="tab-audit" class="hide">
-    <h2>⑥ 操作审计日志（最近 500 条，内存环形存储）</h2>
+    <h2>⑥ 操作审计日志</h2>
     <div class="card">
-      <p class="hint">记录：操作人 / 时间 / 动作 / 对象 / 前后值。持久化：配置 GH_PAT 后自动同步 ops/audit.jsonl 到 GitHub。</p>
+      <div id="audit-mode-badge" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="tag" style="background:rgba(255,182,72,.12);color:var(--color-warning);border:1px solid rgba(255,182,72,.3)">持久化：检测中…</span><span class="hint" style="margin:0">配置 <code>OPS_GH_PAT</code> 后自动写入仓库 <code>ops/audit.jsonl</code>（跨重启保留）；未配置时为内存模式（最近 50 条，Worker 重启即清空）</span></div>
+      <p class="hint" style="margin-bottom:8px">记录：操作人 / 时间 / 动作 / 对象 / 前后值。</p>
       <div id="auditArea">加载中…</div>
     </div>
   </div>
@@ -1733,7 +1750,7 @@
       <h3>监测状态</h3>
       <p class="hint" style="line-height:1.8">
         AI 问答平台（ChatGPT / Perplexity / Google AI Overview）正在成为采购商找供应商的主要入口。<br/>
-        <b>当前数据源状态</b>：Perplexity API — <span class="tag tag-warning">未配置</span>（需 <code>PERPLEXITY_API_KEY</code>）· ChatGPT — <span class="tag tag-success">已配置</span>（AI 优化建议已启用）· Google AI Overview — <span class="tag tag-danger">不可用</span>（无公开 API 且强反爬，按合规原则不抓取）。<br/>
+        <b>当前数据源状态</b>：Perplexity API — <span class="tag tag-warning">未配置</span>（需 <code>PERPLEXITY_API_KEY</code>）· ChatGPT — <span class="tag tag-warning">配置可用于内容优化</span>（AI 回答自动监测规划中）· Google AI Overview — <span class="tag tag-danger">不可用</span>（无公开 API 且强反爬，按合规原则不抓取）。<br/>
         配置后每周自动查询并检测品牌词 <b>mili / mili-packaging / Mili Packaging</b> 是否被推荐。
       </p>
     </div>
@@ -1793,18 +1810,14 @@
   <!-- 店铺装修 -->
   <div id="tab-decor" class="hide">
     <h2>🎨 店铺装修</h2>
-    <p class="hint" style="margin-bottom:16px">编辑网站外观、信息、模块展示；保存后约 2 分钟自动部署生效。</p>
-    <div class="decor-card">
-      <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>网站基本信息</h4>
-      <div class="row" style="gap:12px;margin-bottom:10px">
-        <div style="flex:1"><label>网站标题（SEO Title）</label><input id="decor-site-title" placeholder="Mili Packaging – Custom Boxes Factory" /></div>
-        <div style="flex:1"><label>网站描述（Meta Description）</label><input id="decor-site-desc" placeholder="Premium custom packaging from $0.49/pc..." /></div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 4px">
+        <span style="font-size:26px">🚧</span>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px">模块规划中（P2 内容管理一并交付）</div>
+          <p class="hint" style="margin:0;line-height:1.7">当前站点基本信息（站名 / 联系方式 / SEO 标题）硬编码于代码内，此页暂不可操作。规划中：随「内容管理」板块一并落地为可配置的站点基础信息，写入数据层后自动部署生效。<br/>如需修改站名、WhatsApp、联系邮箱等，请走 <a href="#" onclick="event.preventDefault();goTab('ticket')" style="color:var(--color-primary)">内部任务</a> 提交修改需求（约 2 分钟自动部署）。</p>
+        </div>
       </div>
-      <div class="row" style="gap:12px;margin-bottom:10px">
-        <div style="flex:1"><label>WhatsApp 号码</label><input id="decor-whatsapp" placeholder="+86 138 xxxx xxxx" /></div>
-        <div style="flex:1"><label>联系邮箱</label><input id="decor-email" placeholder="sales@mili-packaging.com" /></div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="alert('装修保存功能即将上线，配合 M6 版本完整交付')">💾 保存装修信息</button>
     </div>
     <div class="decor-card">
       <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>网站实时预览</h4>
@@ -1849,7 +1862,7 @@
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <h3 style="margin:0;font-size:14px">当前账号</h3>
-        <button class="btn btn-primary btn-sm" id="account-add-btn">＋ 添加账号</button>
+        <span class="tag" style="font-size:10.5px;background:rgba(201,162,39,.12);color:var(--color-primary);border:1px solid rgba(201,162,39,.3)">当前：单管理员模式 · 多角色权限规划中（P3）</span>
       </div>
       <div id="account-list">
         <div class="user-list-row">
@@ -1905,32 +1918,44 @@
 
   <!-- 订单履约 -->
   <div id="tab-orders" class="hide">
-    <div class="coming-hero">
-      <div class="coming-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8m5 4H8"/></svg>
-      </div>
-      <h2 class="coming-title">订单履约中心</h2>
-      <p class="coming-sub">从询盘成交到产品交付，完整跟踪 B2B 制造履约全链路——报价、打样、生产、质检、发货、售后，每个节点留痕可查。</p>
-      <span class="coming-badge">P0 优先级 · 规划中</span>
+    <h2 style="margin-bottom:6px">订单履约中心</h2>
+    <p class="hint" style="margin-bottom:14px">询盘成交 → 报价 → 打样 → 生产 → 质检 → 发货 → 交付，全链路留痕；数据存 Supabase orders 表（会话代理读写，自动同步）。</p>
+    <div id="ord-migrate" class="alert-card" style="display:none;margin-bottom:12px">
+      <h3>⚠ 订单数据表未就绪</h3>
+      <p style="font-size:12px;margin-top:4px">请先在 Supabase Dashboard → SQL Editor 执行 <code>supabase-migration-orders-customers-v4.sql</code>（幂等可重复），订单功能将自动生效。</p>
     </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3 style="margin-bottom:12px">核心功能预告</h3>
-      <div class="coming-grid">
-        <div class="coming-feat"><div class="coming-feat-tag">状态管理</div><h4>7 阶段履约状态机</h4><p>已报价 → 确认 → 打样 → 生产 → 质检 → 已发货 → 已交付，逐级流转，超期自动预警</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">数据关联</div><h4>询盘一键转订单</h4><p>从询盘中心直接发起订单，客户信息与产品明细自动带入，免重复录入</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">异常管理</div><h4>异常事件登记</h4><p>延误 / 质量 / 物流异常专项登记，处置留痕，关联影响订单与客户</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">物流追踪</div><h4>快递单号 + 链接</h4><p>录入物流公司与单号，一键跳转查询；P3 阶段接快递 API 自动同步状态</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">收款进度</div><h4>定金/尾款进度</h4><p>30% 定金 + 70% 尾款进度标记，一眼看出应收/已收，催款有据可查</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">售后协同</div><h4>售后单与工单联动</h4><p>退货 / 质保申请关联原订单，补产 / 货记 / 退款各类处置结果留档</p></div>
+    <div class="inq-toolbar" style="margin-bottom:10px">
+      <div class="inq-tabs">
+        <button class="inq-tab active" data-ov="board">📋 订单列表</button>
+      </div>
+      <div class="inq-actions">
+        <button class="btn btn-ghost btn-sm" id="ord-refresh-btn">⟳ 刷新</button>
+        <button class="btn btn-primary btn-sm" id="ord-add-btn">＋ 新增订单</button>
       </div>
     </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3 style="margin-bottom:10px">数据存储规划</h3>
-      <p class="hint" style="line-height:1.9">新增 <code>orders</code> 表（Supabase）：订单编号 / 客户 / 询盘关联 / 产品明细 / 金额 / 币种 / 收款状态 / 交期 / 履约节点时间戳 / 责任人。与现有 <code>inquiries</code> 表通过 <code>inquiry_id</code> 外键关联，与 <code>customers</code>（同期新建）通过 <code>customer_id</code> 关联。</p>
+    <div class="inq-stats" id="ord-stats">加载中…</div>
+    <div class="inq-filters" id="ord-filters" style="margin-bottom:10px"></div>
+    <div class="card" style="padding:0;overflow:auto"><table class="inq-table" id="ordTable"><thead></thead><tbody></tbody></table></div>
+    <div class="inq-pager" id="ordPager"></div>
+
+    <div id="ordModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px">
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:20px;width:100%;max-width:660px;max-height:92vh;overflow:auto">
+        <h3 style="margin-bottom:12px" id="ordModal-title">＋ 新增订单</h3>
+        <div class="row"><div><label>客户姓名 *</label><input id="ord-cust-name" /></div><div><label>客户邮箱</label><input id="ord-cust-email" /></div></div>
+        <div class="row"><div><label>客户电话</label><input id="ord-cust-phone" /></div><div><label>国家</label><input id="ord-cust-country" /></div></div>
+        <div class="row"><div style="flex:1.4"><label>产品 / 订单内容 *</label><input id="ord-title" placeholder="如 Rigid Box 2000pcs + Custom Tray" /></div><div><label>金额 $</label><input id="ord-amount" type="number" step="0.01" min="0" /></div></div>
+        <div class="row"><div><label>履约状态</label><select id="ord-status"><option value="quote">📄 已报价</option><option value="confirmed">✅ 已确认</option><option value="sampling">🧪 打样中</option><option value="production">🏭 生产中</option><option value="qc">🔍 质检中</option><option value="shipped">🚚 已发货</option><option value="delivered">📦 已交付</option><option value="onhold">⏸ 暂停</option><option value="dispute">⚠ 售后中</option><option value="cancelled">✖ 已取消</option></select></div><div><label>收款状态</label><select id="ord-payment"><option value="unpaid">未收款</option><option value="deposit">定金已付（30%）</option><option value="balance">尾款已付</option><option value="paid">全部结清</option></select></div></div>
+        <div class="row"><div><label>预计交期</label><input id="ord-eta" placeholder="如 2026-10-15" /></div><div><label>关联询盘 ID（可选）</label><input id="ord-inquiry" placeholder="粘贴询盘 ID 或留空" /></div></div>
+        <div class="row"><div><label>物流公司</label><input id="ord-carrier" /></div><div><label>运单号</label><input id="ord-tracking" /></div></div>
+        <label>备注</label><textarea id="ord-note" rows="2" placeholder="付款条件（T/T / L/C / Trade Assurance）、特殊要求等"></textarea>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+          <button class="btn btn-ghost btn-sm" id="ord-modal-cancel">取消</button>
+          <button class="btn btn-primary btn-sm" id="ord-save-btn">💾 保存订单</button>
+        </div>
+      </div>
     </div>
-    <div class="coming-cta">
-      <button class="btn-outline" onclick="goTab('inquiry')">现在使用询盘中心跟进线索 →</button>
-    </div>
+
+    <div class="inq-drawer" id="ordDrawer"><div class="inq-drawer-inner" id="ordDrawerInner"></div></div>
   </div>
 
   <!-- 客户中心 -->
@@ -1957,6 +1982,45 @@
     <div class="coming-cta">
       <button class="btn-outline" onclick="goTab('inquiry')">客户画像当前在询盘中心可查 →</button>
     </div>
+  </div>
+
+  <!-- 营销活动 -->
+  <div id="tab-customers" class="hide">
+    <h2 style="margin-bottom:6px">客户中心</h2>
+    <p class="hint" style="margin-bottom:14px">客户主数据（customers 表）+ 询盘与订单自动聚合 + 价值分级；数据经会话代理实时同步。</p>
+    <div id="cust-migrate" class="alert-card" style="display:none;margin-bottom:12px">
+      <h3>⚠ 客户数据表未就绪</h3>
+      <p style="font-size:12px;margin-top:4px">请先在 Supabase Dashboard → SQL Editor 执行 <code>supabase-migration-orders-customers-v4.sql</code>（幂等可重复），客户中心将自动生效。当前可先使用询盘中心「客户聚合」视图（轻量归并）。</p>
+    </div>
+    <div class="inq-toolbar" style="margin-bottom:10px">
+      <div class="inq-tabs">
+        <button class="inq-tab active" data-cv="list">📇 客户列表</button>
+      </div>
+      <div class="inq-actions">
+        <button class="btn btn-ghost btn-sm" id="cust-refresh-btn">⟳ 刷新</button>
+        <button class="btn btn-primary btn-sm" id="cust-add-btn">＋ 新增客户</button>
+      </div>
+    </div>
+    <div class="inq-stats" id="cust-stats">加载中…</div>
+    <div class="inq-filters" id="cust-filters" style="margin-bottom:10px"></div>
+    <div class="card" style="padding:0;overflow:auto"><table class="inq-table" id="custTable"><thead></thead><tbody></tbody></table></div>
+    <div class="inq-pager" id="custPager"></div>
+
+    <div id="custModal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px">
+      <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:20px;width:100%;max-width:560px;max-height:92vh;overflow:auto">
+        <h3 style="margin-bottom:12px" id="custModal-title">＋ 新增客户</h3>
+        <div class="row"><div><label>客户姓名 *</label><input id="cust-name" /></div><div><label>邮箱</label><input id="cust-email" /></div></div>
+        <div class="row"><div><label>电话</label><input id="cust-phone" /></div><div><label>国家</label><input id="cust-country" /></div></div>
+        <div class="row"><div><label>公司</label><input id="cust-company" /></div><div><label>来源渠道</label><select id="cust-source"><option value="">—</option><option value="website">网站</option><option value="whatsapp">WhatsApp</option><option value="email">邮件</option><option value="chat">聊天</option><option value="phone">电话</option><option value="referral">转介绍</option></select></div></div>
+        <label>备注</label><textarea id="cust-note" rows="2" placeholder="客户偏好、采购周期、历史沟通要点等"></textarea>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+          <button class="btn btn-ghost btn-sm" id="cust-modal-cancel">取消</button>
+          <button class="btn btn-primary btn-sm" id="cust-save-btn">💾 保存客户</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="inq-drawer" id="custDrawer"><div class="inq-drawer-inner" id="custDrawerInner"></div></div>
   </div>
 
   <!-- 营销活动 -->
@@ -2062,8 +2126,12 @@
       return fetchT('/' + u, { method: 'HEAD' }, 8000).then(function (r) { return { u: u, ok: r.ok }; }).catch(function () { return { u: u, ok: false }; });
     })).then(function (rs) {
       selfEl.innerHTML = rs.map(function (r) { return '<div class="status ' + (r.ok ? 'ok' : 'bad') + '">' + r.u + ' — ' + (r.ok ? 'OK' : 'FAIL') + '</div>'; }).join('');
-      return rs.every(function (r) { return r.ok; });
-    }).catch(function () { return false; });
+      var allOk = rs.every(function (r) { return r.ok; });
+      window.__dashState = window.__dashState || {};
+      window.__dashState.healthFail = !allOk;
+      window.__dashState.healthMsg = allOk ? '' : rs.filter(function (r) { return !r.ok; }).map(function (r) { return r.u; }).join(', ') + ' 不可访问';
+      return allOk;
+    }).catch(function () { window.__dashState = window.__dashState || {}; window.__dashState.healthFail = true; window.__dashState.healthMsg = '健康检查失败'; return false; });
   }
   selfCheck();
 
@@ -2093,8 +2161,22 @@
   function fmtTime(t) { if (!t) return '—'; var d = new Date(t); if (isNaN(d.getTime())) return '—'; var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
   function nowStamp() { return new Date().toTimeString().slice(0, 8); }
   function loadDeploy() {
-    return fetchT(GH_API + '/actions/runs?per_page=3').then(function (r) { return r.json(); }).then(function (d) {
-      if (!d || !d.workflow_runs) return false;
+    // v14: 走 Worker 代理（OPS_GH_PAT 鉴权，额度 5000/h，免浏览器限流）
+    return fetchT('/api/gh?path=' + encodeURIComponent('actions/runs?per_page=3')).then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.ok) { if (d && d.error) throw new Error(d.error); return false; }
+      var runs = d.data.workflow_runs;
+      if (!runs) return false;
+      d.workflow_runs = runs;
+      // 通知中心数据源：最近一次部署结果
+      window.__dashState = window.__dashState || {};
+      var failRun = null;
+      for (var i = 0; i < d.workflow_runs.length; i++) {
+        var run = d.workflow_runs[i];
+        if (run.status === 'completed' && run.conclusion !== 'success') { failRun = run; break; }
+        if (run.status === 'completed' && run.conclusion === 'success') break;
+      }
+      window.__dashState.deployFail = !!failRun;
+      window.__dashState.deployFailMsg = failRun ? (failRun.name || 'deploy') + ' · ' + failRun.conclusion : '';
       el('dash-deploy').innerHTML = d.workflow_runs.slice(0, 3).map(function (run) {
         var ok = run.status === 'completed';
         var done = run.conclusion === 'success';
@@ -2102,10 +2184,13 @@
       }).join('');
       el('dash-stamp-deploy').textContent = '截至 ' + nowStamp();
       return true;
-    }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; return false; });
+    }).catch(function () { el('dash-deploy').innerHTML = '<div class="status bad">无法读取（网络/限流）</div>'; window.__dashState = window.__dashState || {}; window.__dashState.deployFail = true; window.__dashState.deployFailMsg = '部署状态读取失败（网络/限流）'; return false; });
   }
   function loadCommits() {
-    return fetchT(GH_API + '/commits?per_page=5').then(function (r) { return r.json(); }).then(function (d) {
+    // v14: 走 Worker 代理（OPS_GH_PAT 鉴权，免浏览器限流）
+    return fetchT('/api/gh?path=' + encodeURIComponent('commits?per_page=5')).then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.ok) { if (d && d.error) throw new Error(d.error); return false; }
+      d = d.data;
       if (!Array.isArray(d)) return false;
       el('dash-commits').innerHTML = d.map(function (c) {
         return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--gray)">' + fmtTime(c.commit.author.date) + '</span><br/>' + (c.commit.message.split('\n')[0]).slice(0, 56) + '</div>';
@@ -2151,6 +2236,59 @@
       el('dash-inquiries').innerHTML = '<div class="status">总询盘：<b style="color:var(--gold)">' + total + '</b> · 近 7 天：<b>' + d7 + '</b> · 近 30 天：<b>' + d30 + '</b> · 本月：<b>' + month + '</b> · 待跟进：<b style="color:' + (pend ? 'var(--bad)' : 'var(--ok)') + '">' + pend + '</b> · 成交：<b style="color:var(--ok)">' + won + '</b> (' + (total ? Math.round(won / total * 100) : 0) + '%)</div>' +
         '<div class="status" style="font-size:11.5px;color:var(--color-text-secondary)">' + Object.keys(chan).sort(function (a, b) { return chan[b] - chan[a]; }).map(function (c) { return (chanMap[c] || c) + ' <b style="color:var(--gold)">' + chan[c] + '</b>'; }).join(' · ') + '</div>';
       el('dash-stamp-inquiries').textContent = '截至 ' + nowStamp();
+      // 询盘转化漏斗（新 → 报价 → 谈判 → 成交）
+      var funnel = [
+        { k: 'new', l: '新询盘' },
+        { k: 'quoted', l: '已报价' },
+        { k: 'negotiating', l: '谈判中' },
+        { k: 'won', l: '已成交' }
+      ];
+      var funnelCount = {};
+      funnel.forEach(function (f) { funnelCount[f.k] = rows.filter(function (r) { return (r.status || 'new') === f.k; }).length; });
+      var fMax = Math.max.apply(null, funnel.map(function (f) { return funnelCount[f.k]; }).concat([1]));
+      var fhtml = '';
+      for (var fi = 0; fi < funnel.length; fi++) {
+        var f = funnel[fi], n = funnelCount[f.k];
+        var w = Math.max(6, Math.round(n / fMax * 100));
+        var prev = fi === 0 ? funnelCount.new : funnelCount[funnel[fi - 1].k];
+        var rate = prev ? Math.round(n / prev * 100) : 100;
+        fhtml += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
+          '<span style="width:52px;font-size:11px;color:var(--color-text-secondary);text-align:right;white-space:nowrap">' + f.l + '</span>' +
+          '<div style="flex:1;background:var(--color-surface-2);border-radius:3px;height:22px;overflow:hidden"><div style="width:' + w + '%;height:100%;background:linear-gradient(90deg,var(--color-primary),color-mix(in srgb,var(--color-primary) 55%,#000));display:flex;align-items:center;padding-left:8px;color:var(--color-primary-ink);font-size:11px;font-weight:700">' + n + '</div></div>' +
+          '<span style="width:44px;font-size:10.5px;color:' + (rate < 30 ? 'var(--bad)' : 'var(--ok)') + ';white-space:nowrap">' + rate + '%</span></div>';
+      }
+      el('dash-funnel').innerHTML = fhtml || '<p class="hint">暂无数据</p>';
+      el('dash-stamp-funnel').textContent = '截至 ' + nowStamp();
+      // 询盘趋势（近 14 天折线，内联 SVG）
+      var dayCount = {}, dayLabels = [];
+      for (var di = 13; di >= 0; di--) {
+        var dt = new Date(Date.now() - di * 864e5);
+        var key = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+        dayCount[key] = 0; dayLabels.push(key);
+      }
+      rows.forEach(function (r) {
+        var dts = String(r.created_at || '').slice(0, 10);
+        if (dayCount[dts] !== undefined) dayCount[dts]++;
+      });
+      var vals = dayLabels.map(function (k) { return dayCount[k]; });
+      var vMax = Math.max.apply(null, vals.concat([1]));
+      var W = 300, H = 84, padL = 6, padB = 14;
+      var pts = vals.map(function (v, i) {
+        var x = padL + i * (W - padL - 6) / (vals.length - 1);
+        var y = H - padB - (v / vMax) * (H - padB - 10);
+        return [x, y];
+      });
+      var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+      var area = line + ' L' + (W - 6) + ' ' + (H - padB) + ' L' + padL + ' ' + (H - padB) + ' Z';
+      var thtml = '<svg width="100%" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="display:block">' +
+        '<defs><linearGradient id="dashTrendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--color-primary)" stop-opacity=".32"/><stop offset="100%" stop-color="var(--color-primary)" stop-opacity=".02"/></linearGradient></defs>' +
+        '<path d="' + area + '" fill="url(#dashTrendGrad)"/>' +
+        '<path d="' + line + '" fill="none" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round"/>' +
+        pts.map(function (p) { return '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.2" fill="var(--color-primary)"/>'; }).join('') +
+        '</svg>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-dim);margin-top:2px"><span>' + dayLabels[0].slice(5) + '</span><span>今日 ' + today + '</span><span>' + dayLabels[13].slice(5) + '</span></div>';
+      el('dash-trend').innerHTML = thtml;
+      el('dash-stamp-trend').textContent = '截至 ' + nowStamp();
       // 今日待跟进清单（follow_up_at 已到期且未终结，按到期时间升序取 8 条）
       var fu = rows.filter(function (r) {
         if (r.status === 'won' || r.status === 'lost' || r.status === 'deleted') return false;
@@ -2256,6 +2394,7 @@
       el('dash-last-sync').textContent = stamp;
       if (fail === 0) { setSyncState('ok', '同步成功'); if (manual) toast('数据已更新 · ' + stamp, 'ok'); }
       else { setSyncState('err', '部分数据源失败（' + fail + '/' + res.length + '）'); if (manual) toast('有 ' + fail + ' 项数据源同步失败，将在下个周期自动重试', 'err'); }
+      if (window.__notifRefresh) window.__notifRefresh();
       scheduleSync();
       return fail === 0;
     }).catch(function () {
@@ -2290,6 +2429,15 @@
   function edReloadData() {
     var listEl = el('ed-prod-list');
     if (listEl) listEl.innerHTML = '<div class="prod-list-empty">⏳ 加载产品数据…</div>';
+    // v14: 并行加载库存映射（product_stock 表，迁移后自动生效；未迁移不阻塞）
+    window.__stockMap = window.__stockMap || {};
+    fetch('/api/stock/list').then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.ok && Array.isArray(d.rows)) {
+        window.__stockMap = {};
+        d.rows.forEach(function (s) { window.__stockMap[s.slug] = s.status; });
+        edBuildList();
+      }
+    }).catch(function () {});
     fetch(RAW()).then(function (r) { return r.json(); }).then(function (d) {
       DATA = d;
       var total = 0;
@@ -2867,6 +3015,7 @@
     else if (gap === 'img') { filtered = filtered.filter(function (x) { return !x.p.extraImgs || !x.p.extraImgs.length; }); }
     else if (gap === 'tier') { filtered = filtered.filter(function (x) { return !x.p.tierPrice; }); }
     else if (gap === 'hidden') { filtered = filtered.filter(function (x) { return x.p.status === 'hidden'; }); }
+    else if (gap === 'stock') { filtered = filtered.filter(function (x) { var s = (window.__stockMap || {})[x.p.slug]; return s === 'limited' || s === 'out'; }); }
     if (!filtered.length) { list.innerHTML = '<div class="prod-list-empty"><div style="font-size:28px;margin-bottom:8px">🔍</div>没有符合条件的产品</div>'; return; }
     list.innerHTML = filtered.map(function (x) {
       var p = x.p, g = x.g;
@@ -2896,7 +3045,7 @@
         '<div><div class="prod-thumb-wrap">' + thumbHtml + '</div></div>' +
         '<div class="prod-name-cell"><b title="' + String(p.name || '').replace(/"/g, '') + '"><a href="' + prodFrontUrl + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" onmouseover="this.style.color=\'var(--color-primary)\'" onmouseout="this.style.color=\'inherit\'">' + String(p.name || '').slice(0, 48) + '</a></b><span>' + g.name + ' · ' + p.slug + '</span>' + gaps + '</div>' +
         '<div class="prod-price-cell"><div>$' + (p.price || '—') + '</div><div class="prod-moq">MOQ ' + (p.moq || '—') + '' + tierHtml + '</div></div>' +
-        '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span></div>' +
+        '<div><span class="prod-status-badge ' + (isActive ? 'active' : 'hidden') + '">' + (isActive ? '● 上架' : '○ 下架') + '</span>' + (function () { var st = (window.__stockMap && window.__stockMap[p.slug]) || ''; if (!st) return ''; var sc = { 'in-stock': 'var(--ok)', limited: 'var(--color-warning)', out: 'var(--bad)', 'pre-order': 'var(--color-primary)' }[st] || 'var(--color-text-dim)'; var lb = { 'in-stock': '有货', limited: '少量', out: '缺货', 'pre-order': '预售' }[st] || st; return '<span class="prod-stock-badge" style="display:inline-block;margin-left:6px;padding:1px 8px;border-radius:10px;font-size:10.5px;font-weight:700;color:' + sc + ';background:' + sc + '1c;border:1px solid ' + sc + '3c">' + lb + '</span>'; })() + '</div>' +
         '<div class="prod-seo-col"><b style="color:' + scoreColor + ';font-size:13px">' + score + '</b></div>' +
         '<div class="prod-actions"><button class="ed-act-btn" data-action="edit" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '">编辑</button>' +
         '<button class="ed-act-btn" data-action="dup" data-gslug="' + g.slug + '" data-pslug="' + p.slug + '" title="复制为新产品（默认下架）">复制</button>' +
@@ -2956,6 +3105,7 @@
     el('f-keywords').value = (p.keywords || []).join(', ');
     fillFaqEditor(p.faq);
     edAlts = { main: p.imgAlt || '', extra: p.extraAlt || {} };
+    var fst = el('f-stock'); if (fst) fst.value = (window.__stockMap && window.__stockMap[p.slug]) || '';
     // 价格模式：tierPrice 对象 → 阶梯；"x-y TERM" 字符串 → 区间；否则单一
     if (p.tierPrice && typeof p.tierPrice === 'object' && !Array.isArray(p.tierPrice)) {
       setPriceMode('tier'); fillTierEditor(p.tierPrice);
@@ -3516,6 +3666,7 @@
     var img = el('f-img').value.trim();
     var order = el('f-order').value.trim();
     var status = el('f-status').value;
+    var stockVal = el('f-stock') ? el('f-stock').value : '';
     var extra = [];
     document.querySelectorAll('.ed-extra-img-input').forEach(function (inp) { var v = inp.value.trim(); if (v) extra.push(v); });
     // SEO 字段
@@ -3542,7 +3693,17 @@
     flash('正在提交并触发自动部署…');
     postOps([{ action: 'product', group: edCurrentGroup, slug: edCurrentSlug, fields: fields }]).then(function (res) {
       release();
-      if (res.ok) { flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edClearDraft(); edSetDirty(false); edReloadData(); }
+      if (res.ok) {
+        flash('已发布：' + res.message); toast('保存成功，约 2 分钟自动部署', 'ok'); edClearDraft(); edSetDirty(false); edReloadData();
+        // v14: 库存状态联动写入（product_stock 表）
+        if (stockVal && window.__stockMap) {
+          fetch('/api/stock/patch', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ slug: edCurrentSlug, status: stockVal }) })
+            .then(function (r) { return r.json(); }).then(function (d) {
+              if (d && d.ok) { window.__stockMap[edCurrentSlug] = stockVal; edBuildList(); }
+              else { toast('库存状态同步失败：' + ((d && d.error) || '未知') + '（请确认已执行 stock 迁移）', 'err'); }
+            }).catch(function () { toast('库存状态同步失败：网络异常', 'err'); });
+        }
+      }
       else if (res.error === 'server-not-configured') { flash('编辑管线未开通：请在设置中心配置 GitHub PAT', true); toast('GH_PAT 未配置，无法保存发布', 'err'); }
       else { flash('失败：' + (res.error || '未知'), true); toast('保存失败：' + (res.error || ''), 'err'); }
     }).catch(function () {
@@ -3639,10 +3800,74 @@
       inqState.view = this.getAttribute('data-iv');
       for (var j = 0; j < tabs.length; j++) tabs[j].classList.toggle('active', tabs[j] === this);
       el('inqListView').classList.toggle('hide', inqState.view !== 'list');
+      el('inqCustView').classList.toggle('hide', inqState.view !== 'cust');
       el('inqReportView').classList.toggle('hide', inqState.view !== 'report');
       el('inqTplPanel').classList.add('hide');
       if (inqState.view === 'report') inqRenderReport();
+      if (inqState.view === 'cust') inqRenderCust();
     });
+
+  // ── 客户聚合视图（轻量：按邮箱/电话归并询盘，P0 客户表落地前的过渡方案） ──
+  function inqRenderCust() {
+    var wrap = el('inqCustView');
+    if (!wrap) return;
+    var rows = inqState.rows.filter(function (r) { return r.status !== 'deleted'; });
+    if (!rows.length) { wrap.innerHTML = '<div class="card"><p class="hint">暂无客户数据</p></div>'; return; }
+    var map = {};
+    rows.forEach(function (r) {
+      var key = (r.email || '').trim().toLowerCase() || (r.phone || '').trim() || (r.name || '').trim().toLowerCase() || 'unknown:' + r.id;
+      if (!map[key]) map[key] = { key: key, name: r.name || '', email: r.email || '', phone: r.phone || '', company: r.company || '', country: r.country || '', inq: [], last: 0, first: 0 };
+      var c = map[key];
+      c.inq.push(r);
+      if (!c.name && r.name) c.name = r.name;
+      if (!c.email && r.email) c.email = r.email;
+      if (!c.phone && r.phone) c.phone = r.phone;
+      if (!c.company && r.company) c.company = r.company;
+      var t = new Date(r.created_at || 0).getTime();
+      if (t > c.last) c.last = t;
+      if (!c.first || t < c.first) c.first = t;
+    });
+    var list = Object.keys(map).map(function (k) { return map[k]; });
+    list.sort(function (a, b) { return b.last - a.last; });
+    // 轻量 RFM 分档：按询盘次数与成交标记
+    list.forEach(function (c) {
+      c.total = c.inq.length;
+      c.won = c.inq.filter(function (r) { return r.status === 'won'; }).length;
+      var val = c.won ? 2 : (c.total >= 3 ? 1 : 0);
+      c.grade = val === 2 ? 'A' : (val === 1 ? 'B' : 'C');
+    });
+    var gradeColor = { A: 'var(--ok)', B: 'var(--color-primary)', C: 'var(--color-text-dim)' };
+    var html = '<div class="card" style="padding:0;overflow:auto"><table class="inq-table"><thead><tr>' +
+      '<th style="width:200px">客户</th><th>联系方式</th><th>公司 / 国家</th><th>询盘次数</th><th>成交</th><th>最近询盘</th><th>分级</th><th>操作</th></tr></thead><tbody>';
+    list.slice(0, 60).forEach(function (c) {
+      html += '<tr>' +
+        '<td style="font-weight:600">' + esc(c.name || '未命名') + '</td>' +
+        '<td>' + (c.email ? '<span style="color:var(--color-primary)">✉ ' + esc(c.email) + '</span>' : '') + (c.phone ? (c.email ? '<br/>' : '') + '<span style="color:var(--ok)">💬 ' + esc(c.phone) + '</span>' : '') + '</td>' +
+        '<td>' + esc(c.company || '—') + (c.country ? ' · ' + esc(c.country) : '') + '</td>' +
+        '<td><b>' + c.total + '</b></td>' +
+        '<td style="color:var(--ok)">' + (c.won ? c.won : '—') + '</td>' +
+        '<td>' + fmtTime(new Date(c.last).toISOString()) + '</td>' +
+        '<td><span class="tag" style="background:' + gradeColor[c.grade] + '22;color:' + gradeColor[c.grade] + ';border:1px solid ' + gradeColor[c.grade] + '44;font-weight:700">' + c.grade + '</span></td>' +
+        '<td><button class="btn btn-ghost btn-sm" data-cust-key="' + esc(c.key) + '" style="padding:3px 10px">查看询盘</button></td></tr>';
+    });
+    html += '</tbody></table></div>' +
+      '<p class="hint" style="margin-top:8px">按邮箱/电话自动聚合（最多显示 60 位客户，按最近活动排序）· 分级：A=有成交 · B=≥3 次询盘 · C=其他 —— 正式「客户中心」将随 P0 客户表落地（含完整 360 视图与 RFM）。<a href="#" onclick="event.preventDefault();goTab(\'customers\')" style="color:var(--color-primary)">查看客户中心规划 →</a></p>';
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('[data-cust-key]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var key = btn.getAttribute('data-cust-key');
+        var c = map[key]; if (!c) return;
+        inqState.f.q = (c.email || c.name || c.phone || '').split('@')[0];
+        var fq = el('inq-f-q'); if (fq) fq.value = inqState.f.q;
+        inqState.view = 'list';
+        var tabs = document.querySelectorAll('.inq-tab');
+        for (var j = 0; j < tabs.length; j++) tabs[j].classList.toggle('active', tabs[j].getAttribute('data-iv') === 'list');
+        el('inqCustView').classList.add('hide');
+        el('inqListView').classList.remove('hide');
+        inqRender();
+      });
+    });
+  }
     var seen = {}, list = [];
     ['Rigid Gift Boxes', 'Cosmetic Boxes', 'Jewelry Boxes', 'Watch Boxes', 'Mailer Boxes', 'Folding Cartons', 'Paper Bags', 'Corrugated Shipping', 'Sample Kits'].forEach(function (p) { if (!seen[p]) { seen[p] = 1; list.push(p); } });
     inqState.rows.forEach(function (r) { var p = (r.product_type || '').trim(); if (p && !seen[p]) { seen[p] = 1; list.push(p); } });
@@ -3935,7 +4160,17 @@
       var st = inqSts[r.status] || inqSts.new, ch = inqChan[r.channel] || { i: '🌐', l: '?' };
       return '<tr><td style="padding:4px 8px 4px 0">' + inqT(r.created_at) + '</td><td style="padding:4px 8px 4px 0"><span class="inq-st ' + st.c + '">' + st.l + '</span></td><td class="c">' + ch.i + ' ' + esc(r.product_type || '—') + (r.message ? '<br/><span style="color:var(--color-text-dim);font-size:11px">' + esc(r.message.slice(0, 120)) + '</span>' : '') + '</td></tr>';
     }).join('') + '</table>';
+    // v14: 一键转订单
+    body += '<div style="margin-top:14px"><button class="btn btn-primary btn-sm" id="inqD-order" style="width:100%">🧾 转为订单（进入订单履约）</button></div>';
     el('inqD-body').innerHTML = body;
+    var toOrder = el('inqD-order');
+    if (toOrder) toOrder.addEventListener('click', function () {
+      el('inqDrawer').classList.remove('show');
+      goTab('orders');
+      setTimeout(function () {
+        ordOpenModal({ customer_name: row.name || '', customer_email: row.email || '', customer_phone: row.phone || '', inquiry_id: row.id, title: row.product_type || '' });
+      }, 350);
+    });
     el('inqDrawer').classList.add('show');
   }
 
@@ -4085,6 +4320,17 @@
   // ── v4: Audit log panel ──
   function loadAudit() {
     var area = document.getElementById('auditArea');
+    // 持久化状态徽章（读配置）
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      var badge = document.getElementById('audit-mode-badge');
+      if (badge && d && d.configs) {
+        var gh = d.configs.gh_pat || {};
+        var persisted = gh.ok || gh.ok === true;
+        badge.innerHTML = persisted
+          ? '<span class="tag" style="background:rgba(76,217,100,.1);color:var(--ok);border:1px solid rgba(76,217,100,.3)">持久化：已开启（写入仓库 ops/audit.jsonl）</span><span class="hint" style="margin:0">记录跨重启保留</span>'
+          : '<span class="tag" style="background:rgba(255,182,72,.12);color:var(--color-warning);border:1px solid rgba(255,182,72,.3)">持久化：未开启（内存模式）</span><span class="hint" style="margin:0">配置 <code>OPS_GH_PAT</code> 后自动持久化；当前记录在 Worker 重启后清空</span>';
+      }
+    }).catch(function () {});
     fetch('/api/audit').then(function (r) {
       if (r.status === 401) { area.innerHTML = '<p class="status bad">会话已过期，请刷新页面重新登录</p>'; return null; }
       return r.json();
@@ -4117,7 +4363,17 @@
     ];
     fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
       var cfgs = (d.ok && d.configs) || {};
-      var html = '<table><tr><th>任务</th><th>触发</th><th>状态</th><th>说明</th></tr>';
+      var cronLast = d.cron || {};
+      var tagMap = { 'daily-brief': '每日经营简报', 'link-check': '死链 & 收录巡检', 'indexnow': 'IndexNow 提交' };
+      var lastHtml = Object.keys(cronLast).length
+        ? '<div style="margin-bottom:12px;padding:10px 14px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:6px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px 18px">' + Object.keys(cronLast).map(function (k) {
+            var r = cronLast[k];
+            var nm = tagMap[k] || k;
+            var dot = r.ok === true ? '<span class="status ok" style="padding:1px 8px;font-size:10px">成功</span>' : (r.ok === false ? '<span class="status bad" style="padding:1px 8px;font-size:10px">失败</span>' : '<span class="status" style="padding:1px 8px;font-size:10px">执行中</span>');
+            return '<span>' + nm + '：' + dot + ' <span class="hint" style="font-size:11px">' + fmtTime(r.ts) + '</span></span>';
+          }).join('') + '</div>'
+        : '<div style="margin-bottom:12px;padding:10px 14px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:6px;font-size:12px;color:var(--color-text-dim)">最近运行：等待下一次触发（首次运行后显示，约每日 08:00 / 每周一 09:00 / 每 6 小时）</div>';
+      var html = lastHtml + '<table><tr><th>任务</th><th>触发</th><th>状态</th><th>说明</th></tr>';
       jobs.forEach(function (j) {
         var missingDeps = j.deps.filter(function (dep) { return !(cfgs[dep] && cfgs[dep].ok); });
         var statusBadge = missingDeps.length
@@ -4125,7 +4381,7 @@
           : '<span class="tag tag-success">✓ 运行中</span>';
         html += '<tr><td style="white-space:nowrap;font-weight:600">' + j.name + '</td><td style="font-size:11.5px">' + j.cron + '</td><td style="min-width:90px">' + statusBadge + '</td><td style="font-size:11px;max-width:260px">' + j.desc + '</td></tr>';
       });
-      html += '</table><p class="hint" style="margin-top:10px">执行日志：Cloudflare 控制台 → Workers → flat-mud-c136 → 实时日志（搜索 "CRON:"）。任务内置失败自动重试 1 次。未就绪的密钥在设置中心配置后即可点亮。</p>';
+      html += '</table><p class="hint" style="margin-top:10px">最近运行状态为 Worker 内存记录（当前实例），跨实例仅供参考；执行日志：Cloudflare 控制台 → Workers → flat-mud-c136 → 实时日志（搜索 "CRON:"）。任务内置失败自动重试 1 次。未就绪的密钥在设置中心配置后即可点亮。</p>';
       document.getElementById('cronPanel').innerHTML = html;
     }).catch(function () {
       var html = '<table><tr><th>任务</th><th>触发</th><th>状态</th><th>说明</th></tr>';
@@ -5276,6 +5532,280 @@
     document.getElementById('qc-panel').style.display = 'none';
     goTab('orders');
   });
+
+  // ═════════════════════════════════════════════
+  // V14: 订单履约中心（orders 表，迁移后自动生效）
+  // ═════════════════════════════════════════════
+  var ordState = { rows: [], q: '', status: '', page: 0, size: 25, edId: null };
+  var ORD_ST = { quote: '📄 已报价', confirmed: '✅ 已确认', sampling: '🧪 打样中', production: '🏭 生产中', qc: '🔍 质检中', shipped: '🚚 已发货', delivered: '📦 已交付', onhold: '⏸ 暂停', dispute: '⚠ 售后中', cancelled: '✖ 已取消' };
+  var ORD_ST_COLOR = { quote: 'var(--color-text-secondary)', confirmed: 'var(--ok)', sampling: 'var(--color-primary)', production: 'var(--color-warning)', qc: 'var(--color-warning)', shipped: 'var(--color-primary)', delivered: 'var(--ok)', onhold: 'var(--color-text-dim)', dispute: 'var(--bad)', cancelled: 'var(--bad)' };
+  var ORD_PAY = { unpaid: '未收款', deposit: '定金 30%', balance: '尾款已付', paid: '已结清' };
+  function ordMigrateMsg(e) {
+    var b = el('ord-migrate');
+    if (b && e && /supabase:/.test(e)) b.style.display = 'block';
+    return e;
+  }
+  function ordLoad() {
+    return fetch('/api/order/list?q=' + encodeURIComponent('select=*&order=created_at.desc&limit=300'))
+      .then(function (r) { return r.json(); }).then(function (d) {
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        ordState.rows = Array.isArray(d.rows) ? d.rows : [];
+        ordRender();
+        return true;
+      }).catch(function (e) { ordMigrateMsg(e); var t = el('ordTable'); if (t) t.querySelector('tbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--color-text-dim)">订单读取失败：' + ((e && e.message) || '未知') + '</td></tr>'; return false; });
+  }
+  function ordRenderStats() {
+    var rows = ordState.rows;
+    var counts = {};
+    rows.forEach(function (r) { var s = r.status || 'quote'; counts[s] = (counts[s] || 0) + 1; });
+    var total = rows.length, paid = rows.filter(function (r) { return r.payment_status === 'paid' || r.payment_status === 'balance'; }).length;
+    var overdue = rows.filter(function (r) { return r.eta && new Date(r.eta) < new Date() && ['delivered', 'cancelled'].indexOf(r.status) < 0; }).length;
+    el('ord-stats').innerHTML = '<div class="inq-stats" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-primary)">' + total + '</div><div class="hint">总订单</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--ok)">' + (counts.delivered || 0) + '</div><div class="hint">已交付</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-warning)">' + ((counts.production || 0) + (counts.qc || 0)) + '</div><div class="hint">生产/质检</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:' + (overdue ? 'var(--bad)' : 'var(--color-text-dim)') + '">' + overdue + '</div><div class="hint">交期已过</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-primary)">' + Math.round(paid / Math.max(total, 1) * 100) + '%</div><div class="hint">收款进度</div></div></div>';
+  }
+  function ordRenderFilters() {
+    el('ord-filters').innerHTML = '<input type="text" id="ord-q" placeholder="🔍 搜索订单号 / 客户 / 产品…" style="flex:1;min-width:160px" />' +
+      '<select id="ord-st"><option value="">全部状态</option>' + Object.keys(ORD_ST).map(function (k) { return '<option value="' + k + '">' + ORD_ST[k] + '</option>'; }).join('') + '</select>';
+    var qDeb = null;
+    el('ord-q').addEventListener('input', function () { var self = this; clearTimeout(qDeb); qDeb = setTimeout(function () { ordState.q = self.value.trim(); ordState.page = 0; ordRenderTable(); }, 250); });
+    el('ord-st').addEventListener('change', function () { ordState.status = this.value; ordState.page = 0; ordRenderTable(); });
+  }
+  function ordRenderTable() {
+    var rows = ordState.rows.filter(function (r) {
+      if (ordState.status && r.status !== ordState.status) return false;
+      if (ordState.q) { var s = String(r.order_no || '') + ' ' + String(r.title || '') + ' ' + String(r.customer_name || '') + ' ' + String(r.note || ''); if (s.toLowerCase().indexOf(ordState.q.toLowerCase()) < 0) return false; }
+      return true;
+    });
+    var size = ordState.size, page = ordState.page, pages = Math.max(1, Math.ceil(rows.length / size));
+    if (page >= pages) { page = pages - 1; ordState.page = page; }
+    var slice = rows.slice(page * size, (page + 1) * size);
+    el('ordTable').querySelector('thead').innerHTML = '<tr><th>订单号</th><th>客户</th><th>产品 / 订单内容</th><th>金额</th><th>收款</th><th>履约状态</th><th>交期</th><th>操作</th></tr>';
+    el('ordTable').querySelector('tbody').innerHTML = slice.length ? slice.map(function (r) {
+      var ov = new Date(r.eta || 0).getTime(), now = Date.now();
+      var ovFlag = r.eta && !isNaN(ov) && ov < now && ['delivered', 'cancelled'].indexOf(r.status) < 0;
+      return '<tr' + (ovFlag ? ' style="background:rgba(255,107,107,.07)"' : '') + '>' +
+        '<td style="font-weight:600;color:var(--color-primary);white-space:nowrap">' + esc(r.order_no || '—') + (ovFlag ? '<span class="tag" style="margin-left:6px;font-size:9.5px;background:rgba(255,107,107,.12);color:var(--bad);border:1px solid rgba(255,107,107,.3)">交期已过</span>' : '') + '</td>' +
+        '<td style="white-space:nowrap">' + esc(r.customer_name || '—') + '</td>' +
+        '<td style="max-width:220px">' + esc(r.title || '—') + '</td>' +
+        '<td style="white-space:nowrap;font-variant-numeric:tabular-nums">' + (r.amount != null ? '$' + Number(r.amount).toLocaleString() : '—') + '</td>' +
+        '<td style="white-space:nowrap"><span class="tag" style="font-size:10.5px;background:rgba(76,217,100,.08);color:' + (r.payment_status === 'paid' ? 'var(--ok)' : 'var(--color-warning)') + ';border:1px solid rgba(76,217,100,.25)">' + (ORD_PAY[r.payment_status] || r.payment_status) + '</span></td>' +
+        '<td><select data-oid="' + r.id + '" class="ord-st-sel" style="padding:4px 6px;font-size:11.5px;color:' + (ORD_ST_COLOR[r.status] || 'inherit') + ';border-color:var(--color-border);background:var(--color-surface-2)">' + Object.keys(ORD_ST).map(function (k) { return '<option value="' + k + '"' + (r.status === k ? ' selected' : '') + '>' + ORD_ST[k] + '</option>'; }).join('') + '</select></td>' +
+        '<td style="white-space:nowrap;font-size:11.5px">' + esc(r.eta || '—') + '</td>' +
+        '<td style="white-space:nowrap"><button class="ed-act-btn" data-odetail="' + r.id + '">详情</button></td></tr>';
+    }).join('') : '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--color-text-dim)">暂无订单' + (ordState.rows.length ? '（点击 ＋ 新增订单，或从询盘转入）' : '，点击「＋ 新增订单」创建第一单') + '</td></tr>';
+    el('ordPager').innerHTML = '<span style="margin-right:auto">共 ' + rows.length + ' 条 · 第 ' + (page + 1) + '/' + pages + ' 页</span>' +
+      '<button class="btn btn-ghost btn-sm" data-opg="prev">上一页</button><button class="btn btn-ghost btn-sm" data-opg="next">下一页</button>';
+    bind('.ord-st-sel', 'change', function () {
+      var nv = this.value, id = this.getAttribute('data-oid');
+      var r = ordState.rows.filter(function (x) { return x.id === id; })[0];
+      if (nv === 'cancelled' && r && !confirm('确认将该订单标记为「已取消」？此操作影响履约统计。')) { this.value = r.status; return; }
+      fetch('/api/order/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id, status: nv }) })
+        .then(function (rr) { return rr.json(); }).then(function (d) { if (d.ok) { if (r) r.status = nv; ordRenderStats(); ordRenderTable(); flash('✓ 状态已更新'); } else { flash('更新失败：' + (d.error || ''), true); ordLoad(); } }).catch(function () { flash('更新失败：网络异常', true); });
+    });
+    el('ordPager').querySelectorAll('[data-opg]').forEach(function (b) {
+      b.addEventListener('click', function () { ordState.page = b.getAttribute('data-opg') === 'next' ? ordState.page + 1 : ordState.page - 1; if (ordState.page < 0) ordState.page = 0; ordRenderTable(); });
+    });
+  }
+  function ordRender() { ordRenderStats(); ordRenderFilters(); ordRenderTable(); }
+  function ordOpenModal(prefill) {
+    var p = prefill || {};
+    el('ordModal-title').textContent = p.id ? '编辑订单 ' + (p.order_no || '') : '＋ 新增订单';
+    el('ord-cust-name').value = p.customer_name || ''; el('ord-cust-email').value = p.customer_email || ''; el('ord-cust-phone').value = p.customer_phone || ''; el('ord-cust-country').value = p.customer_country || '';
+    el('ord-title').value = p.title || ''; el('ord-amount').value = p.amount != null ? p.amount : '';
+    el('ord-status').value = p.status || 'quote'; el('ord-payment').value = p.payment_status || 'unpaid';
+    el('ord-eta').value = p.eta || ''; el('ord-inquiry').value = p.inquiry_id || ''; el('ord-carrier').value = p.carrier || ''; el('ord-tracking').value = p.tracking_no || ''; el('ord-note').value = p.note || '';
+    ordState.edId = p.id || null;
+    el('ordModal').style.display = 'flex';
+    setTimeout(function () { var f = el('ord-cust-name'); if (f) f.focus(); }, 50);
+  }
+  function ordCloseModal() { el('ordModal').style.display = 'none'; ordState.edId = null; }
+  function ordSave() {
+    var name = el('ord-cust-name').value.trim(), title = el('ord-title').value.trim();
+    if (!name || !title) { toast('客户姓名与订单内容为必填', 'err'); return; }
+    var body = {
+      id: ordState.edId || undefined,
+      title: title,
+      amount: parseFloat(el('ord-amount').value) || null,
+      status: el('ord-status').value,
+      payment_status: el('ord-payment').value,
+      eta: el('ord-eta').value.trim() || null,
+      inquiry_id: el('ord-inquiry').value.trim() || null,
+      carrier: el('ord-carrier').value.trim() || null,
+      tracking_no: el('ord-tracking').value.trim() || null,
+      note: el('ord-note').value.trim() || null,
+      customer_name: name, customer_email: el('ord-cust-email').value.trim() || null, customer_phone: el('ord-cust-phone').value.trim() || null, customer_country: el('ord-cust-country').value.trim() || null
+    };
+    var btn = el('ord-save-btn'); btn.disabled = true; btn.textContent = '保存中…';
+    fetch('/api/order/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); }).then(function (d) {
+        btn.disabled = false; btn.textContent = '💾 保存订单';
+        if (d.ok) { toast(ordState.edId ? '订单已更新' : '订单已创建', 'ok'); ordCloseModal(); ordLoad(); }
+        else { toast('保存失败：' + (d.error || '未知') + '（请确认已执行 orders 迁移）', 'err'); ordMigrateMsg({ message: d.error }); }
+      }).catch(function () { btn.disabled = false; btn.textContent = '💾 保存订单'; toast('保存失败：网络异常', 'err'); });
+  }
+  function ordOpenDetail(id) {
+    var r = ordState.rows.filter(function (x) { return x.id === id; })[0]; if (!r) return;
+    var inner = el('ordDrawerInner');
+    inner.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">订单 ' + esc(r.order_no || '') + '</h3><button class="ed-act-btn" id="ordD-close">✕</button></div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b style="color:var(--color-primary)">' + esc(r.title || '') + '</b><br/><span class="hint">' + esc(r.customer_name || '未填客户') + ' · ' + (r.amount != null ? '$' + Number(r.amount).toLocaleString() : '—') + ' · ' + (ORD_PAY[r.payment_status] || '') + '</span></div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>履约信息</b><div style="margin-top:6px;font-size:12px">' +
+      '状态：<b style="color:' + (ORD_ST_COLOR[r.status] || 'inherit') + '">' + (ORD_ST[r.status] || r.status) + '</b> · 交期：' + esc(r.eta || '—') +
+      (r.carrier ? ' · 物流：' + esc(r.carrier) + ' ' + esc(r.tracking_no || '') : '') + '<br/>' +
+      (r.inquiry_id ? '关联询盘：<code style="font-size:11px">' + esc(r.inquiry_id) + '</code><br/>' : '') +
+      '创建：' + fmtTime(r.created_at) + ' · 最近更新：' + fmtTime(r.updated_at) + '</div></div>' +
+      (r.note ? '<div class="inq-card" style="margin-bottom:10px"><b>备注</b><div style="margin-top:4px;font-size:12px;white-space:pre-wrap">' + esc(r.note) + '</div></div>' : '') +
+      '<div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" id="ordD-edit" style="flex:1">✏️ 编辑订单</button></div>';
+    el('ordDrawer').classList.add('show');
+    el('ordD-close').onclick = function () { el('ordDrawer').classList.remove('show'); };
+    el('ordD-edit').onclick = function () { el('ordDrawer').classList.remove('show'); ordOpenModal(r); };
+  }
+  document.getElementById('ord-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; ordLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
+  document.getElementById('ord-add-btn').addEventListener('click', function () { ordOpenModal({}); });
+  document.getElementById('ord-modal-cancel').addEventListener('click', ordCloseModal);
+  document.getElementById('ord-save-btn').addEventListener('click', ordSave);
+  document.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('[data-odetail]') : null; if (b) ordOpenDetail(b.getAttribute('data-odetail')); });
+  document.querySelector('.tab[data-tab="orders"]').addEventListener('click', function () { ordLoad(); });
+
+  // ═════════════════════════════════════════════
+  // V14: 客户中心（customers 表 + 询盘/订单聚合）
+  // ═════════════════════════════════════════════
+  var custState = { rows: [], q: '', grade: '', page: 0, size: 25, edId: null };
+  function custMigrateMsg(e) {
+    var b = el('cust-migrate');
+    if (b && e && /supabase:/.test(e)) b.style.display = 'block';
+    return e;
+  }
+  function custLoad() {
+    return fetch('/api/customer/list?q=' + encodeURIComponent('select=*&order=updated_at.desc&limit=300'))
+      .then(function (r) { return r.json(); }).then(function (d) {
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        custState.rows = Array.isArray(d.rows) ? d.rows : [];
+        if (!ordState.rows.length) ordLoad();
+        custRender();
+        return true;
+      }).catch(function (e) { custMigrateMsg(e); var t = el('custTable'); if (t) t.querySelector('tbody').innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--color-text-dim)">客户读取失败：' + ((e && e.message) || '未知') + '</td></tr>'; return false; });
+  }
+  function custStat(r) {
+    var em = (r.email || '').trim().toLowerCase(), ph = (r.phone || '').trim();
+    var inqs = inqState.rows.filter(function (x) { return ((x.email || '').trim().toLowerCase() === em && em) || ((x.phone || '').trim() === ph && ph); });
+    var ords = ordState.rows.filter(function (x) { return x.customer_id === r.id; });
+    var amt = ords.reduce(function (s, x) { return s + (parseFloat(x.amount) || 0); }, 0);
+    return { inq: inqs.length, orders: ords.length, amount: amt };
+  }
+  function custRenderStats() {
+    var rows = custState.rows;
+    var active = rows.filter(function (r) { var t = new Date(r.updated_at || 0).getTime(); return !isNaN(t) && Date.now() - t < 30 * 864e5; }).length;
+    var g = {};
+    rows.forEach(function (r) { g[r.grade] = (g[r.grade] || 0) + 1; });
+    var totalOrders = ordState.rows.length, totalAmt = ordState.rows.reduce(function (s, x) { return s + (parseFloat(x.amount) || 0); }, 0);
+    el('cust-stats').innerHTML = '<div class="inq-stats" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-primary)">' + rows.length + '</div><div class="hint">客户总数</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--ok)">' + active + '</div><div class="hint">近 30 天活跃</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-warning)">' + (g.A || 0) + ' / ' + (g.S || 0) + '</div><div class="hint">A / S 级客户</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-primary)">' + totalOrders + '</div><div class="hint">关联订单</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--ok)">$' + Math.round(totalAmt).toLocaleString() + '</div><div class="hint">累计金额</div></div></div>';
+  }
+  function custRenderFilters() {
+    el('cust-filters').innerHTML = '<input type="text" id="cust-q" placeholder="🔍 搜索姓名 / 邮箱 / 电话 / 公司…" style="flex:1;min-width:160px" />' +
+      '<select id="cust-g"><option value="">全部分级</option><option value="S">S 级</option><option value="A">A 级</option><option value="B">B 级</option><option value="C">C 级</option><option value="D">D 级</option></select>';
+    var qDeb = null;
+    el('cust-q').addEventListener('input', function () { var self = this; clearTimeout(qDeb); qDeb = setTimeout(function () { custState.q = self.value.trim(); custState.page = 0; custRenderTable(); }, 250); });
+    el('cust-g').addEventListener('change', function () { custState.grade = this.value; custState.page = 0; custRenderTable(); });
+  }
+  function custRenderTable() {
+    var rows = custState.rows.filter(function (r) {
+      if (custState.grade && r.grade !== custState.grade) return false;
+      if (custState.q) { var s = String(r.name || '') + ' ' + String(r.email || '') + ' ' + String(r.phone || '') + ' ' + String(r.company || ''); if (s.toLowerCase().indexOf(custState.q.toLowerCase()) < 0) return false; }
+      return true;
+    });
+    var size = custState.size, page = custState.page, pages = Math.max(1, Math.ceil(rows.length / size));
+    if (page >= pages) { page = pages - 1; custState.page = page; }
+    var slice = rows.slice(page * size, (page + 1) * size);
+    var gColor = { S: 'var(--color-primary)', A: 'var(--ok)', B: 'var(--color-primary)', C: 'var(--color-text-dim)', D: 'var(--bad)' };
+    el('custTable').querySelector('thead').innerHTML = '<tr><th>客户</th><th>联系方式</th><th>公司 / 国家</th><th>询盘</th><th>订单</th><th>累计金额</th><th>分级</th><th>最近活动</th><th>操作</th></tr>';
+    el('custTable').querySelector('tbody').innerHTML = slice.length ? slice.map(function (r) {
+      var s = custStat(r);
+      return '<tr>' +
+        '<td style="font-weight:600;white-space:nowrap">' + esc(r.name || '未命名') + '</td>' +
+        '<td style="white-space:nowrap">' + (r.email ? '<span style="color:var(--color-primary);font-size:11.5px">✉ ' + esc(r.email) + '</span>' : '') + (r.phone ? (r.email ? '<br/>' : '') + '<span style="color:var(--ok);font-size:11.5px">💬 ' + esc(r.phone) + '</span>' : '') + '</td>' +
+        '<td style="white-space:nowrap;font-size:12px">' + esc(r.company || '—') + (r.country ? ' · ' + esc(r.country) : '') + '</td>' +
+        '<td>' + s.inq + '</td>' +
+        '<td>' + s.orders + '</td>' +
+        '<td style="white-space:nowrap;font-variant-numeric:tabular-nums">' + (s.amount ? '$' + Math.round(s.amount).toLocaleString() : '—') + '</td>' +
+        '<td><span class="tag" style="font-size:11px;font-weight:700;background:' + (gColor[r.grade] || 'var(--color-text-dim)') + '22;color:' + (gColor[r.grade] || 'var(--color-text-dim)') + ';border:1px solid ' + (gColor[r.grade] || 'var(--color-text-dim)') + '44">' + (r.grade || 'C') + '</span></td>' +
+        '<td style="font-size:11.5px;white-space:nowrap">' + fmtTime(r.updated_at) + '</td>' +
+        '<td style="white-space:nowrap"><button class="ed-act-btn" data-cdetail="' + r.id + '">360° 视图</button></td></tr>';
+    }).join('') : '<tr><td colspan="9" style="text-align:center;padding:24px;color:var(--color-text-dim)">暂无客户，点击「＋ 新增客户」或等待询盘沉淀</td></tr>';
+    el('custPager').innerHTML = '<span style="margin-right:auto">共 ' + rows.length + ' 位客户 · 第 ' + (page + 1) + '/' + pages + ' 页</span>' +
+      '<button class="btn btn-ghost btn-sm" data-cpg="prev">上一页</button><button class="btn btn-ghost btn-sm" data-cpg="next">下一页</button>';
+    el('custPager').querySelectorAll('[data-cpg]').forEach(function (b) {
+      b.addEventListener('click', function () { custState.page = b.getAttribute('data-cpg') === 'next' ? custState.page + 1 : custState.page - 1; if (custState.page < 0) custState.page = 0; custRenderTable(); });
+    });
+  }
+  function custRender() { custRenderStats(); custRenderFilters(); custRenderTable(); }
+  function custOpenModal(prefill) {
+    var p = prefill || {};
+    el('custModal-title').textContent = p.id ? '编辑客户' : '＋ 新增客户';
+    el('cust-name').value = p.name || ''; el('cust-email').value = p.email || ''; el('cust-phone').value = p.phone || '';
+    el('cust-country').value = p.country || ''; el('cust-company').value = p.company || ''; el('cust-source').value = p.source || ''; el('cust-note').value = p.note || '';
+    custState.edId = p.id || null;
+    el('custModal').style.display = 'flex';
+  }
+  function custCloseModal() { el('custModal').style.display = 'none'; custState.edId = null; }
+  function custSave() {
+    var name = el('cust-name').value.trim(), email = el('cust-email').value.trim(), phone = el('cust-phone').value.trim();
+    if (!name && !email && !phone) { toast('至少填写姓名、邮箱或电话之一', 'err'); return; }
+    var body = { id: custState.edId || undefined, name: name, email: email || null, phone: phone || null, country: el('cust-country').value.trim() || null, company: el('cust-company').value.trim() || null, source: el('cust-source').value || null, note: el('cust-note').value.trim() || null };
+    var btn = el('cust-save-btn'); btn.disabled = true; btn.textContent = '保存中…';
+    fetch('/api/customer/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); }).then(function (d) {
+        btn.disabled = false; btn.textContent = '💾 保存客户';
+        if (d.ok) { toast(custState.edId ? '客户已更新' : '客户已创建', 'ok'); custCloseModal(); custLoad(); }
+        else { toast('保存失败：' + (d.error || '未知') + '（请确认已执行迁移）', 'err'); custMigrateMsg({ message: d.error }); }
+      }).catch(function () { btn.disabled = false; btn.textContent = '💾 保存客户'; toast('保存失败：网络异常', 'err'); });
+  }
+  function custOpenDetail(id) {
+    var r = custState.rows.filter(function (x) { return x.id === id; })[0]; if (!r) return;
+    var s = custStat(r);
+    var em = (r.email || '').trim().toLowerCase(), ph = (r.phone || '').trim();
+    var inqHtml = inqState.rows.filter(function (x) {
+      return ((x.email || '').trim().toLowerCase() === em && em) || ((x.phone || '').trim() === ph && ph);
+    }).slice(0, 10).map(function (x) {
+      return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--color-border)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%">' + esc(x.name || '') + ' · ' + esc(x.product_type || '') + '</span><span style="color:var(--color-text-secondary);white-space:nowrap">' + fmtTime(x.created_at) + ' · ' + esc(x.status || '') + '</span></div>';
+    }).join('') || '<p class="hint">暂无关联询盘</p>';
+    var ordHtml = ordState.rows.filter(function (x) { return x.customer_id === id; }).slice(0, 10).map(function (x) {
+      return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:4px 0;border-bottom:1px solid var(--color-border)"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:50%">' + esc(x.order_no || '') + ' · ' + esc(x.title || '') + '</span><span style="color:var(--color-text-secondary);white-space:nowrap">' + (ORD_ST[x.status] || x.status) + ' · $' + (x.amount || 0) + '</span></div>';
+    }).join('') || '<p class="hint">暂无关联订单（可在新增订单时关联此客户）</p>';
+    var inner = el('custDrawerInner');
+    inner.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">' + esc(r.name || '未命名客户') + '</h3><button class="ed-act-btn" id="custD-close">✕</button></div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>客户档案</b><div style="margin-top:6px;font-size:12px;line-height:1.8">' +
+      (r.email ? '✉ ' + esc(r.email) + '<br/>' : '') + (r.phone ? '💬 ' + esc(r.phone) + '<br/>' : '') +
+      '🏢 ' + esc(r.company || '—') + (r.country ? ' · ' + esc(r.country) : '') + '<br/>' +
+      '来源：' + esc(r.source || '—') + ' · 分级：<b style="color:var(--color-primary)">' + (r.grade || 'C') + '</b><br/>' +
+      '询盘 <b>' + s.inq + '</b> · 订单 <b>' + s.orders + '</b> · 累计 <b style="color:var(--ok)">$' + Math.round(s.amount).toLocaleString() + '</b></div></div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>询盘历史</b>' + inqHtml + '</div>' +
+      '<div class="inq-card" style="margin-bottom:10px"><b>订单历史</b>' + ordHtml + '</div>' +
+      (r.note ? '<div class="inq-card" style="margin-bottom:10px"><b>备注</b><div style="margin-top:4px;font-size:12px;white-space:pre-wrap">' + esc(r.note) + '</div></div>' : '') +
+      '<div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" id="custD-edit" style="flex:1">✏️ 编辑客户</button><button class="btn btn-ghost btn-sm" id="custD-order" style="flex:1">＋ 创建订单</button></div>';
+    el('custDrawer').classList.add('show');
+    el('custD-close').onclick = function () { el('custDrawer').classList.remove('show'); };
+    el('custD-edit').onclick = function () { el('custDrawer').classList.remove('show'); custOpenModal(r); };
+    el('custD-order').onclick = function () {
+      el('custDrawer').classList.remove('show');
+      goTab('orders');
+      setTimeout(function () { ordOpenModal({ customer_name: r.name, customer_email: r.email, customer_phone: r.phone, customer_country: r.country }); }, 300);
+    };
+  }
+  document.getElementById('cust-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; custLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
+  document.getElementById('cust-add-btn').addEventListener('click', function () { custOpenModal({}); });
+  document.getElementById('cust-modal-cancel').addEventListener('click', custCloseModal);
+  document.getElementById('cust-save-btn').addEventListener('click', custSave);
+  document.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('[data-cdetail]') : null; if (b) custOpenDetail(b.getAttribute('data-cdetail')); });
+  document.querySelector('.tab[data-tab="customers"]').addEventListener('click', function () { custLoad(); });
 
   // Start dashboard sync engine after all bindings are defined
   var savedIv = null; try { savedIv = localStorage.getItem('mili-sync-interval'); } catch (e) {}
