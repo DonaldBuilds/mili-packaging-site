@@ -1487,6 +1487,7 @@
             <button class="inq-tab" data-iv="report">📊 数据报表</button>
           </div>
           <div class="inq-actions">
+            <button class="btn btn-ghost btn-sm" id="inq-mail-btn" title="拉取 163 邮箱未读邮件并录入（需已配置 IMAP 授权码）">📬 同步邮箱</button>
             <button class="btn btn-ghost btn-sm" id="inq-tpl-btn">💬 快捷模板</button>
             <button class="btn btn-primary btn-sm" id="inq-add-btn">＋ 新增询盘</button>
           </div>
@@ -3820,11 +3821,66 @@
     el('inq-add-btn').addEventListener('click', inqOpenAdd);
     el('inq-m-cancel').addEventListener('click', function () { el('inqModal').style.display = 'none'; });
     el('inq-m-save').addEventListener('click', inqSaveAdd);
+    // v18: 邮箱客户信息实时同步（手动按钮 + 登录会话内 15 分钟自动轮询）
+    function mailSyncRun(silent) {
+      var btn = el('inq-mail-btn');
+      if (btn) { btn.disabled = true; btn.textContent = '同步中…'; }
+      fetch('/api/mail/sync', { method: 'POST' })
+        .then(function (r) { return r.json(); }).then(function (d) {
+          if (btn) { btn.disabled = false; btn.textContent = '📬 同步邮箱'; }
+          try { localStorage.setItem('mili-mail-synced-at', String(Date.now())); } catch (e) {}
+          if (!d.ok) {
+            if (!silent) toast('邮箱同步未执行：' + (d.message || d.error || '未知'), 'err');
+            return;
+          }
+          toast('邮箱同步完成：新录入 ' + d.count + ' 条客户询盘' + (d.count ? '，请刷新查看' : ''), d.count ? 'ok' : 'info');
+          if (d.count) inqLoad();
+        }).catch(function () {
+          if (btn) { btn.disabled = false; btn.textContent = '📬 同步邮箱'; }
+          if (!silent) toast('邮箱同步失败：网络异常', 'err');
+        });
+    }
+    var mb = el('inq-mail-btn');
+    if (mb) mb.addEventListener('click', function () { mailSyncRun(false); });
+    // 自动轮询：登录会话内每 15 分钟同步一次（页面加载时检查）
+    try {
+      var lastSync = parseInt(localStorage.getItem('mili-mail-synced-at') || '0', 10);
+      if (Date.now() - lastSync > 15 * 60 * 1000) mailSyncRun(true);
+    } catch (e) {}
     // v16: 邮件/WhatsApp 文本智能提取 → 自动填充表单（AI 优先，规则降级）
     var parseBtn = el('inq-m-parse'), parseMsg = el('inq-m-parse-msg');
     if (parseBtn) parseBtn.addEventListener('click', function () {
       var raw = el('inq-m-raw').value.trim();
       if (raw.length < 10) { parseMsg.textContent = '请先粘贴买家邮件原文或 WhatsApp 对话内容（至少 10 个字符）'; return; }
+      // v18: 批量模式 —— 用空行拆分为多条独立消息逐条解析录入（单条时填充主表单）
+      var parts = raw.split(/\n\s*\n/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length >= 10; });
+      var batch = parts.length > 1;
+      if (batch) {
+        parseBtn.disabled = true; parseBtn.textContent = '批量录入中…'; parseMsg.textContent = '检测到 ' + parts.length + ' 条消息，正在批量解析录入…';
+        var done = 0, failed = 0;
+        var chain = Promise.resolve();
+        parts.slice(0, 20).forEach(function (part) {
+          chain = chain.then(function () {
+            return fetch('/api/inquiry/parse', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: part }) })
+              .then(function (r) { return r.json(); }).then(function (d) {
+                if (d.ok && d.fields) {
+                  var f = d.fields;
+                  return fetch('/api/inquiry/insert', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({
+                    channel: f.channel || 'email', name: f.name || '', email: f.email || '', phone: f.phone || '', company: f.company || '',
+                    product_type: f.product_type || '', quantity: f.quantity || '', message: f.message || part.slice(0, 500), source_page: 'batch-parse'
+                  }) }).then(function (rr) { return rr.json(); }).then(function (ins) { if (ins.ok) done++; else failed++; });
+                }
+                failed++;
+              }).catch(function () { failed++; });
+          });
+        });
+        chain.then(function () {
+          parseBtn.disabled = false; parseBtn.textContent = '🤖 智能提取';
+          parseMsg.innerHTML = '<span style="color:var(--ok)">✓ 批量录入完成：成功 ' + done + ' 条，失败 ' + failed + ' 条</span>';
+          if (done) inqLoad();
+        });
+        return;
+      }
       parseBtn.disabled = true; parseBtn.textContent = '识别中…'; parseMsg.textContent = '正在提取客户信息…';
       fetch('/api/inquiry/parse', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: raw }) })
         .then(function (r) { return r.json(); }).then(function (d) {
@@ -5211,13 +5267,17 @@
         steps: '① 获取 DeepSeek / OpenAI / 任意兼容 OpenAI 格式的 API Key ② GitHub Secrets 添加 <code>LLM_API_KEY</code>，可选添加 <code>LLM_ENDPOINT</code>（默认 OpenAI）' },
       { key: 'indexnow', name: 'IndexNow Key（INDEXNOW_KEY）', role: 'Bing 新内容收录加速',
         steps: '① 访问 bing.com/webmasters → IndexNow → 生成 key ② 将 key 文件放到网站根目录（部署流程已支持）③ GitHub Secrets 添加 <code>INDEXNOW_KEY</code>' }
+    ]},
+    { label: '客户同步（邮箱 / WhatsApp）', color: '#4da3ff', items: [
+      { key: 'mail_sync', name: '邮箱客户同步（MAIL_IMAP_USER + MAIL_IMAP_PASS）', role: '实时拉取邮箱新邮件 → AI 解析 → 自动录入询盘中心（channel=email）',
+        steps: '① 163 邮箱 → 设置 → POP3/IMAP/SMTP → 开启 IMAP 服务并生成「客户端授权密码」② 将邮箱地址填入 <code>MAIL_IMAP_USER</code>（如 18296876285@163.com），授权密码填入 <code>MAIL_IMAP_PASS</code>（GitHub Secrets 或 Cloudflare 环境变量）③ 询盘中心点击「📬 同步邮箱」立即拉取；登录会话内每 15 分钟自动同步' }
     ]}
   ];
   function loadConfig() {
     fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
       if (!d.ok) { document.getElementById('configGroupArea').innerHTML = '<p class="status bad">读取失败</p>'; return; }
       var cfgs = d.configs;
-      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow'];
+      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow','mail_sync'];
       var done = allKeys.filter(function (k) { return cfgs[k] && cfgs[k].ok; }).length;
       // 更新进度环
       updateCfgRing(done, allKeys.length, cfgs);
@@ -5317,7 +5377,7 @@
     fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
       if (!d.ok) return;
       var cfgs = d.configs;
-      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow'];
+      var allKeys = ['admin_pw','gh_pat','supabase','pushplus','ga4','gsc','llm','indexnow','mail_sync'];
       var done = allKeys.filter(function (k) { return cfgs[k] && cfgs[k].ok; }).length;
       updateCfgRing(done, allKeys.length, cfgs);
     }).catch(function () {

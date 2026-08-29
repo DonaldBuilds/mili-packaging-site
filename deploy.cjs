@@ -317,6 +317,102 @@ export default{async fetch(r,env){
         return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
+    // v18: 邮箱客户信息实时同步（IMAP 拉取新邮件 → 解析 → 写入 inquiries，channel=email）
+    const MAIL_SYNC_KEY='mili-mail-synced';
+    const mailSyncNow=async function(env){
+      const host=String((env&&env.MAIL_IMAP_HOST)||'imap.163.com');
+      const user=String((env&&env.MAIL_IMAP_USER)||'');
+      const pass=String((env&&env.MAIL_IMAP_PASS)||'');
+      if(!user||!pass)return {ok:false,error:'not-configured',message:'未配置 MAIL_IMAP_USER / MAIL_IMAP_PASS'};
+      if(typeof connect!=='function')return {ok:false,error:'no-tcp',message:'当前 Worker 运行时不支持 TCP（邮件同步不可用）'};
+      try{
+        const socket=connect({hostname:host,port:993,tls:true});
+        const reader=socket.readable.getReader();
+        const writer=socket.writable.getWriter();
+        const enc=new TextEncoder(),dec=new TextDecoder();
+        let buf='',ioDone=false;
+        // 后台读循环：持续读取 socket 数据追加到 buf
+        (async function(){
+          try{
+            while(true){
+              const {value,done}=await reader.read();
+              if(done)break;
+              if(value)buf+=dec.decode(value,{stream:true});
+            }
+          }catch(e){} finally {ioDone=true;}
+        })();
+        const waitFor=function(pattern,timeout){
+          return new Promise(function(resolve){
+            const timer=setTimeout(function(){resolve(null)},timeout||12000);
+            (function pump(){
+              const i=buf.indexOf(pattern);
+              if(i>=0){clearTimeout(timer);resolve(buf.slice(0,i+pattern.length));}
+              else if(ioDone){clearTimeout(timer);resolve(null);}
+              else{setTimeout(pump,120);}
+            })();
+          });
+        };
+        const send=async function(cmd){
+          await writer.write(enc.encode(cmd+'\\r\\n'));
+        };
+        const waitTag=async function(tag,timeout){buf='';return await waitFor(tag+' ',timeout)||'';};
+        // 握手（等服务器问候）
+        buf='';await waitFor('OK',9000);
+        await send('a1 LOGIN '+user.replace(/"/g,'')+' "'+pass.replace(/"/g,'')+'"');
+        const lr=await waitTag('a1',15000);
+        if(lr.indexOf('a1 OK')<0)return {ok:false,error:'auth-fail',message:'IMAP 登录失败：请检查邮箱授权码（163 邮箱需在设置中生成客户端授权密码，非登录密码）'};
+        await send('a2 SELECT INBOX');
+        const selR=await waitTag('a2',12000);
+        if(selR.indexOf('a2 OK')<0)return {ok:false,error:'select-fail',message:'无法打开收件箱：'+(selR||'无响应')};
+        await send('a3 SEARCH UNSEEN');
+        const sr=await waitTag('a3',12000);
+        const ids=(sr.match(/[*] SEARCH([^]*?)a3/)||[])[1]||'';
+        const seqs=ids.trim().split(/[ ]+/).filter(Boolean).slice(0,30);
+        const results=[];
+        for(const seq of seqs){
+          await send('a4 FETCH '+seq+' (BODY.PEEK[HEADER.FIELDS (FROM SUBJECT MESSAGE-ID DATE)])');
+          const hr=await waitTag('a4',12000);
+          const headM=hr.match(/From:[ \\t]*([^\\r\\n]*)/i)||[];
+          const subjM=hr.match(/Subject:[ \\t]*([^\\r\\n]*)/i)||[];
+          const idM=hr.match(/Message-ID:[ \\t]*<([^>]+)>/i)||[];
+          const from=String(headM[1]||'').replace(/=\?[^?]+\?[BQ]\?[^?]*\?=/g,'').trim();
+          const subject=String(subjM[1]||'').replace(/=\?[^?]+\?[BQ]\?[^?]*\?=/g,'').trim();
+          const msgId=idM[1]||(from+subject).replace(/[^a-z0-9]/gi,'').slice(0,64);
+          await send('a5 FETCH '+seq+' (BODY.PEEK[TEXT])');
+          const br=await waitTag('a5',15000);
+          const bodyM=br.match(/\\r?\\n\\r?\\n([^]*?)[\\r\\n]*[)]?a5 OK/i)||[];
+          let body=String(bodyM[1]||'').replace(/^\\s+|\\s+$/g,'');
+          body=body.replace(/^(On\s.+?wrote:|>.*$|--\s*$)/m,'').slice(0,2000);
+          // 去重：检查 inquiries 是否有同 message 前缀
+          const dup=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&message=ilike.'+encodeURIComponent(subject.slice(0,40)+'%')+'&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+          const dupRows=await dup.json();
+          const isDup=Array.isArray(dupRows)&&dupRows.length>0;
+          if(isDup){await send('a6 STORE '+seq+' +FLAGS (\\Seen)');await waitTag('a6',8000);continue;}
+          const fromAddr=(from.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/)||[])[0]||'';
+          const name=(from.replace(/\s*<[^>]+>$/,'').replace(/^"|"$/g,'').trim())||fromAddr.split('@')[0]||'';
+          const text='From: '+from+'\\nSubject: '+subject+'\\nBody: '+body;
+          let fields={channel:'email',name:name,email:fromAddr||null,message:('Subject: '+subject+'\\n'+body).slice(0,1000),source_page:'mail-sync'};
+          if(env.LLM_API_KEY){
+            try{
+              const c=await llmChat(env,[{role:'system',content:'从客户邮件提取字段，只输出JSON：{"name":"","company":"","phone":"","quantity":"","product_type":""}'},{role:'user',content:text}]);
+              const m=c&&c.match(/[{][^]*[}]/);
+              if(m){const o=JSON.parse(m[0]);for(const k of ['name','company','phone','quantity','product_type']){if(o[k]&&typeof o[k]==='string')fields[k]=String(o[k]).trim().slice(0,200)}}
+            }catch(e){}
+          }
+          const ins=await fetch(sbU(env)+'/rest/v1/inquiries',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(fields)});
+          results.push({from:fromAddr,subject:subject,ok:ins.ok||ins.status===201});
+          await send('a6 STORE '+seq+' +FLAGS (\\Seen)');await waitTag('a6',8000);
+        }
+        await send('a7 LOGOUT');
+        try{socket.close()}catch(_){}
+        return {ok:true,count:results.length,results:results};
+      }catch(e){try{socket.close()}catch(_){};return {ok:false,error:String((e&&e.message)||e),message:'邮件同步失败：'+(e&&e.message||'网络错误')};}
+    };
+    if(p==='/api/mail/sync'&&r.method==='POST'){
+      const res=await mailSyncNow(env);
+      globalThis.__mailLast={ts:new Date().toISOString(),res:res};
+      return new Response(JSON.stringify(res),{headers:{'content-type':'application/json'}});
+    }
     // v16: 询盘智能提取（邮件/WhatsApp 文本 → 结构化字段；LLM 优先，规则降级）
     if(p==='/api/inquiry/parse'&&r.method==='POST'){
       try{
@@ -447,9 +543,10 @@ export default{async fetch(r,env){
         llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
         indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
         supabase:{ok:sbOk,hint:sbHint},
+        mail_sync:{ok:!!env.MAIL_IMAP_USER,hint:'邮箱客户同步（163 IMAP，配置授权码后自动拉取新邮件入库）'},
         admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
         inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
-      },cron:globalThis.__cronLast||{}}),{headers:{'content-type':'application/json'}});
+      },cron:globalThis.__cronLast||{},mailLast:globalThis.__mailLast||null}),{headers:{'content-type':'application/json'}});
     }
     if(p==='/api/config/test'){return handleConfigTest(env)}
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
@@ -734,6 +831,8 @@ async scheduled(event,env,ctx){
   };
   // ── 每日经营简报（08:00 CST = UTC 00:00）：询盘 / 健康 / 部署；GA4+GSC 需 Service Account，未配置则占位 ──
   if(cron==='0 0 * * *'){
+    // v18: 邮件同步兜底（实时同步由工作台前端 15 分钟轮询触发）
+    await run('mail-sync',async function(){const m=await mailSyncNow(env);return JSON.stringify(m)});
     await run('daily-brief',async function(){
       const lines=[];
       try{
