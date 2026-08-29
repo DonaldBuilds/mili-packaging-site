@@ -975,7 +975,7 @@
         <span class="topbar-time" id="tb-time">--:--</span>
       </div>
       <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
-        <div class="topbar-kpi" id="topbar-kpi" title="配置完成度 / 点击跳转设置" style="cursor:pointer">配置 <b id="topbar-cfg-done">—</b>/8</div>
+        <div class="topbar-kpi" id="topbar-kpi" title="配置完成度 / 点击跳转设置" style="cursor:pointer">配置 <b id="topbar-cfg-done">—</b>/8 项</div>
         <!-- 快捷新建 -->
         <div style="position:relative">
           <button class="qc-btn" id="qc-btn" onclick="event.stopPropagation();var p=document.getElementById('qc-panel');p.style.display=p.style.display==='none'?'block':'none'">
@@ -1475,7 +1475,7 @@
 
   <!-- ③ 询盘中心（全渠道统一视图 v2） -->
   <div id="tab-inquiry" class="hide">
-    <h2>③ 询盘中心 · 全渠道统一视图</h2>
+    <h2>询盘中心 · 全渠道统一视图</h2>
     <div id="inquiryArea">
       <!-- v11: 登录会话即权限，无需二次密码；询盘读写均经 Worker 会话代理 -->
       <div id="inqLoading" class="card" style="padding:18px;text-align:center;color:var(--color-text-dim)">询盘数据加载中…</div>
@@ -1560,7 +1560,7 @@
 
   <!-- ④ 后台工具 -->
   <div id="tab-tools" class="hide">
-    <h2>④ 后台工具导航</h2>
+    <h2>后台工具</h2>
     <div class="grid">
       <div class="card"><h3>Cloudflare</h3><p>域名 DNS / 缓存清理 / Worker 部署日志</p><a class="btn ghost" href="https://dash.cloudflare.com/" target="_blank" rel="noopener">打开</a></div>
       <div class="card"><h3>GitHub 仓库</h3><p>源码 / 自动部署记录（Actions）</p><a class="btn ghost" href="https://github.com/DonaldBuilds/mili-packaging-site" target="_blank" rel="noopener">打开</a></div>
@@ -1602,7 +1602,7 @@
 
   <!-- ⑥ 审计日志 -->
   <div id="tab-audit" class="hide">
-    <h2>⑥ 操作审计日志</h2>
+    <h2>操作审计日志</h2>
     <div class="card">
       <div id="audit-mode-badge" style="margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="tag" style="background:rgba(255,182,72,.12);color:var(--color-warning);border:1px solid rgba(255,182,72,.3)">持久化：检测中…</span><span class="hint" style="margin:0">配置 <code>OPS_GH_PAT</code> 后自动写入仓库 <code>ops/audit.jsonl</code>（跨重启保留）；未配置时为内存模式（最近 50 条，Worker 重启即清空）</span></div>
       <p class="hint" style="margin-bottom:8px">记录：操作人 / 时间 / 动作 / 对象 / 前后值。</p>
@@ -1612,13 +1612,13 @@
 
   <!-- ⑦ 自动任务（v4.5 cron） -->
   <div id="tab-cron" class="hide">
-    <h2>⑦ 自动化任务（Cloudflare Cron，零持续成本）</h2>
+    <h2>自动化任务</h2>
     <div class="card" id="cronPanel">加载中…</div>
   </div>
 
   <!-- ⑧ 数据驾驶舱（v5 GA4+GSC） -->
   <div id="tab-v5" class="hide">
-    <h2>⑧ 数据驾驶舱（GA4 + GSC 双源，官方免费 API）</h2>
+    <h2>数据驾驶舱</h2>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
       <div id="v5-status" class="status">检测配置中…</div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -1633,7 +1633,7 @@
 
   <!-- ⑨ 风格指南（V6 design system 参照） -->
   <div id="tab-guide" class="hide">
-    <h2>⑨ 工作台指南 · 使用手册</h2>
+    <h2>工作台指南 · 使用手册</h2>
     <p class="hint" style="margin-bottom:14px">原「风格指南」升级为使用手册：模块用途、关键操作、数据口径与常见问题速查（设计令牌保留在底部折叠）。</p>
 
     <div class="card" style="margin-bottom:14px">
@@ -1753,7 +1753,7 @@
 
   <!-- ⑩ AI 可见性（GEO 监测） -->
   <div id="tab-geo" class="hide">
-    <h2>⑩ AI 可见性（GEO）— 买家采购意图问题监测</h2>
+    <h2>AI 可见性（GEO）· 买家采购意图问题监测</h2>
     <div class="card" style="margin-bottom:14px">
       <h3>监测状态</h3>
       <p class="hint" style="line-height:1.8">
@@ -1788,7 +1788,7 @@
 
   <!-- ⑪ SEO 医生（产品 SEO 评分 + 优化建议） -->
   <div id="tab-seo" class="hide">
-    <h2>⑪ SEO 医生 v2 — 产品页评分与优化建议</h2>
+    <h2>SEO 医生 · 产品页评分与优化建议</h2>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
       <p class="hint" style="margin:0">评分维度：Title 长度 / Meta 描述 / 卖点 / 关键词覆盖 / 图片 alt / FAQ / 阶梯价 / 内容完整性（0-100）</p>
       <div style="display:flex;gap:8px">
@@ -2343,7 +2343,7 @@
       var msg = (e && e.message) || '';
       el('dash-inquiries').innerHTML = msg.indexOf('supabase:') >= 0
         ? '<div class="status bad">询盘读取失败（Supabase ' + msg.replace('supabase:', '') + '）<br/><span style="font-size:11px">请确认已在 Supabase SQL Editor 执行 supabase-migration-inquiries-v2.sql 迁移</span></div>'
-        : '<div class="status bad">无法读取（' + msg + '）</div>';
+        : '<div class="status bad">无法读取（' + msg + '）<br/><span style="font-size:11px">Supabase 项目不可达：请检查项目是否暂停；更换项目请配置 SB_URL / SB_ANON_KEY</span></div>';
       return false;
     });
   }
@@ -5962,7 +5962,7 @@
     var ld = el('inqLoading');
     if (ld) ld.innerHTML = msg.indexOf('supabase:') >= 0
       ? '<span style="color:var(--color-danger)">询盘数据读取失败（Supabase ' + msg.replace('supabase:', '') + '）</span><br/><span class="hint">请确认已登录，且 Supabase 表结构已按 supabase-migration-inquiries-v2.sql 迁移</span>'
-      : '<span style="color:var(--color-danger)">询盘数据读取失败：' + msg + '</span>';
+      : '<span style="color:var(--color-danger)">询盘数据读取失败：Supabase 项目不可达（' + (msg || '网络/DNS 错误') + '）</span><br/><span class="hint">请检查：① Supabase 项目是否已暂停（Dashboard → 项目状态，恢复即可，数据仍在）；② 若已更换项目，在 GitHub Secrets 或 Cloudflare 配置 <code>SB_URL</code> / <code>SB_ANON_KEY</code></span>';
   });
 })();
 </script>

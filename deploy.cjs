@@ -430,17 +430,27 @@ export default{async fetch(r,env){
     }
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
-    if(p==='/api/config')return new Response(JSON.stringify({ok:true,configs:{
-      gh_pat:{ok:!!env.OPS_GH_PAT,hint:'产品编辑发布、审计持久化、sitemap 自动重建'},
-      pushplus:{ok:!!env.PUSHPLUS_TOKEN,hint:'简报/巡检/告警微信推送'},
-      ga4:{ok:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),hint:'数据驾驶舱流量与转化'},
-      gsc:{ok:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),hint:'数据驾驶舱 SEO 关键词'},
-      llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
-      indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
-      supabase:{ok:true,hint:'询盘入库与统计（内置默认，env 可覆盖）'},
-      admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
-      inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
-    },cron:globalThis.__cronLast||{}}),{headers:{'content-type':'application/json'}});
+    if(p==='/api/config'){
+      // v17: Supabase 真实连通检测（项目暂停/删除/域名失效会显示明确状态）
+      let sbOk=true, sbHint='询盘入库与统计（env 可覆盖 SB_URL/SB_ANON_KEY）';
+      try{
+        const sbR=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)},signal:AbortSignal.timeout(6000)});
+        if(sbR.ok||sbR.status===401||sbR.status===403){sbOk=true;sbHint='Supabase 可达（HTTP '+sbR.status+'）'}
+        else if(sbR.status===404){sbOk=false;sbHint='Supabase 项目不存在/已删除（HTTP 404）：请更换项目并在 env 配置 SB_URL/SB_ANON_KEY'}
+        else{sbOk=false;sbHint='Supabase 响应异常（HTTP '+sbR.status+'）：项目可能已暂停，请在 Dashboard 恢复'}
+      }catch(e){sbOk=false;sbHint='Supabase 不可达（DNS/超时）：项目可能已暂停或域名失效，请检查项目状态'}
+      return new Response(JSON.stringify({ok:true,configs:{
+        gh_pat:{ok:!!env.OPS_GH_PAT,hint:'产品编辑发布、审计持久化、sitemap 自动重建'},
+        pushplus:{ok:!!env.PUSHPLUS_TOKEN,hint:'简报/巡检/告警微信推送'},
+        ga4:{ok:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),hint:'数据驾驶舱流量与转化'},
+        gsc:{ok:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),hint:'数据驾驶舱 SEO 关键词'},
+        llm:{ok:!!env.LLM_API_KEY,hint:'AI 优化建议（当前规则引擎降级）'},
+        indexnow:{ok:!!env.INDEXNOW_KEY,hint:'Bing 收录加速'},
+        supabase:{ok:sbOk,hint:sbHint},
+        admin_pw:{ok:!!env.ADMIN_PW_HASH,hint:'登录密码（当前为默认值，建议设置独立哈希）'},
+        inquiry_pin:{ok:!!(env&&env.INQUIRY_PIN),hint:'询盘中心访问密码（未配置时使用内置默认值）'}
+      },cron:globalThis.__cronLast||{}}),{headers:{'content-type':'application/json'}});
+    }
     if(p==='/api/config/test'){return handleConfigTest(env)}
     if(p==='/api/v5/refresh'){const keys=Object.keys(V5_CACHE);keys.forEach(function(k){delete V5_CACHE[k]});return new Response(JSON.stringify({ok:true,cleared:keys.length}),{headers:{'content-type':'application/json'}})}
     if(p==='/api/v5/dashboard'){return handleV5(env,url)}
