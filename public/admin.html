@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <title>Mili Packaging 独立站运营工作台</title>
-<script>(function(){try{var t=localStorage.getItem('mili-theme');var d=document.documentElement;if(t==='light'||t==='dark'){d.setAttribute('data-theme',t)}else{d.removeAttribute('data-theme')}}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('mili-theme');var d=document.documentElement;var ok=['dark-gold','light','dark','midnight','forest','royal'];if(ok.indexOf(t)>=0&&t!=='dark-gold'){d.setAttribute('data-theme',t)}else{d.removeAttribute('data-theme')}}catch(e){}})();</script>
 <style>
   /* ── V6 design tokens — dark (default) ── */
   :root {
@@ -32,18 +32,48 @@
     --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#6f560e; --txt:#1c1e22; --gray:#3f4754; --ok:#157a3c; --bad:#c13a3a;
     --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#5f6672; --white:#1c1e22;
   }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]):not([data-theme="light"]) {
-      --color-primary:#6f560e; --color-primary-ink:#0a0a0a;
-      --color-success:#157a3c; --color-warning:#9c6100; --color-danger:#c13a3a;
-      --color-surface:#ffffff; --color-surface-2:#f2f3f5; --color-surface-3:#e8eaee;
-      --color-bg:#f5f6f8; --color-text:#1c1e22; --color-text-dim:#5f6672; --color-text-secondary:#3f4754; --color-border:#d8dde3;
-      --color-input-bg:#ffffff; --color-input-border:#b4bcc8; --color-placeholder:#5f6672;
-      --color-gold-solid:#a9851d; --sb-active-bg:rgba(201,162,39,.08);
-      --bg:#f5f6f8; --bg2:#ffffff; --border:#d8dde3; --gold:#6f560e; --txt:#1c1e22; --gray:#3f4754; --ok:#157a3c; --bad:#c13a3a;
-      --black-2:#ffffff; --border-dim:#d8dde3; --gray-3:#5f6672; --white:#1c1e22;
-    }
+  /* V12 多主题：dark-gold(默认，即 :root) / light / dark / midnight / forest / royal */
+  :root[data-theme="dark"] {
+    --color-primary:#aab3c2; --color-primary-ink:#0b0c0e;
+    --color-success:#3ecf8e; --color-warning:#f0a63c; --color-danger:#ff6b6b;
+    --color-surface:#111214; --color-surface-2:#0b0c0e; --color-surface-3:#1a1c20;
+    --color-bg:#070708; --color-text:#e6e8ec; --color-text-dim:#8f96a3; --color-text-secondary:#b4bac4; --color-border:#26282e;
+    --color-input-bg:#0e0f11; --color-input-border:#363a42; --color-placeholder:#7c828e;
+    --color-gold-solid:#aab3c2; --sb-active-bg:rgba(170,179,194,.13);
+    --bg:#070708; --bg2:#111214; --border:#26282e; --gold:#aab3c2; --txt:#e6e8ec; --gray:#b4bac4; --ok:#3ecf8e; --bad:#ff6b6b;
+    --black-2:#111214; --border-dim:#26282e; --gray-3:#8f96a3; --white:#e6e8ec;
   }
+  :root[data-theme="midnight"] {
+    --color-primary:#4da3ff; --color-primary-ink:#06121f;
+    --color-success:#2fd08a; --color-warning:#f0a63c; --color-danger:#ff6b6b;
+    --color-surface:#10182a; --color-surface-2:#0b1120; --color-surface-3:#182238;
+    --color-bg:#070d18; --color-text:#e2eaf6; --color-text-dim:#8fa3c0; --color-text-secondary:#b8c6dd; --color-border:#22304a;
+    --color-input-bg:#0d1526; --color-input-border:#2e3f5e; --color-placeholder:#7e90ad;
+    --color-gold-solid:#4da3ff; --sb-active-bg:rgba(77,163,255,.14);
+    --bg:#070d18; --bg2:#10182a; --border:#22304a; --gold:#4da3ff; --txt:#e2eaf6; --gray:#b8c6dd; --ok:#2fd08a; --bad:#ff6b6b;
+    --black-2:#10182a; --border-dim:#22304a; --gray-3:#8fa3c0; --white:#e2eaf6;
+  }
+  :root[data-theme="forest"] {
+    --color-primary:#4fbf8a; --color-primary-ink:#06120c;
+    --color-success:#39d98a; --color-warning:#e8a93c; --color-danger:#ff6b6b;
+    --color-surface:#0f1913; --color-surface-2:#0a120d; --color-surface-3:#17241b;
+    --color-bg:#070e0a; --color-text:#e4efe8; --color-text-dim:#8fa89a; --color-text-secondary:#b7c9bf; --color-border:#223329;
+    --color-input-bg:#0c1510; --color-input-border:#2e4536; --color-placeholder:#7e9789;
+    --color-gold-solid:#4fbf8a; --sb-active-bg:rgba(79,191,138,.14);
+    --bg:#070e0a; --bg2:#0f1913; --border:#223329; --gold:#4fbf8a; --txt:#e4efe8; --gray:#b7c9bf; --ok:#39d98a; --bad:#ff6b6b;
+    --black-2:#0f1913; --border-dim:#223329; --gray-3:#8fa89a; --white:#e4efe8;
+  }
+  :root[data-theme="royal"] {
+    --color-primary:#b08cff; --color-primary-ink:#130a26;
+    --color-success:#3fd68e; --color-warning:#f0a63c; --color-danger:#ff6b6b;
+    --color-surface:#171226; --color-surface-2:#100b1d; --color-surface-3:#211a36;
+    --color-bg:#0b0716; --color-text:#ece7f8; --color-text-dim:#a291c4; --color-text-secondary:#c5b8e0; --color-border:#2b2148;
+    --color-input-bg:#120d22; --color-input-border:#3a2d60; --color-placeholder:#9383b4;
+    --color-gold-solid:#b08cff; --sb-active-bg:rgba(176,140,255,.14);
+    --bg:#0b0716; --bg2:#171226; --border:#2b2148; --gold:#b08cff; --txt:#ece7f8; --gray:#c5b8e0; --ok:#3fd68e; --bad:#ff6b6b;
+    --black-2:#171226; --border-dim:#2b2148; --gray-3:#a291c4; --white:#ece7f8;
+  }
+  /* 默认主题恒为暗金（:root），不随系统偏好变化 */
   * { box-sizing:border-box; margin:0; padding:0; }
   body { background:var(--color-bg); color:var(--color-text); font-family:'Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif; line-height:1.5; }
   .wrap { max-width:1140px; margin:0 auto; padding:28px 20px 60px; }
@@ -249,6 +279,10 @@
   .prod-thumb-wrap { width:40px; height:40px; border-radius:4px; overflow:hidden; border:1px solid var(--color-border); background:var(--color-surface-2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .prod-thumb-wrap img { width:100%; height:100%; object-fit:cover; }
   .prod-thumb-placeholder { font-size:18px; opacity:.3; }
+  /* 图片预览 lightbox */
+  .img-lightbox { position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.82); display:flex; align-items:center; justify-content:center; cursor:zoom-out; }
+  .img-lightbox img { max-width:min(88vw,1000px); max-height:86vh; border-radius:6px; box-shadow:0 8px 48px rgba(0,0,0,.6); }
+  .img-lightbox .lb-caption { position:absolute; bottom:22px; left:50%; transform:translateX(-50%); color:#e8e8e8; font-size:12px; opacity:.85; background:rgba(0,0,0,.55); padding:6px 14px; border-radius:20px; max-width:80vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .prod-name-cell { padding:0 10px; }
   .prod-name-cell b { display:block; font-size:13px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
   .prod-name-cell span { font-size:11px; color:var(--color-text-secondary); }
@@ -377,7 +411,7 @@
   @media(max-width:768px){ .topbar-fx{ display:none; } .topbar-time{ display:none; } }
 
   /* 用户头像 + 下拉菜单 */
-  .topbar-avatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),#8b6914); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; cursor:pointer; flex-shrink:0; position:relative; }
+  .topbar-avatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),rgba(0,0,0,.3)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; cursor:pointer; flex-shrink:0; position:relative; }
   .topbar-avatar-menu { position:absolute; top:calc(100% + 8px); right:0; background:var(--color-surface); border:1px solid var(--color-border); border-radius:8px; padding:6px; min-width:150px; z-index:200; box-shadow:0 8px 24px rgba(0,0,0,.25); display:none; }
   .topbar-avatar-menu.open { display:block; animation:fadeIn .15s ease; }
   .topbar-avatar-menu-item { display:block; width:100%; text-align:left; padding:7px 10px; font-size:12.5px; color:var(--color-text); background:none; border:none; border-radius:4px; cursor:pointer; white-space:nowrap; }
@@ -422,7 +456,7 @@
   .tier-del-btn:hover { color:var(--color-danger); }
   /* 多账号体系 */
   .user-list-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:6px; margin-bottom:6px; }
-  .user-avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),#8b6914); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; flex-shrink:0; }
+  .user-avatar-sm { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--color-primary),rgba(0,0,0,.3)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#000; flex-shrink:0; }
   .user-role-badge { font-size:10px; padding:2px 7px; border-radius:10px; }
   .user-role-badge.admin { background:rgba(201,162,39,.15); color:var(--color-primary); }
   .user-role-badge.operator { background:rgba(76,217,100,.1); color:var(--ok); }
@@ -657,7 +691,7 @@
     <div class="sb-group">内容工厂</div>
     <button class="sb-item" data-sb="editor">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
-      <span class="sb-label">商品运营优化</span>
+      <span class="sb-label">商品管理</span>
     </button>
     <button class="sb-item" data-sb="ticket">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
@@ -703,7 +737,7 @@
     </button>
     <button class="sb-item" data-sb="guide">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="3.6" x2="5.1" y2="5.1"/><line x1="18.9" y1="18.9" x2="20.4" y2="20.4"/><line x1="20.4" y1="3.6" x2="18.9" y2="5.1"/><line x1="5.1" y1="18.9" x2="3.6" y2="20.4"/></svg></span>
-      <span class="sb-label">风格指南</span>
+      <span class="sb-label">使用手册</span>
     </button>
     <button class="sb-item" data-sb="config">
       <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
@@ -760,7 +794,7 @@
       </div>
       <div class="topbar-actions" style="display:flex;align-items:center;gap:8px">
         <div class="topbar-kpi" id="topbar-kpi" title="配置进度 / 点击跳转设置" style="cursor:pointer">配置 <b id="topbar-cfg-done">—</b>/8</div>
-        <button class="tb-btn" id="themeToggle" title="切换主题：亮色 / 暗色 / 跟随系统" style="display:flex;align-items:center;gap:4px">
+        <button class="tb-btn" id="themeToggle" title="切换主题：暗金 / 纯黑 / 深蓝 / 墨绿 / 紫金 / 亮色" style="display:flex;align-items:center;gap:4px">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <span id="theme-label">跟随系统</span>
         </button>
@@ -793,14 +827,14 @@
 
   <div class="tabs">
     <button class="tab active" data-tab="dash">数据看板</button>
-    <button class="tab" data-tab="editor">商品运营优化</button>
+    <button class="tab" data-tab="editor">商品管理</button>
     <button class="tab" data-tab="inquiry">询盘中心</button>
     <button class="tab" data-tab="tools">后台工具</button>
     <button class="tab" data-tab="ticket">修改工单</button>
     <button class="tab" data-tab="audit">审计日志</button>
     <button class="tab" data-tab="cron">自动任务</button>
     <button class="tab" data-tab="v5">数据驾驶舱</button>
-    <button class="tab" data-tab="guide">风格指南</button>
+    <button class="tab" data-tab="guide">使用手册</button>
     <button class="tab" data-tab="geo">AI 可见性</button>
     <button class="tab" data-tab="seo">SEO 医生</button>
     <button class="tab" data-tab="decor">店铺装修</button>
@@ -831,6 +865,35 @@
     <!-- 今日优先任务 -->
     <div id="dash-priority" class="priority-grid"></div>
 
+    <!-- 核心 KPI（每项均可点击直达对应数据模块） -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;margin:14px 0">
+      <div class="card kpi-card" style="cursor:pointer" onclick="goTab('editor')" title="点击进入商品管理">
+        <div class="hint" style="margin:0 0 2px">产品总数</div>
+        <div class="kpi-num" id="kpi-products" style="font-size:26px;font-weight:700;color:var(--color-primary);font-variant-numeric:tabular-nums">—</div>
+        <div class="hint" style="margin:4px 0 0">在售 <b id="kpi-active" style="color:var(--ok)">—</b> · 下架 <b id="kpi-hidden" style="color:var(--color-text-dim)">—</b><br/>→ 商品管理</div>
+      </div>
+      <div class="card kpi-card" style="cursor:pointer" onclick="goTab('inquiry')" title="点击进入询盘中心">
+        <div class="hint" style="margin:0 0 2px">今日询盘</div>
+        <div class="kpi-num" id="kpi-today" style="font-size:26px;font-weight:700;color:var(--color-primary);font-variant-numeric:tabular-nums">—</div>
+        <div class="hint" style="margin:4px 0 0">近 7 天 <b id="kpi-7d" style="color:var(--color-text)">—</b><br/>→ 询盘中心</div>
+      </div>
+      <div class="card kpi-card" style="cursor:pointer" onclick="goTab('inquiry')" title="点击进入询盘中心">
+        <div class="hint" style="margin:0 0 2px">待跟进</div>
+        <div class="kpi-num" id="kpi-pending" style="font-size:26px;font-weight:700;color:var(--color-warning);font-variant-numeric:tabular-nums">—</div>
+        <div class="hint" style="margin:4px 0 0">SLA 超 48h <b id="kpi-overdue" style="color:var(--bad)">—</b><br/>→ 询盘中心</div>
+      </div>
+      <div class="card kpi-card" style="cursor:pointer" onclick="inqGoReport()" title="点击进入询盘报表">
+        <div class="hint" style="margin:0 0 2px">本月询盘</div>
+        <div class="kpi-num" id="kpi-month" style="font-size:26px;font-weight:700;color:var(--color-primary);font-variant-numeric:tabular-nums">—</div>
+        <div class="hint" style="margin:4px 0 0">本月成交 <b id="kpi-month-won" style="color:var(--ok)">—</b><br/>→ 询盘报表</div>
+      </div>
+      <div class="card kpi-card" style="cursor:pointer" onclick="goTab('v5')" title="点击进入数据驾驶舱">
+        <div class="hint" style="margin:0 0 2px">站点健康</div>
+        <div class="kpi-num" id="kpi-health" style="font-size:26px;font-weight:700;color:var(--color-primary);font-variant-numeric:tabular-nums">—</div>
+        <div class="hint" style="margin:4px 0 0">关键页面检查<br/>→ 数据驾驶舱</div>
+      </div>
+    </div>
+
     <!-- 同步控制条 -->
     <div class="card" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
@@ -853,8 +916,8 @@
     <div class="grid">
       <div class="card"><h3>最近部署状态 <span class="v5-src" id="dash-stamp-deploy"></span></h3><div id="dash-deploy">加载中…</div><p class="hint">GitHub Actions 自动部署（保存修改后约 2 分钟上线）</p></div>
       <div class="card"><h3>最近提交 <span class="v5-src" id="dash-stamp-commits"></span></h3><div id="dash-commits">加载中…</div></div>
-      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span></h3><div id="dash-inquiries">加载中…</div><div id="dash-followup" style="margin-top:8px"></div></div>
-      <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span></h3><div id="dash-products">加载中…</div></div>
+      <div class="card"><h3>询盘统计 <span class="v5-src" id="dash-stamp-inquiries"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('inquiry')" style="float:right;cursor:pointer">查看全部 →</a></h3><div id="dash-inquiries">加载中…</div><div id="dash-followup" style="margin-top:8px"></div></div>
+      <div class="card"><h3>产品数据 <span class="v5-src" id="dash-stamp-products"></span><a class="hint" href="#" onclick="event.preventDefault();goTab('editor')" style="float:right;cursor:pointer">管理产品 →</a></h3><div id="dash-products">加载中…</div></div>
     </div>
     <div class="card" style="margin-top:12px">
       <h3>站点健康检查（关键页面） <span class="v5-src" id="dash-stamp-health"></span></h3>
@@ -872,7 +935,7 @@
   <!-- ② 产品/内容编辑 v9 — 阿里国际站风格专业编辑器 -->
   <div id="tab-editor" class="hide">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-      <h2 style="margin:0">商品运营优化</h2>
+      <h2 style="margin:0">商品管理</h2>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="hint" style="margin:0" id="ed-save-hint">GH_PAT 已配置后可直接保存发布</span>
         <span class="tag tag-warning" id="ed-pat-badge" style="display:none">编辑管线未配置</span>
@@ -1193,11 +1256,8 @@
   <div id="tab-inquiry" class="hide">
     <h2>③ 询盘中心 · 全渠道统一视图</h2>
     <div id="inquiryArea">
-      <div class="lock">
-        <p>询盘数据含买家联系方式，需密码查看</p>
-        <input type="password" id="pin" placeholder="访问密码" style="max-width:260px;margin:14px auto 6px;display:block;text-align:center" />
-        <button class="btn" id="unlockBtn" style="border:none;cursor:pointer">解锁查看</button>
-      </div>
+      <!-- v11: 登录会话即权限，无需二次密码；询盘读写均经 Worker 会话代理 -->
+      <div id="inqLoading" class="card" style="padding:18px;text-align:center;color:var(--color-text-dim)">询盘数据加载中…</div>
       <div id="inquiryDash" class="hide">
         <div class="inq-toolbar">
           <div class="inq-tabs">
@@ -1341,9 +1401,62 @@
 
   <!-- ⑨ 风格指南（V6 design system 参照） -->
   <div id="tab-guide" class="hide">
-    <h2>⑨ 风格指南（V6 Design System）</h2>
+    <h2>⑨ 工作台指南 · 使用手册</h2>
+    <p class="hint" style="margin-bottom:14px">原「风格指南」升级为使用手册：模块用途、关键操作、数据口径与常见问题速查（设计令牌保留在底部折叠）。</p>
+
     <div class="card" style="margin-bottom:14px">
-      <h3>色彩（当前主题：<span id="guide-theme-name">暗色</span>）</h3>
+      <h3>📖 模块速查</h3>
+      <table>
+        <tr><th style="width:110px">模块</th><th>用途</th><th>关键操作</th></tr>
+        <tr><td>数据看板</td><td>站点健康 + 核心指标一屏总览</td><td>KPI 卡点击直达详情；「立即刷新」手动同步；自动同步 1-30 分钟可调</td></tr>
+        <tr><td>商品管理</td><td>产品编辑、发布、SEO 优化</td><td>抽屉含 SEO 标题/Meta/FAQ/关键词；主图点击放大；缺口筛选（低分/缺 Meta/缺附图）快速定位</td></tr>
+        <tr><td>询盘中心</td><td>全渠道询盘跟进 + 数据报表</td><td>登录即见；表头点击排序；跟进人筛选；报表页可导出 CSV、查看渠道转化率与跟进人漏斗</td></tr>
+        <tr><td>后台工具</td><td>批量状态 / 价格 / MOQ 调整</td><td>勾选产品 → 批量应用；价格乘数仅对纯数字价格生效（区间价自动跳过）</td></tr>
+        <tr><td>修改工单</td><td>站内文案修改任务 → 邮件通知</td><td>填写页面位置与修改内容，生成工单邮件并留痕</td></tr>
+        <tr><td>SEO 医生</td><td>全站产品 SEO 评分 + AI 修复</td><td>刷新评分 → 逐项修复或 AI 批量优化；支持 CSV 导出</td></tr>
+        <tr><td>AI 可见性</td><td>GEO 买家采购意图问题监测</td><td>维护问题清单（本地保存），检查 sitemap 覆盖缺口</td></tr>
+        <tr><td>数据驾驶舱</td><td>GA4/GSC 流量与转化（需 Service Account）</td><td>近 7/30 天/昨日切换；「刷新缓存」强制拉取最新</td></tr>
+        <tr><td>自动任务</td><td>每日经营简报等定时任务</td><td>PushPlus 微信推送；运行日志在 Cloudflare 控制台</td></tr>
+        <tr><td>审计日志</td><td>产品/分组修改留痕</td><td>配置 GH_PAT 后持久化到仓库 ops/audit.jsonl</td></tr>
+        <tr><td>设置中心</td><td>环境变量配置与连通性测试</td><td>每项可一键测试连通；未配置项会在看板提示</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <h3>📐 数据口径说明</h3>
+      <ul style="padding-left:18px;line-height:1.9;font-size:13px">
+        <li><b>询盘 SLA</b>：新询盘 4h 内联系、24h 内报价、48h 内跟进；SLA 基于<b>最后活动时间</b>（updated_at），非创建时间。</li>
+        <li><b>转化率</b>：成交数 ÷ 非归档询盘总数；渠道转化率 = 该渠道成交 ÷ 该渠道询盘。看板与询盘中心口径一致（已归档不计入）。</li>
+        <li><b>待跟进</b>：状态未终结（非成交/流失/归档）且下次跟进时间已到期或未设置。</li>
+        <li><b>SEO 评分</b>（100 分）：Title 15 + Meta 15 + Tagline 10 + 主图 10 + FAQ 10 + 阶梯价 10 + 价格/MOQ 10 + 描述 10 + Slug 覆盖 10。</li>
+        <li><b>图片规范</b>：1:1 比例、最长边 ≤1600px、≤1.5MB、webp 优先；主图 + 附图 4-5 张；alt 为买家可读的英文描述。</li>
+        <li><b>部署链路</b>：保存修改 → GitHub 写入 → Actions 自动构建（约 2 分钟）→ Cloudflare Worker 上线。</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <h3>🔧 常见问题排查</h3>
+      <ul style="padding-left:18px;line-height:1.9;font-size:13px">
+        <li><b>看板 GitHub 数据无法读取</b>：未鉴权 API 限 60 次/小时/IP（看板每次刷新消耗 2 次），稍后自动恢复；配置 OPS_GH_PAT 可提升额度。</li>
+        <li><b>保存失败 server-not-configured</b>：设置中心配置 GitHub PAT（OPS_GH_PAT）后重试。</li>
+        <li><b>询盘读取失败</b>：确认已登录；Supabase 需先执行 supabase-migration-inquiries-v2.sql 迁移。</li>
+        <li><b>产品图 404 / 占位</b>：图片经 Accio CDN → GitHub 两级代理；新上传图需等自动部署完成（约 2 分钟）。</li>
+        <li><b>AI 建议不可用</b>：设置中心配置 LLM_API_KEY / LLM_ENDPOINT。</li>
+        <li><b>驾驶舱无数据</b>：需 GA4_SERVICE_JSON + GA4_PROPERTY_ID（GSC 可选）。</li>
+        <li><b>自动部署失败</b>：查看 GitHub Actions 运行日志；常见原因为 Secrets 缺失或构建错误。</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <h3>⌨️ 快捷键</h3>
+      <p class="hint" style="margin:0">Ctrl / ⌘ + S：保存当前产品草稿（编辑抽屉打开时）· Esc：关闭弹窗 / 侧栏</p>
+    </div>
+
+    <details class="card" style="margin-bottom:14px">
+      <summary style="cursor:pointer;font-weight:700;padding:12px 14px">🎨 设计系统参照（原风格指南）</summary>
+    <div style="padding:0 14px 14px">
+    <div class="card" style="margin-bottom:14px">
+      <h3>色彩（当前主题：<span id="guide-theme-name">暗金</span>）</h3>
       <div class="grid">
         <div class="card"><b style="color:var(--color-primary)">Primary</b><p class="hint">品牌主色 · 按钮/链接/强调</p><div style="height:28px;background:var(--color-primary);border-radius:3px"></div></div>
         <div class="card"><b style="color:var(--color-success)">Success</b><p class="hint">成功/增长</p><div style="height:28px;background:var(--color-success);border-radius:3px"></div></div>
@@ -1402,6 +1515,8 @@
       <h3>空状态</h3>
       <div class="empty"><div class="empty-ico">🗂️</div>还没有询盘，去检查联系表单配置</div>
     </div>
+    </div>
+    </details>
   </div>
 
   <!-- ⑩ AI 可见性（GEO 监测） -->
@@ -1625,6 +1740,16 @@
     }, function (e) { clearTimeout(timer); throw e; });
   }
   function el(id) { return document.getElementById(id); }
+  // 看板 KPI 数据路径：点击直达对应模块
+  function goTab(tabId) {
+    var tab = document.querySelector('.tab[data-tab="' + tabId + '"]');
+    if (tab) tab.click();
+  }
+  function inqGoReport() {
+    goTab('inquiry');
+    var rep = document.querySelector('.inq-tab[data-iv="report"]');
+    if (rep) rep.click();
+  }
   function fmtTime(t) { if (!t) return '—'; var d = new Date(t); if (isNaN(d.getTime())) return '—'; var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
   function nowStamp() { return new Date().toTimeString().slice(0, 8); }
   function loadDeploy() {
@@ -1651,11 +1776,13 @@
   }
   function loadInquiryStats() {
     var chanMap = { website: '🌐 网站', whatsapp: '💬 WhatsApp', email: '✉️ 邮件', chat: '💭 聊天', phone: '📞 电话' };
-    return fetchT(SB_URL + '/rest/v1/inquiries?select=created_at,channel,status,follow_up_at,updated_at,name,email,owner&order=created_at.desc', {
-      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY }
-    }).then(function (r) { return r.json(); }).then(function (rows) {
+    return fetchT('/api/inquiry/list?q=' + encodeURIComponent('select=created_at,channel,status,follow_up_at,updated_at,name,email,owner&order=created_at.desc'))
+      .then(function (r) { return r.json(); }).then(function (d) {
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        return d.rows || [];
+      }).then(function (rows) {
       if (!Array.isArray(rows)) return false;
-      var now = Date.now(), d7 = 0, d30 = 0, month = 0, pend = 0, won = 0, chan = {};
+      var now = Date.now(), d7 = 0, d30 = 0, month = 0, pend = 0, won = 0, chan = {}, today = 0, overdue = 0, monthWon = 0;
       rows.forEach(function (r) {
         if (r.status === 'deleted') return; // 与询盘中心口径一致：已归档不计入统计
         var t = new Date(r.created_at).getTime();
@@ -1663,11 +1790,23 @@
         if (now - t < 30 * 864e5) d30++;
         var d = new Date(r.created_at), n = new Date();
         if (d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth()) month++;
+        if (d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate()) today++;
         var st = r.status || 'new';
-        if (st !== 'won' && st !== 'lost' && st !== 'deleted') { var f = r.follow_up_at ? new Date(r.follow_up_at).getTime() : 0; if (!f || f <= now) pend++; }
-        if (st === 'won') won++;
+        if (st !== 'won' && st !== 'lost' && st !== 'deleted') {
+          var f = r.follow_up_at ? new Date(r.follow_up_at).getTime() : 0;
+          if (!f || f <= now) pend++;
+          var sla = inqSlaAge ? inqSlaAge(r) : 0;
+          if (sla > 48) overdue++;
+        }
+        if (st === 'won') { won++; if (d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth()) monthWon++; }
         var c = r.channel || 'website'; chan[c] = (chan[c] || 0) + 1;
       });
+      var kt = el('kpi-today'); if (kt) kt.textContent = today;
+      var k7 = el('kpi-7d'); if (k7) k7.textContent = d7;
+      var kp = el('kpi-pending'); if (kp) kp.textContent = pend;
+      var ko = el('kpi-overdue'); if (ko) ko.textContent = overdue;
+      var km = el('kpi-month'); if (km) km.textContent = month;
+      var kw = el('kpi-month-won'); if (kw) kw.textContent = monthWon;
       var total = rows.length;
       el('dash-inquiries').innerHTML = '<div class="status">总询盘：<b style="color:var(--gold)">' + total + '</b> · 近 7 天：<b>' + d7 + '</b> · 近 30 天：<b>' + d30 + '</b> · 本月：<b>' + month + '</b> · 待跟进：<b style="color:' + (pend ? 'var(--bad)' : 'var(--ok)') + '">' + pend + '</b> · 成交：<b style="color:var(--ok)">' + won + '</b> (' + (total ? Math.round(won / total * 100) : 0) + '%)</div>' +
         '<div class="status" style="font-size:11.5px;color:var(--color-text-secondary)">' + Object.keys(chan).sort(function (a, b) { return chan[b] - chan[a]; }).map(function (c) { return (chanMap[c] || c) + ' <b style="color:var(--gold)">' + chan[c] + '</b>'; }).join(' · ') + '</div>';
@@ -1695,7 +1834,13 @@
         });
       }
       return true;
-    }).catch(function () { el('dash-inquiries').innerHTML = '<div class="status bad">无法读取</div>'; return false; });
+    }).catch(function (e) {
+      var msg = (e && e.message) || '';
+      el('dash-inquiries').innerHTML = msg.indexOf('supabase:') >= 0
+        ? '<div class="status bad">询盘读取失败（Supabase ' + msg.replace('supabase:', '') + '）<br/><span style="font-size:11px">请确认已在 Supabase SQL Editor 执行 supabase-migration-inquiries-v2.sql 迁移</span></div>'
+        : '<div class="status bad">无法读取（' + msg + '）</div>';
+      return false;
+    });
   }
   function loadProductStats() {
     return fetchT(RAW()).then(function (r) { return r.json(); }).then(function (d) {
@@ -1704,6 +1849,10 @@
       var prices = prods.map(function (p) { return parseFloat(p.price); }).filter(function (n) { return !isNaN(n); });
       var hidden = prods.filter(function (p) { return p.status === 'hidden'; }).length;
       var noTier = prods.filter(function (p) { return !p.tierPrice; }).length;
+      // 核心 KPI
+      var kp = el('kpi-products'); if (kp) kp.textContent = prods.length;
+      var ka = el('kpi-active'); if (ka) ka.textContent = prods.length - hidden;
+      var kh = el('kpi-hidden'); if (kh) kh.textContent = hidden;
       el('dash-products').innerHTML = '<div class="status">产品：<b style="color:var(--gold)">' + prods.length + '</b> 个 · 分组 ' + d.productGroups.length + '</div><div class="status">价格区间：$' + Math.min.apply(null, prices) + ' – $' + Math.max.apply(null, prices) + '</div><div class="status">下架中：' + hidden + ' · 分档价沿用组比例：' + noTier + '</div>';
       el('dash-stamp-products').textContent = '截至 ' + nowStamp();
       return true;
@@ -1715,6 +1864,8 @@
       var t0 = Date.now();
       return fetchT(u, { method: 'HEAD' }, 8000).then(function (r) { return { u: u, ok: r.ok, ms: Date.now() - t0, s: r.status }; }).catch(function () { return { u: u, ok: false, ms: 0, s: 0 }; });
     })).then(function (rs) {
+      var okN = rs.filter(function (r) { return r.ok; }).length;
+      var kh = el('kpi-health'); if (kh) kh.textContent = okN + '/' + rs.length;
       el('dash-health').innerHTML = rs.map(function (r) {
         return '<div style="font-size:11.5px;padding:6px 8px;border:1px solid var(--border);border-radius:3px"><span class="' + (r.ok ? 'status ok' : 'status bad') + '">' + (r.ok ? '✔' : '✘') + '</span> ' + r.u + ' <span style="color:var(--gray)">' + (r.ok ? r.s + ' · ' + r.ms + 'ms' : 'FAIL') + '</span></div>';
       }).join('');
@@ -2118,16 +2269,16 @@
     if (logout) logout.addEventListener('click', function(e){ e.stopPropagation(); fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; }); });
   })();
 
-  // 侧边栏 themeToggle label 同步
+  // 侧边栏 themeToggle label 同步（V12 多主题）
   (function(){
     function syncLabel(){
-      var modes = { dark:'🌙 暗色', light:'☀️ 亮色', sys:'跟随系统' };
-      var cur = document.documentElement.getAttribute('data-theme-mode') || 'sys';
+      var t = document.documentElement.getAttribute('data-theme') || 'dark-gold';
+      var names = { 'dark-gold':'暗金', dark:'纯黑', midnight:'深蓝', forest:'墨绿', royal:'紫金', light:'亮色' };
       var lbl = document.getElementById('theme-label');
-      if (lbl) lbl.textContent = modes[cur] || '跟随系统';
+      if (lbl) lbl.textContent = names[t] || '暗金';
     }
     syncLabel();
-    document.getElementById('themeToggle').addEventListener('click', function(){ setTimeout(syncLabel, 50); });
+    document.getElementById('themeToggle').addEventListener('click', function(){ setTimeout(syncLabel, 100); });
   })();
 
   // 页面切换淡入动画
@@ -2383,11 +2534,10 @@
       var score = sc ? sc.score : '—';
       var scoreColor = sc ? (sc.score >= 85 ? 'var(--ok)' : (sc.score >= 70 ? 'var(--color-warning)' : 'var(--bad)')) : 'var(--gray)';
       var isActive = p.status !== 'hidden';
-      var imgPath = p.img ? ('/assets/images/' + p.img) : '';
-      // 规范化图片路径（确保含 /assets/images/ 前缀）
-      var thumbSrc = imgPath ? (imgPath.startsWith('http') ? imgPath : ('/assets/images/' + imgPath.replace(/^\/assets\/images\//, ''))) : '';
+      // 规范化图片路径（p.img 已含 /assets/images/ 前缀，避免重复拼接导致 404）
+      var thumbSrc = p.img ? (p.img.startsWith('http') ? p.img : ('/assets/images/' + String(p.img).replace(/^\/assets\/images\//, ''))) : '';
       var thumbHtml = thumbSrc
-        ? '<img src="' + thumbSrc + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML=\'<div class=prod-thumb-placeholder>📦</div>\'" />'
+        ? '<img src="' + thumbSrc + '" alt="' + String(p.name || '').replace(/"/g, '&quot;') + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in" onclick="event.stopPropagation();showImgPreview(\'' + thumbSrc + '\')" onerror="this.parentElement.innerHTML=\\'<div class=prod-thumb-placeholder>📦</div>\\'" />'
         : '<div class="prod-thumb-placeholder">📦</div>';
       // 产品前台链接
       var prodFrontUrl = 'https://mili-packaging.com/products/' + g.slug + '/' + p.slug;
@@ -2761,6 +2911,17 @@
     return src.startsWith('http') ? src : '/assets/images/' + src.replace(/^\/assets\/images\//, '');
   }
 
+  // 图片放大预览（lightbox，点击任意处关闭）
+  function showImgPreview(src, caption) {
+    var old = document.querySelector('.img-lightbox');
+    if (old) old.remove();
+    var lb = document.createElement('div');
+    lb.className = 'img-lightbox';
+    lb.innerHTML = '<img src="' + src + '" alt="预览" />' + (caption ? '<div class="lb-caption">' + String(caption).replace(/</g, '&lt;') + '</div>' : '');
+    lb.addEventListener('click', function () { lb.remove(); });
+    document.body.appendChild(lb);
+  }
+
   function edRenderImageCenter() {
     var gallery = el('img-gallery'); if (!gallery) return;
     var imgs = edGetAllImages();
@@ -3085,9 +3246,16 @@
   ];
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function inqApi(path, opts) {
-    opts = opts || {}; opts.headers = opts.headers || {};
-    opts.headers.apikey = SB_KEY; opts.headers.Authorization = 'Bearer ' + SB_KEY;
-    return fetch(SB_URL + path, opts).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    // v11: 询盘读写统一走 Worker 会话代理（/api/inquiry/*），前端不再使用 anon key 直连敏感数据
+    opts = opts || {};
+    var qIdx = path.indexOf('?');
+    var qs = qIdx >= 0 ? path.slice(qIdx + 1) : '';
+    return fetch('/api/inquiry/list?q=' + encodeURIComponent(qs))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        return d.rows || [];
+      });
   }
   function inqAge(r) { return (Date.now() - new Date(r.created_at).getTime()) / 36e5; }
   function inqT(s) { var d = new Date(s); if (isNaN(d.getTime())) return ''; var p = function (n) { return String(n).padStart(2, '0'); }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
@@ -3096,39 +3264,28 @@
   function inqFind(id) { for (var i = 0; i < inqState.rows.length; i++) if (inqState.rows[i].id === id) return inqState.rows[i]; return null; }
   function inqWaLink(phone) { var d = String(phone || '').replace(/[^\d]/g, ''); return d ? 'https://wa.me/' + d + '?text=' + encodeURIComponent('Hi, following up on your packaging inquiry with Mili Packaging.') : '#'; }
   function inqLoad() {
+    // v11: 读操作经 Worker 会话代理（/api/inquiry/list），登录会话即权限
     return inqApi('/rest/v1/inquiries?select=*&order=created_at.desc&limit=500').then(function (rows) {
-      inqState.rows = Array.isArray(rows) ? rows : []; inqRender();
+      inqState.rows = Array.isArray(rows) ? rows : [];
+      inqRender();
+      var ld = el('inqLoading'), dd = el('inquiryDash');
+      if (ld) ld.style.display = 'none';
+      if (dd) dd.classList.remove('hide');
     });
   }
   function inqPatch(id, fields) {
     fields.updated_at = new Date().toISOString();
-    return inqApi('/rest/v1/inquiries?id=eq.' + encodeURIComponent(id), { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(fields) })
-      .then(function () { flash('✓ 已更新'); for (var i = 0; i < inqState.rows.length; i++) { if (inqState.rows[i].id === id) { for (var k in fields) inqState.rows[i][k] = fields[k]; break; } } inqRender(); })
-      .catch(function (e) { flash('更新失败：' + e.message, true); });
-  }
-
-  // 解锁（PIN 校验在 Worker：/api/inquiry/unlock，成功后下发 HttpOnly cookie）
-  document.getElementById('unlockBtn').addEventListener('click', function () {
-    var ub = this; if (ub.disabled) return;
-    var pinVal = document.getElementById('pin').value;
-    ub.disabled = true; ub.textContent = '验证中…';
-    fetch('/api/inquiry/unlock', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin: pinVal }) })
+    // v11: 写操作经 Worker 会话代理（/api/inquiry/patch）
+    return fetch('/api/inquiry/patch', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id, fields: fields }) })
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        if (!d.ok) {
-          flash(d.error === 'bad-pin' ? '访问密码不正确' : '解锁失败：' + (d.error || '未知'), true);
-          ub.disabled = false; ub.textContent = '解锁查看';
-          return;
-        }
-        inqLoad().then(function () {
-          ub.disabled = false; ub.textContent = '解锁查看';
-          var lock = document.querySelector('#inquiryArea .lock'); if (lock) lock.style.display = 'none';
-          el('inquiryDash').classList.remove('hide');
-          inqBind();
-        }).catch(function () { ub.disabled = false; ub.textContent = '解锁查看'; flash('询盘读取失败：Supabase 不可达，或表结构未升级（需先执行 SQL 迁移）', true); });
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        flash('✓ 已更新');
+        for (var i = 0; i < inqState.rows.length; i++) { if (inqState.rows[i].id === id) { for (var k in fields) inqState.rows[i][k] = fields[k]; break; } }
+        inqRender();
       })
-      .catch(function () { ub.disabled = false; ub.textContent = '解锁查看'; flash('解锁请求失败：网络异常', true); });
-  });
+      .catch(function (e) { flash('更新失败：' + (e.message || '网络异常'), true); });
+  }
 
   // 一次性绑定
   function inqBind() {
@@ -3332,9 +3489,15 @@
       message: el('inq-m-msg').value.trim(), source_page: el('inq-m-src').value.trim(), status: 'new',
       value_usd: isNaN(v) ? null : v, updated_at: new Date().toISOString()
     };
-    inqApi('/rest/v1/inquiries', { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify(payload) })
-      .then(function () { flash('✓ 已录入'); el('inqModal').style.display = 'none'; return inqLoad(); })
-      .catch(function (e) { flash('录入失败：' + e.message, true); });
+    fetch('/api/inquiry/insert', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || 'HTTP ' + d.status);
+        flash('✓ 已录入');
+        el('inqModal').style.display = 'none';
+        return inqLoad();
+      })
+      .catch(function (e) { flash('录入失败：' + (e.message || '网络异常'), true); });
   }
 
   // ── 批量处理 ──
@@ -3753,40 +3916,61 @@
     fetch('/api/logout', { method: 'POST' }).then(function () { location.href = '/admin.html'; });
   });
 
-  // ── V6: theme (light / dark / system three-state, persisted) ──
-  function themeActual() {
-    var t = document.documentElement.getAttribute('data-theme');
-    if (!t) return (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-    return t;
-  }
+  // ── V12: theme — 默认暗金(dark-gold)，6 套风格可自由切换（localStorage 持久化） ──
+  var THEMES = [
+    { id: 'dark-gold', name: '暗金', desc: '品牌金色 · 默认', colors: ['#0a0a0a', '#141416', '#c9a227'] },
+    { id: 'dark', name: '纯黑', desc: '极简银灰', colors: ['#070708', '#111214', '#aab3c2'] },
+    { id: 'midnight', name: '深蓝', desc: '沉稳蓝调', colors: ['#070d18', '#10182a', '#4da3ff'] },
+    { id: 'forest', name: '墨绿', desc: '自然绿意', colors: ['#070e0a', '#0f1913', '#4fbf8a'] },
+    { id: 'royal', name: '紫金', desc: '奢华紫调', colors: ['#0b0716', '#171226', '#b08cff'] },
+    { id: 'light', name: '亮色', desc: '浅色清爽', colors: ['#f5f6f8', '#ffffff', '#a9851d'] }
+  ];
+  function themeActual() { return document.documentElement.getAttribute('data-theme') || 'dark-gold'; }
+  function themeName(id) { for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i]; return THEMES[0]; }
   function applyTheme(t) {
-    if (t === 'light' || t === 'dark') { document.documentElement.setAttribute('data-theme', t); }
+    if (t && t !== 'dark-gold' && themeName(t).id === t) { document.documentElement.setAttribute('data-theme', t); }
     else { document.documentElement.removeAttribute('data-theme'); }
+    var cur = themeName(t);
     var g = document.getElementById('guide-theme-name');
-    if (g) g.textContent = themeActual() === 'light' ? '亮色' : '暗色';
+    if (g) g.textContent = cur.name;
     var btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = t === 'light' ? '☀️ 亮色' : (t === 'dark' ? '🌙 暗色' : '💻 跟随系统');
+    if (btn) btn.textContent = '🎨 ' + cur.name;
   }
-  var savedTheme = 'system'; try { savedTheme = localStorage.getItem('mili-theme') || 'system'; } catch (e) {}
+  var savedTheme = 'dark-gold'; try { savedTheme = localStorage.getItem('mili-theme') || 'dark-gold'; } catch (e) {}
   applyTheme(savedTheme);
-  document.getElementById('themeToggle').addEventListener('click', function () {
-    var next = savedTheme === 'light' ? 'dark' : (savedTheme === 'dark' ? 'system' : 'light');
-    savedTheme = next;
-    applyTheme(next);
-    try { localStorage.setItem('mili-theme', next); } catch (e) {}
-    toast('主题：' + (next === 'light' ? '☀️ 亮色' : (next === 'dark' ? '🌙 暗色' : '💻 跟随系统')), 'info');
-  });
-  if (window.matchMedia) {
-    var mqTheme = matchMedia('(prefers-color-scheme: light)');
-    if (mqTheme.addEventListener) {
-      mqTheme.addEventListener('change', function () {
-        if (savedTheme !== 'light' && savedTheme !== 'dark') {
-          var g = document.getElementById('guide-theme-name');
-          if (g) g.textContent = mqTheme.matches ? '亮色' : '暗色';
-        }
+  // 主题选择面板（6 色块）
+  function renderThemePop() {
+    var old = document.getElementById('themePop'); if (old) old.remove();
+    var pop = document.createElement('div');
+    pop.id = 'themePop';
+    pop.style.cssText = 'position:fixed;top:52px;right:14px;z-index:9990;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:10px;box-shadow:0 12px 40px rgba(0,0,0,.5);display:grid;grid-template-columns:repeat(3,92px);gap:8px';
+    pop.innerHTML = THEMES.map(function (x) {
+      var active = savedTheme === x.id;
+      return '<button data-theme-id="' + x.id + '" title="切换为「' + x.name + '」" style="border:1px solid ' + (active ? 'var(--color-primary)' : 'var(--color-border)') + ';border-radius:6px;background:var(--color-surface-2);padding:6px;cursor:pointer;text-align:left">' +
+        '<span style="display:flex;gap:3px;margin-bottom:5px"><i style="display:block;width:24px;height:15px;border-radius:3px;background:' + x.colors[0] + ';border:1px solid rgba(255,255,255,.18)"></i><i style="display:block;width:24px;height:15px;border-radius:3px;background:' + x.colors[1] + ';border:1px solid rgba(255,255,255,.18)"></i><i style="display:block;width:24px;height:15px;border-radius:3px;background:' + x.colors[2] + '"></i></span>' +
+        '<b style="font-size:11px;display:block">' + x.name + '</b><span style="font-size:9px;color:var(--color-text-dim)">' + x.desc + '</span></button>';
+    }).join('');
+    pop.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        savedTheme = b.getAttribute('data-theme-id');
+        try { localStorage.setItem('mili-theme', savedTheme); } catch (e) {}
+        applyTheme(savedTheme);
+        var g = document.getElementById('guide-theme-name'); if (g) g.textContent = themeName(savedTheme).name;
+        pop.remove();
+        toast('已切换主题：' + themeName(savedTheme).name, 'ok');
       });
-    }
+    });
+    document.body.appendChild(pop);
+    setTimeout(function () {
+      document.addEventListener('click', function h(ev) { if (pop && !pop.contains(ev.target)) { pop.remove(); document.removeEventListener('click', h); } });
+    }, 0);
   }
+  document.getElementById('themeToggle').addEventListener('click', function (e) {
+    e.stopPropagation();
+    var pop = document.getElementById('themePop');
+    if (pop) { pop.remove(); return; }
+    renderThemePop();
+  });
 
   // ── V6: toast (top-right, 3s, closable) ──
   function toast(msg, type) {
@@ -3802,7 +3986,7 @@
   }
 
   // ── V6: sidebar nav ↔ tabs sync ──
-  var SB_NAMES = { dash: '今日运营 / 数据看板', editor: '内容工厂 / 商品运营优化', decor: '系统 / 店铺装修', accounts: '系统 / 账号管理', inquiry: '线索中心 / 询盘', tools: '内容工厂 / 后台工具', ticket: '内容工厂 / 修改工单', audit: '系统 / 审计日志', cron: '系统 / 自动任务', v5: '增长工具 / 数据驾驶舱', guide: '系统 / 风格指南', geo: '增长工具 / AI 可见性', seo: '增长工具 / SEO 医生', config: '系统 / 设置中心' };
+  var SB_NAMES = { dash: '今日运营 / 数据看板', editor: '内容工厂 / 商品管理', decor: '系统 / 店铺装修', accounts: '系统 / 账号管理', inquiry: '线索中心 / 询盘中心', tools: '内容工厂 / 后台工具', ticket: '内容工厂 / 修改工单', audit: '系统 / 审计日志', cron: '系统 / 自动任务', v5: '增长工具 / 数据驾驶舱', guide: '系统 / 使用手册', geo: '增长工具 / AI 可见性', seo: '增长工具 / SEO 医生', config: '系统 / 设置中心' };
   // topbar KPI 进入设置
   var topKpi = document.getElementById('topbar-kpi');
   if (topKpi) topKpi.addEventListener('click', function () { document.querySelector('.tab[data-tab="config"]').click(); });
@@ -4588,16 +4772,15 @@
   refreshDash(false);
   syncSidebar('dash');
 
-  // 若会话已解锁过询盘中心（HttpOnly cookie），刷新后自动解锁
-  fetch('/api/session').then(function (r) { return r.json(); }).then(function (d) {
-    if (d && d.inquiryUnlocked) {
-      var lock = document.querySelector('#inquiryArea .lock');
-      if (lock) lock.style.display = 'none';
-      el('inquiryDash').classList.remove('hide');
-      if (typeof inqBind === 'function') inqBind();
-      inqLoad();
-    }
-  }).catch(function () {});
+  // v11: 登录会话即权限 — 直接加载询盘中心（读写均经 Worker 会话代理）
+  if (typeof inqBind === 'function') inqBind();
+  inqLoad().catch(function (e) {
+    var msg = (e && e.message) || '';
+    var ld = el('inqLoading');
+    if (ld) ld.innerHTML = msg.indexOf('supabase:') >= 0
+      ? '<span style="color:var(--color-danger)">询盘数据读取失败（Supabase ' + msg.replace('supabase:', '') + '）</span><br/><span class="hint">请确认已登录，且 Supabase 表结构已按 supabase-migration-inquiries-v2.sql 迁移</span>'
+      : '<span style="color:var(--color-danger)">询盘数据读取失败：' + msg + '</span>';
+  });
 })();
 </script>
 </div>

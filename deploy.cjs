@@ -222,6 +222,47 @@ export default{async fetch(r,env){
         return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json','set-cookie':'mili_inquiry=1; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
+    // v11: 询盘读写代理（登录会话鉴权；字段白名单；前端不再直连 Supabase）
+    if(p==='/api/inquiry/list'&&r.method==='GET'){
+      const q=String(url.searchParams.get('q')||'');
+      if(q.length>400||!/^[a-zA-Z0-9_=,&.()*%+\-: ]{0,400}$/.test(q))return new Response(JSON.stringify({ok:false,error:'bad-query'}),{status:400,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await fetch(sbU(env)+'/rest/v1/inquiries?'+q,{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)}});
+        const j=await rr.json();
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/inquiry/patch'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const id=String((b&&b.id)||'');
+        const fields=(b&&b.fields&&typeof b.fields==='object'&&!Array.isArray(b.fields))?b.fields:null;
+        if(!id||!fields)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        const allowed=['status','priority','owner','follow_up_at','value_usd','name','email','phone','company','product_type','quantity','message','source_page','note','channel'];
+        const clean={};
+        for(const k of Object.keys(fields)){if(allowed.indexOf(k)>=0)clean[k]=fields[k]}
+        clean.updated_at=new Date().toISOString();
+        const rr=await fetch(sbU(env)+'/rest/v1/inquiries?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/inquiry/insert'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const fields=(b&&typeof b==='object'&&!Array.isArray(b))?b:{};
+        const allowed=['channel','priority','status','name','email','phone','company','product_type','quantity','message','source_page','value_usd','owner','follow_up_at'];
+        const clean={};
+        for(const k of Object.keys(fields)){if(allowed.indexOf(k)>=0)clean[k]=fields[k]}
+        if(!clean.name&&!clean.email&&!clean.phone)return new Response(JSON.stringify({ok:false,error:'missing-contact'}),{status:400,headers:{'content-type':'application/json'}});
+        clean.status=clean.status||'new';
+        clean.updated_at=new Date().toISOString();
+        const rr=await fetch(sbU(env)+'/rest/v1/inquiries',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(clean)});
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     if(p==='/api/audit')return new Response(JSON.stringify({ok:true,logs:AUDIT_LOG.slice().reverse()}),{headers:{'content-type':'application/json'}});
     if(p==='/api/v5/status')return new Response(JSON.stringify({ok:true,ga4:{configured:!!(env.GA4_SERVICE_JSON&&env.GA4_PROPERTY_ID),propertyId:env.GA4_PROPERTY_ID||''},gsc:{configured:!!(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL),site:env.GSC_SITE_URL||''}}),{headers:{'content-type':'application/json'}});
     if(p==='/api/config')return new Response(JSON.stringify({ok:true,configs:{
