@@ -1531,6 +1531,14 @@
           <div><label>来源 / 备注</label><input id="inq-m-src" placeholder="如：WhatsApp 对话 / info@ 邮件" /></div>
         </div>
         <div><label>需求描述</label><textarea id="inq-m-msg" rows="3" placeholder="产品规格、工艺、数量、交期等需求"></textarea></div>
+        <div style="margin-top:12px;padding:12px;background:var(--color-surface-2);border:1px dashed var(--color-border);border-radius:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <b style="font-size:12.5px">📥 邮件 / WhatsApp 客户信息一键导入</b>
+            <button class="btn btn-primary btn-sm" id="inq-m-parse" style="min-width:150px">🤖 智能提取</button>
+          </div>
+          <textarea id="inq-m-raw" rows="3" placeholder="粘贴买家邮件原文或 WhatsApp 对话（可含姓名、邮箱、电话、公司、需求、数量…），点击「智能提取」自动识别并填入上方表单（AI 可用时逐字段识别；无 AI 时自动识别邮箱/电话/号码）"></textarea>
+          <p class="hint" style="margin:6px 0 0" id="inq-m-parse-msg"></p>
+        </div>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
           <button class="btn btn-ghost btn-sm" id="inq-m-cancel">取消</button>
           <button class="btn btn-primary btn-sm" id="inq-m-save">保存</button>
@@ -3812,6 +3820,29 @@
     el('inq-add-btn').addEventListener('click', inqOpenAdd);
     el('inq-m-cancel').addEventListener('click', function () { el('inqModal').style.display = 'none'; });
     el('inq-m-save').addEventListener('click', inqSaveAdd);
+    // v16: 邮件/WhatsApp 文本智能提取 → 自动填充表单（AI 优先，规则降级）
+    var parseBtn = el('inq-m-parse'), parseMsg = el('inq-m-parse-msg');
+    if (parseBtn) parseBtn.addEventListener('click', function () {
+      var raw = el('inq-m-raw').value.trim();
+      if (raw.length < 10) { parseMsg.textContent = '请先粘贴买家邮件原文或 WhatsApp 对话内容（至少 10 个字符）'; return; }
+      parseBtn.disabled = true; parseBtn.textContent = '识别中…'; parseMsg.textContent = '正在提取客户信息…';
+      fetch('/api/inquiry/parse', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: raw }) })
+        .then(function (r) { return r.json(); }).then(function (d) {
+          parseBtn.disabled = false; parseBtn.textContent = '🤖 智能提取';
+          if (!d.ok) { parseMsg.textContent = '提取失败：' + (d.error || '未知'); return; }
+          var f = d.fields || {};
+          if (f.name) el('inq-m-name').value = f.name;
+          if (f.email) el('inq-m-email').value = f.email;
+          if (f.phone) el('inq-m-phone').value = f.phone;
+          if (f.company) el('inq-m-company').value = f.company;
+          if (f.country && el('inq-m-src')) el('inq-m-src').value = (el('inq-m-src').value ? el('inq-m-src').value + ' · ' : '') + f.country;
+          if (f.product_type) el('inq-m-prod').value = f.product_type;
+          if (f.quantity) el('inq-m-qty').value = f.quantity;
+          if (f.channel) { var cs = el('inq-m-chan'); if (cs && ['whatsapp', 'email', 'website', 'chat', 'phone'].indexOf(f.channel) >= 0) cs.value = f.channel; }
+          if (f.message && !el('inq-m-msg').value) el('inq-m-msg').value = f.message;
+          parseMsg.innerHTML = '<span style="color:var(--ok)">✓ 已提取' + (d.rule ? '（规则模式：识别邮箱/电话/数量）' : '（AI 模式：逐字段识别）') + '，请核对后点击保存</span>';
+        }).catch(function () { parseBtn.disabled = false; parseBtn.textContent = '🤖 智能提取'; parseMsg.textContent = '提取失败：网络异常'; });
+    });
     el('inq-tpl-btn').addEventListener('click', function () { var p = el('inqTplPanel'); p.classList.toggle('hide'); if (!p.classList.contains('hide')) inqRenderTpl(); });
     el('inqD-close').addEventListener('click', function () { el('inqDrawer').classList.remove('show'); });
     var tabs = document.querySelectorAll('.inq-tab');
@@ -3835,13 +3866,16 @@
     var map = {};
     rows.forEach(function (r) {
       var key = (r.email || '').trim().toLowerCase() || (r.phone || '').trim() || (r.name || '').trim().toLowerCase() || 'unknown:' + r.id;
-      if (!map[key]) map[key] = { key: key, name: r.name || '', email: r.email || '', phone: r.phone || '', company: r.company || '', country: r.country || '', inq: [], last: 0, first: 0 };
+      if (!map[key]) map[key] = { key: key, name: r.name || '', email: r.email || '', phone: r.phone || '', company: r.company || '', country: r.country || '', inq: [], last: 0, first: 0, chan: {} };
       var c = map[key];
       c.inq.push(r);
       if (!c.name && r.name) c.name = r.name;
       if (!c.email && r.email) c.email = r.email;
       if (!c.phone && r.phone) c.phone = r.phone;
       if (!c.company && r.company) c.company = r.company;
+      // 渠道分布（v16：集中视图展示各渠道来源）
+      var ch = r.channel || 'website';
+      c.chan[ch] = (c.chan[ch] || 0) + 1;
       var t = new Date(r.created_at || 0).getTime();
       if (t > c.last) c.last = t;
       if (!c.first || t < c.first) c.first = t;
@@ -3856,22 +3890,32 @@
       c.grade = val === 2 ? 'A' : (val === 1 ? 'B' : 'C');
     });
     var gradeColor = { A: 'var(--ok)', B: 'var(--color-primary)', C: 'var(--color-text-dim)' };
+    var chanIco = { whatsapp: '💬', email: '✉️', website: '🌐', chat: '💭', phone: '📞' };
     var html = '<div class="card" style="padding:0;overflow:auto"><table class="inq-table"><thead><tr>' +
-      '<th style="width:200px">客户</th><th>联系方式</th><th>公司 / 国家</th><th>询盘次数</th><th>成交</th><th>最近询盘</th><th>分级</th><th>操作</th></tr></thead><tbody>';
+      '<th style="width:200px">客户</th><th>联系方式</th><th>公司 / 国家</th><th>询盘 / 渠道</th><th>成交</th><th>最近询盘</th><th>分级</th><th>操作</th></tr></thead><tbody>';
     list.slice(0, 60).forEach(function (c) {
+      var chanHtml = Object.keys(c.chan).map(function (ch) { return '<span class="hint" style="font-size:10.5px;white-space:nowrap">' + (chanIco[ch] || '·') + c.chan[ch] + '</span>'; }).join(' ');
       html += '<tr>' +
         '<td style="font-weight:600">' + esc(c.name || '未命名') + '</td>' +
         '<td>' + (c.email ? '<span style="color:var(--color-primary)">✉ ' + esc(c.email) + '</span>' : '') + (c.phone ? (c.email ? '<br/>' : '') + '<span style="color:var(--ok)">💬 ' + esc(c.phone) + '</span>' : '') + '</td>' +
         '<td>' + esc(c.company || '—') + (c.country ? ' · ' + esc(c.country) : '') + '</td>' +
-        '<td><b>' + c.total + '</b></td>' +
+        '<td><b>' + c.total + '</b> <span style="font-size:11px">' + chanHtml + '</span></td>' +
         '<td style="color:var(--ok)">' + (c.won ? c.won : '—') + '</td>' +
         '<td>' + fmtTime(new Date(c.last).toISOString()) + '</td>' +
         '<td><span class="tag" style="background:' + gradeColor[c.grade] + '22;color:' + gradeColor[c.grade] + ';border:1px solid ' + gradeColor[c.grade] + '44;font-weight:700">' + c.grade + '</span></td>' +
-        '<td><button class="btn btn-ghost btn-sm" data-cust-key="' + esc(c.key) + '" style="padding:3px 10px">查看询盘</button></td></tr>';
+        '<td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" data-cust-key="' + esc(c.key) + '" style="padding:3px 10px">查看询盘</button> ' +
+        (c.email || c.phone ? '<button class="btn btn-ghost btn-sm" data-cust-copy="' + esc(c.key) + '" title="复制联系方式" style="padding:3px 8px">📋</button>' : '') + '</td></tr>';
     });
     html += '</tbody></table></div>' +
       '<p class="hint" style="margin-top:8px">按邮箱/电话自动聚合（最多显示 60 位客户，按最近活动排序）· 分级：A=有成交 · B=≥3 次询盘 · C=其他 —— 正式「客户中心」将随 P0 客户表落地（含完整 360 视图与 RFM）。<a href="#" onclick="event.preventDefault();goTab(\'customers\')" style="color:var(--color-primary)">查看客户中心规划 →</a></p>';
     wrap.innerHTML = html;
+    wrap.querySelectorAll('[data-cust-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var c = map[btn.getAttribute('data-cust-copy')]; if (!c) return;
+        var t = 'Name: ' + (c.name || '') + '\nEmail: ' + (c.email || '') + '\nPhone: ' + (c.phone || '') + '\nCompany: ' + (c.company || '');
+        (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { toast('联系方式已复制', 'ok'); }, function () { toast('复制失败，请手动复制', 'err'); });
+      });
+    });
     wrap.querySelectorAll('[data-cust-key]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var key = btn.getAttribute('data-cust-key');

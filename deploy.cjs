@@ -317,6 +317,36 @@ export default{async fetch(r,env){
         return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
     }
+    // v16: 询盘智能提取（邮件/WhatsApp 文本 → 结构化字段；LLM 优先，规则降级）
+    if(p==='/api/inquiry/parse'&&r.method==='POST'){
+      try{
+        const b=await r.json();
+        const text=String((b&&b.text)||'').slice(0,8000);
+        if(text.length<10)return new Response(JSON.stringify({ok:false,error:'too-short'}),{status:400,headers:{'content-type':'application/json'}});
+        if(env.LLM_API_KEY){
+          const sys='你是外贸客服助手。从客户原始信息中提取结构化字段，只输出JSON（无其他文字）：{"name":"客户名或联系人","email":"邮箱或空字符串","phone":"电话或空（含国家码）","company":"公司名或空","country":"国家或空","product_type":"咨询产品品类或空","quantity":"数量或空","channel":"email或whatsapp（根据文本来源判断）","message":"需求摘要200字内，保留数量规格交期等关键信息"}';
+          const c=await llmChat(env,[{role:'system',content:sys},{role:'user',content:text}]);
+          if(c){
+            const m=c.match(/[{][^]*[}]/);
+            if(m){
+              const obj=JSON.parse(m[0]);
+              const clean={};
+              for(const k of ['name','email','phone','company','country','product_type','quantity','channel','message']){if(obj[k]!=null&&typeof obj[k]==='string')clean[k]=String(obj[k]).trim().slice(0,500)}
+              if(clean.channel&&['email','whatsapp'].indexOf(clean.channel)<0)clean.channel='whatsapp';
+              if(Object.keys(clean).length)return new Response(JSON.stringify({ok:true,fields:clean,rule:false}),{headers:{'content-type':'application/json'}});
+            }
+          }
+        }
+        // 规则降级（模板字符串内避免 \d 等转义，用字符类等价写法）
+        const out={};
+        out.channel=/whatsapp|wa[.]me|[+][0-9]{8,}/i.test(text)?'whatsapp':(/@[a-z0-9.-]+[.][a-z]{2,}/i.test(text)?'email':'');
+        const em=text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}/);if(em)out.email=em[0];
+        const ph=text.match(/[0-9][0-9 .\\t-]{6,17}/);if(ph&&!out.email)out.phone=ph[0].replace(/[ .\\t-]/g,'');
+        const qty=text.match(/[0-9]{1,6}[ \\t]*(?:pcs|pieces|units|sets?|个|件)/i);if(qty)out.quantity=qty[0];
+        out.message=text.replace(/[ \\t\\r\\n]+/g,' ').slice(0,500);
+        return new Response(JSON.stringify({ok:true,fields:out,rule:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     // v14: 商品库存（product_stock 表，迁移见 supabase-migration-stock-v3.sql）
     if(p==='/api/stock/list'&&r.method==='GET'){
       try{
