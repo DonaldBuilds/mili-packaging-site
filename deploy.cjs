@@ -214,6 +214,47 @@ export default{async fetch(r,env){
     if(!(await sessionValid()))return new Response(JSON.stringify({ok:false,error:'unauthorized'}),{status:401,headers:{'content-type':'application/json'}});
     if(p==='/api/session')return new Response(JSON.stringify({ok:true,inquiryUnlocked:!!getCookie('mili_inquiry')}),{headers:{'content-type':'application/json'}});
     // v14: GitHub API 代理（看板部署/提交状态，OPS_GH_PAT 鉴权免限流）
+    // v15: 站点装修配置（GitHub src/data/site.json 读写）
+    if(p==='/api/site'&&r.method==='GET'){
+      if(!OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'server-not-configured'}),{status:500,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await fetch('https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/site.json',{headers:{authorization:'Bearer '+OPS_GH_PAT,'accept':'application/vnd.github+json','user-agent':'mili-ops'}});
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'gh:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        const m=await rr.json();
+        let data={};
+        try{data=JSON.parse(decodeURIComponent(escape(atob(m.content))))}catch(e){data={}}
+        return new Response(JSON.stringify({ok:true,data:data,sha:m.sha}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/site'&&r.method==='POST'){
+      if(!OPS_GH_PAT)return new Response(JSON.stringify({ok:false,error:'server-not-configured'}),{status:500,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const data=(b&&typeof b.data==='object'&&!Array.isArray(b.data))?b.data:null;
+        if(!data)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
+        // 字段白名单与长度校验（深层结构按 site.json 模型）
+        const strL=function(v,max){if(v==null)return true;if(typeof v!=='string')return false;if(v.length>(max||200))return false;return true};
+        const S=['brand','contact','social','announcement','seo','home'];
+        const clean={};
+        for(const k of Object.keys(data)){if(S.indexOf(k)<0)return new Response(JSON.stringify({ok:false,error:'bad-field:'+k}),{status:400,headers:{'content-type':'application/json'}})}
+        if(!data.brand||typeof data.brand!=='object')return new Response(JSON.stringify({ok:false,error:'bad-brand'}),{status:400,headers:{'content-type':'application/json'}});
+        const all=['name','tagline','logoText','logoSub','whatsapp','phoneDisplay','email','salesEmail','address','linkedin','facebook','instagram','youtube','enabled','text','title','description','keywords','heroTitle','heroSub'];
+        for(const k of all){if(data.brand&&data.brand[k]!==undefined&&!strL(data.brand[k],300))return new Response(JSON.stringify({ok:false,error:'bad-value:'+k}),{status:400,headers:{'content-type':'application/json'}})}
+        if(data.contact&&!strL(data.contact.whatsapp,40))return new Response(JSON.stringify({ok:false,error:'bad-whatsapp'}),{status:400,headers:{'content-type':'application/json'}});
+        if(data.seo&&(!strL(data.seo.title,90)||!strL(data.seo.description,200)))return new Response(JSON.stringify({ok:false,error:'bad-seo'}),{status:400,headers:{'content-type':'application/json'}});
+        if(data.announcement&&typeof data.announcement.enabled!=='boolean')return new Response(JSON.stringify({ok:false,error:'bad-announcement'}),{status:400,headers:{'content-type':'application/json'}});
+        const gh='https://api.github.com/repos/DonaldBuilds/mili-packaging-site/contents/src/data/site.json';
+        const ghH={authorization:'Bearer '+OPS_GH_PAT,'accept':'application/vnd.github+json','user-agent':'mili-ops','content-type':'application/json'};
+        const cur=await fetch(gh,{headers:ghH});
+        if(!cur.ok)return new Response(JSON.stringify({ok:false,error:'gh-read:'+cur.status}),{status:502,headers:{'content-type':'application/json'}});
+        const meta=await cur.json();
+        const putBody={message:'site: workbench decor update '+new Date().toISOString().slice(0,16)+'Z',content:btoa(unescape(encodeURIComponent(JSON.stringify(data)))),sha:meta.sha};
+        let put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify(putBody)});
+        if(put.status===409){const cur2=await fetch(gh,{headers:ghH});if(cur2.ok){const m2=await cur2.json();putBody.sha=m2.sha;put=await fetch(gh,{method:'PUT',headers:ghH,body:JSON.stringify(putBody)})}}
+        if(!put.ok)return new Response(JSON.stringify({ok:false,error:'gh-write:'+put.status}),{status:502,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,message:'site updated & pushed — auto-deploy started'}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
     if(p==='/api/gh'&&r.method==='GET'){
       const ghPath=String(url.searchParams.get('path')||'');
       if(ghPath.length>200||!/^[a-zA-Z0-9/._?=&-]{1,200}$/.test(ghPath))return new Response(JSON.stringify({ok:false,error:'bad-path'}),{status:400,headers:{'content-type':'application/json'}});

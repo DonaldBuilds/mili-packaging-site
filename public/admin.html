@@ -1809,43 +1809,62 @@
 
   <!-- 店铺装修 -->
   <div id="tab-decor" class="hide">
-    <h2>🎨 店铺装修</h2>
-    <div class="card" style="margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:12px;padding:8px 4px">
-        <span style="font-size:26px">🚧</span>
-        <div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:4px">模块规划中（P2 内容管理一并交付）</div>
-          <p class="hint" style="margin:0;line-height:1.7">当前站点基本信息（站名 / 联系方式 / SEO 标题）硬编码于代码内，此页暂不可操作。规划中：随「内容管理」板块一并落地为可配置的站点基础信息，写入数据层后自动部署生效。<br/>如需修改站名、WhatsApp、联系邮箱等，请走 <a href="#" onclick="event.preventDefault();goTab('ticket')" style="color:var(--color-primary)">内部任务</a> 提交修改需求（约 2 分钟自动部署）。</p>
-        </div>
+    <h2 style="margin-bottom:6px">🎨 店铺装修 · 站点配置中心</h2>
+    <p class="hint" style="margin-bottom:14px">修改品牌 / 联系方式 / 社交 / 促销公告 / 全局 SEO 与首页文案，保存后约 2 分钟自动构建部署生效（数据源：GitHub src/data/site.json）。</p>
+    <div id="decor-status" style="margin-bottom:10px"></div>
+
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px">
+      <div class="card">
+        <h3>🏷️ 品牌信息</h3>
+        <label>品牌名称</label><input id="dc-brand-name" placeholder="MILI Packaging" />
+        <label>品牌标语</label><input id="dc-brand-tagline" placeholder="Custom Boxes Factory" />
+        <div class="row"><div><label>Logo 主文本</label><input id="dc-brand-logo" placeholder="MILI" /></div><div><label>Logo 副文本</label><input id="dc-brand-logosub" placeholder="PACKAGING" /></div></div>
+      </div>
+      <div class="card">
+        <h3>📞 联系信息</h3>
+        <label>WhatsApp 号码（纯数字，含国家码）</label><input id="dc-whatsapp" placeholder="8618296876285" />
+        <label>展示号码</label><input id="dc-phone" placeholder="+86 182 9687 6285" />
+        <label>联系邮箱</label><input id="dc-email" placeholder="info@mili-packaging.com" />
+        <label>销售邮箱</label><input id="dc-sales" placeholder="sales@mili-packaging.com" />
+        <label>工厂地址</label><input id="dc-address" placeholder="Shenzhen, Guangdong, China" />
+      </div>
+      <div class="card">
+        <h3>🔗 社交链接</h3>
+        <label>LinkedIn</label><input id="dc-linkedin" placeholder="https://linkedin.com/company/..." />
+        <label>Facebook</label><input id="dc-facebook" placeholder="https://facebook.com/..." />
+        <label>Instagram</label><input id="dc-instagram" placeholder="https://instagram.com/..." />
+        <label>YouTube</label><input id="dc-youtube" placeholder="https://youtube.com/@..." />
+      </div>
+      <div class="card">
+        <h3>📢 促销公告（首页顶部横幅）</h3>
+        <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="dc-ann-enabled" style="width:auto" /> 启用公告条</label>
+        <label>公告文案</label><textarea id="dc-ann-text" rows="2" placeholder="Free design & samples in 7 days · Factory-direct pricing"></textarea>
+      </div>
+      <div class="card">
+        <h3>🔎 全局 SEO（站点首页）</h3>
+        <label>SEO 标题</label><input id="dc-seo-title" placeholder="站点标题" /><span class="ed-counter" id="dc-cnt-title">0/90</span>
+        <label>Meta 描述</label><textarea id="dc-seo-desc" rows="3" placeholder="站点描述"></textarea><span class="ed-counter" id="dc-cnt-desc">0/200</span>
+        <label>关键词（逗号分隔）</label><input id="dc-seo-keywords" placeholder="custom boxes, packaging factory, ..." />
+      </div>
+      <div class="card">
+        <h3>🏠 首页文案</h3>
+        <label>Hero 主标题</label><input id="dc-hero-title" placeholder="Custom Packaging, Factory-Direct" />
+        <label>Hero 副标题</label><textarea id="dc-hero-sub" rows="2" placeholder="MOQ from 100 pcs · Free design & samples in 7 days"></textarea>
       </div>
     </div>
-    <div class="decor-card">
+
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-primary" id="dc-save-btn" style="min-width:180px">💾 保存并部署</button>
+      <button class="btn btn-ghost btn-sm" id="dc-reset-btn">重置为默认</button>
+      <span class="hint">保存后提交 GitHub → 自动构建部署（约 2 分钟）→ 前台生效</span>
+    </div>
+
+    <div class="decor-card" style="margin-top:16px">
       <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>网站实时预览</h4>
-      <div style="position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--color-border)">
-        <div style="background:var(--color-surface-2);padding:8px 12px;font-size:11px;color:var(--color-text-secondary);display:flex;align-items:center;gap:8px">
-          <div style="display:flex;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div><div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div><div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div></div>
-          <span>mili-packaging.com</span>
-          <a href="https://mili-packaging.com" target="_blank" rel="noopener" style="margin-left:auto;color:var(--color-primary);font-size:10px">在新标签页打开 ↗</a>
-        </div>
-        <iframe src="https://mili-packaging.com" class="decor-preview-frame" title="网站预览" loading="lazy"></iframe>
-      </div>
-    </div>
-    <div class="decor-card">
-      <h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>版本与部署</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
-        <div class="cfg-row"><div class="cfg-row-name">当前版本</div><div class="cfg-row-hint">独立站运营工作台</div></div>
-        <div class="cfg-row"><div class="cfg-row-name">部署平台</div><div class="cfg-row-hint">Cloudflare Workers</div></div>
-        <div class="cfg-row"><div class="cfg-row-name">CI/CD</div><div class="cfg-row-hint">GitHub Actions（push 自动触发）</div></div>
-        <div class="cfg-row"><div class="cfg-row-name">部署时间</div><div class="cfg-row-hint">约 2 分钟</div></div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <a href="https://github.com/DonaldBuilds/mili-packaging-site/actions" target="_blank" class="btn btn-ghost btn-sm" rel="noopener">查看部署日志 ↗</a>
-        <a href="https://mili-packaging.com" target="_blank" class="btn btn-ghost btn-sm" rel="noopener">访问网站 ↗</a>
-      </div>
+      <iframe src="/" style="width:100%;height:420px;border:1px solid var(--color-border);border-radius:4px;background:#fff" loading="lazy" title="网站预览"></iframe>
     </div>
   </div>
 
-  <!-- 账号管理（多账号体系） -->
   <div id="tab-accounts" class="hide">
     <h2>👥 账号与权限</h2>
     <p class="hint" style="margin-bottom:16px">管理工作台访问账号与角色权限；运营/客服/只读等角色可精细控制可见模块。</p>
@@ -5560,8 +5579,10 @@
     rows.forEach(function (r) { var s = r.status || 'quote'; counts[s] = (counts[s] || 0) + 1; });
     var total = rows.length, paid = rows.filter(function (r) { return r.payment_status === 'paid' || r.payment_status === 'balance'; }).length;
     var overdue = rows.filter(function (r) { return r.eta && new Date(r.eta) < new Date() && ['delivered', 'cancelled'].indexOf(r.status) < 0; }).length;
+    var totalAmt = rows.filter(function (r) { return r.status !== 'cancelled'; }).reduce(function (s, r) { return s + (parseFloat(r.amount) || 0); }, 0);
     el('ord-stats').innerHTML = '<div class="inq-stats" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">' +
       '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-primary)">' + total + '</div><div class="hint">总订单</div></div>' +
+      '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--ok)">$' + Math.round(totalAmt).toLocaleString() + '</div><div class="hint">订单金额合计</div></div>' +
       '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--ok)">' + (counts.delivered || 0) + '</div><div class="hint">已交付</div></div>' +
       '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:var(--color-warning)">' + ((counts.production || 0) + (counts.qc || 0)) + '</div><div class="hint">生产/质检</div></div>' +
       '<div class="stat-card"><div style="font-size:20px;font-weight:700;color:' + (overdue ? 'var(--bad)' : 'var(--color-text-dim)') + '">' + overdue + '</div><div class="hint">交期已过</div></div>' +
@@ -5806,6 +5827,82 @@
   document.getElementById('cust-save-btn').addEventListener('click', custSave);
   document.addEventListener('click', function (e) { var b = e.target.closest ? e.target.closest('[data-cdetail]') : null; if (b) custOpenDetail(b.getAttribute('data-cdetail')); });
   document.querySelector('.tab[data-tab="customers"]').addEventListener('click', function () { custLoad(); });
+
+  // ═════════════════════════════════════════════
+  // V15: 店铺装修 · 站点配置中心（GitHub site.json 读写 → 自动部署）
+  // ═════════════════════════════════════════════
+  var DECOR_DEFAULTS = {
+    brand: { name: 'MILI Packaging', tagline: 'Custom Boxes Factory', logoText: 'MILI', logoSub: 'PACKAGING' },
+    contact: { whatsapp: '8618296876285', phoneDisplay: '+86 182 9687 6285', email: 'info@mili-packaging.com', salesEmail: 'sales@mili-packaging.com', address: 'Shenzhen, Guangdong, China' },
+    social: { linkedin: '', facebook: '', instagram: '', youtube: '' },
+    announcement: { enabled: false, text: 'Free design & samples in 7 days · Factory-direct pricing' },
+    seo: { title: 'MILI Packaging – Custom Boxes Factory | Free Samples in 7 Days', description: 'Custom boxes, bags & rigid packaging from factory-direct pricing. MOQ from 100pcs. Free 3D mockup within 48h. FSC-certified materials.', keywords: 'custom boxes, packaging factory, rigid boxes, mailer boxes, FSC packaging' },
+    home: { heroTitle: 'Custom Packaging, Factory-Direct', heroSub: 'MOQ from 100 pcs · Free design & samples in 7 days · 500+ brands trusted' }
+  };
+  function decorFill(d) {
+    var D = Object.assign({}, DECOR_DEFAULTS, d || {});
+    var br = Object.assign({}, DECOR_DEFAULTS.brand, D.brand || {});
+    var ct = Object.assign({}, DECOR_DEFAULTS.contact, D.contact || {});
+    var so = Object.assign({}, DECOR_DEFAULTS.social, D.social || {});
+    var an = Object.assign({}, DECOR_DEFAULTS.announcement, D.announcement || {});
+    var se = Object.assign({}, DECOR_DEFAULTS.seo, D.seo || {});
+    var ho = Object.assign({}, DECOR_DEFAULTS.home, D.home || {});
+    el('dc-brand-name').value = br.name || ''; el('dc-brand-tagline').value = br.tagline || '';
+    el('dc-brand-logo').value = br.logoText || ''; el('dc-brand-logosub').value = br.logoSub || '';
+    el('dc-whatsapp').value = ct.whatsapp || ''; el('dc-phone').value = ct.phoneDisplay || '';
+    el('dc-email').value = ct.email || ''; el('dc-sales').value = ct.salesEmail || ''; el('dc-address').value = ct.address || '';
+    el('dc-linkedin').value = so.linkedin || ''; el('dc-facebook').value = so.facebook || '';
+    el('dc-instagram').value = so.instagram || ''; el('dc-youtube').value = so.youtube || '';
+    el('dc-ann-enabled').checked = !!an.enabled; el('dc-ann-text').value = an.text || '';
+    el('dc-seo-title').value = se.title || ''; el('dc-seo-desc').value = se.description || ''; el('dc-seo-keywords').value = se.keywords || '';
+    el('dc-hero-title').value = ho.heroTitle || ''; el('dc-hero-sub').value = ho.heroSub || '';
+    decorCount();
+  }
+  function decorCollect() {
+    return {
+      brand: { name: el('dc-brand-name').value.trim(), tagline: el('dc-brand-tagline').value.trim(), logoText: el('dc-brand-logo').value.trim(), logoSub: el('dc-brand-logosub').value.trim() },
+      contact: { whatsapp: el('dc-whatsapp').value.trim().replace(/\s+/g, ''), phoneDisplay: el('dc-phone').value.trim(), email: el('dc-email').value.trim(), salesEmail: el('dc-sales').value.trim(), address: el('dc-address').value.trim() },
+      social: { linkedin: el('dc-linkedin').value.trim(), facebook: el('dc-facebook').value.trim(), instagram: el('dc-instagram').value.trim(), youtube: el('dc-youtube').value.trim() },
+      announcement: { enabled: el('dc-ann-enabled').checked, text: el('dc-ann-text').value.trim() },
+      seo: { title: el('dc-seo-title').value.trim(), description: el('dc-seo-desc').value.trim(), keywords: el('dc-seo-keywords').value.trim() },
+      home: { heroTitle: el('dc-hero-title').value.trim(), heroSub: el('dc-hero-sub').value.trim() }
+    };
+  }
+  function decorCount() {
+    var t = el('dc-seo-title'), d = el('dc-seo-desc');
+    if (el('dc-cnt-title') && t) el('dc-cnt-title').textContent = t.value.length + '/90';
+    if (el('dc-cnt-desc') && d) el('dc-cnt-desc').textContent = d.value.length + '/200';
+  }
+  function decorStatus(msg, err) {
+    var s = el('decor-status');
+    if (!s) return;
+    s.innerHTML = '<div class="status ' + (err ? 'bad' : 'ok') + '">' + msg + '</div>';
+  }
+  function loadDecor() {
+    decorStatus('正在从线上加载当前配置…');
+    fetch('/api/site').then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.ok) { decorFill(d.data); decorStatus('已加载线上配置（sha ' + String(d.sha || '').slice(0, 7) + '）'); }
+      else { decorFill(DECOR_DEFAULTS); decorStatus('线上配置读取失败：' + ((d && d.error) || '未知') + '（已载入默认值）', true); }
+    }).catch(function (e) { decorFill(DECOR_DEFAULTS); decorStatus('加载失败（网络）：' + ((e && e.message) || ''), true); });
+  }
+  function saveDecor() {
+    var t = el('dc-seo-title').value.trim(), d = el('dc-seo-desc').value.trim();
+    if (t.length > 90) { toast('SEO 标题超出 90 字符上限', 'err'); return; }
+    if (d.length > 200) { toast('Meta 描述超出 200 字符上限', 'err'); return; }
+    var btn = el('dc-save-btn'); btn.disabled = true; btn.textContent = '提交中…';
+    fetch('/api/site', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ data: decorCollect() }) })
+      .then(function (r) { return r.json(); }).then(function (res) {
+        btn.disabled = false; btn.textContent = '💾 保存并部署';
+        if (res.ok) { decorStatus('✓ ' + res.message); toast('装修配置已提交，约 2 分钟自动部署生效', 'ok'); if (typeof loadAudit === 'function') loadAudit(); }
+        else { decorStatus('保存失败：' + (res.error || '未知') + '（请确认已配置 OPS_GH_PAT）', true); toast('保存失败：' + (res.error || '未知'), 'err'); }
+      }).catch(function () { btn.disabled = false; btn.textContent = '💾 保存并部署'; decorStatus('保存失败：网络异常', true); });
+  }
+  document.getElementById('dc-save-btn').addEventListener('click', saveDecor);
+  document.getElementById('dc-reset-btn').addEventListener('click', function () { decorFill(DECOR_DEFAULTS); toast('已重置为默认值，点击「保存并部署」生效', 'info'); });
+  var dcT = el('dc-seo-title'), dcD = el('dc-seo-desc');
+  if (dcT) dcT.addEventListener('input', decorCount);
+  if (dcD) dcD.addEventListener('input', decorCount);
+  document.querySelector('.tab[data-tab="decor"]').addEventListener('click', function () { loadDecor(); });
 
   // Start dashboard sync engine after all bindings are defined
   var savedIv = null; try { savedIv = localStorage.getItem('mili-sync-interval'); } catch (e) {}

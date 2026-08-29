@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { productGroups } from '../data/products';
 import { industries } from '../pages/Industries';
+import site from '../data/site.json';
 
 export default function Footer() {
+  const { whatsapp, phoneDisplay, email, address } = site.contact;
   return (
     <footer className="footer">
       <div className="footer-grid">
@@ -25,11 +27,11 @@ export default function Footer() {
             ))}
           </div>
           <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
-            <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer"
+            <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer"
               style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
               WhatsApp
             </a>
-            <a href="mailto:info@mili-packaging.com"
+            <a href={`mailto:${email}`}
               style={{ fontSize: 11, letterSpacing: '0.06em', color: 'var(--gold)', textDecoration: 'none', textTransform: 'uppercase', border: '1px solid var(--border)', padding: '6px 14px' }}>
               Email Us
             </a>
@@ -66,9 +68,9 @@ export default function Footer() {
           </ul>
           <div style={{ marginTop: 24 }}>
             <h5 style={{ marginBottom: 10 }}>Contact</h5>
-            <p><a href="mailto:info@mili-packaging.com">info@mili-packaging.com</a></p>
-            <p style={{ marginTop: 4 }}><a href="https://wa.me/8618296876285">+86 182 9687 6285</a></p>
-            <p style={{ marginTop: 4, color: 'var(--gray-2)' }}>Jiangxi, China</p>
+            <p><a href={`mailto:${email}`}>{email}</a></p>
+            <p style={{ marginTop: 4 }}><a href={`https://wa.me/${whatsapp}`}>{phoneDisplay}</a></p>
+            <p style={{ marginTop: 4, color: 'var(--gray-2)' }}>{address}</p>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import ProductDetail from './pages/ProductDetail';
 import ProductItem from './pages/ProductItem';
 import { productGroups, productCatalog } from './data/products';
 import { getPost } from './data/posts';
+import site from './data/site.json';
 import { initGlobalClickTracking, initGA4 } from './lib/track';
 import './styles.css';
 
@@ -44,7 +45,7 @@ function TitleManager() {
   const location = useLocation();
   useEffect(() => {
     const titles = {
-      '/': 'Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs',
+      '/': site.seo.title || 'Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs',
       '/products': 'Packaging Products | Custom Boxes, Bags & Mailers | Mili Packaging',
       '/about': 'About Us | Jiangxi Mili Packaging Materials Co., Ltd.',
       '/contact': 'Contact Us | Get a Free Packaging Quote | Mili Packaging',
@@ -61,8 +62,9 @@ function TitleManager() {
       '/sample-kits': 'Sample & Starter Kit | Test 12 Box Styles for $29 | Mili Packaging',
     };
     const path = location.pathname;
-    let title = titles[path] || 'Mili Packaging | Custom Packaging Manufacturer';
-    let desc = null;
+    // v15: 全局 SEO 由工作台装修页配置（site.json），页面级 TDK 优先
+    let title = titles[path] || site.seo.title || 'Mili Packaging | Custom Packaging Manufacturer';
+    let desc = site.seo.description || null;
     if (path.startsWith('/products/')) {
       const parts = path.split('/').filter(Boolean); // ['products', slug, productSlug?]
       const g = productGroups.find(x => x.slug === parts[1]);

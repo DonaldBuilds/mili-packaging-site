@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { productGroups, getProduct, productCatalog } from '../data/products';
 import { industries } from './Industries';
 import { cases } from './Portfolio';
+import site from '../data/site.json';
 // v20260809-update: Best-Selling shows 8 featured products from the newest (competitor-benchmarked)
 // listings — one per group, 4×2 grid, sample & starter kits excluded.
 const featuredProducts = [
@@ -24,7 +25,7 @@ const findProduct = (slug) => {
   }
   return null;
 };
-const WA_PHONE = '8618296876285';
+const WA_PHONE = site.contact.whatsapp;
 
 // ── 卖点消息流 — 全部为真实可支撑的工厂能力/服务承诺，垂直无缝滚动（模拟实时消息），不伪造任何买家行为 ─
 const TRUST_STRIP = [
@@ -71,6 +72,12 @@ export default function Home() {
   const featRef = useRef(null);
   return (
     <>
+      {/* ── 促销公告条（工作台装修页可配置） ── */}
+      {site.announcement.enabled && (
+        <div className="announcement-bar">
+          <span>{site.announcement.text}</span>
+        </div>
+      )}
       {/* ── Hero ── */}
       <section className="hero">
         <div className="hero-bg">

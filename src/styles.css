@@ -1129,3 +1129,8 @@ html, body { overflow-x: hidden; }
 }
 .view-more-link:hover { gap: 12px; }
 
+
+/* V15 促销公告条（工作台装修可配置） */
+.announcement-bar { background:linear-gradient(90deg,#1a1a1c,#26262a); border-bottom:1px solid rgba(212,175,55,.35); padding:8px 16px; text-align:center; font-size:13px; letter-spacing:.04em; color:var(--gold,#d4af37); }
+.announcement-bar span { display:inline-block; }
+

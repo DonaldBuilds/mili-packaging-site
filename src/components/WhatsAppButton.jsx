@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import site from '../data/site.json';
 
 // Structured inquiry template — buyer only fills in the blanks
-const WA_TEXT = "Hi Mili team! 👋 I'd like a quote.\n• Product: [e.g. mailer box / rigid box]\n• Size: [L×W×H]\n• Quantity: [e.g. 500 pcs]\n• Material/Printing: [e.g. kraft, full-color logo]\n• Destination: [country]";
-const WA_HREF = 'https://wa.me/8618296876285?text=' + encodeURIComponent(WA_TEXT);
+const WA_TEXT = "Hi Mili team! 👋 I'd like a quote.\\n• Product: [e.g. mailer box / rigid box]\\n• Size: [L×W×H]\\n• Quantity: [e.g. 500 pcs]\\n• Material/Printing: [e.g. kraft, full-color logo]\\n• Destination: [country]";
+const WA_HREF = 'https://wa.me/' + site.contact.whatsapp + '?text=' + encodeURIComponent(WA_TEXT);
 const HINT_KEY = 'mili_wa_hint_dismissed';
 
 const fireWAEvent = () => {
