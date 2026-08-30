@@ -8,6 +8,16 @@ const OUT_DIR = process.argv[2] || 'public';
 const data = JSON.parse(fs.readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const { productGroups, productCatalog } = data;
 
+// Compress over-long titles (>65 chars) for SERP display: keep the product-name
+// part before the dash separator when safe, else truncate at a word boundary.
+const compressTitle = (t) => {
+  if (!t || t.length <= 65) return t;
+  const dash = t.indexOf('\u2013');
+  if (dash > 15 && dash <= 60) return t.slice(0, dash).trim();
+  let cut = t.slice(0, 60).replace(/\s+\S*$/, '');
+  return cut.length > 15 ? cut : t.slice(0, 62);
+};
+
 const BASE = 'https://mili-packaging.com';
 const routes = {};
 
@@ -25,7 +35,7 @@ for (const g of productGroups) {
     const price = p.price || (p.tierPrice && p.tierPrice[0] ? String(p.tierPrice[0].price) : '') || '';
     routes[ppath] = {
       type: 'product',
-      title: p.title || `${p.name} – Custom Manufacturer | Mili Packaging`,
+      title: compressTitle(p.title) || `${p.name} – Custom Manufacturer | Mili Packaging`,
       description: p.description || `Custom ${p.name} with free design, MOQ ${p.moq || 100} pcs and factory-direct pricing. Request a quote within 24 hours.`,
       h1: p.name,
       name: p.name,
