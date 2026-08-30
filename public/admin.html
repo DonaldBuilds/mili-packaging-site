@@ -4927,7 +4927,7 @@
       v5Card('③ 城市 Top10', 'GA4', v5Table(['城市', '活跃用户'], (m.city || []).slice(0, 10).map(function (r) { return [r.d[0], r.m[0]]; }))) +
       '</div>';
     if (m.seo && !m.seo.error) {
-      html += v5Card('④ SEO 关键词榜（展示/点击/CTR/排名，独立于 GA4）', 'GSC', v5Table(['关键词', '展示', '点击', 'CTR', '平均排名'], (m.seo || []).map(function (r) { return [r.d[0], r.m[0], r.m[1], (r.m[2] * 100).toFixed(1) + '%', r.m[3].toFixed(1)]; })));
+      html += v5Card('④ SEO 关键词榜（展示/点击/CTR/排名，独立于 GA4）', 'GSC', v5Table(['关键词', '展示', '点击', 'CTR', '平均排名'], (m.seo || []).filter(function (r) { return r && r.d && r.d[0] && Array.isArray(r.m); }).map(function (r) { return [r.d[0], r.m[0] || 0, r.m[1] || 0, ((r.m[2] || 0) * 100).toFixed(1) + '%', (r.m[3] || 0).toFixed(1)]; })));
     } else {
       html += v5Card('④ SEO 关键词榜', 'GSC', '<p class="hint">GSC 未配置' + (m.seo && m.seo.error ? '（' + v5Esc(m.seo.error) + '）' : '') + '——配置 GSC_SERVICE_JSON + GSC_SITE_URL 后显示。</p>');
     }
