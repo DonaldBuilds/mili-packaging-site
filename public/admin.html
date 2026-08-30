@@ -423,11 +423,11 @@
   .v19-kpi::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--color-primary); opacity:.7; }
   .v19-kpi .k-label { font-size:11px; color:var(--color-text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .v19-kpi .k-val { font-size:22px; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.3; }
-  .v19-kpi .k-sub { font-size:10.5px; color:var(--color-text-secondary); }
-  .v19-kpi .k-sub .up { color:var(--ok); } .v19-kpi .k-sub .dn { color:var(--bad); }
-  .v19-r.on { background:var(--color-primary); color:#000; border-color:var(--color-primary); }
-  .v19-bars { display:flex; flex-direction:column; gap:6px; }
-  .v19-bar-row { display:flex; align-items:center; gap:8px; font-size:11.5px; }
+  .v19-kpi .k-sub { font-size:10.5px; color:var(--color-text-secondary); line-height:1.5; min-height:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .v19-kpi .k-sub .up, .v19-bars .up { color:var(--ok); }
+  .v19-kpi .k-sub .dn, .v19-bars .dn { color:var(--bad); }
+  .v19-bar-row { display:flex; align-items:center; gap:8px; font-size:11.5px; flex-wrap:wrap; row-gap:4px; }
+  .v19-bars .b-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .v19-bar-row .b-name { min-width:80px; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--color-text-secondary); }
   .v19-bar-row .b-track { flex:1; height:10px; background:var(--color-surface-2); border-radius:5px; overflow:hidden; }
   .v19-bar-row .b-fill { height:100%; border-radius:5px; background:linear-gradient(90deg,var(--color-primary),rgba(201,162,39,.45)); min-width:2px; }
@@ -1076,22 +1076,6 @@
   <!-- ① 数据看板 -->
   <div id="tab-dash">
     <h2>数据看板</h2>
-
-    <!-- 配置进度环 + 今日优先任务 -->
-    <div id="dash-config-ring" class="cfg-ring-wrap" onclick="document.querySelector('.tab[data-tab=config]').click()">
-      <div class="cfg-ring">
-        <svg width="52" height="52" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="20" fill="none" stroke="var(--color-surface-2)" stroke-width="5"/>
-          <circle id="cfg-ring-arc" cx="26" cy="26" r="20" fill="none" stroke="var(--color-primary)" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 125.66"/>
-        </svg>
-        <div class="cfg-ring-num"><span id="cfg-ring-done">—</span></div>
-      </div>
-      <div class="cfg-ring-info">
-        <b id="cfg-ring-title">加载配置状态…</b>
-        <span id="cfg-ring-sub">点击进入设置中心</span>
-      </div>
-      <span class="tag" id="cfg-ring-tag" style="flex-shrink:0"></span>
-    </div>
 
     <!-- 今日优先任务 -->
     <div id="dash-priority" class="priority-grid"></div>
@@ -1940,35 +1924,40 @@
   </div>
 
   <div id="tab-accounts" class="hide">
-    <h2>👥 账号与权限</h2>
-    <p class="hint" style="margin-bottom:16px">管理工作台访问账号与角色权限；运营/客服/只读等角色可精细控制可见模块。</p>
-    <!-- 权限说明 -->
-    <div class="card" style="margin-bottom:16px">
-      <h3 style="margin-bottom:10px;font-size:14px">权限说明</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px">
-        <div style="padding:10px;background:rgba(201,162,39,.07);border-radius:6px;border:1px solid rgba(201,162,39,.2)"><b style="color:var(--color-primary)">🔑 管理员</b><br/>所有功能，含设置中心、账号管理、密钥配置</div>
-        <div style="padding:10px;background:rgba(76,217,100,.06);border-radius:6px;border:1px solid rgba(76,217,100,.2)"><b style="color:var(--ok)">✏️ 运营</b><br/>数据看板/产品编辑/询盘/SEO，不可进设置中心</div>
-        <div style="padding:10px;background:rgba(128,128,128,.06);border-radius:6px;border:1px solid rgba(128,128,128,.15)"><b style="color:var(--gray)">👁 观察员</b><br/>只读：看板/询盘/SEO，不可编辑任何内容</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <h2 style="margin:0">👥 账号与权限</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="acc-refresh-btn">⟳ 刷新</button>
+        <button class="btn btn-primary btn-sm" id="acc-add-btn">＋ 新增账号</button>
       </div>
     </div>
-    <!-- 当前账号列表 -->
+    <p class="hint" style="margin-bottom:12px">多账号 + 角色权限（RBAC）：账号密码使用 PBKDF2-SHA256（10 万次迭代）加密存储；owner 可在此直接新增、编辑、禁用、删除账号并重置密码。</p>
+    <!-- 角色权限矩阵 -->
+    <div class="card" style="margin-bottom:14px;padding:12px 14px">
+      <h3 style="margin:0 0 10px;font-size:13.5px">角色权限矩阵</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;font-size:12px">
+        <div style="padding:10px;background:rgba(201,162,39,.08);border-radius:6px;border:1px solid rgba(201,162,39,.25)"><b style="color:var(--color-primary)">👑 所有者 owner</b><br/>全部权限：数据/业务/营销/账号管理/系统设置</div>
+        <div style="padding:10px;background:rgba(76,217,100,.06);border-radius:6px;border:1px solid rgba(76,217,100,.2)"><b style="color:var(--ok)">🛠 管理员 admin</b><br/>业务全部 + 营销活动；无账号管理与系统设置</div>
+        <div style="padding:10px;background:rgba(77,163,255,.06);border-radius:6px;border:1px solid rgba(77,163,255,.2)"><b style="color:#4da3ff">📦 运营 operator</b><br/>业务读写：询盘/订单/客户/库存/商品</div>
+        <div style="padding:10px;background:rgba(128,128,128,.06);border-radius:6px;border:1px solid rgba(128,128,128,.15)"><b style="color:var(--gray)">👁 访客 viewer</b><br/>只读：看板/询盘/SEO，不可编辑</div>
+      </div>
+    </div>
+    <!-- 账号列表 -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <h3 style="margin:0;font-size:14px">当前账号</h3>
-        <span class="tag" style="font-size:10.5px;background:rgba(201,162,39,.12);color:var(--color-primary);border:1px solid rgba(201,162,39,.3)">当前：多账号 + RBAC 已启用（配置 SB_SERVICE_KEY 后完整生效）</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 style="margin:0;font-size:14px">账号列表</h3>
+        <span class="hint">共 <b id="acc-count">0</b> 个账号</span>
       </div>
-      <div id="account-list">
-        <div class="user-list-row">
-          <div class="user-avatar-sm">M</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">管理员</div><div style="font-size:11px;color:var(--color-text-secondary)">默认管理员账号 · 登录密码在设置中心管理</div></div>
-          <span class="user-role-badge admin">管理员</span>
-          <span class="tag" style="font-size:10px;background:rgba(76,217,100,.1);color:var(--ok)">当前登录</span>
-        </div>
+      <div style="overflow-x:auto">
+        <table class="inq-table" id="accTable" style="width:100%">
+          <thead><tr><th>账号</th><th>昵称</th><th>角色</th><th>状态</th><th>最近登录</th><th>创建时间</th><th>操作</th></tr></thead>
+          <tbody id="acc-tbody"><tr><td colspan="7" class="hint" style="text-align:center;padding:20px">加载中…</td></tr></tbody>
+        </table>
       </div>
-      <div class="alert-card" style="margin-top:12px">
-        <h3>多账号功能说明</h3>
-        <p style="font-size:12px;margin-top:4px;color:var(--color-text-secondary)">完整多账号体系（独立密码+权限分级）需要数据库支持。当前使用单密码模式，如需为团队成员开通独立账号，请告知，我可以帮你完整实现基于 Supabase 的多账号管理系统（每人独立密码 + 角色权限 + 登录日志）。</p>
-      </div>
+    </div>
+    <div class="alert-card" id="acc-guide" style="margin-top:12px;display:none">
+      <h3>⚙ 启用多账号完整管理</h3>
+      <p style="font-size:12px;margin-top:4px;color:var(--color-text-secondary)">配置 <code>SB_SERVICE_KEY</code>（Supabase Dashboard → Settings → API → service_role key）后即可新增/管理团队成员账号；未配置时当前登录走单密码兼容模式（账号列表只读）。</p>
     </div>
   </div>
 
@@ -1992,19 +1981,13 @@
       <h3>连通性测试结果</h3>
       <div id="configTestArea"><p class="hint">点击「一键测试连通性」验证各已配置项是否真实可用（GA4/GSC 会实际调用 API，PushPlus 会发送测试消息到微信）。</p></div>
     </div>
-    <!-- v19: 账号管理（RBAC，owner 专属） -->
-    <div class="card" id="acc-panel" style="margin-top:12px;display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-        <h3>👥 账号管理 <span class="hint" style="font-weight:400">（多账号 + 角色权限，仅所有者可见）</span></h3>
-        <button class="btn btn-primary btn-sm" id="acc-add-btn">＋ 新增账号</button>
+    <!-- v22: 账号管理已独立为「账号与权限」板块 -->
+    <div class="card" style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <h3 style="margin:0 0 4px">👥 账号与权限</h3>
+        <p class="hint" style="margin:0">多账号 + RBAC 管理已独立为工作台板块（侧边栏「系统 → 账号与权限」），支持新增/编辑/禁用/删除/重置密码。</p>
       </div>
-      <p class="hint" id="acc-hint" style="margin:6px 0 10px;line-height:1.7">角色权限：<b>owner</b> 全部+账号管理 · <b>admin</b> 业务+营销 · <b>operator</b> 业务读写 · <b>viewer</b> 只读。密码使用 PBKDF2-SHA256（10 万次迭代）加密存储。</p>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12.5px">
-          <thead><tr style="text-align:left;color:var(--color-text-secondary)"><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">账号</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">昵称</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">角色</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">状态</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">最近登录</th><th style="padding:6px 8px;border-bottom:1px solid var(--color-border)">操作</th></tr></thead>
-          <tbody id="acc-tbody"><tr><td colspan="6" class="hint">加载中…</td></tr></tbody>
-        </table>
-      </div>
+      <button class="btn btn-primary btn-sm" onclick="goTab('accounts')">前往账号与权限 →</button>
     </div>
     <!-- 兼容旧版 configArea -->
     <div id="configArea" style="display:none"></div>
@@ -2108,25 +2091,34 @@
 
   <!-- 营销活动 -->
   <div id="tab-marketing" class="hide">
-    <div class="coming-hero">
-      <div class="coming-icon">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-      </div>
-      <h2 class="coming-title">营销推广中心</h2>
-      <p class="coming-sub">为 B2B 外贸场景定制的营销工具箱：优惠券核销、活动配置、红人/代理引荐追踪与广告渠道 ROI 归因，让每分推广预算都有数据依据。</p>
-      <span class="coming-badge">P2 优先级 · 规划中</span>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3 style="margin-bottom:12px">核心功能预告</h3>
-      <div class="coming-grid">
-        <div class="coming-feat"><div class="coming-feat-tag">优惠券</div><h4>折扣码生成与核销</h4><p>创建百分比/固定折扣码，设 MOQ 门槛与有效期，关联订单自动核销，使用记录可查</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">活动配置</div><h4>营销活动卡片</h4><p>新客首单 / 样品费抵扣 / 节日促销，配话术模板与落地链接，日历视图管理时间线</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">引荐追踪</div><h4>红人 / 代理引荐码</h4><p>为每个合作方生成专属引荐码与带 UTM 链接，询盘来源自动记录，效果一目了然</p></div>
-        <div class="coming-feat"><div class="coming-feat-tag">广告归因</div><h4>渠道投放 ROI</h4><p>手工登记广告支出，结合 GA4 询盘来源，计算渠道成交额/支出 ROAS；P3 自动对接</p></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <h2 style="margin:0">📣 营销推广中心</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="mkt-refresh">⟳ 刷新</button>
+        <button class="btn btn-primary btn-sm" id="mkt-add">＋ 创建活动</button>
       </div>
     </div>
-    <div class="coming-cta">
-      <button class="btn-outline" onclick="goTab('inquiry')">现可在询盘报表查看渠道转化数据 →</button>
+    <!-- 概览统计 -->
+    <div class="inq-stats" id="mkt-stats">加载中…</div>
+    <!-- 推广渠道管理 -->
+    <div class="grid" style="margin:12px 0">
+      <div class="card" style="margin:0"><h4>✉️ 邮件群发（163 SMTP）</h4><div id="mkt-ch-email" style="font-size:12px;line-height:1.8">检测中…</div></div>
+      <div class="card" style="margin:0"><h4>💬 WhatsApp 触达</h4><div id="mkt-ch-wa" style="font-size:12px;line-height:1.8">导出清单模式：生成收件人清单，在 WhatsApp 客户端手动发送（个人号无公开 API）。</div></div>
+      <div class="card" style="margin:0"><h4>🎯 受众筛选</h4><div id="mkt-ch-aud" style="font-size:12px;line-height:1.8">按分级（A 级）/ 活跃度（沉睡 30 天+）/ 自定义邮箱列表筛选目标客户，发送前可预览人数。</div></div>
+    </div>
+    <!-- 活动列表与效果追踪 -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 style="margin:0;font-size:14px">营销活动记录 <span class="hint" style="font-weight:400">（效果追踪）</span></h3>
+        <span class="hint">共 <b id="mkt-count">0</b> 个</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="inq-table" style="width:100%">
+          <thead><tr><th>活动名称</th><th>渠道</th><th>受众</th><th>发送 / 成功</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
+          <tbody id="mkt-tbody"><tr><td colspan="7" class="hint" style="text-align:center;padding:20px">加载中…</td></tr></tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:8px">口径：发送=目标收件人数 · 成功=SMTP 接受数 · 状态：draft 草稿 / sent 已发送 / partial 部分成功 / failed 失败。发送后新增邮件询盘可在数据看板「询盘渠道对比」中观察增长。</p>
     </div>
   </div>
 
@@ -3106,6 +3098,8 @@
             if (!cur) return;
             if (t === 'inquiries' && cur.id === 'tab-inquiry') inqLoad();
             else if (t === 'orders' && cur.id === 'tab-orders') ordLoad && ordLoad();
+            else if (t === 'accounts') { accLoad && accLoad(); }
+            else if (t === 'marketing') { mktLoad && mktLoad(); mktChannels && mktChannels(); }
             else if (t === 'customers' && cur.id === 'tab-customers') custLoad && custLoad();
             else if (t === 'inquiries' || t === 'orders') { v19Load && v19Load(); }
           }
@@ -5812,10 +5806,14 @@
   function accInit() {
     var btn = el('acc-add-btn');
     if (btn) btn.onclick = function () { accOpenModal(null); };
+    var rb = el('acc-refresh-btn');
+    if (rb) rb.onclick = function () { accLoad(); };
     if (window.__miliRoleReady) return;
-    // 等待 session/me 确定角色后决定是否显示面板
+    // 等待 session/me 确定角色后渲染账号列表（tab-accounts 常驻）
     var show = function (me) {
-      if (me && me.role === 'owner') { var p = el('acc-panel'); if (p) p.style.display = 'block'; accLoad(); }
+      var g = el('acc-guide');
+      if (g) g.style.display = (me && me.role === 'owner') ? 'none' : 'block';
+      if (me && me.role === 'owner') accLoad();
     };
     window.__miliRoleReady = show;
     if (window.__miliMe) show(window.__miliMe);
@@ -6506,6 +6504,54 @@
       }).join('') : '<span class="hint">暂无活动记录</span>');
     }).catch(function () {});
   }
+  // ── v22: 营销推广中心（统计 / 渠道状态 / 活动记录，复用 campaignOpen） ──
+  var mktState = { rows: [] };
+  function mktLoad() {
+    return fetch('/api/campaign/list').then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.ok && Array.isArray(d.rows)) ? d.rows : [];
+      mktState.rows = rows;
+      var sent = 0, okc = 0, drafts = 0;
+      rows.forEach(function (r2) { sent += parseInt(r2.sent_count, 10) || 0; okc += parseInt(r2.success_count, 10) || 0; if (r2.status === 'draft') drafts++; });
+      var rate = sent ? Math.round(okc / sent * 100) : 0;
+      var stEl = el('mkt-stats');
+      if (stEl) stEl.innerHTML = [
+        ['活动总数', rows.length], ['累计发送', sent], ['送达成功', okc + '（' + rate + '%）'], ['草稿待发', drafts]
+      ].map(function (x) { return '<div class="inq-stat"><b>' + x[1] + '</b><span>' + x[0] + '</span></div>'; }).join('');
+      var cnt = el('mkt-count'); if (cnt) cnt.textContent = rows.length;
+      var tb = el('mkt-tbody');
+      if (tb) tb.innerHTML = rows.length ? rows.map(function (r2) {
+        var stMap = { draft: '草稿', sent: '已发送', partial: '部分成功', failed: '失败' };
+        var st = stMap[r2.status] || r2.status || 'draft';
+        var stc = (r2.status === 'sent' || r2.status === 'partial') ? 'var(--ok)' : (r2.status === 'failed' ? 'var(--bad)' : 'var(--color-text-secondary)');
+        return '<tr><td>' + esc(r2.name || '—') + '</td><td>' + ({ email: '✉️ 邮件', whatsapp: '💬 WhatsApp' }[r2.channel] || r2.channel || '—') + '</td><td>' + esc(String(r2.audience || '—').slice(0, 60)) + '</td>' +
+          '<td>' + (r2.sent_count || 0) + ' / ' + (r2.success_count || 0) + '</td><td style="color:' + stc + '">' + st + '</td>' +
+          '<td style="white-space:nowrap">' + fmtTime(r2.created_at) + '</td><td><button class="btn btn-ghost btn-sm" data-mkt-re="' + esc(r2.id) + '">再发一次</button></td></tr>';
+      }).join('') : '<tr><td colspan="7" class="hint" style="text-align:center;padding:20px">暂无活动，点击「＋ 创建活动」开始第一次推广</td></tr>';
+      var res = document.querySelectorAll('[data-mkt-re]');
+      for (var ri = 0; ri < res.length; ri++) {
+        res[ri].addEventListener('click', function () { campaignOpen(); toast('已打开活动弹窗，请选择受众后发送', 'info'); });
+      }
+      return true;
+    }).catch(function () { var tb2 = el('mkt-tbody'); if (tb2) tb2.innerHTML = '<tr><td colspan="7" class="hint" style="text-align:center;padding:20px">活动记录加载失败</td></tr>'; return false; });
+  }
+  function mktChannels() {
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (d) {
+      var c = (d && d.configs) || {};
+      var smtp = !!(c.mail_smtp && c.mail_smtp.ok) || !!(c.mail_sync && c.mail_sync.ok);
+      var ce = el('mkt-ch-email');
+      if (ce) ce.innerHTML = smtp
+        ? '<span class="status ok">● 已配置</span><br/>可发送邮件群发（复用 IMAP 授权码或 MAIL_SMTP_* 独立配置）；单次上限 50 封'
+        : '<span class="status bad">● 未配置</span><br/>配置 <code>MAIL_IMAP_USER / MAIL_IMAP_PASS</code>（163 客户端授权码）后启用群发；也可在设置中心查看配置步骤';
+      var wa = el('mkt-ch-wa');
+      if (wa) wa.innerHTML = '<span class="status ok">● 导出模式可用</span><br/>创建活动时点击「💬 导出 WhatsApp 清单」→ 复制 号码|姓名|话术 清单 → 在 WhatsApp 客户端批量发送（个人号无公开 API）';
+      var au = el('mkt-ch-aud');
+      if (au) au.innerHTML = '<span class="status ok">● 可用</span><br/>全部客户 / A·S 级客户 / 沉睡 30 天+ 客户一键填充；也可手动粘贴邮箱列表（每行一个）';
+    }).catch(function () {});
+  }
+  var mktAddBtn = el('mkt-add');
+  if (mktAddBtn) mktAddBtn.addEventListener('click', function () { campaignOpen(); });
+  var mktRefBtn = el('mkt-refresh');
+  if (mktRefBtn) mktRefBtn.addEventListener('click', function () { mktLoad(); mktChannels(); });
   document.getElementById('cust-campaign-btn').addEventListener('click', function () { campaignOpen(); });
   document.getElementById('cust-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; custLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
   document.getElementById('cust-add-btn').addEventListener('click', function () { custOpenModal({}); });
