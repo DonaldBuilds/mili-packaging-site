@@ -6552,6 +6552,9 @@
   if (mktAddBtn) mktAddBtn.addEventListener('click', function () { campaignOpen(); });
   var mktRefBtn = el('mkt-refresh');
   if (mktRefBtn) mktRefBtn.addEventListener('click', function () { mktLoad(); mktChannels(); });
+  // tab 切换即加载（与 customers/orders 同模式；realtime 回调分支仅作变更刷新）
+  document.querySelector('.tab[data-tab="marketing"]').addEventListener('click', function () { mktLoad(); mktChannels(); });
+  document.querySelector('.tab[data-tab="accounts"]').addEventListener('click', function () { accLoad(); });
   document.getElementById('cust-campaign-btn').addEventListener('click', function () { campaignOpen(); });
   document.getElementById('cust-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; custLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
   document.getElementById('cust-add-btn').addEventListener('click', function () { custOpenModal({}); });
