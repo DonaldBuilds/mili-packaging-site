@@ -4085,6 +4085,7 @@
 
   // ── Group save ──
   var gSaving = false; // v22e: 修复未声明变量（同类 edSaving bug）
+  var gSave = document.getElementById('g-save'); // v22e2: gSave 元素引用也未声明，保存即 ReferenceError
   document.getElementById('g-save').addEventListener('click', function () {
     if (gSaving) { toast('正在保存中，请稍候…', 'info'); return; }
     if (!gGroupSel.value) { flash('请选择分组', true); return; }
