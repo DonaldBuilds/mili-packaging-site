@@ -5758,6 +5758,7 @@
       if (!d || !d.ok) { el('acc-tbody').innerHTML = '<tr><td colspan="6" class="hint">' + esc((d && d.error) || '加载失败') + '</td></tr>'; return; }
       accState.rows = d.rows || [];
       var me = window.__miliMe || {};
+      if (el('acc-count')) el('acc-count').textContent = accState.rows.length;
       el('acc-tbody').innerHTML = accState.rows.map(function (a) {
         var isSelf = me.uid && a.id === me.uid;
         var roleBadge = '<span style="background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:4px;padding:1px 7px;font-size:11px">' + accRoleName(a.role) + (isSelf ? '（我）' : '') + '</span>';
