@@ -2062,6 +2062,7 @@
       </div>
       <div class="inq-actions">
         <button class="btn btn-ghost btn-sm" id="cust-campaign-btn">📣 营销活动</button>
+        <button class="btn btn-ghost btn-sm" id="cust-merge-btn">🔀 查重合并</button>
         <button class="btn btn-ghost btn-sm" id="cust-refresh-btn">⟳ 刷新</button>
         <button class="btn btn-primary btn-sm" id="cust-add-btn">＋ 新增客户</button>
       </div>
@@ -3994,6 +3995,7 @@
   })();
 
   // ── v9: new ed-save (reads from drawer state) ──
+  var edSaving = false; // v22e: 修复未声明变量导致的保存链路 ReferenceError
   document.getElementById('ed-save').addEventListener('click', function () {
     if (edSaving) { toast('正在发布中，请稍候…', 'info'); return; }
     edSaving = true;
@@ -4082,6 +4084,7 @@
   });
 
   // ── Group save ──
+  var gSaving = false; // v22e: 修复未声明变量（同类 edSaving bug）
   document.getElementById('g-save').addEventListener('click', function () {
     if (gSaving) { toast('正在保存中，请稍候…', 'info'); return; }
     if (!gGroupSel.value) { flash('请选择分组', true); return; }
@@ -6570,6 +6573,68 @@
   // tab 切换即加载（与 customers/orders 同模式；realtime 回调分支仅作变更刷新）
   document.querySelector('.tab[data-tab="marketing"]').addEventListener('click', function () { mktLoad(); mktChannels(); });
   document.querySelector('.tab[data-tab="accounts"]').addEventListener('click', function () { accLoad(); });
+  // ── v22e: 客户查重合并（治理自动建档产生的重复档案；merge API 已具备） ──
+  function custMergeOpen() {
+    return fetch('/api/customer/list?q=' + encodeURIComponent('select=id,name,email,phone,company,created_at&limit=500&order=created_at.asc')).then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.ok && Array.isArray(d.rows)) ? d.rows : [];
+      var groups = [], seen = {};
+      rows.forEach(function (r2) {
+        var key = null;
+        if (r2.email) key = 'e:' + String(r2.email).trim().toLowerCase();
+        else if (r2.phone) key = 'p:' + String(r2.phone).trim();
+        if (!key) return;
+        if (seen[key]) seen[key].push(r2);
+        else seen[key] = [r2];
+      });
+      Object.keys(seen).forEach(function (k) { if (seen[k].length > 1) groups.push(seen[k]); });
+      var ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:center;justify-content:center;padding:16px';
+      ov.id = 'custMergeOv';
+      var html = '<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:18px;width:100%;max-width:680px;max-height:86vh;overflow:auto">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h3 style="margin:0">🔀 客户查重合并</h3><button class="ed-act-btn" id="cm-close">✕</button></div>';
+      if (!groups.length) {
+        html += '<p class="hint" style="margin:10px 0">未发现重复客户（按邮箱/电话识别）</p>';
+      } else {
+        html += '<p class="hint" style="margin:0 0 12px">发现 <b>' + groups.length + '</b> 组重复（共 ' + groups.reduce(function (s, g) { return s + g.length; }, 0) + ' 条档案）。每组选择「保留主档案」，合并后订单/行为事件自动归并，重复档案删除。</p>';
+        groups.forEach(function (g, gi) {
+          html += '<div style="border:1px solid var(--color-border);border-radius:8px;padding:10px;margin-bottom:10px">' +
+            '<div style="font-size:11.5px;color:var(--color-text-secondary);margin-bottom:6px">组 ' + (gi + 1) + ' · ' + esc(g[0].email || g[0].phone) + '</div>';
+          g.forEach(function (c, ci) {
+            var checked = ci === 0 ? ' checked' : '';
+            html += '<label style="display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;cursor:pointer;background:' + (ci === 0 ? 'rgba(201,162,39,.08)' : 'transparent') + ';margin-bottom:4px">' +
+              '<input type="radio" name="cmg' + gi + '" value="' + esc(c.id) + '"' + checked + ' />' +
+              '<div style="flex:1;font-size:12px">' + esc(c.name || '未命名') + '<span class="hint" style="font-size:10.5px"> · ' + esc(c.company || '—') + ' · 建档 ' + fmtTime(c.created_at) + '</span></div>' +
+              (ci === 0 ? '<span class="tag" style="font-size:10px">默认保留</span>' : '') + '</label>';
+          });
+          html += '<button class="btn btn-primary btn-sm" style="margin-top:6px" data-cm-go="' + gi + '">合并本组</button></div>';
+        });
+      }
+      html += '</div>';
+      ov.innerHTML = html;
+      document.body.appendChild(ov);
+      el('cm-close').onclick = function () { ov.remove(); };
+      ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
+      document.addEventListener('keydown', function cmKey(e) { if (e.key === 'Escape' && document.getElementById('custMergeOv')) { ov.remove(); document.removeEventListener('keydown', cmKey); } });
+      var goBtns = ov.querySelectorAll('[data-cm-go]');
+      for (var i = 0; i < goBtns.length; i++) {
+        goBtns[i].addEventListener('click', function () {
+          var gi = parseInt(this.getAttribute('data-cm-go'), 10);
+          var sel = ov.querySelector('input[name="cmg' + gi + '"]:checked');
+          if (!sel) { toast('请选择保留的客户', 'err'); return; }
+          var primary = sel.value, ids = groups[gi].map(function (c) { return c.id; });
+          this.disabled = true; this.textContent = '合并中…';
+          fetch('/api/customer/merge', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ primary: primary, ids: ids }) })
+            .then(function (r) { return r.json(); }).then(function (dd) {
+              if (dd && dd.ok) { toast('✓ 合并完成', 'ok'); ov.remove(); custLoad(); }
+              else { toast('合并失败：' + ((dd && dd.error) || '未知'), 'err'); this.disabled = false; this.textContent = '合并本组'; }
+            }).catch(function () { toast('网络错误', 'err'); this.disabled = false; this.textContent = '合并本组'; });
+        });
+      }
+      return true;
+    }).catch(function () { toast('查重加载失败', 'err'); return false; });
+  }
+  var cmBtn = el('cust-merge-btn');
+  if (cmBtn) cmBtn.addEventListener('click', function () { custMergeOpen(); });
   document.getElementById('cust-campaign-btn').addEventListener('click', function () { campaignOpen(); });
   document.getElementById('cust-refresh-btn').addEventListener('click', function () { var b = this; b.textContent = '同步中…'; custLoad().then(function () { b.textContent = '⟳ 刷新'; }); });
   document.getElementById('cust-add-btn').addEventListener('click', function () { custOpenModal({}); });
