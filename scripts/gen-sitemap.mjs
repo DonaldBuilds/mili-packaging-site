@@ -8,7 +8,7 @@ const data = JSON.parse(fs.readFileSync(new URL('../src/data/products.json', imp
 const { productGroups, productCatalog } = data;
 
 const BASE = 'https://mili-packaging.com';
-const LASTMOD = '2026-08-11';
+const LASTMOD = new Date().toISOString().slice(0, 10);
 const urls = [];
 
 const add = (path, freq, pri) => {

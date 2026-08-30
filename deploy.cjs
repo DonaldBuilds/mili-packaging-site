@@ -1250,6 +1250,12 @@ export default{async fetch(r,env){
   let bm=null;if(p.startsWith('/blog/')&&p.length>6){bm=p.split('/').filter(x=>x)[1]}
   if(bm&&F['blog/'+bm+'.html']){return new Response(F['blog/'+bm+'.html'],{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})})}
 
+  // robots.txt — allow AI search crawlers to reference content (training stays excluded)
+  if(p==='/robots.txt'||p==='/robots.txt/'){
+    const robotsTxt='User-agent: *\\nContent-Signal: search=yes,ai-input=yes,ai-train=no,use=reference\\nAllow: /\\nDisallow: /admin.html\\nDisallow: /api/\\n\\n# AI crawlers may reference content; model training stays excluded\\nUser-agent: GPTBot\\nAllow: /\\nUser-agent: ClaudeBot\\nAllow: /\\nUser-agent: anthropic-ai\\nAllow: /\\nUser-agent: PerplexityBot\\nAllow: /\\nUser-agent: CCBot\\nAllow: /\\nUser-agent: Applebot-Extended\\nAllow: /\\nUser-agent: Bytespider\\nAllow: /\\nUser-agent: Google-Extended\\nDisallow: /\\nUser-agent: meta-externalagent\\nAllow: /\\n\\nUser-agent: Googlebot\\nAllow: /\\n\\nSitemap: https://mili-packaging.com/sitemap.xml\\n';
+    return new Response(robotsTxt,{headers:Object.assign({},H,{'content-type':'text/plain;charset=UTF-8'})});
+  }
+
   // Known file → serve directly
   if(F[k]){
     const h={};const e=k.substring(k.lastIndexOf('.')).toLowerCase();
@@ -1286,11 +1292,68 @@ export default{async fetch(r,env){
     return new Response('Not Found',{status:404});
   }
 
-  // Fallback → SPA index (SSR canonical per route: Google sees correct canonical on raw HTML)
+  // ── Fallback → SPA index with per-route SEO SSR injection (v23) ──
+  let ROUTE=null;
+  const SEO_F=F['seo-map.json'];
+  let SEO_MAP=null;
+  if(SEO_F){try{SEO_MAP=JSON.parse(SEO_F)}catch(e){}}
+  if(SEO_MAP&&SEO_MAP.routes){
+    const pnorm=p==='/'?'/':p.replace(/\\/+$/,'');
+    ROUTE=SEO_MAP.routes[p]||SEO_MAP.routes[pnorm]||null;
+  }
+  const canonUrl='https://mili-packaging.com'+(p==='/'?'/':p.replace(/\\/+$/,''));
+  const escHtml=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')};
+  if(!ROUTE){
+    // True 404 for unknown paths (no more soft-404 SPA catch-all)
+    const nf='<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Page Not Found | Mili Packaging</title></head><body style="font-family:Inter,system-ui,sans-serif;text-align:center;padding:64px 20px;background:#0a0a0a;color:#fff"><h1 style="font-size:42px;margin-bottom:8px">404</h1><p style="opacity:.8">The page you requested does not exist or has been moved.</p><p style="margin-top:28px"><a href="/" style="color:#c9a227">Home</a> &nbsp;·&nbsp; <a href="/products" style="color:#c9a227">Products</a> &nbsp;·&nbsp; <a href="/industries" style="color:#c9a227">Industries</a> &nbsp;·&nbsp; <a href="/contact" style="color:#c9a227">Contact</a></p></body></html>';
+    return new Response(nf,{status:404,headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
+  }
   let spa=F['index.html'];
-  const canonUrl='https://mili-packaging.com'+(url.pathname==='/'?'/':url.pathname);
   spa=spa.replace('<link rel="canonical" href="https://mili-packaging.com/" />','<link rel="canonical" href="'+canonUrl+'" />');
   spa=spa.replace('<meta property="og:url" content="https://mili-packaging.com/" />','<meta property="og:url" content="'+canonUrl+'" />');
+  if(ROUTE.noindex){
+    spa=spa.replace('<meta name="robots" content="index, follow" />','<meta name="robots" content="noindex, follow" />');
+  }
+  const seoTitle=ROUTE.title||'';
+  const seoDesc=(ROUTE.description||'').slice(0,155);
+  if(seoTitle){
+    spa=spa.replace(/<title>[\\s\\S]*?<\\/title>/,'<title>'+seoTitle+'</title>');
+    spa=spa.replace('<meta property="og:title" content="Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs" />','<meta property="og:title" content="'+seoTitle+'" />');
+    spa=spa.replace('<meta name="twitter:title" content="Mili Packaging | Custom Gift Box Manufacturer" />','<meta name="twitter:title" content="'+seoTitle+'" />');
+  }
+  if(seoDesc){
+    spa=spa.replace(/<meta name="description" content="[^"]*"/,'<meta name="description" content="'+seoDesc+'"');
+    spa=spa.replace('<meta property="og:description" content="Factory-direct B2B custom packaging. Magnetic gift boxes, rigid boxes, jewelry cases. MOQ 100pcs, free design, FSC and ISO 9001 certified, global delivery." />','<meta property="og:description" content="'+seoDesc+'" />');
+    spa=spa.replace('<meta name="twitter:description" content="Factory-direct custom packaging. Free design, MOQ 100pcs, global delivery." />','<meta name="twitter:description" content="'+seoDesc+'" />');
+  }
+  if(ROUTE.h1||ROUTE.name){
+    spa=spa.replace('<h1>Mili Packaging | Custom Rigid Box Manufacturer</h1>','<h1>'+escHtml(ROUTE.h1||ROUTE.name)+'</h1>');
+  }
+  // JSON-LD: strip site-level Product/FAQPage, inject per-route schemas
+  spa=spa.replace(/<script type="application\\/ld\\+json">[\\s\\S]*?"@type":\\s*"Product"[\\s\\S]*?<\\/script>/,'');
+  spa=spa.replace(/<script type="application\\/ld\\+json">[\\s\\S]*?"@type":\\s*"FAQPage"[\\s\\S]*?<\\/script>/,'');
+  const jldParts=[];
+  const crumbs=[{'@type':'ListItem',position:1,name:'Home',item:'https://mili-packaging.com/'}];
+  if(ROUTE.type==='product'&&ROUTE.categoryName){crumbs.push({'@type':'ListItem',position:2,name:ROUTE.categoryName,item:ROUTE.categoryUrl})}
+  const crumbLabel=ROUTE.h1||ROUTE.name||'';
+  if(crumbLabel&&crumbLabel!=='Home'){crumbs.push({'@type':'ListItem',position:crumbs.length+1,name:crumbLabel,item:canonUrl})}
+  if(crumbs.length>1){jldParts.push({'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:crumbs})}
+  if(ROUTE.type==='product'){
+    const offers={'@type':'Offer',priceCurrency:'USD',availability:'https://schema.org/InStock',url:canonUrl};
+    if(ROUTE.price)offers.price=ROUTE.price;
+    const prod={'@context':'https://schema.org','@type':'Product',name:ROUTE.name||ROUTE.h1,description:(ROUTE.description||'').slice(0,300),brand:{'@type':'Brand',name:'Mili Packaging'},offers:offers};
+    if(ROUTE.image)prod.image='https://mili-packaging.com'+ROUTE.image;
+    jldParts.push(prod);
+  }
+  if(ROUTE.type==='category'){
+    const items=[];for(const rp of Object.keys(SEO_MAP.routes)){const rr=SEO_MAP.routes[rp];if(rr.type==='product'&&rr.categoryUrl===canonUrl){items.push({'@type':'ListItem',position:items.length+1,name:rr.name,url:'https://mili-packaging.com'+rp});if(items.length>=10)break}}
+    if(items.length){jldParts.push({'@context':'https://schema.org','@type':'ItemList',name:ROUTE.h1||ROUTE.name,itemListElement:items})}
+  }
+  if(jldParts.length){
+    let jl='';
+    for(const jp of jldParts){jl+='<script type="application/ld+json">'+JSON.stringify(jp)+'</script>'}
+    spa=spa.replace('</head>',jl+'</head>');
+  }
   return new Response(spa,{headers:Object.assign({},H,{'content-type':'text/html;charset=UTF-8'})});
 },
 async scheduled(event,env,ctx){
