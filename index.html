@@ -26,6 +26,20 @@
           };
           send(body);
           window.__miliTrack = function (extra) { send(Object.assign({ page: location.pathname, source: source, device: dev, session: sid }, extra || {})); };
+          // v24: track SPA route changes (popstate + pushState/replaceState hook) so
+          // every viewed page records a page_view, not just the first screen
+          var lastTracked = location.pathname;
+          var trackRoute = function () {
+            try {
+              if (location.pathname !== lastTracked) { lastTracked = location.pathname; send({ page: location.pathname }); }
+            } catch (e) {}
+          };
+          try {
+            window.addEventListener('popstate', trackRoute);
+            var origPush = history.pushState, origRep = history.replaceState;
+            history.pushState = function () { var r = origPush.apply(this, arguments); setTimeout(trackRoute, 0); return r; };
+            history.replaceState = function () { var r = origRep.apply(this, arguments); setTimeout(trackRoute, 0); return r; };
+          } catch (e) {}
         } catch (e) {}
       })();
     </script>
