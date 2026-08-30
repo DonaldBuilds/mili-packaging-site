@@ -2189,6 +2189,8 @@
       t.classList.add('active');
       document.querySelectorAll('[id^="tab-"]').forEach(function (p) { p.classList.add('hide'); });
       document.getElementById('tab-' + t.dataset.tab).classList.remove('hide');
+      // V22: 切板块重置滚动位置，避免页签栏被顶出视口
+      try { window.scrollTo(0, 0); } catch (e) {}
       // V6: sidebar highlight + breadcrumb follow tab switches (from either nav or tabs)
       if (typeof syncSidebar === 'function') syncSidebar(t.dataset.tab);
     });
@@ -5674,6 +5676,19 @@
     if (topEl) topEl.textContent = done;
     var topT = document.getElementById('topbar-cfg-total');
     if (topT) topT.textContent = total;
+    // 顶栏芯片 hover 提示缺失项
+    var topKpi = document.getElementById('topbar-kpi');
+    if (topKpi) {
+      var miss = [];
+      Object.keys(cfgs || {}).forEach(function (k) {
+        var c = cfgs[k];
+        if (c && c.ok === false) miss.push({ k: k, hint: String(c.hint || k) });
+      });
+      if (miss.length) {
+        var label = { admin_pw: '登录密码', gh_pat: 'GitHub PAT', supabase: 'Supabase', pushplus: 'PushPlus', ga4: 'GA4', gsc: 'GSC', llm: 'LLM', indexnow: 'IndexNow', mail_sync: '邮箱同步', accounts: '账号体系', mail_smtp: 'SMTP 群发' };
+        topKpi.title = '未配置：' + miss.map(function (m) { return (label[m.k] || m.k); }).join(' / ');
+      } else { topKpi.title = '所有功能已配置'; }
+    }
     // 今日优先任务
     renderPriorityTasks(done, cfgs);
   }

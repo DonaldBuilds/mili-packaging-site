@@ -91,13 +91,13 @@ const llmChat=async function(env,messages){
   return (d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||'';
 };
 const ga4Report=async function(token,prop,path,body){
-  const r=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':'+path,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
+  const r=await fetch('https://analyticsdata.googleapis.com/v1beta/properties/'+prop+':'+path,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(12000)});
   const d=await r.json();
   if(!r.ok)throw new Error('ga4:'+r.status+':'+JSON.stringify(d.error||{}).slice(0,220));
   return d;
 };
 const gscQuery=async function(token,site,body){
-  const r=await fetch('https://www.googleapis.com/webmasters/v3/sites/'+encodeURIComponent(site)+'/searchAnalytics/query',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body)});
+  const r=await fetch('https://www.googleapis.com/webmasters/v3/sites/'+encodeURIComponent(site)+'/searchAnalytics/query',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(12000)});
   const d=await r.json();
   if(!r.ok)throw new Error('gsc:'+r.status);
   return d;
@@ -119,20 +119,23 @@ const handleV5=async function(env,url){
     const token=await oauthToken(env.GA4_SERVICE_JSON);
     const prop=env.GA4_PROPERTY_ID;
     const range1=ga4DateRange(days);const range0=ga4DateRange(days*2);
-    const ov=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'date'}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
-    const ov0=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range0.start,endDate:range1.start}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]});
-    const src=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'sessionDefaultChannelGroup'}],metrics:[{name:'sessions'}]});
-    const dev=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'deviceCategory'}],metrics:[{name:'sessions'}]});
-    const geo=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'country'}],metrics:[{name:'activeUsers'}]});
-    const city=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'city'}],metrics:[{name:'activeUsers'}]});
-    const pg=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'landingPage'}],metrics:[{name:'sessions'}]});
-    const ev=await ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'eventName'}],metrics:[{name:'eventCount'}],dimensionFilter:{filter:{fieldName:'eventName',inListFilter:{values:['whatsapp_click','form_submit','page_view','session_start']}}}});
-    const modules={overview:{rows:rowsToObj(ov),prev:rowsToObj(ov0)},sources:rowsToObj(src),devices:rowsToObj(dev),geo:rowsToObj(geo),city:rowsToObj(city),pages:rowsToObj(pg),events:rowsToObj(ev)};
-    let seo=null;
+    // v22: GA4 7 报告 + GSC 并行化（原串行 20-30s，排队拖慢全站接口；并行后 <4s）
+    let seoP=Promise.resolve(null);
     if(env.GSC_SERVICE_JSON&&env.GSC_SITE_URL){
-      try{const gt=await oauthToken(env.GSC_SERVICE_JSON);const q=await gscQuery(gt,env.GSC_SITE_URL,{startDate:range1.start,endDate:range1.end,dimensions:['query'],rowLimit:20});seo=rowsToObj(q)}catch(e){seo={error:'gsc:'+String((e&&e.message)||e)}}
+      seoP=(async function(){try{const gt=await oauthToken(env.GSC_SERVICE_JSON);const q=await gscQuery(gt,env.GSC_SITE_URL,{startDate:range1.start,endDate:range1.end,dimensions:['query'],rowLimit:20});return rowsToObj(q)}catch(e){return {error:'gsc:'+String((e&&e.message)||e)}}})();
     }
-    modules.seo=seo;
+    const [ov,ov0,src,dev,geo,city,pg,ev,seo]=await Promise.all([
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'date'}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range0.start,endDate:range1.start}],metrics:[{name:'activeUsers'},{name:'sessions'},{name:'bounceRate'},{name:'averageSessionDuration'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'sessionDefaultChannelGroup'}],metrics:[{name:'sessions'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'deviceCategory'}],metrics:[{name:'sessions'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'country'}],metrics:[{name:'activeUsers'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'city'}],metrics:[{name:'activeUsers'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'landingPage'}],metrics:[{name:'sessions'}]}),
+      ga4Report(token,prop,'runReport',{dateRanges:[{startDate:range1.start,endDate:range1.end}],dimensions:[{name:'eventName'}],metrics:[{name:'eventCount'}],dimensionFilter:{filter:{fieldName:'eventName',inListFilter:{values:['whatsapp_click','form_submit','page_view','session_start']}}}}),
+      seoP
+    ]);
+    const modules={overview:{rows:rowsToObj(ov),prev:rowsToObj(ov0)},sources:rowsToObj(src),devices:rowsToObj(dev),geo:rowsToObj(geo),city:rowsToObj(city),pages:rowsToObj(pg),events:rowsToObj(ev),seo:seo};
     V5_CACHE[ck]={t:Date.now(),generatedAt:new Date().toISOString(),data:modules};
     return new Response(JSON.stringify({ok:true,configured:true,cache:'miss',generatedAt:V5_CACHE[ck].generatedAt,modules:modules}),{headers:{'content-type':'application/json'}});
   }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
@@ -996,14 +999,19 @@ export default{async fetch(r,env){
       return new Response(JSON.stringify(res),{headers:{'content-type':'application/json'}});
     }
     if(p==='/api/config'){
-      // v17: Supabase 真实连通检测（项目暂停/删除/域名失效会显示明确状态）
+      // v17: Supabase 真实连通检测（60s 缓存避免看板/营销页重复探测拖慢响应）
       let sbOk=true, sbHint='询盘入库与统计（env 可覆盖 SB_URL/SB_ANON_KEY）';
-      try{
-        const sbR=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)},signal:AbortSignal.timeout(6000)});
-        if(sbR.ok||sbR.status===401||sbR.status===403){sbOk=true;sbHint='Supabase 可达（HTTP '+sbR.status+'）'}
-        else if(sbR.status===404){sbOk=false;sbHint='Supabase 项目不存在/已删除（HTTP 404）：请更换项目并在 env 配置 SB_URL/SB_ANON_KEY'}
-        else{sbOk=false;sbHint='Supabase 响应异常（HTTP '+sbR.status+'）：项目可能已暂停，请在 Dashboard 恢复'}
-      }catch(e){sbOk=false;sbHint='Supabase 不可达（DNS/超时）：项目可能已暂停或域名失效，请检查项目状态'}
+      const now=Date.now(),cache=globalThis.__sbCheck||{t:0,ok:true,hint:''};
+      if(now-cache.t<60000){sbOk=cache.ok;sbHint=cache.hint}
+      else{
+        try{
+          const sbR=await fetch(sbU(env)+'/rest/v1/inquiries?select=id&limit=1',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)},signal:AbortSignal.timeout(6000)});
+          if(sbR.ok||sbR.status===401||sbR.status===403){sbOk=true;sbHint='Supabase 可达（HTTP '+sbR.status+'）'}
+          else if(sbR.status===404){sbOk=false;sbHint='Supabase 项目不存在/已删除（HTTP 404）：请更换项目并在 env 配置 SB_URL/SB_ANON_KEY'}
+          else{sbOk=false;sbHint='Supabase 响应异常（HTTP '+sbR.status+'）：项目可能已暂停，请在 Dashboard 恢复'}
+        }catch(e){sbOk=false;sbHint='Supabase 不可达（DNS/超时）：项目可能已暂停或域名失效，请检查项目状态'}
+        globalThis.__sbCheck={t:now,ok:sbOk,hint:sbHint};
+      }
       return new Response(JSON.stringify({ok:true,configs:{
         gh_pat:{ok:!!env.OPS_GH_PAT,hint:'产品编辑发布、审计持久化、sitemap 自动重建'},
         pushplus:{ok:!!env.PUSHPLUS_TOKEN,hint:'简报/巡检/告警微信推送'},
