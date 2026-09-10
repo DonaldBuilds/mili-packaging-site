@@ -56,7 +56,8 @@ const M=Object.fromEntries(Object.entries({
   '.txt':['text/plain','public,max-age=3600'],
   '.xml':['application/xml','public,max-age=3600']
 }).map(([k,[ct,cc]])=>[k,{'content-type':ct,'cache-control':cc}]));
-const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'",'strict-transport-security':'max-age=31536000'};
+const SB_ORIGIN='https://qfecxuuvgbqqruzfgrpl.supabase.co';
+const H={'x-content-type-options':'nosniff','x-frame-options':'DENY','referrer-policy':'strict-origin-when-cross-origin','permissions-policy':'camera=(), microphone=(), geolocation=()','content-security-policy':"default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://qfecxuuvgbqqruzfgrpl.supabase.co wss://qfecxuuvgbqqruzfgrpl.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",'strict-transport-security':'max-age=31536000; includeSubDomains','cross-origin-opener-policy':'same-origin','cross-origin-resource-policy':'same-origin'};
 const BLOG_PATHS=['/blog','/blog/'];
 
 // ── v5: GA4 + GSC dashboard helpers (Service Account JWT, 1h in-memory cache) ──
@@ -173,7 +174,7 @@ const handleV5Realtime=async function(env){
     return new Response(JSON.stringify({ok:true,configured:true,realtime:rowsToObj(rt)}),{headers:{'content-type':'application/json'}});
   }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
 };
-const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili Packaging 运营工作台 · 登录</title><style>\\n*{margin:0;padding:0;box-sizing:border-box}\\nbody{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#0a0a0a;min-height:100vh;display:flex}\\n.hero{position:relative;flex:1.7;min-height:100vh;overflow:hidden;display:flex;align-items:flex-end}\\n.hero .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;background-size:cover;background-position:center}\\n.hero .slide.on{opacity:1}\\n.hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.38) 100%)}\\n.hero .copy{position:relative;z-index:2;padding:56px 52px;color:#fff;max-width:660px}\\n.hero .kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c9a227;font-weight:700}\\n.hero h1{font-size:42px;font-weight:600;margin:14px 0 8px;letter-spacing:.01em;line-height:1.2}\\n.hero h1 em{font-style:normal;color:#c9a227}\\n.hero .sub{font-size:16px;opacity:.88;margin-bottom:20px}\\n.hero .tags{display:flex;gap:10px;flex-wrap:wrap}\\n.hero .tags span{font-size:11px;letter-spacing:.06em;border:1px solid rgba(255,255,255,.38);padding:6px 13px;border-radius:2px;opacity:.92}\\n.hero .trust{font-size:12.5px;opacity:.62;margin-top:20px}\\n.hero .dots{position:absolute;left:52px;bottom:32px;display:flex;gap:8px;z-index:3}\\n.hero .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.38);cursor:pointer;transition:all .3s}\\n.hero .dots i.on{width:28px;border-radius:4px;background:#c9a227}\\n.panel{flex:1;min-width:400px;max-width:540px;background:#fff;color:#1c1e22;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 46px;position:relative}\\n.panel .brand{text-align:center;margin-bottom:32px}\\n.panel .logo{width:58px;height:58px;margin:0 auto 14px;background:linear-gradient(135deg,#0a0a0a,#3a3a3a);color:#c9a227;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.18)}\\n.panel .brand b{font-size:22px;font-weight:700}\\n.panel .brand b span{color:#c9a227}\\n.panel .brand p{color:#8a8f98;font-size:12.5px;margin-top:6px}\\n.panel form{width:100%;max-width:340px}\\n.panel label{display:block;font-size:12px;font-weight:600;color:#3f4754;margin:16px 0 6px;letter-spacing:.02em}\\n.panel .field{position:relative}\\n.panel input{width:100%;padding:12px 14px;border:1px solid #d8dde3;border-radius:6px;font-size:14px;color:#1c1e22;outline:none;transition:border-color .2s,box-shadow .2s;background:#fbfcfd}\\n.panel input:focus{border-color:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.14)}\\n.panel .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;opacity:.55;padding:4px}\\n.panel .eye:hover{opacity:1}\\n.panel button[type=submit]{width:100%;margin-top:26px;background:#c9a227;color:#0a0a0a;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;letter-spacing:.14em;cursor:pointer;transition:all .2s;box-shadow:0 8px 20px rgba(201,162,39,.28)}\\n.panel button[type=submit]:hover{background:#b08e1f;transform:translateY(-1px);box-shadow:0 10px 26px rgba(201,162,39,.36)}\\n.panel button[type=submit]:disabled{opacity:.55;cursor:wait;transform:none}\\n#msg{color:#d64545;font-size:12.5px;margin-top:14px;min-height:18px;text-align:center}\\n.panel .foot{position:absolute;bottom:26px;color:#b6bcc6;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:center}\\n.panel .hint{color:#9aa1ab;font-size:11.5px;margin-top:18px;text-align:center}\\n@media (max-width:860px){\\nbody{flex-direction:column}\\n.hero{flex:none;height:36vh;min-height:0}\\n.hero .copy{padding:22px 22px}\\n.hero h1{font-size:23px;margin-top:8px}\\n.hero .sub{font-size:13px;margin-bottom:10px}\\n.hero .tags span{display:none}\\n.hero .trust{font-size:11px;margin-top:10px}\\n.hero .dots{left:22px;bottom:14px}\\n.panel{min-width:0;flex:1;padding:34px 24px}\\n.panel .foot{position:static;margin-top:26px}\\n}\\n</style></head><body>\\n<div class="hero">\\n  <div class="slide on" style="background-image:url(\\'/assets/images/login-1.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-2.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-3.webp\\')"></div>\\n  <div class="veil"></div>\\n  <div class="copy">\\n    <div class="kicker">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n    <h1>Mili Packaging <em>运营工作台</em></h1>\\n    <div class="sub">一站式独立站运营管理</div>\\n    <div class="tags"><span>产品管理</span><span>询盘中心</span><span>SEO 医生</span><span>数据看板</span><span>实时同步</span></div>\\n    <div class="trust">工厂直供 · 500+ 品牌 · 50+ 国家 · 数据实时同步</div>\\n  </div>\\n  <div class="dots"><i class="on" data-i="0"></i><i data-i="1"></i><i data-i="2"></i></div>\\n</div>\\n<div class="panel">\\n  <div class="brand">\\n    <div class="logo">M</div>\\n    <b>Mili <span>Packaging</span></b>\\n    <p>运营工作台 · 内部系统（会话 24h）</p>\\n  </div>\\n  <form id="f" autocomplete="on">\\n    <label for="acc">账号 / 邮箱</label>\\n    <div class="field"><input id="acc" type="text" placeholder="账号（首次登录用 owner）或邮箱" autocomplete="username" required /></div>\\n    <label for="pw">密码</label>\\n    <div class="field">\\n      <input id="pw" type="password" placeholder="请输入密码" autocomplete="current-password" required />\\n      <button type="button" class="eye" id="eye" aria-label="显示/隐藏密码">👁</button>\\n    </div>\\n    <button type="submit" id="btn">登 录</button>\\n    <p id="msg"></p>\\n    <div class="hint">登录后自动进入工作台</div>\\n  </form>\\n  <div class="foot">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n</div>\\n<script>\\nvar slides=document.querySelectorAll(\\'.hero .slide\\'),dots=document.querySelectorAll(\\'.hero .dots i\\'),idx=0,timer;\\nfunction show(n){idx=(n+slides.length)%slides.length;for(var i=0;i<slides.length;i++){slides[i].classList.toggle(\\'on\\',i===idx);dots[i].classList.toggle(\\'on\\',i===idx)}}\\nfunction next(){show(idx+1)}\\ntimer=setInterval(next,4500);\\nfor(var d=0;d<dots.length;d++){(function(k){dots[k].addEventListener(\\'click\\',function(){show(k);clearInterval(timer);timer=setInterval(next,4500)})})(d)}\\nvar eye=document.getElementById(\\'eye\\'),pw=document.getElementById(\\'pw\\'),btn=document.getElementById(\\'btn\\'),f=document.getElementById(\\'f\\'),m=document.getElementById(\\'msg\\');\\neye.addEventListener(\\'click\\',function(){pw.type=pw.type===\\'password\\'?\\'text\\':\\'password\\';eye.textContent=pw.type===\\'password\\'?\\'👁\\':\\'🙈\\'});\\nfunction go(){\\n  m.textContent=\\'\\';\\n  var acc=document.getElementById(\\'acc\\').value.trim();\\n  if(acc.length<2){m.textContent=\\'请输入账号\\';return}\\n  btn.disabled=true;btn.textContent=\\'登录中…\\';\\n  fetch(\\'/api/login\\',{method:\\'POST\\',headers:{\\'content-type\\':\\'application/json\\'},body:JSON.stringify({account:acc,password:pw.value})}).then(function(r){\\n    if(r.ok){location.href=\\'/admin.html\\'}else{return r.json().then(function(j){m.textContent=j.error===\\'bad-credentials\\'?\\'账号或密码错误\\':(j.error===\\'account-disabled\\'?\\'账号已被禁用，请联系管理员\\':\\'登录失败 (\\'+j.error+\\')\\')})}\\n  }).catch(function(){m.textContent=\\'网络错误，请重试\\'}).then(function(){btn.disabled=false;btn.textContent=\\'登 录\\'});\\n}\\nf.addEventListener(\\'submit\\',function(e){e.preventDefault();go()});\\npw.addEventListener(\\'keydown\\',function(e){if(e.key===\\'Enter\\')go()});\\n</script></body></html>';
+const LOGIN_HTML='<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Mili Packaging 运营工作台 · 登录</title><style>\\n*{margin:0;padding:0;box-sizing:border-box}\\nbody{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#0a0a0a;min-height:100vh;display:flex}\\n.hero{position:relative;flex:1.7;min-height:100vh;overflow:hidden;display:flex;align-items:flex-end}\\n.hero .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;background-size:cover;background-position:center}\\n.hero .slide.on{opacity:1}\\n.hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.12) 46%,rgba(0,0,0,.38) 100%)}\\n.hero .copy{position:relative;z-index:2;padding:56px 52px;color:#fff;max-width:660px}\\n.hero .kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c9a227;font-weight:700}\\n.hero h1{font-size:42px;font-weight:600;margin:14px 0 8px;letter-spacing:.01em;line-height:1.2}\\n.hero h1 em{font-style:normal;color:#c9a227}\\n.hero .sub{font-size:16px;opacity:.88;margin-bottom:20px}\\n.hero .tags{display:flex;gap:10px;flex-wrap:wrap}\\n.hero .tags span{font-size:11px;letter-spacing:.06em;border:1px solid rgba(255,255,255,.38);padding:6px 13px;border-radius:2px;opacity:.92}\\n.hero .trust{font-size:12.5px;opacity:.62;margin-top:20px}\\n.hero .dots{position:absolute;left:52px;bottom:32px;display:flex;gap:8px;z-index:3}\\n.hero .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.38);cursor:pointer;transition:all .3s}\\n.hero .dots i.on{width:28px;border-radius:4px;background:#c9a227}\\n.panel{flex:1;min-width:400px;max-width:540px;background:#fff;color:#1c1e22;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 46px;position:relative}\\n.panel .brand{text-align:center;margin-bottom:32px}\\n.panel .logo{width:58px;height:58px;margin:0 auto 14px;background:linear-gradient(135deg,#0a0a0a,#3a3a3a);color:#c9a227;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.18)}\\n.panel .brand b{font-size:22px;font-weight:700}\\n.panel .brand b span{color:#c9a227}\\n.panel .brand p{color:#8a8f98;font-size:12.5px;margin-top:6px}\\n.panel form{width:100%;max-width:340px}\\n.panel label{display:block;font-size:12px;font-weight:600;color:#3f4754;margin:16px 0 6px;letter-spacing:.02em}\\n.panel .field{position:relative}\\n.panel input{width:100%;padding:12px 14px;border:1px solid #d8dde3;border-radius:6px;font-size:14px;color:#1c1e22;outline:none;transition:border-color .2s,box-shadow .2s;background:#fbfcfd}\\n.panel input:focus{border-color:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.14)}\\n.panel .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;opacity:.55;padding:4px}\\n.panel .eye:hover{opacity:1}\\n.panel button[type=submit]{width:100%;margin-top:26px;background:#c9a227;color:#0a0a0a;border:none;border-radius:6px;padding:13px;font-size:15px;font-weight:700;letter-spacing:.14em;cursor:pointer;transition:all .2s;box-shadow:0 8px 20px rgba(201,162,39,.28)}\\n.panel button[type=submit]:hover{background:#b08e1f;transform:translateY(-1px);box-shadow:0 10px 26px rgba(201,162,39,.36)}\\n.panel button[type=submit]:disabled{opacity:.55;cursor:wait;transform:none}\\n#msg{color:#d64545;font-size:12.5px;margin-top:14px;min-height:18px;text-align:center}\\n.panel .foot{position:absolute;bottom:26px;color:#b6bcc6;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;text-align:center}\\n.panel .hint{color:#9aa1ab;font-size:11.5px;margin-top:18px;text-align:center}\\n@media (max-width:860px){\\nbody{flex-direction:column}\\n.hero{flex:none;height:36vh;min-height:0}\\n.hero .copy{padding:22px 22px}\\n.hero h1{font-size:23px;margin-top:8px}\\n.hero .sub{font-size:13px;margin-bottom:10px}\\n.hero .tags span{display:none}\\n.hero .trust{font-size:11px;margin-top:10px}\\n.hero .dots{left:22px;bottom:14px}\\n.panel{min-width:0;flex:1;padding:34px 24px}\\n.panel .foot{position:static;margin-top:26px}\\n}\\n</style></head><body>\\n<div class="hero">\\n  <div class="slide on" style="background-image:url(\\'/assets/images/login-1.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-2.webp\\')"></div>\\n  <div class="slide" style="background-image:url(\\'/assets/images/login-3.webp\\')"></div>\\n  <div class="veil"></div>\\n  <div class="copy">\\n    <div class="kicker">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n    <h1>Mili Packaging <em>运营工作台</em></h1>\\n    <div class="sub">一站式独立站运营管理</div>\\n    <div class="tags"><span>产品管理</span><span>询盘中心</span><span>SEO 医生</span><span>数据看板</span><span>实时同步</span></div>\\n    <div class="trust">工厂直供 · 500+ 品牌 · 50+ 国家 · 数据实时同步</div>\\n  </div>\\n  <div class="dots"><i class="on" data-i="0"></i><i data-i="1"></i><i data-i="2"></i></div>\\n</div>\\n<div class="panel">\\n  <div class="brand">\\n    <div class="logo">M</div>\\n    <b>Mili <span>Packaging</span></b>\\n    <p>运营工作台 · 内部系统（会话 24h）</p>\\n  </div>\\n  <form id="f" autocomplete="on">\\n    <label for="acc">账号 / 邮箱</label>\\n    <div class="field"><input id="acc" type="text" placeholder="请输入账号或邮箱" autocomplete="username" required /></div>\\n    <label for="pw">密码</label>\\n    <div class="field">\\n      <input id="pw" type="password" placeholder="请输入密码" autocomplete="current-password" required />\\n      <button type="button" class="eye" id="eye" aria-label="显示/隐藏密码">👁</button>\\n    </div>\\n    <button type="submit" id="btn">登 录</button>\\n    <p id="msg"></p>\\n    <div class="hint">登录后自动进入工作台</div>\\n  </form>\\n  <div class="foot">MILI PACKAGING · INTERNAL WORKBENCH</div>\\n</div>\\n<script>\\nvar slides=document.querySelectorAll(\\'.hero .slide\\'),dots=document.querySelectorAll(\\'.hero .dots i\\'),idx=0,timer;\\nfunction show(n){idx=(n+slides.length)%slides.length;for(var i=0;i<slides.length;i++){slides[i].classList.toggle(\\'on\\',i===idx);dots[i].classList.toggle(\\'on\\',i===idx)}}\\nfunction next(){show(idx+1)}\\ntimer=setInterval(next,4500);\\nfor(var d=0;d<dots.length;d++){(function(k){dots[k].addEventListener(\\'click\\',function(){show(k);clearInterval(timer);timer=setInterval(next,4500)})})(d)}\\nvar eye=document.getElementById(\\'eye\\'),pw=document.getElementById(\\'pw\\'),btn=document.getElementById(\\'btn\\'),f=document.getElementById(\\'f\\'),m=document.getElementById(\\'msg\\');\\neye.addEventListener(\\'click\\',function(){pw.type=pw.type===\\'password\\'?\\'text\\':\\'password\\';eye.textContent=pw.type===\\'password\\'?\\'👁\\':\\'🙈\\'});\\nfunction go(){\\n  m.textContent=\\'\\';\\n  var acc=document.getElementById(\\'acc\\').value.trim();\\n  if(acc.length<2){m.textContent=\\'请输入账号\\';return}\\n  btn.disabled=true;btn.textContent=\\'登录中…\\';\\n  fetch(\\'/api/login\\',{method:\\'POST\\',headers:{\\'content-type\\':\\'application/json\\'},body:JSON.stringify({account:acc,password:pw.value})}).then(function(r){\\n    if(r.ok){location.href=\\'/admin.html\\'}else{return r.json().then(function(j){m.textContent=j.error===\\'too-many-attempts\\'?(j.message||\\'失败次数过多，请稍后重试\\'):(j.error===\\'bad-credentials\\'?\\'账号或密码错误\\':(j.error===\\'account-disabled\\'?\\'账号已被禁用，请联系管理员\\':\\'登录失败 (\\'+j.error+\\')\\'))})}\\n  }).catch(function(){m.textContent=\\'网络错误，请重试\\'}).then(function(){btn.disabled=false;btn.textContent=\\'登 录\\'});\\n}\\nf.addEventListener(\\'submit\\',function(e){e.preventDefault();go()});\\npw.addEventListener(\\'keydown\\',function(e){if(e.key===\\'Enter\\')go()});\\n</script></body></html>';
 
 export default{async fetch(r,env){
   const url=new URL(r.url);
@@ -184,6 +185,12 @@ export default{async fetch(r,env){
   if(p==='/')p='/index.html';
   let k=p.length>1&&p[0]==='/'?p.slice(1):p;
   const OPS_GH_PAT=(env&&env.OPS_GH_PAT)||'';
+
+  // ── v24 SEC-06: robots.txt 由 Worker 接管（移除指向后台的 Disallow 行，避免给扫描者指路）──
+  if(p==='/robots.txt'){
+    const rb=['User-agent: *','Content-Signal: search=yes,ai-input=yes,ai-train=no,use=reference','Allow: /','','# AI crawlers may reference content; model training stays excluded','User-agent: GPTBot','Allow: /','User-agent: ClaudeBot','Allow: /','User-agent: anthropic-ai','Allow: /','User-agent: PerplexityBot','Allow: /','User-agent: CCBot','Allow: /','User-agent: Applebot-Extended','Allow: /','User-agent: Bytespider','Allow: /','User-agent: Google-Extended','Disallow: /','','User-agent: Googlebot','Allow: /','','Sitemap: https://mili-packaging.com/sitemap.xml',''].join('\\n');
+    return new Response(rb,{headers:Object.assign({},H,{'content-type':'text/plain; charset=utf-8','cache-control':'public, max-age=3600'})});
+  }
 
   // ── v4 Security: session (HMAC cookie), rate limit, audit ring ──
   const SESSION_SECRET=(env&&env.SESSION_SECRET)||'d9bd1a6dab1fda8f6c9766f1836d5b203c145c9f47554ca334da5becc6859bc9';
@@ -277,6 +284,39 @@ export default{async fetch(r,env){
   const ip=(r.headers.get('cf-connecting-ip'))||'unknown';const now=Date.now();const rc=RL[ip];
   if(!rc||rc.r<now){RL[ip]={n:1,r:now+60000}}else{RL[ip].n++;if(RL[ip].n>60)return new Response(JSON.stringify({ok:false,error:'rate-limited'}),{status:429,headers:{'content-type':'application/json'}})}
 
+  // ── v24 SEC-04: 登录限流（IP + 账号双维度；login_attempts 表优先，表不可用时内存回退）──
+  const LOGIN_MAX_FAILS=5, LOGIN_LOCK_MS=15*60*1000;
+  const loginFailCount=async function(env2,scopeKey,scopeVal){
+    const since=new Date(Date.now()-LOGIN_LOCK_MS).toISOString();
+    try{
+      const url=sbU(env2)+'/rest/v1/login_attempts?select=id&ok=eq.false&'+scopeKey+'=eq.'+encodeURIComponent(scopeVal)+'&created_at=gte.'+since+'&limit=10';
+      const r=await fetch(url,{headers:{apikey:sbK(env2),Authorization:'Bearer '+sbK(env2)},signal:AbortSignal.timeout(5000)});
+      if(r.ok){const rows=await r.json();return Array.isArray(rows)?rows.length:0}
+    }catch(e){}
+    return null;
+  };
+  const loginLockCheck=async function(env2,ip2,user2){
+    const byIp=await loginFailCount(env2,'ip',ip2);
+    const byUser=user2?(await loginFailCount(env2,'username',user2)):0;
+    if(byIp!==null||byUser!==null){
+      const n=Math.max(byIp||0,byUser||0);
+      return {locked:n>=LOGIN_MAX_FAILS,retryAfter:Math.ceil(LOGIN_LOCK_MS/1000),mode:'db'};
+    }
+    const M=(globalThis.__miliLoginFail=globalThis.__miliLoginFail||{});
+    const rec=M['k:'+ip2+'|'+user2];
+    if(rec&&rec.n>=LOGIN_MAX_FAILS&&rec.until>Date.now())return {locked:true,retryAfter:Math.ceil((rec.until-Date.now())/1000),mode:'mem'};
+    return {locked:false,retryAfter:0,mode:'mem'};
+  };
+  const loginAttemptRecord=async function(env2,ip2,user2,ua,okFlag){
+    const M=(globalThis.__miliLoginFail=globalThis.__miliLoginFail||{});
+    const key='k:'+ip2+'|'+user2;
+    if(okFlag){delete M[key]}
+    else{const rec=M[key]||{n:0,until:0};rec.n++;rec.until=Date.now()+LOGIN_LOCK_MS;M[key]=rec}
+    try{
+      await fetch(sbU(env2)+'/rest/v1/login_attempts',{method:'POST',headers:{apikey:sbK(env2),Authorization:'Bearer '+sbK(env2),'content-type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({ip:ip2,username:user2,ok:!!okFlag,user_agent:String(ua||'').slice(0,200)})});
+    }catch(e){}
+  };
+
   // ── Auth API（/api/login 免会话，其余 /api/* 需会话） ──
   if(p==='/api/login'&&r.method==='POST'){
     try{
@@ -285,6 +325,12 @@ export default{async fetch(r,env){
       const password=String((b&&b.password)||'');
       if(!password)return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}});
       if(username.length>100||username.length<2)return new Response(JSON.stringify({ok:false,error:'bad-username'}),{status:400,headers:{'content-type':'application/json'}});
+      // v24 SEC-04: 失败次数超阈值则锁定（429 + Retry-After）
+      const lock=await loginLockCheck(env,ip,username);
+      if(lock.locked){
+        const mins=Math.max(1,Math.ceil(lock.retryAfter/60));
+        return new Response(JSON.stringify({ok:false,error:'too-many-attempts',retryAfter:lock.retryAfter,message:'失败次数过多，请 '+mins+' 分钟后重试'}),{status:429,headers:{'content-type':'application/json','Retry-After':String(lock.retryAfter)}});
+      }
       let info=null;
       // 1) 账号体系登录（accounts 表）
       try{
@@ -293,9 +339,10 @@ export default{async fetch(r,env){
           const rows=await rr.json();
           const accRow=Array.isArray(rows)&&rows[0]?rows[0]:null;
           if(accRow){
-            if(accRow.status!=='active')return new Response(JSON.stringify({ok:false,error:'account-disabled'}),{status:403,headers:{'content-type':'application/json'}});
+            // v24 SEC-08: 先校验密码，再判断禁用状态（避免通过响应差异枚举账号存在性）
             const okPw=await verifyPw(password,accRow.password_hash);
-            if(!okPw)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
+            if(!okPw){await loginAttemptRecord(env,ip,username,r.headers.get('user-agent'),false);return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});}
+            if(accRow.status!=='active'){await loginAttemptRecord(env,ip,username,r.headers.get('user-agent'),false);return new Response(JSON.stringify({ok:false,error:'account-disabled'}),{status:403,headers:{'content-type':'application/json'}});}
             info={uid:accRow.id,role:accRow.role||'operator',name:accRow.display_name||accRow.username||username};
             // 更新 last_login_at
             try{await accFetch('accounts?id=eq.'+encodeURIComponent(accRow.id),{method:'PATCH',headers:{'content-type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({last_login_at:new Date().toISOString()})})}catch(e){}
@@ -316,11 +363,13 @@ export default{async fetch(r,env){
           }catch(e){}
         }
       }
-      if(!info)return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});
+      if(!info){await loginAttemptRecord(env,ip,username,r.headers.get('user-agent'),false);return new Response(JSON.stringify({ok:false,error:'bad-credentials'}),{status:401,headers:{'content-type':'application/json'}});}
       const exp=Date.now()+86400000;
       const payload=btoa(unescape(encodeURIComponent(JSON.stringify({uid:info.uid,role:info.role,name:info.name})))).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/g,'');
       const sig=await hmacHex('mili_session.'+exp+'.'+payload);
       audit('login',{account:username});
+      // v24 SEC-04: 成功登录清空失败计数并记录
+      await loginAttemptRecord(env,ip,username,r.headers.get('user-agent'),true);
       return new Response(JSON.stringify({ok:true,exp:exp,me:info}),{headers:{'content-type':'application/json','set-cookie':'mili_session='+exp+'.'+payload+'.'+sig+'; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400'}});
     }catch(e){return new Response(JSON.stringify({ok:false,error:'bad-request'}),{status:400,headers:{'content-type':'application/json'}})}
   }
@@ -972,6 +1021,44 @@ export default{async fetch(r,env){
         const j=await rr.json();
         return new Response(JSON.stringify({ok:true,rows:Array.isArray(j)?j:[]}),{headers:{'content-type':'application/json'}});
       }catch(e){return new Response(JSON.stringify({ok:false,error:String((e&&e.message)||e)}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    // ── v24 FC-02/FC-03: 工作台记录（内部任务工单 / AI 可见性问题清单）服务端持久化 ──
+    if(p==='/api/records/list'&&r.method==='GET'){
+      const type=String(url.searchParams.get('type')||'').slice(0,40);
+      if(!type)return new Response(JSON.stringify({ok:false,error:'type-required'}),{status:400,headers:{'content-type':'application/json'}});
+      try{
+        const rr=await fetch(sbU(env)+'/rest/v1/workbench_records?type=eq.'+encodeURIComponent(type)+'&select=id,type,title,payload,actor,created_at&order=created_at.desc&limit=100',{headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env)},signal:AbortSignal.timeout(8000)});
+        if(!rr.ok)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status,rows:[]}),{status:200,headers:{'content-type':'application/json'}});
+        return new Response(JSON.stringify({ok:true,rows:await rr.json()}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:'records-fail',rows:[]}),{status:200,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/records/save'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin','operator']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const type=String((b&&b.type)||'').slice(0,40);
+        if(!type)return new Response(JSON.stringify({ok:false,error:'type-required'}),{status:400,headers:{'content-type':'application/json'}});
+        const body={type:type,title:String((b&&b.title)||'').slice(0,200)||null,payload:(b&&b.payload)||null,actor:(g.si&&g.si.name)||(g.si&&g.si.role)||'unknown'};
+        const rr=await fetch(sbU(env)+'/rest/v1/workbench_records',{method:'POST',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),'content-type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+        if(!rr.ok&&rr.status!==201)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        const j=await rr.json();const row=Array.isArray(j)?j[0]:j;
+        audit('record-save',{type:type});
+        return new Response(JSON.stringify({ok:true,row:row}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:'save-fail'}),{status:500,headers:{'content-type':'application/json'}})}
+    }
+    if(p==='/api/records/delete'&&r.method==='POST'){
+      const g=await requireRole(['owner','admin','operator']);
+      if(!g.ok)return new Response(JSON.stringify({ok:false,error:g.error}),{status:g.code,headers:{'content-type':'application/json'}});
+      try{
+        const b=await r.json();
+        const id=String((b&&b.id)||'');
+        if(!id)return new Response(JSON.stringify({ok:false,error:'id-required'}),{status:400,headers:{'content-type':'application/json'}});
+        const rr=await fetch(sbU(env)+'/rest/v1/workbench_records?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{apikey:sbK(env),Authorization:'Bearer '+sbK(env),Prefer:'return=minimal'}});
+        if(!rr.ok&&rr.status!==204)return new Response(JSON.stringify({ok:false,error:'supabase:'+rr.status}),{status:502,headers:{'content-type':'application/json'}});
+        audit('record-delete',{id:id});
+        return new Response(JSON.stringify({ok:true}),{headers:{'content-type':'application/json'}});
+      }catch(e){return new Response(JSON.stringify({ok:false,error:'delete-fail'}),{status:500,headers:{'content-type':'application/json'}})}
     }
     if(p==='/api/campaign/create'&&r.method==='POST'){
       const g=await requireRole(['owner','admin']);

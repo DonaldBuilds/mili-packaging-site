@@ -1651,9 +1651,6 @@
     </div>
   </div>
 
-  <footer>Mili Packaging 独立站运营工作台 · 专业后台 · 商品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Supabase / GitHub</footer>
-</div>
-
   <!-- ⑥ 审计日志 -->
   <div id="tab-audit" class="hide">
     <h2>操作审计日志</h2>
@@ -1738,71 +1735,11 @@
       <p class="hint" style="margin:0">Ctrl / ⌘ + S：保存当前产品草稿（编辑抽屉打开时）· Esc：关闭弹窗 / 侧栏</p>
     </div>
 
-    <details class="card" style="margin-bottom:14px">
-      <summary style="cursor:pointer;font-weight:700;padding:12px 14px">🎨 设计系统参照（原风格指南）</summary>
-    <div style="padding:0 14px 14px">
-    <div class="card" style="margin-bottom:14px">
+    <!-- v24 UI-01: 设计系统演示内容（色彩/排版/按钮/标签/表单/表格/空状态示例）已整体移除 -->
+
+    <div class="card" style="margin-bottom:14px;display:none">
       <h3>色彩（当前主题：<span id="guide-theme-name">暗金</span>）</h3>
-      <div class="grid">
-        <div class="card"><b style="color:var(--color-primary)">Primary</b><p class="hint">品牌主色 · 按钮/链接/强调</p><div style="height:28px;background:var(--color-primary);border-radius:3px"></div></div>
-        <div class="card"><b style="color:var(--color-success)">Success</b><p class="hint">成功/增长</p><div style="height:28px;background:var(--color-success);border-radius:3px"></div></div>
-        <div class="card"><b style="color:var(--color-warning)">Warning</b><p class="hint">警告/SLA 提醒</p><div style="height:28px;background:var(--color-warning);border-radius:3px"></div></div>
-        <div class="card"><b style="color:var(--color-danger)">Danger</b><p class="hint">错误/风险</p><div style="height:28px;background:var(--color-danger);border-radius:3px"></div></div>
-        <div class="card"><b>Surface</b><p class="hint">卡片底色</p><div style="height:28px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:3px"></div></div>
-        <div class="card"><b>Background</b><p class="hint">页面底色</p><div style="height:28px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:3px"></div></div>
-        <div class="card"><b>Text</b><p class="hint">正文</p><div style="height:28px;background:var(--color-text);border-radius:3px"></div></div>
-        <div class="card"><b>Text Dim</b><p class="hint">次要文字</p><div style="height:28px;background:var(--color-text-dim);border-radius:3px"></div></div>
-      </div>
     </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3>排版</h3>
-      <p style="font-size:var(--fs-h1);font-weight:700">H1 · 2rem — 页面主标题</p>
-      <p style="font-size:var(--fs-h2);font-weight:700;margin-top:4px">H2 · 1.5rem — 区块标题</p>
-      <p style="font-size:var(--fs-h3);font-weight:700;margin-top:4px">H3 · 1.25rem — 卡片标题</p>
-      <p style="font-size:var(--fs-body);margin-top:4px">Body · 1rem — 正文内容</p>
-      <p style="font-size:var(--fs-caption);color:var(--color-text-dim);margin-top:4px">Caption · 0.875rem — 辅助说明</p>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3>按钮</h3>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary">主要操作</button>
-        <button class="btn btn-secondary">次要操作</button>
-        <button class="btn btn-danger">危险操作</button>
-        <button class="btn btn-ghost">幽灵按钮</button>
-        <button class="btn btn-primary btn-sm">小按钮</button>
-        <button class="btn btn-primary loading">加载中…</button>
-      </div>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3>标签 Tag / Badge / 状态</h3>
-      <span class="tag tag-primary">上架中</span>
-      <span class="tag tag-success">已回复</span>
-      <span class="tag tag-warning">待跟进</span>
-      <span class="tag tag-danger">SLA 超时</span>
-      <span class="status ok">▲ 正常</span>
-      <span class="status bad">▼ 异常</span>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3>表单</h3>
-      <div class="row">
-        <div><label>输入框</label><input placeholder="请输入…" /></div>
-        <div><label>下拉选择</label><select><option>选项一</option><option>选项二</option></select></div>
-        <div><label>文本域</label><textarea rows="2" placeholder="多行文本…"></textarea></div>
-      </div>
-    </div>
-    <div class="card" style="margin-bottom:14px">
-      <h3>表格（sortable / sticky header 样式基础）</h3>
-      <table><tr><th>列 A</th><th>列 B</th><th>状态</th></tr>
-        <tr><td>示例 1</td><td>数值</td><td><span class="tag tag-primary">正常</span></td></tr>
-        <tr><td>示例 2</td><td>数值</td><td><span class="tag tag-danger">风险</span></td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <h3>空状态</h3>
-      <div class="empty"><div class="empty-ico">🗂️</div>还没有询盘，去检查联系表单配置</div>
-    </div>
-    </div>
-    </details>
   </div>
 
   <!-- ⑩ AI 可见性（GEO 监测） -->
@@ -2178,6 +2115,8 @@
     </div>
   </div>
 
+  <footer>Mili Packaging 独立站运营工作台 · 专业后台 · 商品编辑 → GitHub 自动部署（约 2 分钟生效）· 数据源：GA4 / GSC / Supabase / GitHub</footer>
+
   <script>
 (function () {
   var FLASH = document.getElementById('flash');
@@ -2231,9 +2170,29 @@
   }
   function el(id) { return document.getElementById(id); }
   // 看板 KPI 数据路径：点击直达对应模块
+  // v24 FC-01: 直接操作面板切换（原实现依赖顶栏 .tab 按钮，没有对应按钮的模块点击后无反应）
   function goTab(tabId) {
+    var panel = document.getElementById('tab-' + tabId);
+    if (panel) {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      var tabBtn = document.querySelector('.tab[data-tab="' + tabId + '"]');
+      if (tabBtn) tabBtn.classList.add('active');
+      document.querySelectorAll('[id^="tab-"]').forEach(function (p) { p.classList.add('hide'); });
+      panel.classList.remove('hide');
+      try { window.scrollTo(0, 0); } catch (e) {}
+      if (typeof syncSidebar === 'function') syncSidebar(tabId);
+      // 按需加载（合并原散落的 tab 单独绑定）
+      try {
+        if (tabId === 'orders' && typeof ordLoad === 'function') ordLoad();
+        else if (tabId === 'customers' && typeof custLoad === 'function') custLoad();
+        else if (tabId === 'accounts' && typeof accLoad === 'function') accLoad();
+        else if (tabId === 'marketing') { if (typeof mktLoad === 'function') mktLoad(); if (typeof mktChannels === 'function') mktChannels(); }
+      } catch (e) {}
+      return true;
+    }
     var tab = document.querySelector('.tab[data-tab="' + tabId + '"]');
     if (tab) tab.click();
+    return false;
   }
   function inqGoReport() {
     goTab('inquiry');
@@ -4765,23 +4724,49 @@
     if (!page || !body) { flash('请填写页面位置和修改内容', true); return null; }
     return { subject: '【内容修改·' + pri + '】' + page, text: '页面位置：' + page + '\n优先级：' + pri + '\n\n修改内容：\n' + body };
   }
+  // v24 FC-02: 历史工单改为服务端持久化（workbench_records，type=ticket；localStorage 仅作离线回退）
   function saveTicketHistory(t) {
+    // 本地回退写入（离线时仍可查看最近记录）
     try {
       var hist = JSON.parse(localStorage.getItem('mili-tickets') || '[]');
       hist.unshift({ ts: new Date().toISOString(), subject: t.subject, text: t.text.slice(0, 120) });
       if (hist.length > 10) hist = hist.slice(0, 10);
       localStorage.setItem('mili-tickets', JSON.stringify(hist));
     } catch (e) {}
-    renderTicketHistory();
+    // 服务端持久化（多人可见、换设备不丢）
+    fetch('/api/records/save', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ type: 'ticket', title: t.subject, payload: { text: t.text.slice(0, 2000) } })
+    }).then(function () { renderTicketHistory(); }).catch(function () { renderTicketHistory(); });
   }
   function renderTicketHistory() {
     var wrap = document.getElementById('ticket-history');
     if (!wrap) return;
+    wrap.innerHTML = '<p class="hint">加载中…</p>';
+    fetch('/api/records/list?type=ticket').then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.ok && Array.isArray(d.rows)) ? d.rows : null;
+      if (rows === null) { return renderTicketHistoryLocal(wrap, '服务端不可达，显示本地记录'); }
+      if (!rows.length) {
+        // 服务端为空时回退展示本地缓存（迁移平滑）
+        var local = [];
+        try { local = JSON.parse(localStorage.getItem('mili-tickets') || '[]'); } catch (e) {}
+        if (!local.length) { wrap.innerHTML = '<p class="hint">暂无历史工单（服务端持久化，已同步账号）</p>'; return; }
+        return renderTicketHistoryLocal(wrap, '本地缓存记录（新工单将保存到服务端）');
+      }
+      wrap.innerHTML = '<div class="ticket-history">' + rows.map(function (h) {
+        var ts = String(h.created_at || '').replace('T', ' ').slice(0, 16);
+        var sub = esc(String(h.title || ''));
+        var who = h.actor ? ' · ' + esc(h.actor) : '';
+        return '<div class="ticket-history-item"><span class="hint" style="min-width:118px">' + ts + '</span><span style="flex:1">' + sub + '</span><span class="hint">' + who + '</span></div>';
+      }).join('') + '</div>';
+    }).catch(function () { renderTicketHistoryLocal(wrap, '读取失败，显示本地记录'); });
+  }
+  function renderTicketHistoryLocal(wrap, note) {
     try {
       var hist = JSON.parse(localStorage.getItem('mili-tickets') || '[]');
       if (!hist.length) { wrap.innerHTML = '<p class="hint">暂无历史工单</p>'; return; }
-      wrap.innerHTML = '<div class="ticket-history">' + hist.map(function (h) {
-        return '<div class="ticket-history-item"><span class="hint" style="min-width:110px">' + h.ts.replace('T', ' ').slice(0, 16) + '</span><span style="flex:1">' + String(h.subject).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span></div>';
+      wrap.innerHTML = '<p class="hint" style="margin:0 0 6px">' + esc(note) + '</p><div class="ticket-history">' + hist.map(function (h) {
+        return '<div class="ticket-history-item"><span class="hint" style="min-width:118px">' + esc(String(h.ts).replace('T', ' ').slice(0, 16)) + '</span><span style="flex:1">' + esc(String(h.subject)) + '</span></div>';
       }).join('') + '</div>';
     } catch (e) { wrap.innerHTML = '<p class="hint">读取失败</p>'; }
   }
@@ -5126,7 +5111,36 @@
     'packaging supplier with free samples'
   ];
   var geoQ = [];
+  var geoQIds = {}; // v24 FC-03: 问题文本 → 服务端记录 id（用于删除与留痕）
   try { geoQ = JSON.parse(localStorage.getItem('mili-geo-q') || 'null') || GEO_DEFAULT.slice(); } catch (e) { geoQ = GEO_DEFAULT.slice(); }
+  // v24 FC-03: 优先从服务端加载（多人共享、换设备不丢；保留添加人与时间）
+  function geoLoadRemote() {
+    return fetch('/api/records/list?type=geo_issue').then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.ok && Array.isArray(d.rows)) ? d.rows : null;
+      if (rows === null) { return false; }
+      if (!rows.length) {
+        // 首次迁移：把本地/默认列表写入服务端，之后统一走服务端
+        var seed = geoQ.slice();
+        seed.forEach(function (q) { geoSyncAdd(q); });
+        return true;
+      }
+      geoQ = rows.map(function (h) { return String(h.title || ''); }).filter(Boolean);
+      geoQIds = {};
+      rows.forEach(function (h) { if (h.title) geoQIds[String(h.title)] = h.id; });
+      try { localStorage.setItem('mili-geo-q', JSON.stringify(geoQ)); } catch (e) {}
+      return true;
+    }).catch(function () { return false; });
+  }
+  function geoSyncAdd(q) {
+    return fetch('/api/records/save', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'geo_issue', title: q }) })
+      .then(function (r) { return r.json(); }).then(function (d) { if (d && d.ok && d.row && d.row.id) geoQIds[q] = d.row.id; }).catch(function () {});
+  }
+  function geoSyncDel(q) {
+    var id = geoQIds[q];
+    if (!id) { return; }
+    delete geoQIds[q];
+    fetch('/api/records/delete', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) }).catch(function () {});
+  }
   var geoUrls = null;
   function geoFetchUrls() {
     if (geoUrls) return Promise.resolve(geoUrls);
@@ -5147,7 +5161,11 @@
     });
     el.innerHTML = html + '</table>';
     el.querySelectorAll('[data-del]').forEach(function (b) {
-      b.addEventListener('click', function () { geoQ.splice(parseInt(b.dataset.del, 10), 1); saveGeo(); geoRenderList(); geoRenderGap(); });
+      b.addEventListener('click', function () {
+        var removed = geoQ.splice(parseInt(b.dataset.del, 10), 1)[0];
+        if (removed) geoSyncDel(String(removed));
+        saveGeo(); geoRenderList(); geoRenderGap();
+      });
     });
   }
   function geoRenderGap() {
@@ -5192,11 +5210,14 @@
     geoQ.push(v);
     document.getElementById('geo-new-q').value = '';
     saveGeo(); geoRenderList(); geoRenderGap();
-    toast('已添加，监测列表更新', 'ok');
+    geoSyncAdd(v); // v24 FC-03: 服务端留痕（含添加人与时间）
+    toast('已添加，监测列表更新（已同步服务端）', 'ok');
   });
   var geoNewInput = document.getElementById('geo-new-q');
   if (geoNewInput) geoNewInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') document.getElementById('geo-add').click(); });
-  document.querySelector('.tab[data-tab="geo"]').addEventListener('click', function () { geoRenderList(); geoRenderGap(); });
+  document.querySelector('.tab[data-tab="geo"]').addEventListener('click', function () {
+    geoLoadRemote().then(function () { geoRenderList(); geoRenderGap(); });
+  });
 
   // ── SEO 医生：产品 SEO 评分（基于 GitHub raw 产品数据，零依赖） ──
   var seoData = null;
@@ -6756,6 +6777,7 @@
   });
 })();
 </script>
+</div>
 </div>
 </div>
 </div>
