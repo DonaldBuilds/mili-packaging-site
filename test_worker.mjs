@@ -22,11 +22,11 @@ await check('SPA route /products -> fallback', 'https://mili-packaging.com/produ
 await check('SPA deep route /products/rigid-gift-boxes -> fallback', 'https://mili-packaging.com/products/rigid-gift-boxes', 200, 'text/html');
 await check('blog index', 'https://mili-packaging.com/blog', 200, 'text/html');
 await check('blog post 1', 'https://mili-packaging.com/blog/1', 200, 'text/html');
-await check('blog unknown -> SPA fallback', 'https://mili-packaging.com/blog/xyz', 200, 'text/html');
+await check('blog unknown -> real 404 (no soft-404)', 'https://mili-packaging.com/blog/xyz', 404, 'text/html');
 await check('assets js', `https://mili-packaging.com/assets/${assetJs}`, 200, 'javascript');
 await check('assets css', `https://mili-packaging.com/assets/${assetCss}`, 200, 'css');
 await check('robots.txt', 'https://mili-packaging.com/robots.txt', 200, 'text/plain');
 await check('sitemap.xml', 'https://mili-packaging.com/sitemap.xml', 200, 'xml');
-await check('fallback SPA', 'https://mili-packaging.com/unknown-page', 200, 'text/html');
+await check('unknown path -> real 404 (no soft-404)', 'https://mili-packaging.com/unknown-page', 404, 'text/html');
 
 console.log(process.exitCode ? 'SMOKE TEST FAILED' : 'SMOKE TEST PASSED');

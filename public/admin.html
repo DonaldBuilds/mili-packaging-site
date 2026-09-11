@@ -185,6 +185,8 @@
   .main { flex:1; min-width:0; display:flex; flex-direction:column; }
   .topbar { height:var(--topbar-h); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 20px; gap:12px; position:sticky; top:0; background:var(--color-bg); z-index:20; }
   .crumb { font-size:13px; color:var(--color-text-secondary); } .crumb b { color:var(--color-text); font-weight:600; }
+  /* v24: 窄屏隐藏面包屑（当前板块由侧边栏高亮指示），避免被截断 */
+  @media (max-width:768px) { .crumb { display:none; } }
   .tb-btn { background:none; border:1px solid var(--color-border); color:var(--color-text-secondary); border-radius:4px; padding:6px 10px; font-size:12px; cursor:pointer; }
   .tb-btn:hover { color:var(--color-text); border-color:var(--color-primary); }
   .hamburger { display:none; background:none; border:none; color:var(--color-text); font-size:20px; cursor:pointer; padding:4px 8px; }
@@ -352,12 +354,21 @@
   @media (max-width:900px) {
     .ed-drawer { position:fixed; right:0; top:var(--topbar-h); bottom:0; z-index:50; width:360px; box-shadow:-4px 0 20px rgba(0,0,0,.2); transform:translateX(0); }
     .ed-drawer.closed { transform:translateX(100%); width:360px; }
-    .prod-list-head, .prod-list-row { grid-template-columns:30px 1fr 80px 70px; }
-    .prod-list-head > :nth-child(2), .prod-list-row > :nth-child(2), .prod-list-head > :nth-child(6), .prod-list-row > :nth-child(6), .prod-list-head > :nth-child(7), .prod-list-row > :nth-child(7) { display:none; }
+    /* v24: 保留操作列（原规则隐藏第 7 列导致窄屏无法编辑），仅隐图片与 SEO 分 */
+    .prod-list-head, .prod-list-row { grid-template-columns:30px 1fr 96px 80px 104px; }
+    .prod-list-head > :nth-child(2), .prod-list-row > :nth-child(2), .prod-list-head > :nth-child(6), .prod-list-row > :nth-child(6) { display:none; }
   }
   @media (max-width:600px) {
-    .prod-list-head, .prod-list-row { grid-template-columns:28px 1fr 70px; }
-    .prod-list-head > :nth-child(3), .prod-list-row > :nth-child(3), .prod-list-head > :nth-child(4), .prod-list-row > :nth-child(4), .prod-list-head > :nth-child(5), .prod-list-row > :nth-child(5) { display:none; }
+    /* v24: 窄屏改两行卡片式，所有关键信息与操作按钮完整可见 */
+    .prod-list-head { display:none; }
+    .prod-list-row { grid-template-columns:26px 1fr auto; grid-template-rows:auto auto; gap:3px 8px; padding:11px 10px; align-items:center; }
+    .prod-list-row > :nth-child(1) { grid-column:1; grid-row:1 / span 2; }
+    .prod-list-row > :nth-child(2) { display:none; }
+    .prod-list-row > :nth-child(3) { grid-column:2 / span 2; grid-row:1; font-weight:600; white-space:normal; }
+    .prod-list-row > :nth-child(4) { grid-column:2; grid-row:2; font-size:11.5px; color:var(--color-text-secondary); }
+    .prod-list-row > :nth-child(5) { grid-column:3; grid-row:2; justify-self:end; }
+    .prod-list-row > :nth-child(6) { display:none; }
+    .prod-list-row > :nth-child(7) { grid-column:3; grid-row:1; justify-self:end; }
   }
 
   /* ── v10: 顶部冗余导航隐藏（左侧功能栏已覆盖全部入口） ── */
@@ -644,6 +655,17 @@
   .inq-tpl-item .tpl-title { font-weight:600; font-size:12.5px; margin-bottom:4px; }
   .inq-tpl-item .tpl-body { font-size:12px; color:var(--color-text-secondary); white-space:pre-wrap; }
   .inq-tpl-item .tpl-actions { margin-top:8px; display:flex; gap:6px; }
+  /* v24: 移动端精简询盘表格（仅 #inqTable，保留 渠道/时间/客户/产品/状态/需求 6 列） */
+  @media (max-width:600px) {
+    #inqTable th:nth-child(4), #inqTable td:nth-child(4),
+    #inqTable th:nth-child(5), #inqTable td:nth-child(5),
+    #inqTable th:nth-child(6), #inqTable td:nth-child(6),
+    #inqTable th:nth-child(8), #inqTable td:nth-child(8),
+    #inqTable th:nth-child(10), #inqTable td:nth-child(10),
+    #inqTable th:nth-child(11), #inqTable td:nth-child(11),
+    #inqTable th:nth-child(12), #inqTable td:nth-child(12),
+    #inqTable th:nth-child(13), #inqTable td:nth-child(13) { display:none; }
+  }
   .inq-bar { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:12px; }
   .inq-bar .bar-fill { height:14px; border-radius:2px; background:var(--color-gold-solid); opacity:.85; }
   .inq-bar .bar-label { min-width:130px; }
@@ -703,7 +725,7 @@
   /* ── 通知铃铛 ── */
   .notif-btn { position:relative; background:none; border:1px solid var(--color-border); border-radius:8px; padding:5px 8px; cursor:pointer; color:var(--color-text-dim); display:flex; align-items:center; transition:color .15s,border-color .15s; }
   .notif-btn:hover { color:var(--color-text); border-color:var(--color-primary); }
-  .notif-badge { position:absolute; top:-4px; right:-4px; min-width:16px; height:16px; background:var(--color-danger); color:#fff; border-radius:8px; font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 3px; border:2px solid var(--color-bg); }
+  .notif-badge { position:absolute; top:-3px; right:-3px; min-width:15px; height:15px; background:var(--color-danger); color:#fff; border-radius:8px; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; padding:0 3px; border:1.5px solid var(--color-bg); }
   .notif-panel { position:absolute; top:calc(100% + 8px); right:0; width:320px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:10px; box-shadow:0 14px 45px rgba(0,0,0,.5); z-index:9000; }
   .notif-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 8px; border-bottom:1px solid var(--color-border); }
   .notif-header h4 { font-size:13px; font-weight:700; margin:0; }
@@ -1149,8 +1171,8 @@
             <button class="btn btn-ghost btn-sm v19-t" data-t="orders">订单金额</button>
           </span>
         </div>
-        <div id="v19-trend-main" style="height:180px">—</div>
-        <div style="display:flex;gap:14px;font-size:10.5px;color:var(--color-text-secondary);margin-top:2px">
+        <div id="v19-trend-main" style="min-height:146px">—</div>
+        <div style="display:flex;gap:14px;font-size:10.5px;color:var(--color-text-secondary);margin-top:2px;flex-wrap:wrap">
           <span><i style="display:inline-block;width:12px;height:2px;background:#c9a227;vertical-align:middle;margin-right:5px"></i>本期</span>
           <span><i style="display:inline-block;width:12px;height:2px;background:rgba(140,150,160,.55);vertical-align:middle;margin-right:5px"></i>上期（前 14 天）</span>
         </div>
@@ -2475,7 +2497,7 @@
       return arr.map(function (p, i) { return x(i + (o || 0), n).toFixed(1) + ',' + y(p.v).toFixed(1); }).join(' ');
     };
     var last = cur[cur.length - 1];
-    el2.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:100%">' +
+    el2.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:128px;display:block">' +
       (prev.length ? '<polyline points="' + pts(prev) + '" fill="none" stroke="rgba(140,150,160,.55)" stroke-width="1.6" stroke-dasharray="5 4" stroke-linejoin="round"/>' : '') +
       '<polyline points="' + pts(cur) + '" fill="none" stroke="' + (color || '#c9a227') + '" stroke-width="2.2" stroke-linejoin="round"/>' +
       (last ? '<circle cx="' + x(cur.length - 1, cur.length) + '" cy="' + y(last.v) + '" r="3.5" fill="' + (color || '#c9a227') + '"/>' : '') +
