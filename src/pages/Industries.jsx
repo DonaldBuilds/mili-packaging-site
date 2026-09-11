@@ -18,7 +18,7 @@ export const industries = [
     products: ['mailer-boxes', 'paper-bags', 'corrugated-shipping'],
     featuredProducts: ['custom-logo-mailer-box', 'hard-handle-kraft-bag'],
     capabilities: ['Tape-free mailers', 'Retail paper bags'],
-    stats: [['MOQ', '100 pcs'], ['Production', '10–12 days'], ['Sample', '48 h'], ['Volume pricing', '3,000+ pcs']],
+    stats: [['MOQ', '500 pcs'], ['Production', '10–12 days'], ['Sample', '48 h'], ['Volume pricing', '3,000+ pcs']],
     why: [
       ['Flat-pack, ship flat', 'Mailers and cartons ship flat to cut freight and warehouse space — up to 60% volume savings vs rigid alternatives.'],
       ['One Pantone identity', 'Mailers, bags, tissue and inserts print in the same Pantone colors and foil finishes for a consistent retail + e-commerce brand.'],
@@ -28,7 +28,7 @@ export const industries = [
     faq: [
       ['What is the best box for shipping clothing?', 'Mailer boxes are ideal - they ship flat, self-seal without tape, and print fully in your brand colors. For heavier outerwear use corrugated shipping boxes.'],
       ['Can bags match my mailer branding?', 'Yes - paper bags and mailers are printed in the same Pantone colors and foil finishes for a consistent retail + e-commerce identity.'],
-      ['What MOQ applies?', 'Mailer boxes, paper bags and shipping cartons all start at 100 pcs.'],
+      ['What MOQ applies?', 'Mailer boxes, paper bags and shipping cartons all start at 500 pcs.'],
     ],
     title: 'Fashion & Apparel Packaging Solutions | Mili Packaging',
     description: 'Custom apparel packaging: branded mailer boxes, boutique paper bags and shipping cartons for fashion e-commerce and retail.',
@@ -49,7 +49,7 @@ export const industries = [
     products: ['folding-cartons', 'rigid-gift-boxes', 'corrugated-shipping'],
     featuredProducts: ['luxury-cookie-rigid-box', 'marbled-foldable-gift-box'],
     capabilities: ['Food-safe inks', 'Window cartons'],
-    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Food-safe', 'Yes'], ['FSC stock', 'Available']],
+    stats: [['MOQ', '500 pcs'], ['Production', '12–15 days'], ['Food-safe', 'Yes'], ['FSC stock', 'Available']],
     why: [
       ['Food-safe by default', 'Food-safe inks, water-based adhesives and FSC-certified board — with direct food-contact and window-patching options.'],
       ['Shelf-ready design', 'Window cartons, rigid gift sets and foil finishing engineered to win trial on retail shelves.'],
@@ -59,7 +59,7 @@ export const industries = [
     faq: [
       ['Are your cartons food-safe?', 'Yes - we use food-safe inks and FSC-certified board, with options for direct food contact and window patching.'],
       ['Do you make gift boxes for tea and chocolate?', 'Yes - rigid gift boxes with custom inserts for tea tins, chocolate truffles and gourmet sets, foil-stamped with your brand.'],
-      ['What is the minimum order for cartons?', 'Folding cartons start at 100 pcs, rigid gift boxes at 100 pcs.'],
+      ['What is the minimum order for cartons?', 'All cartons and rigid gift boxes start at 500 pcs.'],
     ],
     title: 'Food & Beverage Packaging | Custom Food Boxes | Mili Packaging',
     description: 'Custom food packaging: folding cartons, rigid gift boxes and kraft shipping boxes for confectionery, tea and gourmet food brands.',
@@ -80,7 +80,7 @@ export const industries = [
     products: ['cosmetic-boxes', 'rigid-gift-boxes', 'paper-bags'],
     featuredProducts: ['valentine-magnetic-folding-box', 'black-magnetic-gift-box'],
     capabilities: ['FSC board', 'EVA bottle cradles'],
-    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Set assembly', 'In-house'], ['Finishing', 'Full range']],
+    stats: [['MOQ', '500 pcs'], ['Production', '12–15 days'], ['Set assembly', 'In-house'], ['Finishing', 'Full range']],
     why: [
       ['One supplier, one standard', 'Box, insert, holder and finishing coordinated in-house — consistent quality and one less vendor to manage.'],
       ['Precision bottle cradles', 'EVA and foam die-cut to your exact bottle dimensions, tested for courier and export transit.'],
@@ -90,7 +90,7 @@ export const industries = [
     faq: [
       ['What is a complete cosmetic set?', 'Outer box (folding or rigid) + EVA/paper insert + bottle holder + foil stamping or soft-touch finish - everything coordinated by one supplier.'],
       ['Can you protect glass bottles in transit?', 'Yes - EVA and foam cradles are die-cut to your exact bottle dimensions, tested for courier and export shipping.'],
-      ['What are the MOQ and lead time?', 'MOQ 100 pcs, production 12-15 days after sample approval.'],
+      ['What are the MOQ and lead time?', 'MOQ 500 pcs, production 12-15 days after sample approval.'],
     ],
     title: 'Beauty & Skincare Packaging | Cosmetic Boxes | Mili Packaging',
     description: 'Custom beauty packaging: cosmetic boxes with EVA inserts, rigid gift sets and branded paper bags for skincare and fragrance brands.',
@@ -111,7 +111,7 @@ export const industries = [
     products: ['rigid-gift-boxes', 'corrugated-shipping', 'mailer-boxes'],
     featuredProducts: ['black-magnetic-gift-box', 'eco-printed-shipping-box'],
     capabilities: ['Anti-static foam', 'Precision die-cut inserts'],
-    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Anti-static', 'Available'], ['Drop rating', 'Export-tested']],
+    stats: [['MOQ', '500 pcs'], ['Production', '12–15 days'], ['Anti-static', 'Available'], ['Drop rating', 'Export-tested']],
     why: [
       ['Anti-static protection', 'Anti-static EVA and foam inserts for sensitive components, PCBs and precision hardware.'],
       ['Zero-damage transit', 'Double-wall corrugated with corner protection and precision-fit inserts, rated for international courier transit.'],
@@ -121,7 +121,7 @@ export const industries = [
     faq: [
       ['Do you offer anti-static packaging?', 'Yes - anti-static EVA and foam inserts are available for sensitive components and PCBs.'],
       ['Can the shipping box protect against drops?', 'Double-wall corrugated with corner protection and precision-fit inserts is rated for international courier transit.'],
-      ['What MOQ applies to electronics packaging?', 'Rigid presentation boxes 100 pcs, corrugated shipping 100 pcs.'],
+      ['What MOQ applies to electronics packaging?', 'Rigid presentation boxes 500 pcs, corrugated shipping 500 pcs.'],
     ],
     title: 'Electronics & Tech Packaging | Protective Boxes | Mili Packaging',
     description: 'Custom electronics packaging: rigid gift boxes with foam inserts, mailers and heavy-duty corrugated shipping boxes.',
@@ -142,7 +142,7 @@ export const industries = [
     products: ['mailer-boxes', 'sample-starter-kits', 'corrugated-shipping'],
     featuredProducts: ['custom-logo-mailer-box', 'ecommerce-mailer-sample-kit'],
     capabilities: ['Tape-free programs', 'Volume pricing 3,000+'],
-    stats: [['MOQ', '100 pcs'], ['Production', '10–12 days'], ['Reorder lead time', '10–12 days'], ['Volume steps', '3k / 10k']],
+    stats: [['MOQ', '500 pcs'], ['Production', '10–12 days'], ['Reorder lead time', '10–12 days'], ['Volume steps', '3k / 10k']],
     why: [
       ['Built for monthly reorders', 'Tooling and artwork stay on file — consistent pricing and 10-12 day production on every reorder.'],
       ['Test before you commit', 'Starter kits let you compare 4-6 structures in a week before scaling volume.'],
@@ -152,7 +152,7 @@ export const industries = [
     faq: [
       ['Can you handle monthly subscription reorders?', 'Yes - we keep your tooling and artwork on file for fast reordering with consistent pricing and 10-12 day production.'],
       ['What is in the starter kit?', '4-6 box structures (magnetic, lid & base, drawer, book-style, folding, bag) plus material and finish samples, all branded with your logo.'],
-      ['What are the MOQ options?', 'Mailers 100 pcs, starter kits 100 pcs. Volume pricing steps at 3,000 and 10,000 units.'],
+      ['What are the MOQ options?', 'Mailers 500 pcs, starter kits 500 pcs. Volume pricing steps at 3,000 and 10,000 units.'],
     ],
     title: 'Subscription & DTC Packaging | Mailer Boxes | Mili Packaging',
     description: 'Custom subscription packaging: self-seal mailer boxes, starter kits and scalable cartons for DTC and subscription box brands.',
@@ -173,7 +173,7 @@ export const industries = [
     products: ['rigid-gift-boxes', 'paper-bags', 'folding-cartons'],
     featuredProducts: ['bottle-product-rigid-set', 'luxury-magnetic-folding-gift-box'],
     capabilities: ['Rigid gift sets', 'Custom bottle cradles'],
-    stats: [['MOQ', '100 pcs'], ['Production', '12–15 days'], ['Tooling on file', 'Yes'], ['Volume pricing', '3,000+ pcs']],
+    stats: [['MOQ', '500 pcs'], ['Production', '12–15 days'], ['Tooling on file', 'Yes'], ['Volume pricing', '3,000+ pcs']],
     why: [
       ['Bottle-perfect cradles', 'Precision-cut foam and velvet cradles die-cut to your exact bottle dimensions, export-tested.'],
       ['Festive-ready reordering', 'Tooling stays on file — holiday programs reorder in 12-15 days production.'],
@@ -183,7 +183,7 @@ export const industries = [
     faq: [
       ['Can you protect bottles in transit?', 'Yes - precision-cut foam and velvet cradles are die-cut to your exact bottle dimensions and tested for export shipping.'],
       ['Do you support seasonal gifting programs?', 'Yes - we keep tooling and artwork on file for fast reordering, with production 12-15 days and volume pricing from 3,000 units.'],
-      ['What MOQ applies to wine and spirits boxes?', 'Rigid gift sets start at 100 pcs; magnetic folding boxes at 100 pcs.'],
+      ['What MOQ applies to wine and spirits boxes?', 'Rigid gift sets and magnetic folding boxes both start at 500 pcs.'],
     ],
     title: 'Wine & Spirits Packaging | Custom Gift Boxes | Mili Packaging',
     description: 'Custom wine and spirits packaging: magnetic rigid gift sets, bottle cradles and luxury finishing for gifting programs and duty-free retail.',
@@ -204,7 +204,7 @@ export const industries = [
     products: ['jewelry-boxes', 'watch-boxes', 'rigid-gift-boxes'],
     featuredProducts: ['drawer-sliding-jewelry-box', 'modern-luxury-single-watch-box'],
     capabilities: ['Velvet-lined interiors', 'Embossed logos'],
-    stats: [['MOQ', '100 pcs'], ['Production', '14–18 days'], ['Interiors', 'Tarnish-safe'], ['Embossing', 'Available']],
+    stats: [['MOQ', '500 pcs'], ['Production', '14–18 days'], ['Interiors', 'Tarnish-safe'], ['Embossing', 'Available']],
     why: [
       ['Tarnish-safe interiors', 'Anti-tarnish velvet and leatherette linings with precision-fit cushions protect silver, gold and fine pieces.'],
       ['Boutique presentation at scale', 'Embossed logos, drawer structures and watch cradles engineered for production budgets.'],
@@ -214,7 +214,7 @@ export const industries = [
     faq: [
       ['Are your interiors safe for silver and gold?', 'Yes - we use tarnish-safe, anti-tarnish velvet and leatherette linings with precision-fit cushions.'],
       ['Can you make watch display boxes?', 'Yes - single and multi-watch rigid boxes with cushioned pillows and foam cradles, embossed with your logo.'],
-      ['What MOQ applies?', 'Ring boxes and watch boxes start at 100 pcs; multi-drawer collection boxes at 100 pcs.'],
+      ['What MOQ applies?', 'Ring boxes, watch boxes and multi-drawer collection boxes all start at 500 pcs.'],
     ],
     title: 'Jewelry & Watch Packaging | Custom Boxes | Mili Packaging',
     description: 'Custom jewelry and watch packaging: velvet-lined ring boxes, drawer collections and watch presentation boxes with embossed branding.',
@@ -335,7 +335,7 @@ export default function Industries() {
           </section>
           <section style={{ padding: '44px 40px', background: 'var(--black-2)', border: '1px solid var(--gold)', textAlign: 'center', marginBottom: 40 }}>
             <div style={{ fontSize: 20, color: 'var(--gold)', fontFamily: 'var(--font-display)', marginBottom: 8 }}>Ready to solve {ind.name} packaging?</div>
-            <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 24 }}>Free design &amp; 3D mockup within 48 hours. MOQ from 100 pcs.</p>
+            <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 24 }}>Free design &amp; 3D mockup within 48 hours. MOQ from 500 pcs.</p>
             <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get Your Factory-Direct Quote Now &rarr;</Link>
           </section>
         </div>

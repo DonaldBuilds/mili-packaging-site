@@ -19,7 +19,7 @@ const whyUs = [
   'Factory-direct pricing, no middlemen',
   'Dedicated account manager for your project',
   'Global shipping to 50+ countries',
-  'MOQ from 100 pcs, watch boxes from 50 pcs',
+  'MOQ from 500 pcs',
 ];
 
 export default function Contact() {
@@ -35,7 +35,7 @@ export default function Contact() {
     const honeypotFilled = formData.get('w3_field');
     const tooFast = Date.now() - Number(formData.get('w3_ts') || 0) < 3000;
     if (honeypotFilled || tooFast) {
-      setError('Submission blocked by our anti-spam check (often caused by browser form-fill extensions). Please refresh the page, disable auto-fill add-ons, and try again — or email us directly at info@mili-packaging.com.');
+      setError('Submission blocked by our anti-spam check (often caused by browser form-fill extensions). Please refresh the page, disable auto-fill add-ons, and try again — or email us directly at milipackaging@163.com.');
       return;
     }
     setLoading(true);

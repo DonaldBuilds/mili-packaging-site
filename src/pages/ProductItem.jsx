@@ -142,7 +142,7 @@ export default function ProductItem() {
   const groupPricing = detailData[group.slug]?.pricing;
   const tierRows = product.tierPrice
     ? [
-        { qty: '100 pcs', price: product.tierPrice[100] },
+        { qty: '500 pcs', price: product.tierPrice[500] },
         { qty: '1,000 pcs', price: product.tierPrice[1000] },
         { qty: '5,000 pcs', price: product.tierPrice[5000] },
       ]

@@ -63,7 +63,7 @@ for (const [slug, name, benefits] of industries) {
   routes[path] = {
     type: 'industry',
     title: `${name} Packaging Solutions | Mili Packaging`,
-    description: `Custom packaging for ${name.toLowerCase()} brands: ${benefits}. Factory-direct, MOQ 100 pcs, free samples, global delivery to 50+ countries.`,
+    description: `Custom packaging for ${name.toLowerCase()} brands: ${benefits}. Factory-direct, MOQ 500 pcs, free samples, global delivery to 50+ countries.`,
     h1: `${name} Packaging`,
     name
   };
@@ -71,17 +71,17 @@ for (const [slug, name, benefits] of industries) {
 routes['/industries'] = {
   type: 'static',
   title: 'Industry Packaging Solutions | Mili Packaging',
-  description: 'Tailored custom packaging for jewelry, cosmetics, food & beverage, fashion, electronics, subscription and wine & spirits brands. Factory-direct, MOQ 100 pcs.',
+  description: 'Tailored custom packaging for jewelry, cosmetics, food & beverage, fashion, electronics, subscription and wine & spirits brands. Factory-direct, MOQ 500 pcs.',
   h1: 'Industry Solutions'
 };
 
 // ── Static pages ──
 const statics = {
-  '/products': ['Custom Packaging Products & Boxes | Mili Packaging', 'Shop custom rigid boxes, magnetic gift boxes, jewelry boxes, cosmetic boxes, mailer boxes, paper bags and more. MOQ 100 pcs, free design, factory-direct pricing.', 'Our Products'],
-  '/about': ['About Mili Packaging – Custom Box Factory in China', 'Jiangxi Mili Packaging Materials Co., Ltd. — a factory-direct custom luxury packaging manufacturer since 2018. FSC certified, ISO 9001, MOQ 100 pcs.', 'About Mili Packaging'],
+  '/products': ['Custom Packaging Products & Boxes | Mili Packaging', 'Shop custom rigid boxes, magnetic gift boxes, jewelry boxes, cosmetic boxes, mailer boxes, paper bags and more. MOQ 500 pcs, free design, factory-direct pricing.', 'Our Products'],
+  '/about': ['About Mili Packaging – Custom Box Factory in China', 'Jiangxi Mili Packaging Materials Co., Ltd. — a factory-direct custom luxury packaging manufacturer since 2018. FSC certified, ISO 9001, MOQ 500 pcs.', 'About Mili Packaging'],
   '/portfolio': ['Portfolio & Client Case Studies | Mili Packaging', 'Real packaging projects for brands across 50+ countries: rigid boxes, mailers, cosmetic sets and more. See what Mili delivers.', 'Our Portfolio'],
-  '/faq': ['Packaging FAQ – MOQ, Lead Times, Samples | Mili Packaging', 'Answers on MOQ (from 100 pcs), production lead times (12-15 days), free samples, customization and shipping. Get your quote in 24 hours.', 'Frequently Asked Questions'],
-  '/contact': ['Contact Us – Get a Custom Packaging Quote | Mili Packaging', 'Send your packaging brief and get a factory-direct quote within 24 hours. Free design & 3D mockup, 2 rounds of free samples. MOQ from 100 pcs.', 'Contact Mili Packaging'],
+  '/faq': ['Packaging FAQ – MOQ, Lead Times, Samples | Mili Packaging', 'Answers on MOQ (from 500 pcs), production lead times (12-15 days), free samples, customization and shipping. Get your quote in 24 hours.', 'Frequently Asked Questions'],
+  '/contact': ['Contact Us – Get a Custom Packaging Quote | Mili Packaging', 'Send your packaging brief and get a factory-direct quote within 24 hours. Free design & 3D mockup, 2 rounds of free samples. MOQ from 500 pcs.', 'Contact Mili Packaging'],
   '/sample-kits': ['Sample & Starter Kits | Mili Packaging', 'Explore 12 material and finish combinations in one $29 sample kit — fee credited to your first bulk order. Free shipping included.', 'Sample & Starter Kits'],
   '/support': ['Support & After-Sales | Mili Packaging', 'Production updates, QC reports, shipping tracking and after-sales support for your custom packaging orders.', 'Support'],
   '/warranty': ['Warranty & Quality Promise | Mili Packaging', 'AQL 2.5 inspection on every batch, FSC-certified materials and a quality promise on all custom packaging orders.', 'Warranty & Quality', true],

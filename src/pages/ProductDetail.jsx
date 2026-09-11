@@ -96,8 +96,8 @@ export default function ProductDetail() {
 
   const isSample = !!(detail && detail.pricing && detail.pricing.fixed);
   const skus = getSkus(slug);
-  const skuMoq = group.slug === 'watch-boxes' ? 'MOQ 50 pcs' : 'MOQ 100 pcs';
-  const pricing = (detail && detail.pricing) || { tiers: ['100 pcs', '1,000 pcs', '5,000 pcs'], prices: ['0.00', '0.00', '0.00'] };
+  const skuMoq = group.slug === 'watch-boxes' ? 'MOQ 500 pcs' : 'MOQ 500 pcs';
+  const pricing = (detail && detail.pricing) || { tiers: ['500 pcs', '1,000 pcs', '5,000 pcs'], prices: ['0.00', '0.00', '0.00'] };
   const specs = (detail && detail.specs) || [];
   const copy = (detail && detail.copy) || [];
   const industryLinks = (detail && detail.industryLinks) || [];

@@ -94,7 +94,7 @@ export default function Support() {
             <p style={{ color:'var(--gray-3)', marginBottom:28, fontSize:15 }}>Reach us directly — we respond within 2 hours during business hours.</p>
             <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap' }}>
               <a href="https://wa.me/8618296876285" target="_blank" rel="noopener noreferrer" className="btn-gold">WhatsApp Support</a>
-              <a href="mailto:info@mili-packaging.com" className="btn-outline-gold">Email Support</a>
+              <a href="mailto:milipackaging@163.com" className="btn-outline-gold">Email Support</a>
             </div>
           </div>
         </div>

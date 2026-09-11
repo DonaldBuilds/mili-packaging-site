@@ -1405,13 +1405,13 @@ export default{async fetch(r,env){
   const seoDesc=(ROUTE.description||'').slice(0,155);
   if(seoTitle){
     spa=spa.replace(/<title>[\\s\\S]*?<\\/title>/,'<title>'+seoTitle+'</title>');
-    spa=spa.replace('<meta property="og:title" content="Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs" />','<meta property="og:title" content="'+seoTitle+'" />');
+    spa=spa.replace('<meta property="og:title" content="Mili Packaging | Custom Rigid Box Manufacturer | MOQ 500pcs" />','<meta property="og:title" content="'+seoTitle+'" />');
     spa=spa.replace('<meta name="twitter:title" content="Mili Packaging | Custom Gift Box Manufacturer" />','<meta name="twitter:title" content="'+seoTitle+'" />');
   }
   if(seoDesc){
     spa=spa.replace(/<meta name="description" content="[^"]*"/,'<meta name="description" content="'+seoDesc+'"');
-    spa=spa.replace('<meta property="og:description" content="Factory-direct B2B custom packaging. Magnetic gift boxes, rigid boxes, jewelry cases. MOQ 100pcs, free design, FSC and ISO 9001 certified, global delivery." />','<meta property="og:description" content="'+seoDesc+'" />');
-    spa=spa.replace('<meta name="twitter:description" content="Factory-direct custom packaging. Free design, MOQ 100pcs, global delivery." />','<meta name="twitter:description" content="'+seoDesc+'" />');
+    spa=spa.replace('<meta property="og:description" content="Factory-direct B2B custom packaging. Magnetic gift boxes, rigid boxes, jewelry cases. MOQ 500pcs, free design, FSC and ISO 9001 certified, global delivery." />','<meta property="og:description" content="'+seoDesc+'" />');
+    spa=spa.replace('<meta name="twitter:description" content="Factory-direct custom packaging. Free design, MOQ 500pcs, global delivery." />','<meta name="twitter:description" content="'+seoDesc+'" />');
   }
   if(ROUTE.h1||ROUTE.name){
     spa=spa.replace('<h1>Mili Packaging | Custom Rigid Box Manufacturer</h1>','<h1>'+escHtml(ROUTE.h1||ROUTE.name)+'</h1>');

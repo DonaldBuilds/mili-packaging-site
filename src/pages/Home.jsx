@@ -31,7 +31,7 @@ const WA_PHONE = site.contact.whatsapp;
 const TRUST_STRIP = [
   'Factory-direct since 2018',
   'Free 3D mockup within 48h',
-  'MOQ from 100 pcs · watch from 50',
+  'MOQ from 500 pcs',
   'FSC-certified materials',
   'AQL 2.5 QC on every order',
   'Free structural samples in 3–5 days',
@@ -100,7 +100,7 @@ export default function Home() {
           {/* MOQ差异化副行 — 金色，字号缩小，不做uppercase */}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16, marginTop:-8 }}>
             <span style={{ color:'var(--gold)', fontSize:15, fontWeight:600, letterSpacing:'0.04em' }}>
-              MOQ 100 pcs
+              MOQ 500 pcs
             </span>
             <span style={{ color:'rgba(201,168,76,0.4)', fontSize:13 }}>·</span>
             <span style={{ color:'var(--gold)', fontSize:15, fontWeight:600, letterSpacing:'0.04em' }}>
@@ -140,7 +140,7 @@ export default function Home() {
           {/* P6: 底部参数条加对比锚点 */}
           <div className="hero-stats-row">
             {[
-              { l: 'MOQ', v: '100 pcs', c: 'vs 500+ at most factories' },
+              { l: 'MOQ', v: '500 pcs', c: 'all box types, one minimum' },
               { l: 'Lead Time', v: '15 Days', c: 'vs 25–40 via agents' },
               { l: 'Design', v: 'Free', c: 'vs $200+ setup elsewhere' },
               { l: 'Shipping', v: '50+ Countries', c: 'FOB · CIF · DDP available' },
@@ -206,7 +206,7 @@ export default function Home() {
             { n: '48h', l: 'Free 3D Mockup' },
             { n: '3–5 Days', l: 'Free Structural Samples' },
             { n: '15 Days', l: 'Bulk Lead Time' },
-            { n: 'MOQ 100', l: 'Watch from 50' },
+            { n: 'MOQ 500', l: 'All Categories' },
           ].map(({ n, l }, i) => (
             <div key={l} style={{ display:'flex', alignItems:'center', gap:12 }}>
               {i > 0 && <span aria-hidden="true" style={{ width:1, height:22, background:'rgba(201,168,76,0.25)' }} />}
@@ -337,7 +337,7 @@ export default function Home() {
         <div className="pillars-grid">
           {[
             { icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20c0-9 7-16 16-16-1 9-7 16-16 16z" /><path d="M4 20c4-4 7-8 8-13" /></svg>, h: 'Eco-Friendly', p: 'FSC-certified paper, soy inks, biodegradable options for every product line.' },
-            { icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v8" /></svg>, h: 'Low MOQ 100 pcs', p: 'Start small, scale fast. Designed for growing brands at every stage.' },
+            { icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v8" /></svg>, h: 'MOQ 500 pcs', p: 'Start small, scale fast. Designed for growing brands at every stage.' },
             { icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z" /><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" /><path d="M2 2l7.6 7.6" /></svg>, h: 'Free Design', p: 'Professional structural design & graphic layout included at no extra charge.' },
             { icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 20h20" /><path d="M4 20V9l5 4V9l5 4V4h6v16" /></svg>, h: 'Factory Direct', p: 'Own factory + own QC = premium quality without the middleman markup.' },
           ].map(({ icon, h, p }) => (

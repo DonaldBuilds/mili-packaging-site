@@ -13,7 +13,7 @@ export default function Footer() {
             <img src="/assets/images/logo-horizontal-clear.webp" alt="mili custom packaging" style={{ height: 36 }} />
           </div>
           <p style={{ fontSize:12, marginBottom:4, color:'var(--gold)' }}>Jiangxi Mili Packaging Materials Co., Ltd.</p>
-          <p>Factory-direct custom packaging manufacturer serving global brands. Free design, low MOQ 100pcs, worldwide delivery.</p>
+          <p>Factory-direct custom packaging manufacturer serving global brands. Free design, low MOQ 500pcs, worldwide delivery.</p>
           <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
             {[
               { img: '/assets/images/cert-fsc.svg', label: 'FSC Certified' },

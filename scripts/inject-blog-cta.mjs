@@ -45,7 +45,7 @@ const SNIPPET = `
 </a>
 <div class="blog-cta">
 <h3>Planning a packaging project?</h3>
-<p>Free design consultation and 3D mockup within 48 hours. MOQ from 100 pcs.</p>
+<p>Free design consultation and 3D mockup within 48 hours. MOQ from 500 pcs.</p>
 <a href="/contact#quote-form">Get a Free Quote</a>
 <a class="ghost" href="${WA_HREF}" data-track="whatsapp_click">Chat on WhatsApp</a>
 </div>

@@ -116,7 +116,7 @@
             For any privacy-related questions or requests, contact:<br />
             Jiangxi Mili Packaging Materials Co., Ltd.<br />
             Nanchang, Jiangxi, China<br />
-            Email: info@mili-packaging.com<br />
+            Email: milipackaging@163.com<br />
             WhatsApp: +86 182 9687 6285
           </p>
 

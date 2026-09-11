@@ -70,7 +70,7 @@ export default function BlogPost() {
 
         <div style={{ marginTop: 48, padding: '32px 28px', background: 'var(--black-2)', border: '1px solid var(--gold)', textAlign: 'center' }}>
           <div style={{ fontSize: 17, color: 'var(--gold)', fontFamily: 'var(--font-display)', marginBottom: 8 }}>Planning a packaging project in 2026?</div>
-          <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 20 }}>Get a free design consultation and 3D mockup within 48 hours. MOQ from 100 pcs.</p>
+          <p style={{ fontSize: 13.5, color: 'var(--gray-3)', marginBottom: 20 }}>Get a free design consultation and 3D mockup within 48 hours. MOQ from 500 pcs.</p>
           <Link to="/contact#quote-form" className="btn-gold" style={{ textDecoration: 'none' }}>Get Your Factory-Direct Quote Now &rarr;</Link>
         </div>
       </div>

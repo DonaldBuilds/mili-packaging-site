@@ -1412,7 +1412,7 @@
               <!-- 通用：MOQ -->
               <div style="margin-bottom:10px">
                 <label>MOQ（最小起订量）</label>
-                <input id="f-moq" placeholder="100 pcs" />
+                <input id="f-moq" placeholder="500 pcs" />
               </div>
               <!-- 单一参考价（默认） -->
               <div id="price-panel-single">
@@ -1473,7 +1473,7 @@
               </div>
               <div class="ed-field-wrap">
                 <label>Meta 描述 (Description) <span class="hint" style="font-weight:normal">— 120-160 字符，含核心卖点/MOQ/定制能力</span></label>
-                <textarea id="f-desc" rows="3" placeholder="Factory-direct custom luxury gift boxes from MOQ 100 pcs. Free 3D mockup within 48h, FSC-certified materials, 7-15 day lead time." style="padding-bottom:24px"></textarea>
+                <textarea id="f-desc" rows="3" placeholder="Factory-direct custom luxury gift boxes from MOQ 500 pcs. Free 3D mockup within 48h, FSC-certified materials, 7-15 day lead time." style="padding-bottom:24px"></textarea>
                 <span class="ed-counter" id="cnt-desc">0/170</span>
               </div>
               <div class="ed-field-wrap">
@@ -1845,8 +1845,8 @@
         <h3>📞 联系信息</h3>
         <label>WhatsApp 号码（纯数字，含国家码）</label><input id="dc-whatsapp" placeholder="8618296876285" />
         <label>展示号码</label><input id="dc-phone" placeholder="+86 182 9687 6285" />
-        <label>联系邮箱</label><input id="dc-email" placeholder="info@mili-packaging.com" />
-        <label>销售邮箱</label><input id="dc-sales" placeholder="sales@mili-packaging.com" />
+        <label>联系邮箱</label><input id="dc-email" placeholder="milipackaging@163.com" />
+        <label>销售邮箱</label><input id="dc-sales" placeholder="milipackaging@163.com" />
         <label>工厂地址</label><input id="dc-address" placeholder="Shenzhen, Guangdong, China" />
       </div>
       <div class="card">
@@ -1870,7 +1870,7 @@
       <div class="card">
         <h3>🏠 首页文案</h3>
         <label>Hero 主标题</label><input id="dc-hero-title" placeholder="Custom Packaging, Factory-Direct" />
-        <label>Hero 副标题</label><textarea id="dc-hero-sub" rows="2" placeholder="MOQ from 100 pcs · Free design & samples in 7 days"></textarea>
+        <label>Hero 副标题</label><textarea id="dc-hero-sub" rows="2" placeholder="MOQ from 500 pcs · Free design & samples in 7 days"></textarea>
       </div>
     </div>
 
@@ -4098,7 +4098,7 @@
   var inqSts = { new: { l: '新询盘', c: 's-new' }, contacted: { l: '已联系', c: 's-contacted' }, quoted: { l: '已报价', c: 's-quoted' }, negotiating: { l: '洽谈中', c: 's-negotiating' }, won: { l: '已成交', c: 's-won' }, lost: { l: '已流失', c: 's-lost' }, deleted: { l: '已归档', c: 's-del' } };
   var inqState = { rows: [], view: 'list', page: 0, size: 25, sel: {}, f: { chan: '', sts: '', pri: '', range: '', q: '', owner: '' }, sort: { key: '', dir: 1 } };
   var inqTplDefs = [
-    { t: '💬 WhatsApp 首询回复', body: 'Hi {name}, thanks for reaching out to Mili Packaging!\n\nQuick response to your inquiry:\n• Product: {product}\n• MOQ: from 100 pcs (watch boxes from 50)\n• Free 3D mockup within 48h\n• Free structural samples in 3–5 days\n\nMay I confirm the quantity and target delivery date? I will send a formal quotation today.' },
+    { t: '💬 WhatsApp 首询回复', body: 'Hi {name}, thanks for reaching out to Mili Packaging!\n\nQuick response to your inquiry:\n• Product: {product}\n• MOQ: from 500 pcs\n• Free 3D mockup within 48h\n• Free structural samples in 3–5 days\n\nMay I confirm the quantity and target delivery date? I will send a formal quotation today.' },
     { t: '✉️ 邮件报价跟进', body: 'Dear {name},\n\nThank you for your inquiry about {product} ({qty}).\n\nWe are finalizing your quotation and will send it within 24h, including tier pricing for 100 / 1,000 / 5,000 pcs.\n\nBest regards,\nMili Packaging' },
     { t: '⏰ 催单 / 二次跟进', body: 'Hi {name}, just following up on the {product} quote. Do you have any questions on pricing or samples? Happy to adjust the design or finish to fit your budget.' },
     { t: '🎉 成交后确认', body: 'Dear {name}, thank you for choosing Mili Packaging! Your order is confirmed and production has started. You will receive a production schedule with photos within 24h.' }
@@ -4795,7 +4795,7 @@
   document.getElementById('ticketBtn').addEventListener('click', function () {
     var t = buildTicket(); if (!t) return;
     saveTicketHistory(t);
-    location.href = 'mailto:info@mili-packaging.com?subject=' + encodeURIComponent(t.subject) + '&body=' + encodeURIComponent(t.text);
+    location.href = 'mailto:milipackaging@163.com?subject=' + encodeURIComponent(t.subject) + '&body=' + encodeURIComponent(t.text);
     flash('已打开邮件客户端，发送即生成工单');
   });
   document.getElementById('copyBtn').addEventListener('click', function () {
@@ -5220,7 +5220,7 @@
         b.addEventListener('click', function () {
           var q = b.dataset.copy;
           var title = q.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-          var draft = 'Title: ' + title + ' — Mili Packaging Guide\n\nMeta: Learn how Mili Packaging manufactures ' + q + ' — factory-direct MOQ from 100 pcs, free 3D mockups in 48h, FSC-certified materials, AQL 2.5 QC, 7-15 day lead time.\n\nH1: ' + title + '\n\nKey facts: factory since 2018 (Nanchang, 20,000sqm), ISO 9001, SGS audited, MOQ 100 pcs (watch 50), lead 7-15 days, free samples 3-5 days, FSC materials, AQL 2.5 QC, 500+ brands in 50+ countries.\n\nFAQ: MOQ? Lead time? Samples? Shipping (FOB/CIF/DDP)? Certifications?';
+          var draft = 'Title: ' + title + ' — Mili Packaging Guide\n\nMeta: Learn how Mili Packaging manufactures ' + q + ' — factory-direct MOQ from 500 pcs, free 3D mockups in 48h, FSC-certified materials, AQL 2.5 QC, 7-15 day lead time.\n\nH1: ' + title + '\n\nKey facts: factory since 2018 (Nanchang, 20,000sqm), ISO 9001, SGS audited, MOQ 500 pcs (watch 50), lead 7-15 days, free samples 3-5 days, FSC materials, AQL 2.5 QC, 500+ brands in 50+ countries.\n\nFAQ: MOQ? Lead time? Samples? Shipping (FOB/CIF/DDP)? Certifications?';
           try { navigator.clipboard.writeText(draft); toast('草稿建议已复制（博客工作流开通后可一键转草稿）', 'ok'); } catch (e) { toast('复制失败，请手动选择', 'err'); }
         });
       });
@@ -5675,7 +5675,7 @@
     ]},
     { label: '客户同步（邮箱 / WhatsApp）', color: '#4da3ff', items: [
       { key: 'mail_sync', name: '邮箱客户同步（MAIL_IMAP_USER + MAIL_IMAP_PASS）', role: '实时拉取邮箱新邮件 → AI 解析 → 自动录入询盘中心（channel=email）',
-        steps: '① 163 邮箱 → 设置 → POP3/IMAP/SMTP → 开启 IMAP 服务并生成「客户端授权密码」② 将邮箱地址填入 <code>MAIL_IMAP_USER</code>（如 18296876285@163.com），授权密码填入 <code>MAIL_IMAP_PASS</code>（GitHub Secrets 或 Cloudflare 环境变量）③ 询盘中心点击「📬 同步邮箱」立即拉取；登录会话内每 15 分钟自动同步' }
+        steps: '① 163 邮箱 → 设置 → POP3/IMAP/SMTP → 开启 IMAP 服务并生成「客户端授权密码」② 将邮箱地址填入 <code>MAIL_IMAP_USER</code>（如 milipackaging@163.com），授权密码填入 <code>MAIL_IMAP_PASS</code>（GitHub Secrets 或 Cloudflare 环境变量）③ 询盘中心点击「📬 同步邮箱」立即拉取；登录会话内每 15 分钟自动同步' }
     ]}
   ];
   function loadConfig() {
@@ -6489,7 +6489,7 @@
   }
   // v19: 营销活动（邮件群发 163 SMTP / WhatsApp 导出 / 活动记录）
   var CAMP_TEMPLATES = [
-    { n: '新品通知', sub: 'New Product Launch – Mili Packaging', body: 'Hi {name},\n\nWe are excited to introduce our new packaging solutions at mili-packaging.com. Factory-direct pricing, MOQ from 100pcs, free design in 48h.\n\nBest regards,\nMili Packaging Team' },
+    { n: '新品通知', sub: 'New Product Launch – Mili Packaging', body: 'Hi {name},\n\nWe are excited to introduce our new packaging solutions at mili-packaging.com. Factory-direct pricing, MOQ from 500pcs, free design in 48h.\n\nBest regards,\nMili Packaging Team' },
     { n: '节日问候', sub: 'Season\u2019s Greetings from Mili Packaging', body: 'Dear {name},\n\nWishing you a wonderful season. As your packaging partner, we remain ready for your upcoming projects.\n\nBest regards,\nMili Packaging Team' },
     { n: '沉睡唤醒', sub: 'Special Offer for You – Mili Packaging', body: 'Hi {name},\n\nWe noticed it has been a while. Here is a special offer for your next packaging order: free design + quick samples.\n\nReply or visit mili-packaging.com.\n\nBest regards,\nMili Packaging Team' },
     { n: '报价跟进', sub: 'Following Up on Your Quote – Mili Packaging', body: 'Hi {name},\n\nJust checking in on your recent inquiry. Let us know if you need adjusted pricing, samples, or a 3D mockup.\n\nBest regards,\nMili Packaging Team' }
@@ -6710,11 +6710,11 @@
   // ═════════════════════════════════════════════
   var DECOR_DEFAULTS = {
     brand: { name: 'MILI Packaging', tagline: 'Custom Boxes Factory', logoText: 'MILI', logoSub: 'PACKAGING' },
-    contact: { whatsapp: '8618296876285', phoneDisplay: '+86 182 9687 6285', email: 'info@mili-packaging.com', salesEmail: 'sales@mili-packaging.com', address: 'Shenzhen, Guangdong, China' },
+    contact: { whatsapp: '8618296876285', phoneDisplay: '+86 182 9687 6285', email: 'milipackaging@163.com', salesEmail: 'milipackaging@163.com', address: 'Shenzhen, Guangdong, China' },
     social: { linkedin: '', facebook: '', instagram: '', youtube: '' },
     announcement: { enabled: false, text: 'Free design & samples in 7 days · Factory-direct pricing' },
-    seo: { title: 'MILI Packaging – Custom Boxes Factory | Free Samples in 7 Days', description: 'Custom boxes, bags & rigid packaging from factory-direct pricing. MOQ from 100pcs. Free 3D mockup within 48h. FSC-certified materials.', keywords: 'custom boxes, packaging factory, rigid boxes, mailer boxes, FSC packaging' },
-    home: { heroTitle: 'Custom Packaging, Factory-Direct', heroSub: 'MOQ from 100 pcs · Free design & samples in 7 days · 500+ brands trusted' }
+    seo: { title: 'MILI Packaging – Custom Boxes Factory | Free Samples in 7 Days', description: 'Custom boxes, bags & rigid packaging from factory-direct pricing. MOQ from 500pcs. Free 3D mockup within 48h. FSC-certified materials.', keywords: 'custom boxes, packaging factory, rigid boxes, mailer boxes, FSC packaging' },
+    home: { heroTitle: 'Custom Packaging, Factory-Direct', heroSub: 'MOQ from 500 pcs · Free design & samples in 7 days · 500+ brands trusted' }
   };
   function decorFill(d) {
     var D = Object.assign({}, DECOR_DEFAULTS, d || {});

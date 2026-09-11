@@ -45,7 +45,7 @@ function TitleManager() {
   const location = useLocation();
   useEffect(() => {
     const titles = {
-      '/': site.seo.title || 'Mili Packaging | Custom Rigid Box Manufacturer | MOQ 100pcs',
+      '/': site.seo.title || 'Mili Packaging | Custom Rigid Box Manufacturer | MOQ 500pcs',
       '/products': 'Packaging Products | Custom Boxes, Bags & Mailers | Mili Packaging',
       '/about': 'About Us | Jiangxi Mili Packaging Materials Co., Ltd.',
       '/contact': 'Contact Us | Get a Free Packaging Quote | Mili Packaging',
@@ -73,7 +73,7 @@ function TitleManager() {
         const list = productCatalog[g.slug] || [];
         const p = list.find(x => x.slug === parts[2]);
         if (p) {
-          title = `${p.name} | MOQ ${g.slug === 'watch-boxes' ? 50 : g.slug === 'sample-starter-kits' ? '1 kit' : g.moq} pcs | Mili Packaging`;
+          title = `${p.name} | MOQ ${g.moq} pcs | Mili Packaging`;
           desc = `${p.name} - ${p.tagline}. ${p.spec}. Reference price from $${p.price} per unit (EXW). Factory-direct custom ${g.name.toLowerCase()} with free design & 3D mockup.`;
         }
       } else if (g) {
